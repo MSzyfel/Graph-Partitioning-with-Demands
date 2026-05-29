@@ -1,0 +1,47 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+
+
+\newcommand{\Title}[1]{{\large\bf \uppercase{#1}}}
+\newcommand{\Email}[1]{\\
+	\smallskip \small{e-mail:} \textnormal{#1}}
+\newcommand{\Author}[2]{{\sc #1} \\
+	\medskip
+	{\small\textit{#2}}}
+\renewenvironment{abstract}{}{}
+
+\begin{document}
+
+\begin{center}
+\Title{Graph Partitioning with Demands: Generalized Graph Conductance With Applications to Hierarchical Clustering}
+
+\bigskip
+\Author{\underline{Micha{\l} Szyfelbein} and Dariusz Dereniowski}
+{Gda\'nsk University of Technology}
+\Email{michal.szyfelbein@pg.edu.pl, dariusz.dereniowski@pg.edu.pl}
+\end{center}
+
+\medskip
+
+\begin{abstract}
+  In this work, we study various graph partitioning tasks under a general demand model. In each such task, we are given a graph $G=(V,E,c,w)$ with a capacity function $c\colon E\to \mathbb{N}$ and a demand function $w\colon V\times V\to \mathbb{N}$. Our main focus is the problem of finding a cut $(S, \bar{S})$ minimizing the quantity
+  \[
+  \psi_w(S) = \frac{c(S, \bar{S})}{w(S, V)\cdot w(\bar{S}, V)}.
+  \]
+  Here, $c(S, \bar{S})$ is the cost of edges between $S$ and the complement of $S$, $\bar{S}$, and $w(S, V)=w(S)+w(S, \bar{S})$ is the sum of the internal demand within $S$, denoted $w(S)$, and the demand between vertices of $S$ and $\bar{S}$, denoted $w(S, \bar{S})$. We call $\psi_w(S)$ the \emph{generalized conductance} of the cut $(S, \bar{S})$, and the task of minimizing $\psi_w(S)$ the \textsc{Generalized Minimum Conductance Problem}. Our main contribution is an algorithm with an $O(\log n)$-approximation guarantee for this objective. This result is achieved via a two-way reduction: first to the well-known generalized $k$-multicut problem, and then to a constrained variant of the classic sparsest-cut problem, with an additional upper-bound constraint on the amount of demand that may be cut.
+  
+  Moreover, we show that this result can be leveraged to obtain an $O(\log n)$ bicriteria approximation for \textsc{Graph Partitioning with Demands}, where the goal is to find a minimum-cost subset of edges $C$ such that for every component $H$ of $G\setminus C$, $w(H)\leq w(V)/2$. This, in turn, yields an $O(\log n)$-approximation for \textsc{Hierarchical Clustering with Demands}, the problem of finding a hierarchy of cuts that partitions the graph into increasingly refined clusters.
+\end{abstract}
+
+
+\medskip
+
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

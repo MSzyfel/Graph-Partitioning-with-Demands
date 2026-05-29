@@ -1,0 +1,9 @@
+\section{Preliminaries}
+
+Most of the instances of the problem considered in this work consist of a graph $G=\br{V,E,c,w}$, where $V$ is the vertex set, $E$ is the edge set, $c\colon E \to \mathbb{N}$ is the capacity function which denotes the cost of cutting an edge, and $w\colon E\times E\to \mathbb{N}$ is the demand function which represents how important separating a given vertex pair is. For vertices $u,v\in V$, we denote by $uv$ the edge between $u$ and $v$ in $E$ if it exists. If only one graph is being concerned, then $\br{V,E,c,w}$ represents the parameters of $G$ and if a second graph is concerned we would write $V\br{G'}$, $V\br{E}$, $c_{G'}$ and $w_{G'}$. For any function $f\colon E\times E\to \mathbb{N}$ and disjoint subsets $A, B\subseteq V$, we define:
+\[
+f\br{A}=\sum_{u,v\in A}f\br{u, v} \quad f\br{A, B}=\sum_{u\in A}\sum_{v\in B}f\br{u, v}
+\]
+with a convention that if $uv\notin E$, then $f\br{uv}=0$.
+Whenever $A, B\subseteq V$ are not disjoint we define $f\br{A, B}=f\br{A}+f\br{A, B\setminus A}$. For a subset $C\subseteq E$, we define $f\br{C}=\sum_{e\in C}f\br{e}$.
+For a subset $S\subseteq V$, we denote by $\bar{S}$ the complement of $S$ in $V$, i.~e. $\bar{S}=V\setminus S$. A cut is any subset $S\susbeteq V$, such that $S\neq \emptyset$, $S\neq V$ and we denote it either by just $S$ or we write $\br{S, \bar{S}}$ to explicitly indicate the two sides of the cut. 

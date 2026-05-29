@@ -1,0 +1,175 @@
+﻿\section{Racke's cut-sparsifier decomposition}
+
+Since solving tasks related to sparsest cut is easier on trees, a common approach to solving such problems is to first embed the graph into a tree while partially preserving the value of all cuts. To do so, one can use the cut-sparsifier tree decomposition of Racke \cite{OptimalHierarchicalDecompositionsForCongestionMinimizationInNetworks}. This decomposition allows embedding any graph into a probability distribution over a polynomial number of trees such that for every cut, the expected value of the cut in the tree is at most $O\br{\log n}$ times the value of the cut in the original graph, and for every cut, its value in the original graph is at most its value in every tree in the support of the distribution. Therefore, if we can solve our problem on trees, then we can solve it on general graphs with an $O\br{\log n}$-approximation ratio by first embedding it into a distribution over trees and then solving it on each tree in the support of the distribution. Then, the approximation ratio is achieved by choosing the best cut among all cuts produced for these trees. In what follows we make this ideas more precise.
+
+\subsection{Decomposition trees}
+Given a graph $G=(V,E,c)$, denote by $E^*$ the set of all paths in $G$.
+A \emph{decomposition tree} for a graph $G=(V,E,c)$ is a rooted tree
+$T=(V_T,E_T, c_T)$ together with:
+\begin{enumerate}
+  \item a node map $m_V:V_T\to V$ that is bijective on leaves of $T$ and $V$,
+  \item an edge map $m_E:E_T\to E^*$ sending each tree edge to a path in $G$
+  between the mapped endpoints,
+  \item induced maps $m'_V:V\to V_T$ which maps each vertex of $V$ to the corresponding leaf of $T$ and $m'_E:E\to E_T^*$ which maps an edge $uv\in E$ to the unique (shortest) path between $m'_V(u)$ and $m'_V(v)$ in $T$,
+  \item For a tree edge $e_t=(u_t,v_t)$, let $V_{u_t},V_{v_t}$ be the leaf partition
+induced by deleting $e_t$. Its capacity is then defined as
+\[
+  c_T(e_t):=\sum_{u\in V_{u_t}, v\in V_{v_t}} c(u,v).
+\]
+\end{enumerate}
+
+\subsection{Multicommodity flows and congestion}
+
+A \emph{multicommodity flow} in a graph $G$ is a collection of flows $f^{(i)}:E\to\mathbb{R}_{\ge 0}$ for $i=1,\ldots,k$, where each flow $f^{(i)}$ routes $d_i$ units between a source-sink pair $(s_i,t_i)$. The flows needs to satisfy the demand constraints and should respect edge capacities.
+
+The \emph{congestion} of a multicommodity flow is a way to measure how much these capacities are violated.Formally, we define is as the maximum ratio of total flow to capacity over all edges:
+\[
+  C_G := \max_{e\in E} \frac{\sum_i f^{(i)}(e)}{c(e)}.
+\]
+A multicommodity flow is feasible if its congestion is at most $1$. Given a multicommodity flow $f$ in $G$, we can map it to a flow in a decomposition tree $T$ using the edge map $m_E$. The mapped flow $m'(f)$ is defined as follows: for each tree edge $e_t\in E_T$, we sum the flow of all edges in $G$ that are mapped to paths in $T$ that include $e_t$. Formally:
+\[
+  m'(f)(e_t) := \sum_{e\in E: e_t\in m'_E(e)} f(e).
+\]
+
+Racke's theorems relate the congestion of flows in a graph to the congestion in decomposition trees:
+
+\begin{theorem}[Racke (STOC 2008, Theorem 2)]
+Let $f$ be any multicommodity flow in $G$ with congestion $C_G$.
+For any decomposition tree $T$ of $G$, the mapped flow $m'(f)$ in $T$
+has congestion $C_T\le C_G$.
+\end{theorem}
+
+\begin{theorem}[Racke (STOC 2008, Theorem 4)]
+There exists a polynomial-time computable convex combination of decomposition
+trees $(T_i,\lambda_i)$, $\sum_i\lambda_i=1$, such that for any family of multicommodity flows
+$f_i$ with congestion at most $1$ in $T_i$, the mapped flow
+\[
+  f:=\sum_i \lambda_i m(f_i)
+\]
+has congestion at most $\rho=O(\log n)$ in $G$.
+\end{theorem}
+
+\subsection{Cut capacity preservation}
+
+\begin{theorem}[Dual cut bound from Racke]\label{thm:racke}
+Let $G=(V,E,c)$ and let $(T_i,\lambda_i)$ be as in Racke's Theorem~4.
+Define $\mu$ by $\Pr_{T\sim\mu}[T=T_i]=\lambda_i$ and set
+$\rho=O(\log n)$. Then for every cut $U\subsetneq V$:
+\begin{enumerate}
+  \item[(i)] $c_G(\cut(U))\le c_T(\cut(U))$ for every $T$ in the support of $\mu$.
+  \item[(ii)] $\Etree[c_T(\cut(U))]\le \rho\,c_G(\cut(U))$.
+\end{enumerate}
+The proof is deferred to Appendix~\ref{app:racke-proof}.
+\end{theorem}
+
+
+\subsection{Approximation for a fixed $K$}
+
+\begin{theorem}\label{thm:fixed-K}
+  Apply Theorem~\ref{thm:racke} to $G$, obtaining distribution $\mu$.
+  There exists a tree $T$ in the support of $\mu$ such that $\OPT_K(T)\le \rho\,\OPT_K(G)$.
+\end{theorem}
+
+\begin{proof}
+  Let $X^*$ be an optimal cut for $\OPT_K(G)$.
+  Since the demand function $w$ is the same in $G$ and in every tree $T$,
+  the cut $X^*$ satisfies $0<w(\cut(X^*))\le K$, hence it is feasible in every tree.
+  Therefore:
+  \begin{align*}
+    \Etree\!\left[\OPT_K(T)\right]
+    \;&\le\;
+    \Etree\!\left[\frac{c_T(\cut(X^*))}{w(\cut(X^*))}\right]
+    \;
+    \\&=\;
+    \frac{1}{w(\cut(X^*))}\,\Etree\!\left[c_T(\cut(X^*))\right]
+    \;\\&\le\;
+    \frac{\rho\,c_G(\cut(X^*))}{w(\cut(X^*))}
+    \;\\&=\;
+    \rho\,\OPT_K(G).
+  \end{align*}
+  By averaging, some tree $T$ in the support satisfies
+  $\OPT_K(T)\le \rho\,\OPT_K(G)$.
+\end{proof}
+
+\subsection{Solving the bounded-demand problem on a tree}
+
+    It is a well known fact that the optimal value of the sparsest cut problem cut on trees is achieved by a cut induced by a single edge. Below, we show that this is also the case if we have an additional constraint on the demand cut by the solution.
+\begin{theorem}[Tree optimum is attained by a single edge]\label{thm:single-edge}
+  \[
+    \OPT_K(T)
+    \;=\;
+    \min_{\substack{e\in T \\ 0<w_e\le K}} \frac{c(e)}{w_e}.
+  \]
+\end{theorem}
+
+\begin{proof}
+  Root $T$ at $r$. For each edge $e$, let $A_e$ be the component away from $r$,
+  and define $c(e):=c_T(e)$ and $w_e:=w(\cut_T(A_e))$. Let $S$ be any feasible cut with $w(\cut(S))\le K$.
+  Let $F(S)$ be the set of tree edges crossing the cut $(S,\bar S)$. Then
+  \[
+    c_T(\cut(S))=\sum_{e\in F(S)} c(e),
+    \qquad
+    w(\cut(S))=\sum_{e\in F(S)} w_e.
+  \]
+  Since $w(\cut(S))=\sum_{e\in F(S)}w_e\le K$ and all $w_e\ge 0$, we have
+  $w_e\le w(\cut(S))\le K$ for every $e\in F(S)$.
+  Also $w_e>0$ whenever $e\in F(S)$ (otherwise the edge contributes zero to both
+  numerator and denominator and can be dropped from $F(S)$).
+  Therefore
+  \[
+    \frac{c_T(\cut(S))}{w(\cut(S))}
+    =
+    \sum_{e\in F(S)} \frac{w_e}{\sum_{f\in F(S)}w_f}\cdot\frac{c(e)}{w_e}
+    \;\ge\;
+    \min_{e\in T, 0<w_e\le K} \brc{\frac{c(e)}{w_e}}.
+  \]
+  where the inequality is due to the fact that the left-hand side is a weighted sum with coefficients $w_e/\sum_{f\in F(S)}w_f$ that sum to $1$. By averaging, at least one of the terms in the sum must be at most the minimum of the terms.
+\end{proof}
+
+\begin{corollary}
+  $\OPT_K(T)$ can be computed in $O(n)$ time by a single scan over the edges of $T$.
+\end{corollary}
+
+
+% \section{Semi-definite programming formulation of $h\br{S}$}
+% In order to obtain an approximation algorithm for the problem of minimizing $h\br{S}=\frac{c\br{S, \bar{S}}}{w\br{S, V}}$, we will use a semi-definite programming relaxation. This problem can be formulated as the following quadratic program:
+
+% \begin{align}
+% \min \quad & \frac{1}{2K} \sum_{u,v \in V} c(u,v)\cdot(x_u-x_v) ^2\\[6pt]
+% \text{s.t.} \quad 
+% & x_u^2 + y_u^2 = 1 \quad \forall u \in V \\[6pt]
+% & x_u\cdot y_u= 0 \quad \forall u \in V \\[6pt]
+% & \sum_{u,v \in V} w(u,v)\cdot\, x_u^2 = K
+% \end{align}
+
+% Note, that in polynomial time, we can guess the value of $K=w(S^*, V)$ up to an arbitrary multiplicative precision.
+
+% We now relax this QP to an SDP, allowing the variables to be vectors in unbounded (but polynomial sized) space. Furthermore, we add more constraints in order to strengthen the relaxation. We add triangle inequalities in order to ensure $x$ to be a metric. Moreover, we force all the vectors to be centered at $v/2$ where $v$ is the unit vector and we constraint all of them to be of length $1/2$. The SDP is as follows:
+% \begin{align}
+% \min \quad & \frac{1}{2K} \sum_{u,v \in E} c(u,v)\cdot(x_u-x_v) ^2 \\[6pt]
+% \text{s.t.} \quad 
+% & x_u^2 + y_u^2 = 1 \quad \forall u \in V \\[6pt]
+% & x_u\cdot y_u= 0 \quad \forall u \in V \\[6pt]
+% & v^2= 1 \\[6pt]
+% & v\cdot x_u = x_u^2, v\cdot y_u = y_u^2 \quad \forall u \in V  \\[6pt]
+% & \sum_{u,v \in V} w(u,v)\cdot\, x_u^2 = K \\[6pt]
+% & (x_u - x_v)^2 \leq (x_u - x_w)^2 + (x_v - x_w)^2 \quad \forall u,v,w \in V
+% \end{align}
+
+% Define a metric on $V$ as $d(u,v)=(x_u-x_v)^2$. A map $f\colon X \to \mathbb{R}$ is called 1-Lipshitz if for all $x,y \in V$ $|f(x)-f(y)|\leq d(x,y)$. Given a 1-Lipschitz map $f$ and a capacity function $c$, define its average distortion under $c$ as:
+% \[
+% a_c(f) = \frac{\sum_{x,y \in X}c(x,y)\cdot d(x,y)}{\sum_{x,y \in X}c(x,y)\cdot |f(x)-f(y)|}
+% \]
+
+% Bourgains theorem states that for every such $w$ there exists an efficiently computable map $f$ such that $a_c(f)=O(\log n)$. Observe, that the objective function of the SDP can be rewritten as $$\frac{1}{2K} \sum_{u,v \in V} c(u,v)\cdot d(u,v)$$
+
+% Therefore, we know that there exists an efficiently computable map $f$ such that the following holds:
+% $$
+% \frac{1}{2K} \sum_{u,v \in V} c(u,v)\cdot d(u,v)\geq \frac{1}{2K} \sum_{u,v \in V} c(u,v)\cdot |f(x)-f(y)|\geq \frac{1}{a_c(f)\cdot 2K} \sum_{u,v \in V} c(u,v)\cdot d(u,v)
+% $$
+% where the first inequality is by the fact that $f$ is 1-Lipshitz and the second inequality is by definition of $a_c(f)$.
+
+% Since by Bourgains theorem $f$ with $a_c(f)=O(\log n)$ can be found in polynomial time we have that the objective function of the SDP embeds into $\mathbb{R}$ with $O(\log n)$ distortion.
+
+% The remaining objective is to use the fact in design of a rounding procedure for the above SDP.
+

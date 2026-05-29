@@ -1,0 +1,25 @@
+flowchart LR
+  subgraph Trees[Problems on Trees]
+    CST[Constrained sparsest cut on trees]
+    KTM[K-multicut on trees]
+  end
+
+  subgraph Graphs[Problems on Graphs]
+    CSG[Constrained sparsest cut on graphs]
+    KMG[K-multicut on graphs]
+    MC[Max-cut]
+  end
+
+  GCD[Generalized conductance]
+  BPD[Balanced partitioning with demands]
+  QSC[Quadratic sparsest cut]
+  HCD[Hierarchical clustering with demands]
+
+  CST --> CSG
+  KTM --> KMG
+  CSG --> GCD
+  KMG --> GCD
+  MC --> GCD
+  GCD --> BPD
+  GCD --> QSC
+  BPD --> HCD

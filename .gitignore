@@ -1,0 +1,41 @@
+# LaTeX intermediate and build artifacts
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.idx
+*.ilg
+*.ind
+*.lof
+*.log
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.xdv
+
+# Bibliography tools
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.ist
+
+# Latexmk and temp outputs
+latexmkrc
+*.nav
+*.snm
+*.vrb
+
+# Build directories
+_build/
+build/
+out/
+
+# PDFs generated from LaTeX (uncomment if PDFs should be ignored)
+*.pdf

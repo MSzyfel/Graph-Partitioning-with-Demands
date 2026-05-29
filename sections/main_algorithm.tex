@@ -1,0 +1,149 @@
+﻿\section{The main algorithm}
+
+In order to tackle the minimum generalized conductance problem, our first objective is to further simplify the denominator $w\br{S, V}\cdot w\br{\bar{S}, V}$ into a linear function. It is a standard trick to assume that $w\br{S, V}\le w\br{\bar{S}, V}$, without loss of generality. In this case we have $w\br{V}/2\leq w\br{\bar{S}, V} \leq w\br{V}$ and thus, minimizing $\phi_w\br{S}$ is equivalent to minimizing
+\[h_w\br{S}=\frac{c\br{S, \bar{S}}}{w\br{S, V}}, \quad \text{subject to} \quad w\br{S, V}\le w\br{\bar{S}, V}\] up to a constant factor loss. 
+
+However, for our purposes we will slightly relax the assumption that $w\br{S, V}\le w\br{\bar{S}, V}$ and in turn we will only demand that $w\br{S, V}\le c\cdot w\br{\bar{S}, V}$ for some appropriate constant $c>1$. Note that this still preserves the approximation ratio up to a factor dependent on $c$ by a similar discussion.
+
+The full reduction used in this section can be summarized as follows:
+\begin{enumerate}
+  \item Compute candidate $S_1$:
+  \begin{itemize}
+    \item Build the auxiliary instance $(G',w,c)$ by adding a new vertex $r$, setting $c\br{r,u}=0$, $w_{G'}\br{r,u}=\sum_{v\in V}w_G\br{u,v}$ for each $u\in V$ and $w_{G'}\br{u,v}=0$ for each pair $u,v\in V$.
+    \item Set $K\gets \frac{4}{3}\cdot w_G\br{V}$.
+    \item Run an $\alpha$-approximation algorithm for
+    \[
+      \min_{S\subseteq V'} \phi_w\br{S}=\frac{c_{G'}\br{S,\bar S}}{w_{G'}\br{S,\bar S}}
+      \quad\text{subject to}\quad 0<w_{G'}\br{S,\bar S}\le K.
+    \]
+    and denote the returned cut by $S_1$.
+  \end{itemize}
+  \item Compute candidate $S_2$:
+  \begin{itemize}
+    \item Run a $\beta$-approximation algorithm for generalized $k$-multicut with $k=w_G\br{V}/3$ to obtain a multicut $C$.
+    \item Build a complete graph $R$ on components of $G\setminus C$, with edge weights $w_R\br{H_1,H_2}=w_G\br{H_1,H_2}$.
+    \item Apply rounding: set $W=\frac{w\br{V\br{R}}}{4\cdot \spr{E\br{R}}}$ and replace each edge weight by $w'\br{e}=\fl{w\br{e}/W}$.
+    \item Run local search for max-cut on $(R,w')$: start from $(\emptyset,V\br{R})$, repeatedly move a single vertex if it improves the cut, and stop at a local optimum.
+    \item Map the resulting cut of $R$ back to a cut $S_2$ of $G$.
+  \end{itemize}
+  \item Return the better of $S_1,S_2$, i.e., the one with smaller value of $\psi_w\br{S}$.
+\end{enumerate}
+
+\begin{theorem}
+  The above algorithm is an $O\br{\alpha+\beta}$-approximation algorithm for the problem of computing $\psi_w\br{G}$.
+\end{theorem}
+\begin{proof}
+
+Let $S^*$ be some optimal solution with $w\br{S^*, V}\le w\br{\bar{S}^*, V}$. Our analysis consists of two separate cases depending on the size of $w\br{S^*, \bar{S}^*}$. We show that no matter what the actual value is, at least one of the solution has a good approximation ratio. Note that the exact choice of constants in our construction is somewhat arbitrary and we do not attempt to optimize them.
+\begin{lemma}
+  Assume that $w\br{S^*, \bar{S}^*}\leq w\br{V}/3$. Moreover, let $\alpha$ be an approximation ratio of some approximation algorithm for the problem of minimizing $\phi_w\br{S}$ in $G$ subject to $w_{G}\br{S, \bar{S}}\leq K$. Then, $S_1$ is an $O\br{\alpha}$-approximate solution.
+\end{lemma}
+\begin{proof}
+To obtain a good approximation for $h\br{S}$, we proceed as follows. Firstly, we create an auxiliary graph $G'$, such that $V'=V\cup \brc{r}$. We set $c\br{r, u}=0$ for every $u\in V$ and we set $w\br{r, u}=\sum_{v\in V} w\br{u, v}$ for every $u\in V$.
+
+Consider some cut $S\subseteq V$. Assume, that $r\in \bar{S}$. In such case, we have that: 
+\[
+w_{G}\br{S, V}\leq w_{G}\br{S, V}+w_G\br{S}= w_{G'}\br{S, \bar{S}}\leq 2\cdot w_{G}\br{S, V}
+\]
+where the equality is due to the fact that for any $S\subseteq V\br{G'}$, the quanitity $w\br{S, \bar{S}}$ double counts the contribution of edges between the vertices of $S$ in $w_{G}\br{S, V}$.
+
+It would be desireable to minimize the value of $\phi_w\br{S} = \frac{c\br{S, \bar{S}}}{w\br{S, \bar{S}}}
+$ in this new graph. However, it is also easy to see, that in this new instance a trivial cut $S=V$ has cost $0$. Moreover, we demand $w_G\br{S, V}$ to be roughly smaller then $w_G\br{\bar{S}, V}$. To achieve both ends we thus add the constraint that $w_{G'}\br{S, \bar{S}}\leq K$ for $K=\frac{4}{3}\cdot w_G\br{V}$.
+
+We now want to argue that any $\alpha$-approximation of $\phi_w\br{S} $ subject to $w_{G'}\br{S, \bar{S}}\leq K$ in $G'$ is also a good approximation of $h\br{S}$ in $G$. Firstly, observe that for any optimal solution $S^*$ for $h\br{S}$, where $w\br{S^*, V}\leq w\br{\bar{S}^*, V}$ we have that
+\[
+w_G\br{S^*, V}+w_G\br{\bar{S}^*, V}=w_G\br{V}+w_G\br{S^*, \bar{S}^*}\leq \frac{4}{3}\cdot w_G\br{V}
+\]
+by our assumption that $w\br{S^*, \bar{S}^*}\leq w\br{V}/3$. As a consequence we get that $w_G\br{S^*, V}\leq \frac{2}{3}w\br{V}.$ In order to move this cut to $G'$ we append $r$ to $\bar{S}^*$.
+This gives 
+\[w_{G'}\br{S^*, \bar{S}^*}\leq 2\cdot w_G\br{S^*, V}\leq \frac{4}{3}\cdot w_G\br{V}=K.
+\]
+Therefore, we get that $\br{S^*, \bar{S}^*}$ is a valid solution for $\phi_{G'}\br{S}$ and as a consequence $\phi_{G'}\br{S}\leq h_{G}\br{S}$. Now we want to show an opposite direction, namely, that any solution to the problem of minimizing $\phi_w\br{S}$ in $G'$ subject to $w_{G'}\br{S, \bar{S}}\leq K$ gives a solution for $G$, such that $w_G\br{\bar{S}^*}\geq w\br{V}/6$. By the previous discussion, this yields an $O\br{\alpha}$-approximation for $h\br{S}$ and thus also for $\psi\br{S}$. Let $\br{S_1, \bar{S}_1}$ be the returned partition. 
+There are 3 cases:
+\begin{enumerate}
+  \item $w_{G}\br{S_1, V}\leq \frac{5}{6}\cdot w_G\br{V}$. This means that  \[w_G\br{\bar{S}_1, V}\geq w_G\br{V}-w_{G}\br{S_1, V}\geq w_G\br{V}/6.
+  \]
+  \item $w_{G}\br{S_1, V}\geq \frac{5}{6}\cdot w_G\br{V}$. There are two subcases:
+  \begin{itemize}
+    \item $w_G\br{S_1}\geq w_G\br{V}/2$. We get that 
+    \[w_G\br{S_1, V}=w_{G'}\br{S_1, \bar{S}_1}-w_G\br{S_1}\leq K-w_G\br{S_1} \leq \frac{4}{3}\cdot w_G\br{V}-w_G\br{V}/2 = \frac{5}{6}\cdot w_G\br{V}.
+    \]
+    This further means that 
+    \[w_G\br{\bar{S}_1, V}\geq w_G\br{V}-w_G\br{S_1, V}\geq w_G\br{V}/6.
+    \]
+  \item $w_G\br{S_1, \bar{S}_1}\geq w_G\br{V}/3$. Here, we trivially get that $w_G\br{\bar{S}_1, V}\geq w_G\br{S_1, \bar{S}_1}\geq w_G\br{V}/3$.
+  \end{itemize}
+  It should be noted that at least one of the two above conditions must hold since $w_G\br{S_1}+w_G\br{S, \bar{S}_1}=w_{G}\br{S_1, V}$
+\end{enumerate}
+The lemma follows.
+\end{proof}
+
+Now we analyze, the second case. Here, we use an approximation ratio for the (generalized) $k$-multicut problem which is as follows: Given a graph $G$ with capacities and demands, the generalized $k$-multicut problem is to find a minimal set of edges $C\subseteq E$, such that the demand cut by $C$ is at least $k$. This problem admits an $\beta=O\br{\log n}$-approximation algorithm by combining \cite{AUnifiedApproachToApproximatingPartialCoveringProblems} with \cite{OptimalHierarchicalDecompositionsForCongestionMinimizationInNetworks}. 
+\begin{lemma}
+  Assume that $w\br{S^*, \bar{S}^*}\leq w\br{V}/3$. Moreover, let $\beta$ be an approximation ratio of some approximation algorithm for the (generalized) $k$-multicut problem. Then, $S_2$ is an $O\br{\beta}$-approximate solution.
+\end{lemma}
+\begin{proof}
+  In this case, we have that $w\br{S^*, V}, w\br{\bar{S}^*, V}=\Theta\br{w\br{V}}$ and therefore with a constant factor loss, it suffices to minimize $c\br{S, \bar{S}}$ subject to $w\br{S, \bar{S}}\geq w\br{V}/3$. Notably, this task is not equivalent to the $k$-multicut problem since $G\setminus C$ might consist of more then two components. To remedy this issue we proceeed as follows: We find an $\beta$-approximate multicut $C$. Then, we build a complete graph $R$, on vertex set consisting of components of $G\setminus C$. For any $H_1, H_2\in G\setminus C$, we set a weight $w_R\br{H_1, H_2}=w_G\br{H_1, H_2}$ (be weary of the fact that $H_1, H_2$ are vertices of $R$, but subsets of vertices of $G$). We now wish to solve a max-cut problem on $R$ in order to partition components of $G\setminus C$ in such a way to preserve a significant amount of demand being cut. Given a graph $R$, with weights $w$, the max-cut is to find a partition $\br{S_R, \bar{S_R}}$ of $V\br{R}$, such that $w\br{S_R, \bar{S_R}}$ is maximized. Although max-cut is NP-hard, it is well known that for any graph, there exists a cut $\br{A, B}$, such that $w\br{A, B}\geq w\br{V\br{R}}/2$. It is easy to see, that such a solution is $2$-approximation for max-cut, however for our purposes the crucial property is that since the demand cut by $C^*$ is at least $w_R\br{V\br{R}}=w_G\br{V}/3$, finding $(A, B)$ produces a cut of $G$ cutting at least $w\br{V}/6$ amount of demand which is sufficient for our purposes. 
+  
+  To find an appropriate cut, we need an additional detail regarding the runtime of the our algorithm. There exists a local search policy which finds $\br{A, B}$ however its running time is pseudopolynomial in the weights. To mitigate this inconvenience we perform a knapsack-like rounding step first. Let $W=\frac{w\br{V\br{R}}}{4\cdot \spr{E\br{R}}}$. For any $e\in E\br{R}$ we set $w'\br{e}=\fl{\frac{w\br{e}}{P}}$. Let $\br{A', B'}$ be the cut in this new instance for which $w'\br{A', B'}\geq w'\br{V\br{R}}/2$. For any edge $e$, $W\cdot w'\br{e}$ might be smaller then $w\br{e}$, but by no more then by $W$ (additively). Thus, by summing up over all edges cut by $\br{A, B}$ we get that:
+\[
+w\br{A, B}-W\cdot w'\br{e}\leq \spr{E\br{A, B}}\cdot W\leq \spr{E\br{R}}\cdot W.
+\]
+We have:
+\[
+w\br{A', B'}\geq W\cdot w'\br{A, B}\geq w\br{A, B} - \spr{E\br{R}}\cdot W = w\br{A, B}-w\br{V\br{R}}/4\geq w\br{V\br{R}}/4
+\] 
+We conclude that finding $\br{A', B'}$ gives us a cut of $R$ cutting at least $w\br{V\br{R}}/4$ amount of demand, which is still sufficient for out purposes.
+Moreover, we have that 
+\[
+w'\br{V\br{R}}=\sum_{e\in E\br{R}}w'\br{e}\leq \frac{1}{W}\cdot \sum_{e\in E\br{R}}w\br{e}=4\spr{E\br{R}}^2
+.\]
+Hence, there are polynomially many values, that any cut of $\br{R, w'}$ can take, which will certify the polynomial runtime of our procedure.
+
+In order to find $(A',B')$, we use the aforementioned local-search heurstic which is as follows: Start with $A=\emptyset, B=V\br{R}$. At any iteration, consider each vertex $v\in V\br{R}$, and if swapping the assignment of $v$ between $A$ and $B$ results in a better cut, perform the swap. Proceed until no such improvement is possible. For any vertex $v\in V\br{R}$, denote by $w'\br{v}$ its contribution to $w'\br{A', B'}$. We have the following:
+\begin{align*}
+2w'\br{A', B'}&=\sum_{v\in A'}w'\br{v}+\sum_{v\in B'}w'\br{v}
+\\&\geq 
+\sum_{v\in A'}\frac{w'\br{v, V\br{R}}}{2}+\sum_{v\in B'}\frac{w'\br{v, V\br{R}}}{2}
+\\&=
+\frac{1}{2}\sum_{v\in V\br{R}}w'\br{v, V\br{R}}=w'\br{V\br{R}}
+\end{align*}
+where the inequality is by the halting condition of our procedure.
+
+The running time is polynomial, since every swap increases the weight of the cut, which as argued above can only take polynomially many different values.
+
+Upon finding $\br{A', B'}$ we output the partition $\br{S_2, \bar{S}_2}$ of $V\br{G}$, such that vertices of members of $A'$ belong to $S_2$ and vertices of members of $B'$ belong to $\bar{S}_2$. We have that we cut at least $w\br{V}/12$ amount of demand, and the cost of the edges cut is $c\br{S_2, \bar{S}_2}\leq c\br{C}$, since $E\br{S_2, \bar{S}_2}\subseteq C$.
+\end{proof}
+
+By picking the best among the two created solution we ensure that the approximation ratio of the above procedure is upper bounded by $O\br{\alpha+\beta}$.
+\end{proof}
+
+Therefore it remains to obtain an approximation algorithm for the problem of minimizing $\phi_w\br{S}$ subject to $w\br{S, V}\leq K$. In what follows, we show how to do this using cut-sparsifier tree decompositions. We have the following proposition:
+\begin{proposition}
+  There exists an $\alpha=O\br{\log n}$-approximation algorithm for the $\phi_w\br{S}$ subject to $w\br{S, V}\leq K$ problem
+   for general graphs and an exact algorithm for trees.
+\end{proposition}
+
+It should be noted that the $O\br{\log n}$-approximation algorithm for the generalized $k$-multicut is also obtained using cut-sparsifiers in conjunction with an $O\br{1}$-approximation algorithm for trees. By combining all of the above discussions, we get the following corollary:
+\begin{corollary}
+  There is a polynomial-time $O(\log n)$-approximation algorithm for the problem of minimizing $\psi_w\br{G}$ on general graphs as well as an $O(1)$-approximation algorithm for the problem of minimizing $\psi_w\br{G}$ on trees.
+\end{corollary}
+
+A special kind of demand function is one, where for each vertex there exists a potential function $\pi\colon V\to \mathbb{N}$, such that for every $u,v\in V$, $w\br{u,v}=\pi\br{u}\cdot \pi\br{v}$. We call such a function a multiplicative function. Notably, unit demand is multiplicative with $\pi\br{u}=1$ for every $u\in V$. For such demand functions, we have the following strengthening of approximation guarantees:
+\begin{theorem}
+  If the demand function $w$ is multiplicative, then there is a polynomial-time $O\br{\sqrt{\log n}}$-approximation algorithm for the problem of minimizing $\psi_w\br{S}$.
+\end{theorem}
+\begin{proof}
+  Firstly, assume that $\pi\br{S}\leq \pi\br{\bar{S}}$. Since for multiplicative demands we have 
+  \[
+  w\br{A, B}=\sum_{u\in A}w\br{u}\cdot \sum_{v\in B}w\br{v}= \pi\br{A}\cdot \pi\br{B}
+  \] 
+  we get that $w\br{S, V}\leq w\br{\bar{S}, V}$ and moreover $w\br{S}\leq w\br{S, \bar{S}}$. Thus, minimizing $\psi_w\br{G}$ is up to a constant factor equivalent to minimizing 
+  \[\frac{c\br{S, \bar{S}}}{w\br{S, \bar{S}}}=\frac{c\br{S, \bar{S}}}{\pi\br{S}\cdot \pi\br{\bar{S}}}.
+  \]
+  This can be then reduced to the min-ratio vertex cut problem which is as follows: Given a graph $G=\br{V,E,c,\omega}$, with a capacity vertex function $c\colon V\to \mathbb{N}$ and weight function $\omega\colon V\to \mathbb{N}$ find a partition $A, S, B$ of $V$ that minimizes 
+  \[\frac{c\br{S}}{\omega\br{A\cup S}\cdot \omega\br{B\cup S}}
+  \]
+  such that there are no edges between $A$ and $B$. This problem admits an $O\br{\sqrt{\log n}}$-approximation algorithm \cite{ImprovedApproximationAlgorithmsForMinimumWeightVertexSeparators}. To reduce our instance to this problem we construct a new graph in which each edge $uv\in E$ is subdivided by a new vertex of capacity $c\br{u,v}$ and weight $0$ and each old vertex $u\in V$ is assigned capacity $0$ and weight $\pi\br{u}$. It is easy to see that the optimal solution for the min-ratio vertex cut problem on this new graph corresponds to the optimal solution for our problem on the original graph, and thus we get the desired approximation ratio. 
+\end{proof}
+
