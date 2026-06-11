@@ -1,26 +1,31 @@
 ﻿\section{The main algorithm}
 
-In order to tackle the minimum generalized conductance problem, our first objective is to further simplify the denominator $w\br{S, V}\cdot w\br{\bar{S}, V}$ into a linear function. It is a standard trick to assume that $w\br{S, V}\le w\br{\bar{S}, V}$, without loss of generality. In this case we have $w\br{V}/2\leq w\br{\bar{S}, V} \leq w\br{V}$ and thus, minimizing $\phi_w\br{S}$ is equivalent to minimizing
+In order to tackle the minimum generalized conductance problem, our first objective is to further simplify the denominator $w\br{S, V}\cdot w\br{\bar{S}, V}$ into a linear function. It is a standard trick to assume that $w\br{S, V}\le w\br{\bar{S}, V}$, without loss of generality. In this case we have $w\br{V}/2\leq w\br{\bar{S}, V} \leq w\br{V}$ and thus, minimizing $\phi_w\br{S}$ \DD{mamy tu na mysli $\psi_w\br{S}$?} is equivalent to minimizing
 \[h_w\br{S}=\frac{c\br{S, \bar{S}}}{w\br{S, V}}, \quad \text{subject to} \quad w\br{S, V}\le w\br{\bar{S}, V}\] up to a constant factor loss. 
+\DD{tutaj nie zrozumialem, gdyz ten factor do jest dokladnie $w(\bar{S},V)$; no chyba ze literowka powyzej polegala na tym, ze mialbyc generalized sparsest cut.}
+\DD{do wyjasnienia: nie widze jak ta stala wychodzi, wiec do obgadania zostawiam marker.}
 
-However, for our purposes we will slightly relax the assumption that $w\br{S, V}\le w\br{\bar{S}, V}$ and in turn we will only demand that $w\br{S, V}\le c\cdot w\br{\bar{S}, V}$ for some appropriate constant $c>1$. Note that this still preserves the approximation ratio up to a factor dependent on $c$ by a similar discussion.
+However, for our purposes we will slightly relax the assumption that $w\br{S, V}\le w\br{\bar{S}, V}$ and in turn we will only demand that $w\br{S, V}\le c\cdot w\br{\bar{S}, V}$ for some appropriate constant $c>1$.
+\DD{$c$ juz jest zajeta na capacity, wiec pewnie lepiej zmienic stala, np $\delta$.}
+Note that this still preserves the approximation ratio up to a factor dependent on $c$ by a similar discussion.
 
-The full reduction used in this section can be summarized as follows:
+The full reduction \DDfix{scheme} used in this section can be summarized as follows:
 \begin{enumerate}
-  \item Compute candidate $S_1$:
+  \item Compute a candidate set $S_1$:
   \begin{itemize}
-    \item Build the auxiliary instance $(G',w,c)$ by adding a new vertex $r$, setting $c\br{r,u}=0$, $w_{G'}\br{r,u}=\sum_{v\in V}w_G\br{u,v}$ for each $u\in V$ and $w_{G'}\br{u,v}=0$ for each pair $u,v\in V$.
+    \item Build an auxiliary instance $(G',w,c)$ \DD{wczesniej graf juz zawieral $w$ i $c$, wiec spodziewalbym sie czegos w rodzaju ``Build an auxiliary graph $G'=(V',E',w_{G'},c_{G'})$ (..)''; trzebaby w ktoras strone to ujednolicic} by adding a new vertex $r$, setting $c\br{r,u}=0$, \DD{dla kompletnosci dobrze dodac, ze pozostale capacities pozostaja bez zmian (tak?)} $w_{G'}\br{r,u}=\sum_{v\in V}w_G\br{u,v}$ for each $u\in V$ and $w_{G'}\br{u,v}=0$ for each pair $u,v\in V$.
     \item Set $K\gets \frac{4}{3}\cdot w_G\br{V}$.
     \item Run an $\alpha$-approximation algorithm for
     \[
       \min_{S\subseteq V'} \phi_w\br{S}=\frac{c_{G'}\br{S,\bar S}}{w_{G'}\br{S,\bar S}}
       \quad\text{subject to}\quad 0<w_{G'}\br{S,\bar S}\le K.
     \]
-    and denote the returned cut by $S_1$.
+    and denote the returned cut by $S_1$. \DD{tutaj zamiast opisywac slownie problem odniosl bym sie, to frazy, ze rozwiazujemy generalized sparsest cut i podac dla jakiej instancji (tak, widze, ze bedzie extra ``subject to''. Jesli to ``subject to'' (nie wiem gdyż czytam liniowo) pojawialoby sie wiecej razy, to pewnie warto nazwac, a jak nie to niech zostanie tak, gdyz jest czytelnie.}
   \end{itemize}
-  \item Compute candidate $S_2$:
+  \item Compute a candidate set $S_2$:
   \begin{itemize}
     \item Run a $\beta$-approximation algorithm for generalized $k$-multicut with $k=w_G\br{V}/3$ to obtain a multicut $C$.
+    \DD{``generalized'' $k$-multicut nie byl zdefiniowany, a mamy na razie $k$-multicut i domyslam sie, ze o tenze chodzi. Druga rzecz: skoro mamy w algorytmie dwie instancje problemu, to trzebaby wyraznie napisac na jakim grafie to robimy.}
     \item Build a complete graph $R$ on components of $G\setminus C$, with edge weights $w_R\br{H_1,H_2}=w_G\br{H_1,H_2}$.
     \item Apply rounding: set $W=\frac{w\br{V\br{R}}}{4\cdot \spr{E\br{R}}}$ and replace each edge weight by $w'\br{e}=\fl{w\br{e}/W}$.
     \item Run local search for max-cut on $(R,w')$: start from $(\emptyset,V\br{R})$, repeatedly move a single vertex if it improves the cut, and stop at a local optimum.
