@@ -1,6 +1,7 @@
 ﻿\section{Racke's cut-sparsifier decomposition}
 
-Since solving tasks related to sparsest cut is easier on trees, a common approach to solving such problems is to first embed the graph into a tree while partially preserving the value of all cuts. To do so, one can use the cut-sparsifier tree decomposition of Racke \cite{OptimalHierarchicalDecompositionsForCongestionMinimizationInNetworks}. This decomposition allows embedding any graph into a probability distribution over a polynomial number of trees such that for every cut, the expected value of the cut in the tree is at most $O\br{\log n}$ times the value of the cut in the original graph, and for every cut, its value in the original graph is at most its value in every tree in the support of the distribution. Therefore, if we can solve our problem on trees, then we can solve it on general graphs with an $O\br{\log n}$-approximation ratio by first embedding it into a distribution over trees and then solving it on each tree in the support of the distribution. Then, the approximation ratio is achieved by choosing the best cut among all cuts produced for these trees. In what follows we make this ideas more precise.
+Since solving tasks related to sparsest cut is easier on trees, a common approach to solving such problems is to first embed the graph into a tree while partially preserving the value of all cuts. To do so, one can use the cut-sparsifier tree decomposition of Racke \cite{OptimalHierarchicalDecompositionsForCongestionMinimizationInNetworks}. This decomposition allows for an embedding of any graph into a probability distribution over a polynomial number of trees such that for every cut, the expected value of the cut in the tree is at most $O\br{\log n}$ times the value of the cut in the original graph, and for every cut, its value in the original graph is at most its value in every tree in the support of the distribution. Therefore, if we can solve our problem on trees, then we can solve it on general graphs with an $O\br{\log n}$-approximation ratio by first embedding it into a distribution over trees and then solving it on each tree in the support of the distribution. Then, the approximation ratio is achieved by choosing the best cut among all cuts produced for these trees. In what follows we make this ideas more precise.
+\DD{aby nie bylo, ze sie ciagle ``czepiam'', to intro bardzo informatywne :)}
 
 \subsection{Decomposition trees}
 Given a graph $G=(V,E,c)$, denote by $E^*$ the set of all paths in $G$.
@@ -21,8 +22,10 @@ induced by deleting $e_t$. Its capacity is then defined as
 \subsection{Multicommodity flows and congestion}
 
 A \emph{multicommodity flow} in a graph $G$ is a collection of flows $f^{(i)}:E\to\mathbb{R}_{\ge 0}$ for $i=1,\ldots,k$, where each flow $f^{(i)}$ routes $d_i$ units between a source-sink pair $(s_i,t_i)$. The flows needs to satisfy the demand constraints and should respect edge capacities.
+\DD{dobrze byloby dodefiniowac co to oznacza (dla capacities to jeszcze mozna sie domyslac, ale respektowanie demandow przez flow to juz nie jest klasyczne.}
 
-The \emph{congestion} of a multicommodity flow is a way to measure how much these capacities are violated.Formally, we define is as the maximum ratio of total flow to capacity over all edges:
+The \emph{congestion} of a multicommodity flow is a way to measure how much these capacities are violated.
+Formally, we define it as the maximum ratio of total flow to capacity over all edges:
 \[
   C_G := \max_{e\in E} \frac{\sum_i f^{(i)}(e)}{c(e)}.
 \]
