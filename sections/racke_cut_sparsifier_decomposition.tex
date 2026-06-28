@@ -9,13 +9,13 @@ A \emph{decomposition tree} for a graph $G=(V,E,c)$ is a rooted tree
 $T=(V_T,E_T, c_T)$ together with:
 \begin{enumerate}
   \item a node map $m_V:V_T\to V$ that is bijective on leaves of $T$ and $V$,
-  \item an edge map $m_E:E_T\to E^*$ sending each tree edge to a path in $G$
-  between the mapped endpoints,
+  \item an edge map $m_E:E_T\to E^*$ sending each tree edge $uv$ \DD{notacja krawedziowa do ujednolicenia} to a path in $G$
+  between the mapped endpoints $m_V(u)$ and $m_V(v)$,
   \item induced maps $m'_V:V\to V_T$ which maps each vertex of $V$ to the corresponding leaf of $T$ and $m'_E:E\to E_T^*$ which maps an edge $uv\in E$ to the unique (shortest) path between $m'_V(u)$ and $m'_V(v)$ in $T$,
-  \item For a tree edge $e_t=(u_t,v_t)$, let $V_{u_t},V_{v_t}$ be the leaf partition
-induced by deleting $e_t$. Its capacity is then defined as
+  \item For a tree edge $e=(u,v)$ of $T$, let $V_{u},V_{v}$ be the leaf partition
+induced by deleting $e$. Its capacity is then defined as
 \[
-  c_T(e_t):=\sum_{u\in V_{u_t}, v\in V_{v_t}} c(u,v).
+  c_T(e):=\sum_{x\in V_{u}, y\in V_{v}} c(x,y).
 \]
 \end{enumerate}
 
@@ -29,7 +29,7 @@ Formally, we define it as the maximum ratio of total flow to capacity over all e
 \[
   C_G := \max_{e\in E} \frac{\sum_i f^{(i)}(e)}{c(e)}.
 \]
-A multicommodity flow is feasible if its congestion is at most $1$. Given a multicommodity flow $f$ in $G$, we can map it to a flow in a decomposition tree $T$ using the edge map $m_E$. The mapped flow $m'(f)$ is defined as follows: for each tree edge $e_t\in E_T$, we sum the flow of all edges in $G$ that are mapped to paths in $T$ that include $e_t$. Formally:
+A multicommodity flow is \emph{feasible} if its congestion is at most $1$. Given a \DD{czy na pewno: multicommodity} flow $f$ in $G$, we can map it to a flow in a decomposition tree $T$ using the edge map $m_E$. The mapped flow $m'(f)$ is defined as follows: for each tree edge $e_t\in E_T$, we sum the flow of all edges in $G$ that are mapped to paths in $T$ that include $e_t$. Formally:
 \[
   m'(f)(e_t) := \sum_{e\in E: e_t\in m'_E(e)} f(e).
 \]
