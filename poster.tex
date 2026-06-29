@@ -1,0 +1,628 @@
+\documentclass[final]{beamer}
+
+\usepackage[size=custom,width=100,height=180,scale=2.0]{beamerposter}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,decorations.pathreplacing,shapes.geometric,fit,backgrounds}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable,raster}
+
+\definecolor{mainblue}{RGB}{31,73,125}
+\definecolor{accentblue}{RGB}{68,138,201}
+\definecolor{lightblue}{RGB}{213,232,252}
+\definecolor{accentred}{RGB}{192,57,43}
+\definecolor{accentgreen}{RGB}{39,128,80}
+\definecolor{accentpurple}{RGB}{102,51,153}
+\definecolor{boxbg}{RGB}{245,248,255}
+\definecolor{titlebg}{RGB}{20,50,100}
+\definecolor{demandcol}{RGB}{210,120,0}
+
+\usetheme{default}
+\setbeamercolor{background canvas}{bg=white}
+\setbeamercolor{headline}{bg=titlebg,fg=white}
+\setbeamercolor{footline}{bg=titlebg,fg=white}
+\setbeamerfont{headline}{size=\Large}
+
+\tcbset{
+  posterbox/.style={
+    enhanced,
+    colback=boxbg,
+    colframe=mainblue,
+    arc=4pt,
+    boxrule=1.5pt,
+    fonttitle=\bfseries\large,
+    coltitle=white,
+    attach boxed title to top left={yshift=-2mm,xshift=4mm},
+    boxed title style={colback=mainblue,arc=3pt,boxrule=0pt,boxsep=1.1mm,top=1.2mm,bottom=1.2mm},
+    top=6mm,
+    left=4mm,right=4mm,bottom=4mm,
+  },
+  defbox/.style={
+    enhanced,
+    colback=lightblue,
+    colframe=accentblue,
+    arc=4pt,
+    boxrule=1.5pt,
+    fonttitle=\bfseries\normalsize,
+    coltitle=white,
+    attach boxed title to top left={yshift=-2mm,xshift=4mm},
+    boxed title style={colback=accentblue,arc=3pt,boxrule=0pt,boxsep=1.1mm,top=1.2mm,bottom=1.2mm},
+    top=6mm,
+    left=4mm,right=4mm,bottom=4mm,
+  },
+  thmbox/.style={
+    enhanced,
+    colback=white,
+    colframe=accentgreen,
+    arc=4pt,
+    boxrule=1.5pt,
+    fonttitle=\bfseries\normalsize,
+    coltitle=white,
+    attach boxed title to top left={yshift=-2mm,xshift=4mm},
+    boxed title style={colback=accentgreen,arc=3pt,boxrule=0pt,boxsep=1.1mm,top=1.2mm,bottom=1.2mm},
+    top=6mm,
+    left=4mm,right=4mm,bottom=4mm,
+  },
+  appbox/.style={
+    enhanced,
+    colback=white,
+    colframe=accentpurple,
+    arc=4pt,
+    boxrule=1.5pt,
+    fonttitle=\bfseries\normalsize,
+    coltitle=white,
+    attach boxed title to top left={yshift=-2mm,xshift=4mm},
+    boxed title style={colback=accentpurple,arc=3pt,boxrule=0pt,boxsep=1.1mm,top=1.2mm,bottom=1.2mm},
+    top=6mm,
+    left=4mm,right=4mm,bottom=4mm,
+  },
+}
+
+\newcommand{\br}[1]{\left(#1\right)}
+\newcommand{\brc}[1]{\left\{#1\right\}}
+\newcommand{\spr}[1]{\left|#1\right|}
+\newcommand{\fl}[1]{\left\lfloor#1\right\rfloor}
+
+\newcommand{\defterm}[2]{%
+  \begin{tcolorbox}[defbox,title={Definition: #1}]
+  #2
+  \end{tcolorbox}}
+
+\newcommand{\thmterm}[2]{%
+  \begin{tcolorbox}[thmbox,title={#1}]
+  #2
+  \end{tcolorbox}}
+
+\begin{document}
+\begin{frame}[t]{}
+
+\begin{tcolorbox}[
+  enhanced,colback=titlebg,colframe=titlebg,arc=0pt,boxrule=0pt,
+  left=12mm,right=12mm,top=12mm,bottom=12mm
+]
+  {\color{white}\bfseries\fontsize{174}{202}\selectfont
+   Graph Partitioning with Demands:\par
+   \fontsize{78}{92}\selectfont
+   Generalized Graph Conductance with Applications to Hierarchical Clustering}
+  \par
+  {\color{accentblue!80!white}\large
+   Micha{\l} Szyfelbein \quad \& \quad Dariusz Dereniowski\par
+   Gda\'nsk University of Technology}
+\end{tcolorbox}
+
+
+\begin{columns}[T]
+
+\begin{column}{0.48\textwidth}
+
+\begin{tcolorbox}[posterbox,title={Motivation}]
+\textbf{Sparsest cut} is to find a cut $\br{S, \bar{S}}$, minimizing
+\[
+  \phi(S) = \frac{c(S,\bar S)}{|S|\cdot|\bar S|}.
+\]
+This problem is important due to its usage in graph partitioning,
+divide-and-conquer algorithms, and hierarchical clustering.
+
+\medskip
+The denominator $|S|\cdot|\bar S|$ has \emph{two} interpretations:
+\begin{itemize}
+  \item \textbf{Demand view}: total unit demand crossing the cut.
+  \item \textbf{Balance view}: large when both sides are of similar size.
+\end{itemize}
+
+\medskip
+With a general demand function $w\colon V\times V\to\mathbb{N}$ these two
+interpretations \textbf{diverge}.  Existing work
+only regards minimising $\phi_w(S)=c(S,\bar S)/w(S,\bar S)$, \emph{ignores the balance of the cut}.
+\end{tcolorbox}
+
+
+
+\defterm{Graph with demands}{
+  A graph $G=(V,E,c,w)$ where $c\colon E\to\mathbb{N}$ is a capacity
+  (edge-cut cost) function and $w\colon V\times V\to\mathbb{N}$ is a
+  \emph{demand} function.  For disjoint $A,B\subseteq V$:
+  \[
+    w(A,B)=\sum_{u\in A}\sum_{v\in B}w(u,v),\qquad
+    w(A,V)=w(A)+w(A,\bar A).
+  \]
+}
+
+
+
+\begin{tcolorbox}[posterbox,title={Illustration 1: Weighted Degree of $S$},top=12mm,bottom=12mm]
+\centering
+\resizebox{0.98\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth,line width=1.4pt,
+    vn/.style={circle,draw=mainblue,fill=white,minimum size=5mm,inner sep=0pt,line width=1pt}]
+
+  \draw[fill=accentblue!25,draw=accentblue,line width=2pt]
+    (0,0) ellipse (3.2 and 1.8);
+  \node[accentblue,font=\bfseries\normalsize,draw=none,fill=none] at (0,2.8) {$S$};
+  \node[vn] (s1) at (-1.4, 0.5) {};
+  \node[vn] (s2) at ( 0.0, 0.9) {};
+  \node[vn] (s3) at ( 1.2, 0.3) {};
+  \node[vn] (s4) at (-0.3,-0.8) {};
+  \draw[accentblue!70] (s1)--(s2)--(s3) (s1)--(s4)--(s3) (s2)--(s4);
+
+  \draw[fill=accentgreen!25,draw=accentgreen,line width=2pt]
+    (8,0) ellipse (3.2 and 1.8);
+  \node[accentgreen,font=\bfseries\normalsize,draw=none,fill=none] at (8,2.8) {$\bar S$};
+  \node[vn] (b1) at ( 6.6, 0.6) {};
+  \node[vn] (b2) at ( 8.0, 1.0) {};
+  \node[vn] (b3) at ( 9.2, 0.4) {};
+  \node[vn] (b4) at ( 7.8,-0.8) {};
+  \draw[accentgreen!70] (b1)--(b2)--(b3) (b2)--(b4)--(b3);
+
+  \draw[demandcol,line width=1.4pt,dashed] (s3)--(b1);
+  \draw[demandcol,line width=1.4pt,dashed] (s2)--(b2);
+  \draw[demandcol,line width=1.4pt,dashed] (s3)--(b4);
+  \draw[demandcol,line width=1.4pt,dashed] (s4)--(b1);
+
+  \node[draw=none,fill=none,font=\normalsize,anchor=west,align=left] at (12.2,0.4) {
+    $w(S,V) =$
+    $\textcolor{accentblue}{w(S)}$
+    $+ \textcolor{demandcol}{w(S,\bar S)}$
+  };
+
+\end{tikzpicture}}
+\end{tcolorbox}
+
+
+
+
+\defterm{Generalized Sparsest Cut (Arora-Lee-Naor)}{
+  \[
+    \phi_w(S) = \frac{c(S,\bar S)}{w(S,\bar S)}.
+  \]
+  Best known approximation ratio: $O\!\br{\sqrt{\log n}\cdot\log\log n}$.
+}
+
+
+
+\defterm{Generalized Conductance \textnormal{[this work]}}{
+  \[
+    \psi_w(S) = \frac{c(S,\bar S)}{w(S,V)\cdot w(\bar S,V)}.
+  \]
+  The denominator uses \emph{ weighted degree}, measuring
+  balance even when little demand crosses the cut.
+}
+
+
+
+% --- Figure 1: Auxiliary graph G' for Step 1 ---
+\begin{tcolorbox}[posterbox,title={Illustration 2: Auxiliary Graph $G'$ (Step~1)}]
+\small
+A root $r$ is added to $G$ with zero-capacity edges, thus forming $G'$.
+Its demand to each $u\in V$ equals $w'(r,u)=w(u,V)$,
+encoding the weighted degree of $u$. This then becomes an instance of the generalized sparsest-cut, under an \textbf{additional condition}, that $w'\br{S, \bar{S}}\leq K$, where we set $K=\frac{4}{3}w\br{V}$. 
+
+\vspace{3mm}
+\centering
+\resizebox{0.95\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth, line width=1.0pt,
+    vn/.style={circle,draw=mainblue,fill=white,
+               minimum size=9mm,inner sep=0pt,line width=1.0pt,font=\tiny}]
+
+  \node[vn,draw=accentred,fill=accentred!20,
+        minimum size=10mm,line width=1.5pt] (r) at (-11.0, 0) {$r$};
+  \node[accentred,font=\tiny,draw=none,fill=none,
+        align=center,anchor=north] at (-11.0,-1.1)
+    {$c(r,{\cdot})=0$};
+
+  \draw[fill=lightblue!55,draw=accentblue,line width=1.5pt]
+    (6.0,0) ellipse (6.5 and 5.0);
+  \node[accentblue,font=\bfseries\tiny,draw=none,fill=none] at (6.0,5.7)
+    {$G$};
+
+  \node[vn] (u) at (4.0,  3.5) {$u$};
+  \node[vn] (v) at (8.0,  0.0) {$v$};
+  \node[vn] (x) at (4.0, -3.5) {$x$};
+  \draw[mainblue!70,line width=1.0pt] (u)--(v)--(x)--(u);
+
+  \draw[dashed,accentred,line width=1.2pt] (r) -- (u)
+    node[midway,above,sloped,draw=none,fill=none,font=\tiny,accentred]
+      {$w'(r,u){=}w(u,V)$};
+  \draw[dashed,accentred,line width=1.2pt] (r) -- (v)
+    node[midway,above,sloped,draw=none,fill=none,font=\tiny,accentred]
+      {$w'(r,v){=}w(v,V)$};
+  \draw[dashed,accentred,line width=1.2pt] (r) -- (x)
+    node[midway,below,sloped,draw=none,fill=none,font=\tiny,accentred]
+      {$w'(r,x){=}w(x,V)$};
+
+\end{tikzpicture}}
+
+
+All other demand values (inbetween original vertices) become $0$.
+\vspace{5mm}
+\end{tcolorbox}
+
+
+
+
+% --- Figure 3: Cut-sparsifier tree decomposition ---
+\begin{tcolorbox}[posterbox,title={Illustration 3: Cut-Sparsifier Decomposition}]
+\small
+To solve the constrained sparsest-cut, embed $G'$ into a convex combination of trees, such that the expected value of each cut is preserved up to an $O(\log n)$ distortion.
+Then, solve the constrained sparsest cut \emph{exactly} on each tree, move each cut to $G'$ and output the best solution.
+
+\vspace{3mm}
+\centering
+\resizebox{0.90\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth, line width=1.2pt,
+    vn/.style={circle,draw=mainblue,fill=white,
+               minimum size=5mm,inner sep=0pt,line width=1.2pt},
+    tn/.style={circle,draw=accentgreen,fill=accentgreen!18,
+               minimum size=4mm,inner sep=0pt,line width=1.2pt}]
+
+  \node[vn] (g1) at ( 0.0, 1.5) {};
+  \node[vn] (g2) at ( 1.5, 3.0) {};
+  \node[vn] (g3) at ( 3.0, 2.5) {};
+  \node[vn] (g4) at ( 4.5, 1.0) {};
+  \node[vn] (g5) at ( 3.5,-1.0) {};
+  \node[vn] (g6) at ( 1.5,-1.5) {};
+  \node[vn] (g7) at (-0.5,-0.5) {};
+  \node[vn] (g8) at ( 2.2, 0.8) {};
+  \draw[mainblue!75,line width=1.6pt]
+    (g1)--(g2)--(g3)--(g4)--(g5)--(g6)--(g7)--(g1)
+    (g2)--(g8)--(g5) (g3)--(g8) (g7)--(g6) (g1)--(g8) (g4)--(g8) (g2)--(g6);
+  \node[accentblue,font=\bfseries\tiny,draw=none,fill=none] at (2.2,3.9) {$G$};
+
+  % tree roots will be at: T1 root=(2.2-6.7, -5.5)=(-4.5,-5.5)
+  %                        T2 root=(2.2,      -5.5)
+  %                        Tp root=(2.2+6.7,  -5.5)=(8.9,-5.5)
+  % arrows - label placed between the three arrows
+  \draw[->,mainblue,line width=2pt] (2.2,-2.0) -- (-7.5,-5.0);
+  \draw[->,mainblue,line width=2pt] (2.2,-2.0) -- ( 2.2,-5.0);
+  \draw[->,mainblue,line width=2pt] (2.2,-2.0) -- (11.9,-5.0);
+  \node[mainblue,font=\tiny,draw=none,fill=none] at (2.2,-3.8) {cut-sparsifiers};
+
+  \begin{scope}[shift={(-7.5,-5.5)},accentgreen,line width=1.2pt]
+    \node[tn] (t1r)  at ( 0.0, 0.0) {};
+    \node[tn] (t1a)  at (-2.0,-1.8) {};
+    \node[tn] (t1b)  at ( 2.0,-1.8) {};
+    \node[tn] (t1c)  at (-3.0,-3.6) {};
+    \node[tn] (t1d)  at (-1.0,-3.6) {};
+    \node[tn] (t1e)  at ( 1.0,-3.6) {};
+    \node[tn] (t1f)  at ( 3.0,-3.6) {};
+    \node[tn] (t1l1) at (-3.5,-5.4) {};
+    \node[tn] (t1l2) at (-2.5,-5.4) {};
+    \node[tn] (t1l3) at (-1.5,-5.4) {};
+    \node[tn] (t1l4) at (-0.5,-5.4) {};
+    \node[tn] (t1l5) at ( 0.5,-5.4) {};
+    \node[tn] (t1l6) at ( 1.5,-5.4) {};
+    \node[tn] (t1l7) at ( 2.5,-5.4) {};
+    \node[tn] (t1l8) at ( 3.5,-5.4) {};
+    \draw (t1r)--(t1a) (t1r)--(t1b);
+    \draw (t1a)--(t1c) (t1a)--(t1d);
+    \draw (t1b)--(t1e) (t1b)--(t1f);
+    \draw (t1c)--(t1l1) (t1c)--(t1l2);
+    \draw (t1d)--(t1l3) (t1d)--(t1l4);
+    \draw (t1e)--(t1l5) (t1e)--(t1l6);
+    \draw (t1f)--(t1l7) (t1f)--(t1l8);
+    \node[font=\bfseries\tiny,draw=none,fill=none,accentgreen] at (0.0,-6.4) {$T_1$};
+  \end{scope}
+
+  \begin{scope}[shift={(2.2,-5.5)},accentgreen,line width=1.2pt]
+    \node[tn] (t2r)  at ( 0.0, 0.0) {};
+    \node[tn] (t2a)  at (-3.5,-1.8) {};
+    \node[tn] (t2b)  at ( 0.5,-1.8) {};
+    \node[tn] (t2c)  at ( 3.8,-1.8) {};
+    \node[tn] (t2d)  at (-0.5,-3.6) {};
+    \node[tn] (t2e)  at ( 1.5,-3.6) {};
+    \node[tn] (t2l1) at (-4.5,-3.6) {};
+    \node[tn] (t2l2) at (-2.5,-3.6) {};
+    \node[tn] (t2l3) at (-1.2,-5.4) {};
+    \node[tn] (t2l4) at ( 0.2,-5.4) {};
+    \node[tn] (t2l5) at ( 0.8,-5.4) {};
+    \node[tn] (t2l6) at ( 2.2,-5.4) {};
+    \node[tn] (t2l7) at ( 3.0,-3.6) {};
+    \node[tn] (t2l8) at ( 4.6,-3.6) {};
+    \draw (t2r)--(t2a) (t2r)--(t2b) (t2r)--(t2c);
+    \draw (t2a)--(t2l1) (t2a)--(t2l2);
+    \draw (t2b)--(t2d) (t2b)--(t2e);
+    \draw (t2d)--(t2l3) (t2d)--(t2l4);
+    \draw (t2e)--(t2l5) (t2e)--(t2l6);
+    \draw (t2c)--(t2l7) (t2c)--(t2l8);
+    \node[font=\bfseries\tiny,draw=none,fill=none,accentgreen] at (0.0,-6.4) {$T_2$};
+  \end{scope}
+
+  \node[draw=none,fill=none,font=\scriptsize] at (8.1,-7.8) {$\cdots$};
+
+  \begin{scope}[shift={(11.9,-5.5)},accentgreen,line width=1.2pt]
+    \node[tn] (tps1) at ( 0.0, 0.0) {};
+    \node[tn] (tps2) at ( 0.0,-1.8) {};
+    \node[tn] (tps3) at ( 0.0,-3.6) {};
+    \node[tn] (tpl1) at (-2.5,-0.9) {};
+    \node[tn] (tpl2) at (-1.5,-0.9) {};
+    \node[tn] (tpl3) at ( 1.5,-0.9) {};
+    \node[tn] (tpl4) at (-1.8,-2.7) {};
+    \node[tn] (tpl5) at ( 1.8,-2.7) {};
+    \node[tn] (tpl6) at (-2.0,-5.0) {};
+    \node[tn] (tpl7) at (-0.5,-5.0) {};
+    \node[tn] (tpl8) at ( 1.2,-5.0) {};
+    \draw (tps1)--(tps2) (tps2)--(tps3);
+    \draw (tps1)--(tpl1) (tps1)--(tpl2) (tps1)--(tpl3);
+    \draw (tps2)--(tpl4) (tps2)--(tpl5);
+    \draw (tps3)--(tpl6) (tps3)--(tpl7) (tps3)--(tpl8);
+    \node[font=\bfseries\tiny,draw=none,fill=none,accentgreen] at (0.0,-6.0) {$T_p$};
+  \end{scope}
+
+\end{tikzpicture}}
+
+
+\vspace{5mm}
+\end{tcolorbox}
+
+
+\end{column}
+
+\begin{column}{0.48\textwidth}
+
+\thmterm{Main Result}{
+  \textbf{Theorem.} There is a polynomial-time
+  $O(\log n)$-approximation algorithm for minimising $\psi_w(S)$
+  on general graphs, and an $O(1)$-approximation on trees.
+}
+
+
+\begin{tcolorbox}[posterbox,title={Main Algorithm (Minimise $\psi_w$)}]
+\textbf{Input:} Graph $G=(V,E,c,w)$.\\
+\textbf{Output:} Cut $(S,\bar S)$ approximating $\min_S \psi_w(S)$.
+
+\bigskip
+\textbf{Step 1 - Candidate $S_1$}
+\begin{enumerate}
+  \item Build auxiliary graph $G'=(V\cup\{r\},E,c,w')$ by adding a
+        root $r$ with $c(r,u)=0$ and $w'(r,u)=w(u,V)$ for every $u\in V$.
+  \item Set $K=\tfrac{4}{3}w(V)$.
+  \item Run an $\alpha=O\br{\log n}$-approx.\ algorithm for
+        \[
+          \min_{S\subseteq V'}\phi_{w'}(S)=\frac{c(S,\bar S)}{w'(S,\bar S)}
+          \quad\text{s.t.}\quad w'(S,\bar S)\le K.
+        \]
+  \item Return the corresponding cut $S_1\subseteq V$.
+\end{enumerate}
+
+\smallskip\hrule\smallskip
+
+\textbf{Step 2 - Candidate $S_2$:}
+\begin{enumerate}
+  \item Find a $\beta=O\br{\log n}$-approx.\ $k$-multicut $C$ with $k=w(V)/3$.
+  \item Build a complete graph $R$ on components of $G\setminus C$
+        with demands $w_R(H_1,H_2)=w_G(H_1,H_2)$.
+  \item Run \textbf{local-search max-cut} on $(R,w')$ to obtain a cut $\br{A, B}$:
+        start from $(\emptyset,V(R))$, flip a single vertex whenever
+        it improves the cut, stop at a local optimum.
+  \item Map the cut $\br{A, B}$ of $R$ back to a cut $S_2\subseteq V$ of $G$.
+\end{enumerate}
+
+\smallskip\hrule\smallskip
+
+\textbf{Step 3:} Return $\arg\min\bigl\{\psi_w(S_1),\,\psi_w(S_2)\bigr\}$.
+
+\bigskip
+\textbf{Key sub-routine:} The constrained sparsest-cut in Step~1 is
+solved via \emph{Cut-sparsifier tree decompositions}:
+embed $G$ into a convex combination of trees (distortion $O(\log n)$),
+solve the problem exactly on each tree, return the best solution.
+\end{tcolorbox}
+
+
+% --- Figure 2: k-multicut + graph R + max-cut ---
+\begin{tcolorbox}[posterbox,title={Illustration 4: $k$-Multicut and Max-Cut (Step~2)}]
+\small
+\textbf{(a)} $k$-multicut partitions $G$ into several components.
+\textbf{(b)} Each component becomes a node in a new graph $R$, edge demands equal inter-component demand.
+\textbf{(c)} Max-cut on $R$ gives bipartition $\br{A, B}$.
+
+\vspace{3mm}
+\centering
+\resizebox{1.0\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth,line width=1.2pt,
+    iblob/.style={ellipse,draw=mainblue!60,fill=mainblue!10,
+                  minimum width=9mm,minimum height=6mm,
+                  line width=0.8pt,font=\tiny},
+    rnode/.style={ellipse,draw=mainblue,fill=lightblue!70,
+                  minimum width=10mm,minimum height=6mm,
+                  line width=1pt,font=\tiny},
+    rA/.style={ellipse,draw=accentblue,fill=accentblue!25,
+               minimum width=10mm,minimum height=6mm,
+               line width=1pt,font=\tiny},
+    rB/.style={ellipse,draw=accentgreen,fill=accentgreen!25,
+               minimum width=10mm,minimum height=6mm,
+               line width=1pt,font=\tiny}]
+
+  \draw[fill=gray!8,draw=gray!60,line width=2pt,rounded corners=16pt]
+    (-0.5,-5.5) rectangle (11.0,6.5);
+  \node[draw=none,fill=none,font=\bfseries\tiny,gray!70] at (5.2,7.1) {(a) $G$};
+
+  % Nodes: H5 moved to (0.5,3.5) so H1-H6 edge avoids it
+  \node[iblob,fill=accentblue!20,draw=accentblue]       (a1) at (2.0, 5.2) {$H_1$};
+  \node[iblob,fill=accentpurple!20,draw=accentpurple!70](a2) at (7.5, 5.2) {$H_2$};
+  \node[iblob,fill=accentred!20,draw=accentred]         (a3) at (9.5, 1.5) {$H_3$};
+  \node[iblob,fill=accentgreen!20,draw=accentgreen]     (a4) at (5.5, 1.5) {$H_4$};
+  \node[iblob,fill=orange!25,draw=orange!80]            (a5) at (0.8,-0.5) {$H_5$};
+  \node[iblob,fill=accentblue!15,draw=accentblue!60]    (a6) at (4.5,-3.0) {$H_6$};
+  \node[iblob,fill=accentgreen!15,draw=accentgreen!60]  (a7) at (8.0,-2.0) {$H_7$};
+
+  % k-multicut edges with VARYING multiplicity (1, 2, or 3 parallel lines)
+  \tikzset{me/.style={accentred,dashed,line width=0.9pt}}
+  % 1 edge:
+  \draw[me] (a1)--(a2);
+  \draw[me] (a2)--(a3);
+  \draw[me] (a3)--(a7);
+  \draw[me] (a5)--(a6);
+  % 2 edges:
+  \draw[me] (a1) to[bend left=12]  (a4); \draw[me] (a1) to[bend right=12] (a4);
+  \draw[me] (a2) to[bend left=10]  (a4); \draw[me] (a2) to[bend right=10] (a4);
+  \draw[me] (a4) to[bend left=12]  (a6); \draw[me] (a4) to[bend right=12] (a6);
+  \draw[me] (a6) to[bend left=12]  (a7); \draw[me] (a6) to[bend right=12] (a7);
+  % 3 edges:
+  \draw[me] (a4) to[bend left=18]  (a5); \draw[me] (a4)--(a5); \draw[me] (a4) to[bend right=18] (a5);
+  \node[draw=none,fill=none,font=\tiny,accentred] at (5.0,-5.0)
+    {$k$-multicut edges $C$};
+
+  \draw[->,mainblue,line width=3.5pt] (11.2,0.5) -- (13.0,0.5)
+    node[midway,above,draw=none,fill=none,font=\tiny,mainblue,align=center]{build\\$R$};
+
+  \node[rnode] (r1) at (16.5, 5.2) {$H_1$};
+  \node[rnode] (r2) at (21.5, 5.2) {$H_2$};
+  \node[rnode] (r3) at (23.5, 1.5) {$H_3$};
+  \node[rnode] (r4) at (19.5, 1.5) {$H_4$};
+  \node[rnode] (r5) at (14.8,-0.5) {$H_5$};
+  \node[rnode] (r6) at (18.5,-3.0) {$H_6$};
+  \node[rnode] (r7) at (22.0,-2.0) {$H_7$};
+  % exactly the edges from (a):
+  \draw[gray!55,line width=1pt] (r1)--(r2);
+  \draw[gray!55,line width=1pt] (r1)--(r4);
+  \draw[gray!55,line width=1pt] (r2)--(r3);
+  \draw[gray!55,line width=1pt] (r2)--(r4);
+  \draw[gray!55,line width=1pt] (r3)--(r7);
+  \draw[gray!55,line width=1pt] (r4)--(r5);
+  \draw[gray!55,line width=1pt] (r4)--(r6);
+  \draw[gray!55,line width=1pt] (r5)--(r6);
+  \draw[gray!55,line width=1pt] (r6)--(r7);
+  \node[draw=none,fill=none,font=\tiny] at (19.0,3.5){$w_R(H_i,H_j){=}w_G(H_i,H_j)$};
+  \node[draw=none,fill=none,font=\bfseries\tiny,gray!70] at (19.0,7.1) {(b) $R$};
+
+  \draw[->,mainblue,line width=3.5pt] (24.8,0.5) -- (26.6,0.5)
+    node[midway,above,draw=none,fill=none,font=\tiny,mainblue,align=center]{max-\\cut};
+
+  % Side A (blue): H1,H4,H5  - staggered x positions
+  \node[rA] (c1) at (28.5, 5.5) {$H_1$};
+  \node[rA] (c4) at (30.0, 2.0) {$H_4$};
+  \node[rA] (c5) at (28.5,-1.0) {$H_5$};
+  % Side B (green): H2,H3,H6,H7  - staggered
+  \node[rB] (c2) at (36.5, 5.5) {$H_2$};
+  \node[rB] (c3) at (38.0, 2.5) {$H_3$};
+  \node[rB] (c6) at (35.5,-1.5) {$H_6$};
+  \node[rB] (c7) at (37.5,-3.0) {$H_7$};
+  % cut edges (red) - A={H1,H4,H5}, B={H2,H3,H6,H7}
+  % cross edges: a1-a2, a2-a4, a4-a6, a5-a6
+  \draw[accentred,line width=2pt] (c1)--(c2);
+  \draw[accentred,line width=2pt] (c2)--(c4);
+  \draw[accentred,line width=2pt] (c4)--(c6);
+  \draw[accentred,line width=2pt] (c5)--(c6);
+  % intra-A edges (gray) from (a): a4-a5
+  \draw[gray!50,line width=1pt] (c4)--(c5);
+  % intra-B edges (gray) from (a): a3-a7, a6-a7
+  \draw[gray!50,line width=1pt] (c3)--(c7);
+  \draw[gray!50,line width=1pt] (c6)--(c7);
+  % non-cut a1-a4 edge is intra-A:
+  \draw[gray!50,line width=1pt] (c1)--(c4);
+  % non-cut a2-a3 is intra-B:
+  \draw[gray!50,line width=1pt] (c2)--(c3);
+  \node[accentblue,font=\bfseries\scriptsize,draw=none,fill=none] at (26.8, 2.0) {$A$};
+  \node[accentgreen,font=\bfseries\scriptsize,draw=none,fill=none] at (40.0, 2.0) {$B$};
+  \draw[dashed,gray!60,line width=2pt] (33.2,-5.5) -- (33.2,7.1);
+  \node[draw=none,fill=none,font=\bfseries\tiny,gray!70] at (33.2,7.1){(c) max-cut};
+
+\end{tikzpicture}}
+
+\vspace{2mm}
+{\footnotesize
+  Red dashed = $k$-multicut edges.  Red solid = max-cut edges of $R$.}
+\end{tcolorbox}
+
+
+
+%% Reduction map
+\begin{tcolorbox}[posterbox,title={Illustration 5: Reduction Map}]
+\centering
+\resizebox{0.96\linewidth}{!}{%
+\begin{tikzpicture}[
+  box/.style={draw,rounded corners=3pt,fill=lightblue,
+              minimum width=14mm,minimum height=5mm,
+              align=center,font=\tiny},
+  >=Stealth,line width=0.8pt
+]
+  % horizontal chain - spread to ~38cm so resizebox scale ~= 1.2x
+  \node[box] (csc)   at ( 0.0, 0.0) {Constrained Sparsest\\Cut $\phi_w$};
+  \node[box,fill=accentblue!30] (mgc) at (12.0, 0.0) {Min.\ Generalised\\Conductance $\psi_w$};
+  \node[box] (gpd)   at (24.0, 0.0) {Graph Partitioning\\with Demands};
+  \node[box] (hcd)   at (36.0, 0.0) {Hierarchical Clustering\\with Demands};
+  % k-Multicut feeds in from above mgc
+  \node[box] (kmcut) at (12.0, 4.0) {$k$-Multicut};
+
+  \draw[->] (csc)   -- (mgc);
+  \draw[->] (kmcut) -- (mgc);
+  \draw[->] (mgc)   -- (gpd);
+  \draw[->] (gpd)   -- (hcd);
+  % extend bounding box vertically to match Illustration 1 height
+  \path[draw=none] (-1,-1.0) rectangle (40,5.0);
+\end{tikzpicture}}
+\end{tcolorbox}
+
+\begin{tcolorbox}[appbox,title={Applications}]
+
+\textbf{1.\ Graph Partitioning with Demands.}\\
+Find the cheapest edge set $C$, such that every component $H$ of
+$G\setminus C$ is small enough, i.e., $w(H)\le w(V)/2$.\\[2pt]
+Algorithm: Iteratively apply the $\psi_w$ approximation algorithm, always
+removing the smaller side of the returned cut until all components $H$ are of size $w(H)\le 4w(V)/5$.
+
+\smallskip
+\thmterm{Corollary}{
+  A bicriteria $O(\log n)$-approx. algorithm exists: it
+  achieves cost $O(\log n)\cdot c(C^*)$ while guaranteeing
+  $w(H)\le \tfrac{4}{5}w(V)$ for every resulting component $H$. A bicriteria $O\br{1}$-approx.  exists for trees.
+}
+
+\bigskip
+\textbf{2.\ Hierarchical Clustering with Demands.}\\
+Find a binary clustering tree $T$ on $V$ minimising
+\[
+  \sum_{u\in V(T)} w(S_u)\cdot c\bigl(S_u,V\setminus S_u\bigr).
+\]
+Algorithm: recursively apply graph partitioning with demands,
+building $T$ top-down until all clusters become singletons.
+
+\smallskip
+\thmterm{Corollary}{
+  There is a polynomial-time $O(\log n)$-approximation for
+  hierarchical clustering with demands on general graphs, and
+  $O(1)$ on trees.
+}
+
+\end{tcolorbox}
+
+\end{column}
+\end{columns}
+
+\vfill
+
+\begin{tcolorbox}[
+  enhanced,colback=titlebg,colframe=titlebg,arc=0pt,boxrule=0pt,
+  left=12mm,right=12mm,top=4mm,bottom=4mm
+]
+  {\color{white}\small
+   Szyfelbein \& Dereniowski - Gda\'nsk University of Technology \hfill
+   \emph{Graph Partitioning with Demands: Generalized Graph Conductance with Applications to Hierarchical Clustering}}
+\end{tcolorbox}
+
+\end{frame}
+\end{document}
