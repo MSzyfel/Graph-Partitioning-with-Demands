@@ -1,17 +1,35 @@
-﻿\section{Racke's cut-sparsifier decomposition}
+﻿\newcommand{\paths}{P^*}
 
-Since solving tasks related to sparsest cut is easier on trees, a common approach to solving such problems is to first embed the graph into a tree while partially preserving the value of all cuts. To do so, one can use the cut-sparsifier tree decomposition of Racke \cite{OptimalHierarchicalDecompositionsForCongestionMinimizationInNetworks}. This decomposition allows for an embedding of any graph into a probability distribution over a polynomial number of trees such that for every cut, the expected value of the cut in the tree is at most $O\br{\log n}$ times the value of the cut in the original graph, and for every cut, its value in the original graph is at most its value in every tree in the support of the distribution. Therefore, if we can solve our problem on trees, then we can solve it on general graphs with an $O\br{\log n}$-approximation ratio by first embedding it into a distribution over trees and then solving it on each tree in the support of the distribution. Then, the approximation ratio is achieved by choosing the best cut among all cuts produced for these trees. In what follows we make this ideas more precise.
+\section{Racke's cut-sparsifier decomposition}
+
+Since solving tasks related to sparsest cut is easier on trees, an efficient approach to solving such problems is to first embed the graph into a tree while partially preserving the value of all cuts. To do so, one can use the cut-sparsifier tree decomposition of Racke \cite{OptimalHierarchicalDecompositionsForCongestionMinimizationInNetworks}. This decomposition allows for an embedding of any graph into a probability distribution over a polynomial number of trees such that for every cut, the expected value of the cut in the tree is at most $O\br{\log n}$ times the value of the cut in the original graph, and for every cut, its value in the original graph is at most its value in every tree in the support of the distribution. Therefore, if we can solve our problem on trees, then we can solve it on general graphs with an $O\br{\log n}$-approximation ratio by first embedding it into a distribution over trees and then solving it on each tree in the support of the distribution. Then, the approximation ratio is achieved by choosing the best cut among all cuts produced for these trees. In what follows we make this ideas more precise.
 \DD{aby nie bylo, ze sie ciagle ``czepiam'', to intro bardzo informatywne :)}
 
+\DD{====================================}
+
+Therefore it remains to obtain an approximation algorithm for the problem of minimizing $\phi_w\br{S}$ subject to $w\br{S, V}\leq K$, i.e., the algorithm used in step~\ref{it:S1:alpha}.
+In what follows, we show how to do this using cut-sparsifier tree decompositions. We have the following proposition: \DD{czy to z literatury czy tuta? Jesli z lit. to trzebaby [??] dodać. Ogólnie dwuznaczna fraza jest ``subject to exact ...'': po pierwsze te claimy powinny mowic ``polynomial-time''; po drugie ten exact alg. for trees to trzebay napisac dla jakiego problemu, gdyz zaglujemy tutaj szeregiem problemow.}
+\begin{proposition}
+  There exists an $\alpha=O\br{\log n}$-approximation algorithm for the $\phi_w\br{S}$ subject to $w\br{S, V}\leq K$ problem
+   for general graphs and an exact algorithm for trees.
+\end{proposition}
+
+It should be noted that the $O\br{\log n}$-approximation algorithm for the generalized $k$-multicut is also obtained using cut-sparsifiers \DD{domyslam sie, ze moze tutaj miec miejsce forward-referencja do innych miejsc. Trzeba dopilnowac, ze jesli uzywamy cos czego zrobimy to ze dla czytelnika to jest jasne i ze jasne jest to jakie brzmienie ma fakt, ktory uzywamy} in conjunction with an $O\br{1}$-approximation algorithm for trees. By combining all of the above discussions, we get the following corollary:
+\begin{corollary}
+  There is a polynomial-time $O(\log n)$-approximation algorithm for the problem of minimizing $\psi_w\br{G}$ on general graphs as well as an $O(1)$-approximation algorithm for the problem of minimizing $\psi_w\br{G}$ on trees.
+\end{corollary}
+
+\DD{==========================================}
+
 \subsection{Decomposition trees}
-Given a graph $G=(V,E,c)$, denote by $E^*$ the set of all paths in $G$.
+Given a graph $G=(V,E,c)$, denote by $\paths$ the set of all paths in $G$.
 A \emph{decomposition tree} for a graph $G=(V,E,c)$ is a rooted tree
 $T=(V_T,E_T, c_T)$ together with:
 \begin{enumerate}
   \item a node map $m_V:V_T\to V$ that is bijective on leaves of $T$ and $V$,
-  \item an edge map $m_E:E_T\to E^*$ sending each tree edge $uv$ \DD{notacja krawedziowa do ujednolicenia} to a path in $G$
+  \item an edge map $m_E:E_T\to \paths$ sending each tree edge $uv$ \DD{notacja krawedziowa do ujednolicenia} to a path in $G$
   between the mapped endpoints $m_V(u)$ and $m_V(v)$,
-  \item induced maps $m'_V:V\to V_T$ which maps each vertex of $V$ to the corresponding leaf of $T$ and $m'_E:E\to E_T^*$ which maps an edge $uv\in E$ to the unique (shortest) path between $m'_V(u)$ and $m'_V(v)$ in $T$,
+  \item induced maps $m'_V:V\to V_T$ which maps each vertex of $V$ to the corresponding leaf of $T$ and $m'_E:E\to \paths_T$ which maps an edge $uv\in E$ to the unique (shortest) path between $m'_V(u)$ and $m'_V(v)$ in $T$,
   \item For a tree edge $e=(u,v)$ of $T$, let $V_{u},V_{v}$ be the leaf partition
 induced by deleting $e$. Its capacity is then defined as
 \[
@@ -54,8 +72,10 @@ has congestion at most $\rho=O(\log n)$ in $G$.
 
 \subsection{Cut capacity preservation}
 
+\DD{define $\delta$.}
+
 \begin{theorem}[Dual cut bound from Racke]\label{thm:racke}
-Let $G=(V,E,c)$ and let $(T_i,\lambda_i)$ be as in Racke's Theorem~4.
+Let $G=(V,E,c_G)$ and let $(T_i,\lambda_i)$ be as in Racke's Theorem~4.
 Define $\mu$ by $\Pr_{T\sim\mu}[T=T_i]=\lambda_i$ and set
 $\rho=O(\log n)$. Then for every cut $U\subsetneq V$:
 \begin{enumerate}
@@ -94,9 +114,11 @@ The proof is deferred to Appendix~\ref{app:racke-proof}.
   $\OPT_K(T)\le \rho\,\OPT_K(G)$.
 \end{proof}
 
-\subsection{Solving the bounded-demand problem on a tree}
+\subsection{Solving the \DD{sparsest cut} problem on a tree}
 
-    It is a well known fact that the optimal value of the sparsest cut problem cut on trees is achieved by a cut induced by a single edge. Below, we show that this is also the case if we have an additional constraint on the demand cut by the solution.
+\DD{$S_1$ now...}
+    It is a well known fact that the optimal value of the sparsest cut problem cut on trees is achieved by a cut induced by a single edge. Below, we show that this is also the case if we have an additional constraint on the demand cut.
+    \DD{For each edge $e$ of the tree $T$ we define $w_e$ to be the total demand cut by removing $e$ from $T$. (?)}
 \begin{theorem}[Tree optimum is attained by a single edge]\label{thm:single-edge}
   \[
     \OPT_K(T)
@@ -106,18 +128,17 @@ The proof is deferred to Appendix~\ref{app:racke-proof}.
 \end{theorem}
 
 \begin{proof}
-  Root $T$ at $r$. For each edge $e$, let $A_e$ be the component away from $r$,
-  and define $c(e):=c_T(e)$ and $w_e:=w(\cut_T(A_e))$. Let $S$ be any feasible cut with $w(\cut(S))\le K$.
+  Root $T$ at $r$. For each edge $e$, let $A_e$ be the component away from $r$.
+  Define $c(e):=c_T(e)$ and $w_e:=w(\cut_T(A_e))$. Let $S$ be any feasible cut with $w(\cut(S))\le K$.
   Let $F(S)$ be the set of tree edges crossing the cut $(S,\bar S)$. Then
   \[
     c_T(\cut(S))=\sum_{e\in F(S)} c(e),
     \qquad
-    w(\cut(S))=\sum_{e\in F(S)} w_e.
+    w(\cut(S)) \DDfix{\geq} \sum_{e\in F(S)} w_e.
   \]
-  Since $w(\cut(S))=\sum_{e\in F(S)}w_e\le K$ and all $w_e\ge 0$, we have
+  Since $w(\cut(S))\le K$ and all $w_e\ge 0$, we have
   $w_e\le w(\cut(S))\le K$ for every $e\in F(S)$.
-  Also $w_e>0$ whenever $e\in F(S)$ (otherwise the edge contributes zero to both
-  numerator and denominator and can be dropped from $F(S)$).
+  Also $w_e>0$ whenever $e\in F(S)$ (otherwise the edge can be trivially dropped from $F(S)$).
   Therefore
   \[
     \frac{c_T(\cut(S))}{w(\cut(S))}

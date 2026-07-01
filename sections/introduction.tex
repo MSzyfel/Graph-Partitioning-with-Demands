@@ -41,6 +41,8 @@ If the aforementioned quantity is small, then we show that we can reduce the pro
 
 In order to tackle this constrained version of the sparsest cut we use a general technique by \cite{OptimalHierarchicalDecompositionsForCongestionMinimizationInNetworks}. The idea is to embed a graph into a polynomial-sized convex combination of trees, which in expectance preserves the value of any cut up to $O\br{\log n}$ distortion. This allows us to obtain the $O\br{\log n}$-approximation by solving the problem to optimality on all trees and outputting the best of the solutions. This indeed becomes an easy task, since the (unconstrained) sparsest cut can be found in a tree by only considering cuts with singular edge cut. As it turns out, the same is true for the constrained version of the problem.
 
+\DD{tutaj skleic...} This problem admits an $\beta=O\br{\log n}$-approximation algorithm by combining \cite{AUnifiedApproachToApproximatingPartialCoveringProblems} with \cite{OptimalHierarchicalDecompositionsForCongestionMinimizationInNetworks}.
+
 In the second part of the paper we move ourselves towards applications of the generalized conductance. We show that by iterative application of the above algorithm we can partition the graph into components with demand at most $\frac{4}{5}\cdot w\br{V}$ while paying only $O\br{\log n}$ times more than it is required to partition the graph into components with demand at most $w\br{V}/2$. Therefore, the algorithm is a bicriteria approximation.
 % It should be noted, that there is an evidence that no true polylogarithmic approximation for this task exists [cite here].
 

@@ -25,8 +25,14 @@ For any graph $G$, $\psi\br{\psiOPT}=\Theta\br{\hw\br{\hOPT}/w(V)}$.
 %However, for our purposes we will slightly relax the assumption that $w\br{S, V}\le w\br{\bar{S}, V}$ and in turn we will only require that $w\br{S, V}\le \C\cdot w\br{\bar{S}, V}$ for some appropriate constant $\C>1$.
 %This still preserves the approximation ratio up to a factor dependent on $\C$ by a similar discussion.
 
-As an internal tool used in this section we will utilize the generalized $k$-multicut problem, which is as follows.
+As an internal tool used in this section (cf. step~\ref{it:S2:beta} below) we will utilize the generalized $k$-multicut problem, which is as follows.
 Given a graph $G=(V,E,c,w)$ with capacities and demands, the \emph{generalized $k$-multicut problem} is to find a minimal-cost set of edges $C\subseteq E$, such that the demand cut by $C$ is at least $k$.
+
+Also, we recall the \emph{max-cut} problem that in our context is defined, for a given graph $(R,w_R)$, as finding a vertex partition $\br{S_R, \bar{S_R}}$ of $V\br{R}$, such that $w_R\br{S_R, \bar{S_R}}$ is maximized.
+To solve the latter (approximately du to its NP-hardness), we utilize a folclore local search procedure (cf. step~\ref{it:S2:local} below) that we recall in the following form.
+Start with a cut $(A,B)$, where $A=\emptyset$ and $B=V\br{R}$, where $R$ is the graph constructed below for this computation.
+At any iteration, consider each vertex $v\in V\br{R}$, and if swapping the assignment of $v$ between $A$ and $B$ results in cutting more demand, perform the swap.
+Proceed until no such improvement is possible.
 
 We now introduce a reduction\footnote{We use the word `reduction' since both $S_1$ and $S_2$ are obtained via an algorithmic reduction to another combinatorial problem, either generalized sparsest cut (with restrictions) or the generalized $k$-multicut.} scheme used in this section.
 The scheme is applied to an input graph $G=(V,E,c_G,w_G)$ and it computes independently two candidate sets $S_1$ and $S_2$ via two different methos.
@@ -49,8 +55,8 @@ Formally, the scheme is the following:
     \item\label{it:S2:beta} Run a $\beta$-approximation algorithm for the generalized $k$-multicut with $k=w_G\br{V}/3$ to obtain a multicut $C$.
     \item\label{it:S2:R} Build a complete graph $R$ on components of $G\setminus C$, with edge weights $w_R\br{H_1,H_2}=w_G\br{H_1,H_2}$ for any pair $H_1$ and $H_2$, where $H_1$ and $H_2$ are the vertex set of the components.
     \item\label{it:S2:W} Apply rounding: set $W=\frac{w_R\br{V\br{R}}}{4\cdot \spr{E\br{R}}}$ and replace the weight of each edge $e\in E\br{R}$ by $w_R'\br{e}=\fl{w_R\br{e}/W}$.
-    \item\label{it:S2:local} Run a local search for max-cut on $(R,w_R')$: start with $(A,B)=(\emptyset,V\br{R})$, repeatedly move a single vertex from $B$ to $A$ if it improves the cut, and stop at a local optimum, i.e., when a single vertex transfer from $B$ to $A$ does not improve the cut.
-    \item\label{it:S2:S2} Map the resulting cut of $R$ back to a cut $S_2$ of $G$.
+    \item\label{it:S2:local} Run the local search for max-cut on $(R,w_R')$. Let $(A',B')$ be the computed cut.
+    \item\label{it:S2:S2} Map $(A',B')$ back to a cut $S_2$ of $G$: if $v\in V$ belongs to a component corresponding to a vertex of $R$ in $A'$, then add $v$ to $S_2$; otherwise $v$ goes to $\bar{S}_2$.
   \end{enumerate}
   \item Return the better of $S_1,S_2$, i.e., $\argmin_{X\in\brc{S_1,S_2}}\psi_w\br{X}$.
 \end{enumerate}
@@ -117,51 +123,23 @@ Now we analyze, the second case regarding the size of the cut $\br{\Sopt, \SoptB
 We start with two claims regarding the computations on the graph $R$ in steps \ref{it:S2:R}, \ref{it:S2:W} and \ref{it:S2:local}.
 In particular, the classical local-search that we use has pseudopolynomial running time.
 This issue is overcomed by the rounding of the weights in $R$:
-\DD{to co jest powyzej jest wg mnie sprawdzone, choc jeszcze do poczyszczenia, natomiast to co ponizej to balagan, do ktorego mam konkretne pytania by sie posunac dalej (pytania dalej w tekscie). Na razie ignorujmy, ze tekst jest zle pociety, tzn. lemat ponizej ma w srodku za duzo. To wynika z tego, ze zrobilem copy-paste fragmentu, ktrory byl annsowany jako pokazywaneie, ze jest wielomianowa liczba stanow, ale w srodku sa jaies dodatkowe claimy pomiedzy, ktrych na razie nie przenioslem.}
-\begin{lemma} \label{lem:W}
-The running time of the local search in step~\ref{it:S2:local} is polynomial in $n=\spr{V}$.
+\newpage
+\begin{lemma} \label{lem:local-search}
+The local search in step~\ref{it:S2:local} cuts at least $1/4$ of the total demand in $(R,w_R)$.
+Moreover, the running time of the local search  is polynomial in $n=\spr{V}$.
 \end{lemma}
 \begin{proof}
-Let $\br{A', B'}$ be the cut in the new instance $(R,w_R')$.
-Since the local search is $2$-approximate, we have $w_R'\br{A', B'}\geq w_R'\br{V\br{R}}/2$.
-For any edge $e$, $W\cdot w_R'\br{e} \leq w_R\br{e} \leq W\cdot w_R'\br{e}-W$.
-Thus, by summing up over all edges cut by $\br{A, B}$ we get that:
-\[
-w\br{A, B}-W\cdot w'\br{e}\leq \spr{E\br{A, B}}\cdot W\leq \spr{E\br{R}}\cdot W.
-\]
-We have:
-\[
-w\br{A', B'}\geq W\cdot w'\br{A, B}\geq w\br{A, B} - \spr{E\br{R}}\cdot W = w\br{A, B}-w\br{V\br{R}}/4\geq w\br{V\br{R}}/4
-\]
-\DD{Pytanie: w powyzszym $w$ odnosi sie do grafu $R$, a nie oryginalnego $G$?}
-We conclude that finding $\br{A', B'}$ gives us a cut of $R$ cutting at least $w\br{V\br{R}}/4$ amount of demand, which is still sufficient for out purposes.
-Moreover, we have that
-\[
-w'\br{V\br{R}}=\sum_{e\in E\br{R}}w'\br{e}\leq \frac{1}{W}\cdot \sum_{e\in E\br{R}}w\br{e}=4\spr{E\br{R}}^2
-.\]
-\DD{Z czego wynika ostatnia rownosc? Czy szacujmey faktycznie $w'(V(R))$ czy $w'(E(R))$?}
-Hence, there are polynomially many values, that any cut of $\br{R, w'}$ can take, which will certify the polynomial runtime of our procedure.
-\end{proof}
+\begin{itemize}
+ \item losowy przydzial do A,B.
+ \item derandom.
+ \item nowy ratio 1/2 vs 1/4
+\end{itemize}
 
+Let $\br{A', B'}$ be the solution produced by the local search.
 
-
-\begin{lemma}
-  Assume that $w_G\br{\Sopt, \SoptBar}\geq w_G\br{V}/3$.
-  %Moreover, let $\beta$ be an approximation ratio of some approximation algorithm for the (generalized) $k$-multicut problem.
-  Then, $S_2$ is an $O\br{\beta}$-approximate solution to the minimum generalized conductance problem.
-\end{lemma}
-\begin{proof}
-  By Lemma~\ref{lem:h-equivalent}, $w_G\br{\Sopt, V}=\Theta\br{w_G\br{V}}$ and $w_G\br{\SoptBar, V}=\Theta\br{w_G\br{V}}$, and therefore with a constant factor loss, it suffices to minimize $c_G\br{S, \bar{S}}$ subject to $w_G\br{S, \bar{S}}\geq w\br{V}/3$.
-  Notably, this task is not equivalent to the generalized $k$-multicut problem.
-  The latter is solved in step~\ref{it:S2:beta} with the approximation factor of $\beta$.
-  Note that $G\setminus C$ has in general many connected  components.
-
-  To remedy this issue we proceeed as follows:
-  We find an $\beta$-approximate multicut $C$. Then, we build a complete graph $R$, on vertex set consisting of components of $G\setminus C$. For any $H_1, H_2\in G\setminus C$, we set a weight $w_R\br{H_1, H_2}=w_G\br{H_1, H_2}$ (be weary of the fact that $H_1, H_2$ are vertices of $R$, but subsets of vertices of $G$). We now wish to solve a max-cut problem on $R$ in order to partition components of $G\setminus C$ in such a way to preserve a significant amount of demand being cut. Given a graph $R$, with weights $w$, the max-cut is to find a partition $\br{S_R, \bar{S_R}}$ of $V\br{R}$, such that $w\br{S_R, \bar{S_R}}$ is maximized. Although max-cut is NP-hard, it is well known that for any graph, there exists a cut $\br{A, B}$, such that $w\br{A, B}\geq w\br{V\br{R}}/2$. It is easy to see, that such a solution is $2$-approximation for max-cut, however for our purposes the crucial property is that since the demand cut by $C^*$ is at least $w_R\br{V\br{R}}=w_G\br{V}/3$, \DD{czy jesli sie poronujemy do oryginalnego $G$, to czy nie zgubilismy $\beta$? Tzn czy nie bedzie to $w_R\br{V\br{R}}=\beta w_G\br{V}/3$} finding $(A, B)$ produces a cut of $G$ cutting at least $w\br{V}/6$ amount of demand which is sufficient for our purposes.
-
-
-
-In order to find $(A',B')$, we use the aforementioned local-search heurstic which is as follows: Start with $A=\emptyset, B=V\br{R}$. At any iteration, consider each vertex $v\in V\br{R}$, and if swapping the assignment of $v$ between $A$ and $B$ results in a better cut, perform the swap. Proceed until no such improvement is possible. For any vertex $v\in V\br{R}$, denote by $w'\br{v}$ its contribution to $w'\br{A', B'}$. We have the following:
+\DD{=====================}
+For any vertex $v\in V\br{R}$, denote by $w'\br{v}$ its contribution to $w'\br{A', B'}$.
+We have the following:
 \begin{align*}
 2w'\br{A', B'}&=\sum_{v\in A'}w'\br{v}+\sum_{v\in B'}w'\br{v}
 \\&\geq
@@ -171,48 +149,84 @@ In order to find $(A',B')$, we use the aforementioned local-search heurstic whic
 \end{align*}
 where the inequality is by the halting condition of our procedure.
 
-The running time is polynomial, since every swap increases the weight of the cut, which as argued above can only take polynomially many different values.
+\DD{=====================}
 
-Upon finding $\br{A', B'}$ we output the partition $\br{S_2, \bar{S}_2}$ of $V\br{G}$, such that vertices of members of $A'$ belong to $S_2$ and vertices of members of $B'$ belong to $\bar{S}_2$. We have that we cut at least $w\br{V}/12$ amount of demand, and the cost of the edges cut is $c\br{S_2, \bar{S}_2}\leq c\br{C}$, since $E\br{S_2, \bar{S}_2}\subseteq C$.
+Hence, the local search cuts at least half of the total demand, i.e., $w_R'\br{A', B'}\geq w_R'\br{V\br{R}}/2$.
+For any edge $e$ of $R$, $W\cdot w_R'\br{e} \leq w_R\br{e} \leq W\cdot w_R'\br{e}+W$.
+Thus, by summing up over all edges in any cut $\br{A, B}$ we get that:
+\[
+w_R\br{A, B}-W\cdot w_R'\br{A,B}\leq \spr{E\br{A, B}}\cdot W\leq \spr{E\br{R}}\cdot W.
+\]
+We then have for an optimal cut $(A,B)$ for $(R,w_R)$:
+\[
+w_R\br{A', B'}\geq W\cdot w_R'\br{A', B'}\geq    \frac{W}{2} w_R'(V(R)) \geq \frac{W}{2}w_R'(A,B)\geq \frac{1}{2}\br{ w_R\br{A, B} - \spr{E\br{R}}\cdot W} = w_R\br{A, B}-w_R\br{V\br{R}}/4\geq w_R\br{V\br{R}}/4.
+\]
+\DD{ostatnia nierownosc wydaje sie aplikacja local searh (x2) ale tutaj mamy $w$ zamiast $w'$ (?)}
+
+
+We conclude that finding $\br{A', B'}$ gives us a cut in $R$ cutting at least $w\br{V\br{R}}/4$ amount of demand, as claimed in the lemma.
+
+Regarding the running time of the local search procedure, we have that
+\[
+w_R'\br{V\br{R}}=\sum_{e\in E\br{R}}w_R'\br{e}\leq \frac{1}{W}\cdot \sum_{e\in E\br{R}}w_R\br{e}=4\spr{E\br{R}}^2
+.\]
+Hence, since $w_R'$ is integer-valued, there are polynomially many values that any cut in $\br{R, w'}$ can take.
+This upper-bounds the number of steps in the local search.
 \end{proof}
 
 
-Here, we use an approximation ratio for  which is as follows: \DD{tutaj skleic...} This problem admits an $\beta=O\br{\log n}$-approximation algorithm by combining \cite{AUnifiedApproachToApproximatingPartialCoveringProblems} with \cite{OptimalHierarchicalDecompositionsForCongestionMinimizationInNetworks}.
 
-\begin{theorem}
-  The above algorithm is an $O\br{\alpha+\beta}$-approximation algorithm for the minimum generalized conductance problem.
-\end{theorem}
+\begin{lemma} \label{lem:S2}
+  Assume that $w_G\br{\Sopt, \SoptBar}\geq w_G\br{V}/3$.
+  %Moreover, let $\beta$ be an approximation ratio of some approximation algorithm for the (generalized) $k$-multicut problem.
+  Then, $S_2$ is an $O\br{\beta}$-approximate solution to the minimum generalized conductance problem.
+\end{lemma}
 \begin{proof}
-By picking the best among the two created solution we ensure that the approximation ratio of the above procedure is upper bounded by $O\br{\alpha+\beta}$.
+  By Lemma~\ref{lem:h-equivalent}, $w_G\br{\Sopt, V}=\Theta\br{w_G\br{V}}$ and $w_G\br{\SoptBar, V}=\Theta\br{w_G\br{V}}$, and therefore with a constant factor loss, it suffices to minimize $c_G\br{S, \bar{S}}$ subject to $w_G\br{S, \bar{S}}\geq w\br{V}/3$.
+  Notably, this task is not equivalent to the generalized $k$-multicut problem, which is approximated in step~\ref{it:S2:beta}.
+  The reason for this is that $G\setminus C$ has in general many connected components.
+
+%  To remedy this issue we proceeed as follows:
+%  We find an $\beta$-approximate multicut $C$. Then, we build a complete graph $R$, on vertex set consisting of components of $G\setminus C$. For any $H_1, H_2\in G\setminus C$, we set a weight $w_R\br{H_1, H_2}=w_G\br{H_1, H_2}$ (be weary of the fact that $H_1, H_2$ are vertices of $R$, but subsets of vertices of $G$). We now wish to solve a max-cut problem on $R$ in order to partition components of $G\setminus C$ in such a way to preserve a significant amount of demand being cut.
+%It is well known that for any graph, there exists a cut $\br{A, B}$, such that $w\br{A, B}\geq w\br{V\br{R}}/2$. It is easy to see, that such a solution is $2$-approximation for max-cut, however for our purposes the crucial property is that since the demand cut by $C^*$ is at least $w_R\br{V\br{R}}=w_G\br{V}/3$, \DD{czy jesli sie poronujemy do oryginalnego $G$, to czy nie zgubilismy $\beta$? Tzn czy nie bedzie to $w_R\br{V\br{R}}=\beta w_G\br{V}/3$; nie bo $\beta$ dot. $c$.} finding $(A, B)$ produces a cut of $G$ cutting at least $w\br{V}/6$ amount of demand which is sufficient for our purposes.
+Since the total demand in $(R,w_R')$ is lower-bounded by $w\br{V}/3$ according to step~\ref{it:S2:beta}, Lemma~\ref{lem:local-search} gives that $S_2$ cuts at least $w\br{V}/12$ of the demand in $G$.
+Since $E\br{S_2, \bar{S}_2}\subseteq C$, the cost of the outputed edges cut is $c\br{S_2, \bar{S}_2}\leq c\br{C}$.
 \end{proof}
 
-Therefore it remains to obtain an approximation algorithm for the problem of minimizing $\phi_w\br{S}$ subject to $w\br{S, V}\leq K$, i.e., the algorithm used in step~\ref{it:S1:alpha}.
-In what follows, we show how to do this using cut-sparsifier tree decompositions. We have the following proposition: \DD{czy to z literatury czy tuta? Jesli z lit. to trzebaby [??] dodać. Ogólnie dwuznaczna fraza jest ``subject to exact ...'': po pierwsze te claimy powinny mowic ``polynomial-time''; po drugie ten exact alg. for trees to trzebay napisac dla jakiego problemu, gdyz zaglujemy tutaj szeregiem problemow.}
-\begin{proposition}
-  There exists an $\alpha=O\br{\log n}$-approximation algorithm for the $\phi_w\br{S}$ subject to $w\br{S, V}\leq K$ problem
-   for general graphs and an exact algorithm for trees.
-\end{proposition}
 
-It should be noted that the $O\br{\log n}$-approximation algorithm for the generalized $k$-multicut is also obtained using cut-sparsifiers \DD{domyslam sie, ze moze tutaj miec miejsce forward-referencja do innych miejsc. Trzeba dopilnowac, ze jesli uzywamy cos czego zrobimy to ze dla czytelnika to jest jasne i ze jasne jest to jakie brzmienie ma fakt, ktory uzywamy} in conjunction with an $O\br{1}$-approximation algorithm for trees. By combining all of the above discussions, we get the following corollary:
-\begin{corollary}
-  There is a polynomial-time $O(\log n)$-approximation algorithm for the problem of minimizing $\psi_w\br{G}$ on general graphs as well as an $O(1)$-approximation algorithm for the problem of minimizing $\psi_w\br{G}$ on trees.
-\end{corollary}
+Lemmas~\ref{lem:S1} and~\ref{lem:S2} give together the following.
+\begin{lemma}
+  There exists an $O\br{\alpha+\beta}$-approximation polynomial-time algorithm for the generalized conductance problem.
+  \qed
+\end{lemma}
 
-A special kind of demand function is one, where for each vertex there exists a potential function $\pi\colon V\to \mathbb{N}$, such that for every $u,v\in V$, $w\br{u,v}=\pi\br{u}\cdot \pi\br{v}$. We call such a function a \emph{multiplicative function}. Notably, unit demand is multiplicative with $\pi\br{u}=1$ for every $u\in V$. For such demand functions, we have the following strengthening of approximation guarantees:
+In the next section we develop specific two algorithms that determine the ratios of $\alpha$ and $\beta$.
+We finish this section with a remark that our method can be improved for a natural class of multiplicative demand functions.
+Formally, $w$ is a \emph{multiplicative function} if there exists a potential function $\pi\colon V\to \mathbb{N}$, \DD{musi byc naturalne czy moga byc reals?} such that for every $u,v\in V$, $w\br{u,v}=\pi\br{u}\cdot \pi\br{v}$.
+Notably, unit demand is multiplicative with $\pi\br{u}=1$ for every $u\in V$. For such demand functions, we have the following strengthening of approximation guarantees:
 \begin{theorem}
   If the demand function $w$ is multiplicative, then there is a polynomial-time $O\br{\sqrt{\log n}}$-approximation algorithm for the problem of minimizing $\psi_w\br{S}$.
 \end{theorem}
 \begin{proof}
-  Firstly, assume that $\pi\br{S}\leq \pi\br{\bar{S}}$. Since for multiplicative demands we have 
+  Without loss of generality assume that $\pi\br{S}\leq \pi\br{\bar{S}}$. Since for multiplicative demands and disjoint $A,B$ we have
   \[
-  w\br{A, B}=\sum_{u\in A}w\br{u}\cdot \sum_{v\in B}w\br{v}= \pi\br{A}\cdot \pi\br{B}
+  w\br{A, B}= \sum_{u\in A}\sum_{v\in B}w\br{u,v} = \sum_{u\in A}\pi\br{u}\cdot \sum_{v\in B}\pi\br{v}= \pi\br{A}\cdot \pi\br{B}.
   \] 
-  we get that $w\br{S, V}\leq w\br{\bar{S}, V}$ and moreover $w\br{S}\leq w\br{S, \bar{S}}$. Thus, minimizing $\psi_w\br{G}$ is up to a constant factor equivalent to minimizing 
+  Also,
+  \[w(A) = \frac{1}{2}\br{\sum_{v\in A} \pi\br{v}}^2 = \frac{\pi\br{A}^2}{2}.\]
+ We get that
+ \[w\br{S, V} = w\br{S}+w\br{S,\bar{S}} = \frac{\pi\br{S}^2}{2}+w\br{S,\bar{S}} \leq \frac{\pi\br{\bar{S}}^2}{2}+w\br{S,\bar{S}}=w\br{\bar{S}, V}.\]
+Moreover
+\[w\br{S} = \frac{\pi\br{S}^2}{2} \leq \frac{1}{2}\pi\br{S}\pi\br{\bar{S}}= \frac{1}{2}w\br{S, \bar{S}}.\]
+We have by the above
+  \[\frac{c\br{S, \bar{S}}}{3w\br{S,\bar{S}}/2} \leq \frac{c\br{S, \bar{S}}}{w\br{S, V}}=\frac{c\br{S, \bar{S}}}{w\br{S}+w\br{S,\bar{S}}} \leq \frac{c\br{S, \bar{S}}}{w\br{S,\bar{S}}}.
+  \]
+Thus, minimizing $\psi_w\br{G}$ is up to a constant factor equivalent to minimizing
   \[\frac{c\br{S, \bar{S}}}{w\br{S, \bar{S}}}=\frac{c\br{S, \bar{S}}}{\pi\br{S}\cdot \pi\br{\bar{S}}}.
   \]
   This can be then reduced to the min-ratio vertex cut problem which is as follows: Given a graph $G=\br{V,E,c,\omega}$, with a capacity vertex function $c\colon V\to \mathbb{N}$ and weight function $\omega\colon V\to \mathbb{N}$ find a partition $A, S, B$ of $V$ that minimizes 
   \[\frac{c\br{S}}{\omega\br{A\cup S}\cdot \omega\br{B\cup S}}
   \]
-  such that there are no edges between $A$ and $B$. This problem admits an $O\br{\sqrt{\log n}}$-approximation algorithm \cite{ImprovedApproximationAlgorithmsForMinimumWeightVertexSeparators}. To reduce our instance to this problem we construct a new graph in which each edge $uv\in E$ is subdivided by a new vertex of capacity $c\br{u,v}$ and weight $0$ and each old vertex $u\in V$ is assigned capacity $0$ and weight $\pi\br{u}$. It is easy to see that the optimal solution for the min-ratio vertex cut problem on this new graph corresponds to the optimal solution for our problem on the original graph, and thus we get the desired approximation ratio. 
+  such that there are no edges between $A$ and $B$. This problem admits an $O\br{\sqrt{\log n}}$-approximation algorithm \cite{ImprovedApproximationAlgorithmsForMinimumWeightVertexSeparators}. To reduce our instance to this problem we construct a new graph in which each edge $uv\in E$ is subdivided by a new vertex of capacity $c\br{u,v}$ and weight $0$ and each old vertex $u\in V$ is assigned capacity $\infty$ and weight $\pi\br{u}$. It is easy to see that the optimal solution for the min-ratio vertex cut problem on this new graph corresponds to the optimal solution for our problem on the original graph, and thus we get the desired approximation ratio.
 \end{proof}
 
