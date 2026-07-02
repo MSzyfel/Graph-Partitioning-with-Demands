@@ -1,27 +1,25 @@
 ﻿\newcommand{\paths}{P^*}
 
-\section{Racke's cut-sparsifier decomposition}
+\section{The algorithm for bounded sparsest cut}
 
 Since solving tasks related to sparsest cut is easier on trees, an efficient approach to solving such problems is to first embed the graph into a tree while partially preserving the value of all cuts. To do so, one can use the cut-sparsifier tree decomposition of Racke \cite{OptimalHierarchicalDecompositionsForCongestionMinimizationInNetworks}. This decomposition allows for an embedding of any graph into a probability distribution over a polynomial number of trees such that for every cut, the expected value of the cut in the tree is at most $O\br{\log n}$ times the value of the cut in the original graph, and for every cut, its value in the original graph is at most its value in every tree in the support of the distribution. Therefore, if we can solve our problem on trees, then we can solve it on general graphs with an $O\br{\log n}$-approximation ratio by first embedding it into a distribution over trees and then solving it on each tree in the support of the distribution. Then, the approximation ratio is achieved by choosing the best cut among all cuts produced for these trees. In what follows we make this ideas more precise.
-\DD{aby nie bylo, ze sie ciagle ``czepiam'', to intro bardzo informatywne :)}
 
-\DD{====================================}
+More precisely, in this section we focus on the approximation algorithm for the problem of minimizing $\phi_w\br{S}$ subject to $w\br{S, V}\leq K$, i.e., which is used in step~\ref{it:S1:alpha}.
+Formally, we obtain (using Lemmas~\ref
+{lem:fixed-K} and~\ref{lem:single-edge} proven below):
+\begin{theorem}
+  There exists an $\alpha=\bigo\br{\log n}$-approximation algorithm for general graphs and an exact algorithm for trees for the problem of minimizing $\phi_w\br{S}$ subject to $w\br{S, V}\leq K$.
+\end{theorem}
+Our main tool for proving the result is cut sparcifiers.
+We recall the necessary notation in the next section.
 
-Therefore it remains to obtain an approximation algorithm for the problem of minimizing $\phi_w\br{S}$ subject to $w\br{S, V}\leq K$, i.e., the algorithm used in step~\ref{it:S1:alpha}.
-In what follows, we show how to do this using cut-sparsifier tree decompositions. We have the following proposition: \DD{czy to z literatury czy tuta? Jesli z lit. to trzebaby [??] dodać. Ogólnie dwuznaczna fraza jest ``subject to exact ...'': po pierwsze te claimy powinny mowic ``polynomial-time''; po drugie ten exact alg. for trees to trzebay napisac dla jakiego problemu, gdyz zaglujemy tutaj szeregiem problemow.}
-\begin{proposition}
-  There exists an $\alpha=O\br{\log n}$-approximation algorithm for the $\phi_w\br{S}$ subject to $w\br{S, V}\leq K$ problem
-   for general graphs and an exact algorithm for trees.
-\end{proposition}
-
-It should be noted that the $O\br{\log n}$-approximation algorithm for the generalized $k$-multicut is also obtained using cut-sparsifiers \DD{domyslam sie, ze moze tutaj miec miejsce forward-referencja do innych miejsc. Trzeba dopilnowac, ze jesli uzywamy cos czego zrobimy to ze dla czytelnika to jest jasne i ze jasne jest to jakie brzmienie ma fakt, ktory uzywamy} in conjunction with an $O\br{1}$-approximation algorithm for trees. By combining all of the above discussions, we get the following corollary:
+\DD{to by moze poszlo do frontu do our results}
 \begin{corollary}
   There is a polynomial-time $O(\log n)$-approximation algorithm for the problem of minimizing $\psi_w\br{G}$ on general graphs as well as an $O(1)$-approximation algorithm for the problem of minimizing $\psi_w\br{G}$ on trees.
 \end{corollary}
 
-\DD{==========================================}
 
-\subsection{Decomposition trees}
+\subsection{Decomposition trees and multicommodity flows}
 Given a graph $G=(V,E,c)$, denote by $\paths$ the set of all paths in $G$.
 A \emph{decomposition tree} for a graph $G=(V,E,c)$ is a rooted tree
 $T=(V_T,E_T, c_T)$ together with:
@@ -37,17 +35,16 @@ induced by deleting $e$. Its capacity is then defined as
 \]
 \end{enumerate}
 
-\subsection{Multicommodity flows and congestion}
 
 A \emph{multicommodity flow} in a graph $G$ is a collection of flows $f^{(i)}:E\to\mathbb{R}_{\ge 0}$ for $i=1,\ldots,k$, where each flow $f^{(i)}$ routes $d_i$ units between a source-sink pair $(s_i,t_i)$. The flows needs to satisfy the demand constraints and should respect edge capacities.
-\DD{dobrze byloby dodefiniowac co to oznacza (dla capacities to jeszcze mozna sie domyslac, ale respektowanie demandow przez flow to juz nie jest klasyczne.}
+\DD{dobrze byloby dodefiniowac co to oznacza (a moze usunac ostatnie zdanie?)}
 
 The \emph{congestion} of a multicommodity flow is a way to measure how much these capacities are violated.
 Formally, we define it as the maximum ratio of total flow to capacity over all edges:
 \[
-  C_G := \max_{e\in E} \frac{\sum_i f^{(i)}(e)}{c(e)}.
+  \xi_G := \max_{e\in E} \frac{\sum_i f^{(i)}(e)}{c(e)}.
 \]
-A multicommodity flow is \emph{feasible} if its congestion is at most $1$. Given a \DD{czy na pewno: multicommodity} flow $f$ in $G$, we can map it to a flow in a decomposition tree $T$ using the edge map $m_E$. The mapped flow $m'(f)$ is defined as follows: for each tree edge $e_t\in E_T$, we sum the flow of all edges in $G$ that are mapped to paths in $T$ that include $e_t$. Formally:
+A multicommodity flow is \emph{feasible} if its congestion is at most $1$. Given a flow $f$ in $G$, we can map it to a flow in a decomposition tree $T$ using the edge map $m_E$. The mapped flow $m'(f)$ is defined as follows: for each tree edge $e_t\in E_T$, we sum the flow of all edges in $G$ that are mapped to paths in $T$ that include $e_t$. Formally:
 \[
   m'(f)(e_t) := \sum_{e\in E: e_t\in m'_E(e)} f(e).
 \]
@@ -55,9 +52,8 @@ A multicommodity flow is \emph{feasible} if its congestion is at most $1$. Given
 Racke's theorems relate the congestion of flows in a graph to the congestion in decomposition trees:
 
 \begin{theorem}[Racke (STOC 2008, Theorem 2)]
-Let $f$ be any multicommodity flow in $G$ with congestion $C_G$.
-For any decomposition tree $T$ of $G$, the mapped flow $m'(f)$ in $T$
-has congestion $C_T\le C_G$.
+Let $f$ be any multicommodity flow in $G$ with congestion $\xi_G$.
+For any decomposition tree $T$ of $G$, the mapped flow $m'(f)$ in $T$ has congestion $\xi_T\le \xi_G$.
 \end{theorem}
 
 \begin{theorem}[Racke (STOC 2008, Theorem 4)]
@@ -70,11 +66,12 @@ $f_i$ with congestion at most $1$ in $T_i$, the mapped flow
 has congestion at most $\rho=O(\log n)$ in $G$.
 \end{theorem}
 
-\subsection{Cut capacity preservation}
+\subsection{Approximating sparsest cut with fixed $K$}
 
-\DD{define $\delta$.}
+For a graph $G$ and $U\subseteq V$, define $\delta(U)=\brc{uv\in E\colon u\in U \land v\notin U}$.
+\DD{w sumie wczesniej pisalismy $E(U,\bar{U})$ wiec trzebaby ujednolicic moze.}
 
-\begin{theorem}[Dual cut bound from Racke]\label{thm:racke}
+\begin{theorem}[Dual cut bound from Racke]\label{thm:racke-dual}
 Let $G=(V,E,c_G)$ and let $(T_i,\lambda_i)$ be as in Racke's Theorem~4.
 Define $\mu$ by $\Pr_{T\sim\mu}[T=T_i]=\lambda_i$ and set
 $\rho=O(\log n)$. Then for every cut $U\subsetneq V$:
@@ -86,18 +83,16 @@ The proof is deferred to Appendix~\ref{app:racke-proof}.
 \end{theorem}
 
 
-\subsection{Approximation for a fixed $K$}
-
-\begin{theorem}\label{thm:fixed-K}
-  Apply Theorem~\ref{thm:racke} to $G$, obtaining distribution $\mu$.
-  There exists a tree $T$ in the support of $\mu$ such that $\OPT_K(T)\le \rho\,\OPT_K(G)$.
-\end{theorem}
+\begin{lemma}\label{lem:fixed-K}
+  Apply Theorem~\ref{thm:racke-dual} to $G$, obtaining distribution $\mu$.
+  There exists a tree $T$ in the support of $\mu$ such that $\OPT_K(T) = \bigo\br{\log n}\cdot\OPT_K(G)$.
+\end{lemma}
 
 \begin{proof}
   Let $X^*$ be an optimal cut for $\OPT_K(G)$.
   Since the demand function $w$ is the same in $G$ and in every tree $T$,
-  the cut $X^*$ satisfies $0<w(\cut(X^*))\le K$, hence it is feasible in every tree.
-  Therefore:
+  the cut $X^*$ satisfies $0<w(\cut(X^*))\le K$, hence the cut $X^*$ is feasible in every tree.
+  Therefore by Theorem~\ref{thm:racke-dual},
   \begin{align*}
     \Etree\!\left[\OPT_K(T)\right]
     \;&\le\;
@@ -116,38 +111,39 @@ The proof is deferred to Appendix~\ref{app:racke-proof}.
 
 \subsection{Solving the \DD{sparsest cut} problem on a tree}
 
-\DD{$S_1$ now...}
-    It is a well known fact that the optimal value of the sparsest cut problem cut on trees is achieved by a cut induced by a single edge. Below, we show that this is also the case if we have an additional constraint on the demand cut.
+It is a well known fact that the optimal value of the sparsest cut problem on trees is achieved by a single edge removal.
+Below, we show that this is also the case if we have the additional constraint on the demand.
     \DD{For each edge $e$ of the tree $T$ we define $w_e$ to be the total demand cut by removing $e$ from $T$. (?)}
-\begin{theorem}[Tree optimum is attained by a single edge]\label{thm:single-edge}
+\begin{lemma}[Tree optimum is attained by a single edge]\label{lem:single-edge}
+For a tree $T=(V,E,c,w)$,
   \[
     \OPT_K(T)
     \;=\;
-    \min_{\substack{e\in T \\ 0<w_e\le K}} \frac{c(e)}{w_e}.
+    \min_{\substack{e\in E \\ 0<w_e\le K}} \frac{c(e)}{w_e}.
   \]
-\end{theorem}
-
+\end{lemma}
 \begin{proof}
-  Root $T$ at $r$. For each edge $e$, let $A_e$ be the component away from $r$.
-  Define $c(e):=c_T(e)$ and $w_e:=w(\cut_T(A_e))$. Let $S$ be any feasible cut with $w(\cut(S))\le K$.
-  Let $F(S)$ be the set of tree edges crossing the cut $(S,\bar S)$. Then
+Root $T$ at $r$.
+For each edge $e$, let $A_e$ be the component away from $r$.
+%  Define $c(e):=c_T(e)$ and $w_e:=w(\cut_T(A_e))$. Let $S$ be any feasible cut with $w(\cut(S))\le K$.
+Take an arbitrary cut $(S,\bar{S})$ and denote for brevity $E'=E(S,\bar{S})$.
+Then,
   \[
-    c_T(\cut(S))=\sum_{e\in F(S)} c(e),
-    \qquad
-    w(\cut(S)) \DDfix{\geq} \sum_{e\in F(S)} w_e.
+    w(S,\bar{S}) \leq \sum_{e\in E'} w_e.
   \]
-  Since $w(\cut(S))\le K$ and all $w_e\ge 0$, we have
-  $w_e\le w(\cut(S))\le K$ for every $e\in F(S)$.
-  Also $w_e>0$ whenever $e\in F(S)$ (otherwise the edge can be trivially dropped from $F(S)$).
-  Therefore
+  Since $w\br{S,\bar{S}}\le K$ and all $w_e\ge 0$, we have
+  $w_e\le w(S,\bar{S})\le K$ for every $e\in E'$.
+  Also $w_e>0$ whenever $e\in E'$ (otherwise the edge can be trivially dropped from $E'$).
+  Therefore,
   \[
-    \frac{c_T(\cut(S))}{w(\cut(S))}
-    =
-    \sum_{e\in F(S)} \frac{w_e}{\sum_{f\in F(S)}w_f}\cdot\frac{c(e)}{w_e}
+    \frac{c(E')}{w(S,\bar{S})}
+    \geq
+    \sum_{e\in E'} \frac{w_e}{\sum_{f\in E'}w_f}\cdot\frac{c(e)}{w_e}
     \;\ge\;
-    \min_{e\in T, 0<w_e\le K} \brc{\frac{c(e)}{w_e}}.
+    \min_{e\in T, 0<w_e\le K} \brc{\frac{c(e)}{w_e}},
   \]
-  where the inequality is due to the fact that the left-hand side is a weighted sum with coefficients $w_e/\sum_{f\in F(S)}w_f$ that sum to $1$. By averaging, at least one of the terms in the sum must be at most the minimum of the terms.
+  where the inequality is due to the fact that the left-hand side is a weighted sum with coefficients $w_e/\sum_{f\in E'}w_f$ that sum up to $1$.
+  In particular, we observe that by averaging, at least one of the terms in the sum must be at most the minimum of the terms.
 \end{proof}
 
 \begin{corollary}
