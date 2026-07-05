@@ -6,8 +6,7 @@
 \newcommand{\hOPT}{S_h^{\delta}(G)}
 \newcommand{\psiOPT}{S_{\psi}(G)}
 
-In order to tackle the minimum generalized conductance problem, our first objective is to further simplify the denominator $w\br{S, V}\cdot w\br{\bar{S}, V}$ into a linear function.
-To that end we consider the problem of minimizing
+In order to tackle the minimum generalized conductance problem, we simplify the optimization criterion by considering the problem of minimizing
 \begin{equation} \label{eq:h}
 \hw\br{S}=\frac{c\br{S, \bar{S}}}{w\br{S, V}}, \quad \text{subject to}
 \quad w\br{\bar{S}, V}\geq \delta\cdot w\br{V}
@@ -29,53 +28,55 @@ As an internal tool used in this section (cf. step~\ref{it:S2:beta} below) we wi
 Given a graph $G=(V,E,c,w)$ with capacities and demands, the \emph{generalized $k$-multicut problem} is to find a minimal-cost set of edges $C\subseteq E$, such that the demand cut by $C$ is at least $k$.
 
 Also, we recall the \emph{max-cut} problem that in our context is defined, for a given graph $(R,w_R)$, as finding a vertex partition $\br{S_R, \bar{S}_R}$ of $V\br{R}$, such that $w_R\br{S_R, \bar{S}_R}$ is maximized.
-To solve the latter (approximately du to its NP-hardness), we utilize a folclore greedy procedure (in step~\ref{it:S2:R-cut} below) that we recall in the following form.
-\begin{proposition}[Folclore] \label{pro:max-cut}
-For any edge weighted graph $(R,w_R)$ there exists a polynomial-time greedy algorithm that computes a cut $(C_R,\bar{C}_R)$ such that $w_R\br{C_R,\bar{C}_R}\geq\frac{1}{2}w_R\br{V(R)}$.
+To solve the latter (approximately due to its NP-hardness), we utilize a folklore greedy procedure (in step~\ref{it:S2:R-cut} below) that we recall in the following form.
+\begin{proposition}[Folklore] \label{pro:max-cut}
+For any graph $(R,w_R)$ with demands there exists a polynomial-time greedy algorithm that computes a cut $(C_R,\bar{C}_R)$ such that $w_R\br{C_R,\bar{C}_R}\geq\frac{1}{2}w_R\br{V_R}$.
 \end{proposition}
 \begin{proof}
 Order the vertices of $R$ arbitrarily as $v_1,\ldots,v_l$.
-For each $i\in\brc{1,\ldots,l}$ define $X_i=\brc{v_jv_i\colon j<i}$.
-Start with $C_R=\bar{C}_R=\emptyset$.
-For each $i\in\brc{2,\ldots,l}$ add $v_i$ to either $C_R$ or $\bar{C}_R$ so that $w_R\br{Y_i\cap X_i}$ is maximized, where $Y_i=\brc{uv\colon u\in C_R,v\in \bar{C}_R}$.
+Start with $C_R=\brc{v_1}$ adn $\bar{C}_R=\emptyset$.
+For each $i\in\brc{2,\ldots,l}$, if $w\br{\brc{v_i},\bar{C}_R}>w\br{C_R,\brc{v_i}}$, then add $v_i$ to $C_R$, otherwise add $v_i$ to $\bar{C}_R$.
 
-Clearly the final $(C_R,\bar{C}_R)$ is a cut.
-Also, for each $i\in\brc{2,\ldots,l}$, $w_R\br{Y_i\cap X_i}\geq w_R\br{X_i}$.
-Because $X_i$ are pairwise disjoint and the union of $X_i$'s is $E(R)$, we get $w_R\br{C_R,\bar{C}_R}=\sum_{i=1}^l w_R\br{Y_i\cap X_i}\geq\frac{1}{2}\sum_{i=1}^l w_R\br{X_i}=\frac{1}{2}w_R(V(R)$.
+The final $(C_R,\bar{C}_R)$ is a cut because $C_R\cup\bar{C}_R=V_R$.
+For each $i\in\brc{1,\ldots,l}$ define $X_i=\brc{\br{v_j,v_i}\colon j<i}$.
+For each $i\in\brc{2,\ldots,l}$, $w_R\br{\br{C_R,\bar{C}_R}\cap X_i}\geq \frac{1}{2}w_R\br{X_i}$, which follows from the algorithm's greedy.
+Because $X_i$'s are pairwise disjoint and the union of $X_i$'s is $E_R$, we get
+\[
+w_R\br{C_R,\bar{C}_R}=\sum_{i=1}^l w_R\br{\br{C_R,\bar{C}_R}\cap X_i}\geq\frac{1}{2}\sum_{i=1}^l w_R\br{X_i}=\frac{1}{2}w_R(V_R).
+\]
 \end{proof}
 
 
-
-
 We now introduce a reduction\footnote{We use the word `reduction' since both $S_1$ and $S_2$ are obtained via an algorithmic reduction to another combinatorial problem, either generalized sparsest cut (with restrictions) or the generalized $k$-multicut.} scheme used in this section.
-The scheme is applied to an input graph $G=(V,E,c_G,w_G)$ and it computes independently two candidate sets $S_1$ and $S_2$ via two different methos.
+The scheme is applied to an input graph $G=(V,E,c_G,w_G)$ and it computes independently two candidate sets $S_1$ and $S_2$ via two different methods.
 The returned solution is $S_i$ that minimizes $\psi_w$.
 Formally, the scheme is the following:
 \begin{enumerate}
   \item \label{it:S1} Compute a candidate set $S_1$:
   \begin{enumerate}[label=(\theenumi\alph*)]
-    \item\label{it:S1:Gprime} Build an auxiliary graph $G'=(V',E',w_{G'},c_{G'})$ by adding a universal vertex $r$, i.e. $V'=V\cup\brc{r}$ and $E'=E\cup\brc{ru\colon u\in V}$, setting the capacities to $c_{G'}\br{r,u}=0$ for each $u\in V$ and $c_{G'}\brc{u,v}=c_G\brc{u,v}$ for each $u,v\in V$, and the demands to $w_{G'}\br{r,u}=\sum_{v\in V}w_G\br{u,v}$ for each $u\in V$ and $w_{G'}\br{u,v}=0$ for each pair $u,v\in V$.
+    \item\label{it:S1:Gprime} Build an auxiliary graph $G'=(V',E',c_{G'},w_{G'})$ by adding a universal vertex $r$, i.e. $V'=V\cup\brc{r}$ and $E'=E\cup\brc{ru\colon u\in V}$, setting the capacities to $c_{G'}\br{r,u}=0$ for each $u\in V$ and $c_{G'}\brc{u,v}=c_G\brc{u,v}$ for each $u,v\in V$, and the demands to $w_{G'}\br{r,u}=\sum_{v\in V}w_G\br{u,v}$ for each $u\in V$ and $w_{G'}\br{u,v}=0$ for each pair $u,v\in V$.
     \item\label{it:S1:K} Set $K\gets \frac{4}{3}\cdot w_G\br{V}$.
     \item\label{it:S1:alpha} Run an $\alpha$-approximation algorithm for
     \begin{equation} \label{eq:K}
       \min_{S\subseteq V'} \phi_w\br{S}=\frac{c_{G'}\br{S,\bar S}}{w_{G'}\br{S,\bar S}}
       \quad\text{subject to}\quad 0<w_{G'}\br{S,\bar S}\le K.
     \end{equation}
-    and denote the returned cut by $S_1$. \DD{tutaj zamiast opisywac slownie problem odniosl bym sie, to frazy, ze rozwiazujemy generalized sparsest cut i podac dla jakiej instancji (tak, widze, ze bedzie extra ``subject to''. Jesli to ``subject to'' (nie wiem gdyż czytam liniowo) pojawialoby sie wiecej razy, to pewnie warto nazwac, a jak nie to niech zostanie tak, gdyz jest czytelnie; na razie zostawiam taki marker do oceny pozniej.}
+    and denote the returned cut by $S_1$. \DD{tutaj zamiast opisywac slownie problem odniosl bym sie, to frazy, ze rozwiazujemy generalized sparsest cut i podac dla jakiej instancji (do przemyslenia)}
   \end{enumerate}
   \item \label{it:S2} Compute a candidate set $S_2$:
   \begin{enumerate}[label=(\theenumi\alph*)]
     \item\label{it:S2:beta} Run a $\beta$-approximation algorithm for the generalized $k$-multicut with $k=w_G\br{V}/3$ to obtain a multicut $C$.
-    \item\label{it:S2:R} Build a complete graph $R$ on components of $G\setminus C$, with edge weights $w_R\br{H_1,H_2}=w_G\br{H_1,H_2}$ for any pair $H_1$ and $H_2$, where $H_1$ and $H_2$ are the vertex set of the components.
-    \item\label{it:S2:R-cut} Find a cut $(C_R,\bar{C}_R)$ that cut at least lalf of the total weight in $R$.
+    \item\label{it:S2:R} Build a complete graph $R$ whose vertices are the components of $G- C$, with edge weights $w_R\br{H_1,H_2}=w_G\br{V_{H_1},V_{H_2}}$ for any pair of components $H_1$ and $H_2$.
+    \item\label{it:S2:R-cut} Find a cut $(C_R,\bar{C}_R)$ that cut at least half of the total weight in $R$ (cf. Proopsition~\ref{pro:max-cut}).
     \item\label{it:S2:S2} Map $(C_R,\bar{C}_R)$ back to a cut $S_2$ of $G$: if $v\in V$ belongs to a component corresponding to a vertex of $R$ in $C_R$, then add $v$ to $S_2$; otherwise $v$ goes to $\bar{S}_2$.
   \end{enumerate}
   \item Return the better of $S_1,S_2$, i.e., $\argmin_{X\in\brc{S_1,S_2}}\psi_w\br{X}$.
 \end{enumerate}
 
-Let for the rest of this section $\Sopt$ be an optimal solution, where $w\br{\Sopt, V}\le w\br{\SoptBar, V}$.
+Let for the rest of this section $\Sopt$ be a cut that minimizes $\hw$ in problem~\eqref{eq:h}, where we without loss of generality assume $w\br{\Sopt, V}\le w\br{\SoptBar, V}$.
 Our analysis consists of two separate cases depending on the size of $w\br{\Sopt, \SoptBar}$.
-The first lemma proves that if $w\br{\Sopt, \SoptBar}$ is sufficiently small, then the candidate solution $S_1$ is the one that guarantees the required approximation ratio.
+First we prove (cf. Lemma~\ref{lem:S1}) that if $w\br{\Sopt, \SoptBar}$ is sufficiently small, then the candidate solution $S_1$ is the one that guarantees the required approximation ratio.
+The complementary case is handled by Lemma~\ref{lem:S2}.
 (We remark that the exact choice of constants in our construction, like the one in Lemma~\ref{lem:S1}, is somewhat arbitrary and we do not attempt to optimize them).
 \begin{lemma} \label{lem:S1}
   Assume that $w_G\br{\Sopt, \SoptBar}\leq w\br{V}/3$. %Moreover, let $\alpha$ be an approximation ratio of some approximation algorithm for the problem of minimizing $\phi_w\br{S}$ in $G$ subject to $w_{G}\br{S, \bar{S}}\leq K$.
@@ -88,11 +89,12 @@ For any cut $S\subseteq V$ for which we have without loss of generality that $r\
 \begin{equation} \label{eq:Stwo}
 w_{G}\br{S, V}\leq w_{G}\br{S, V}+w_G\br{S}= w_{G'}\br{S, \bar{S}}\leq 2\cdot w_{G}\br{S, V}.
 \end{equation}
-Here, the equality is due to the fact that for any $S\subseteq V\br{G'}$ the quanitity $w\br{S, \bar{S}}$ double counts the contribution of edges between the vertices of $S$ in $w_{G}\br{S, V}$.
+Here, the second equality is due to the fact that for any $S\subseteq V_{G'}$ the quantity $w_{G'}\br{S, \bar{S}}$ double counts the contribution of edges between the vertices of $S$ in $w_{G}\br{S, V}$.
 
 
-Recall that the set $S_1$ is obtained in step~\ref{it:S1:alpha} and before we analyze this part, we give an intuition as to why we impose the additional bound using the $K$ in \eqref{eq:K} instead of simply solving the generalized sparsest cut on $G'$.
-Note that a trivial cut $S=V$ has cost $0$ in $G'$. Hence, the requirement that $w_G\br{S, V}$ is roughly smaller than $w_G\br{\bar{S}, V}$ eliminates this case as a possible solution.
+Recall that the set $S_1$ is obtained in step~\ref{it:S1:alpha}.
+Note that a trivial cut $S=V$ has cost $0$ in $G'$.
+Hence, the intuition behind the additional bound using the $K$ in \eqref{eq:K} instead of simply solving the generalized sparsest cut on $G'$ is that when $w_G\br{S, V}$ is forced to be roughly smaller than $w_G\br{\bar{S}, V}$, then this eliminates $S=V$ as a possible solution.
 Hence the coice of $K$ in step~\ref{it:S1:K} for the constraint in \eqref{eq:K}.
 
 We now prove that the optimal solution $\Sopt$ that minimizes $h_{G}$ is a valid solution to the problem in \eqref{eq:K}.
@@ -100,7 +102,8 @@ Observe that $\Sopt$ satisfies
 \[
 w_G\br{\Sopt, V}+w_G\br{\SoptBar, V}=w_G\br{V}+w_G\br{\Sopt, \SoptBar}\leq \frac{4}{3}\cdot w_G\br{V}
 \]
-by our assumption that $w_G\br{\Sopt, \SoptBar}\leq w_G\br{V}/3$. As a consequence we get that $w_G\br{\Sopt, V}\leq \frac{2}{3}w_G\br{V}.$ In order to move this cut to $G'$ we append $r$ to $\SoptBar$.
+by our assumption that $w_G\br{\Sopt, \SoptBar}\leq w_G\br{V}/3$.
+Hence, $w_G\br{\Sopt, V}\leq \frac{2}{3}w_G\br{V}.$ In order to move this cut to $G'$ we append $r$ to $\SoptBar$.
 This gives, using~\eqref{eq:Stwo}, that
 \[w_{G'}\br{\Sopt, \SoptBar}\leq 2\cdot w_G\br{\Sopt, V}\leq \frac{4}{3}\cdot w_G\br{V}=K.
 \]

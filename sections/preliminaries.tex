@@ -11,5 +11,8 @@ with a convention that if the domain of $f$ is the edge set and $uv\notin E$, th
 Whenever $A, B\subseteq V$ are not disjoint we define $f\br{A, B}=f\br{A}+f\br{A, B\setminus A}$.
 We remark that the lack of symmetry here, i.e., that $f(A,B)\neq f(B,A)$ in general, is intentional.
 For a subset $C\subseteq E$, $f\br{C}=\sum_{uv\in C}f\br{u,v}$.
-For a subset $S\subseteq V$, we denote by $\bar{S}$ the complement of $S$ in $V$, i.~e. $\bar{S}=V\setminus S$. A \emph{cut} is any subset $S\subseteq V$, such that $S\neq \emptyset$, $S\neq V$ and we denote it either by just $S$ or we write $\br{S, \bar{S}}$ to explicitly indicate the two sides of the cut.
-\DD{todo: sprawdzic czy def. cut spojna.}
+For a subset $S\subseteq V$, we denote by $\bar{S}$ the complement of $S$ in $V$, i.~e. $\bar{S}=V\setminus S$.
+It will be sometimes more convienient to call a cut the set of edges having one endpoint in $S$ and the other in $\bar{S}$.
+\DD{uwaga: tutaj sa de facto 3 definicje cutow ktore dalej zamiennie sa uzywane. Mysle, ze to ok, ale zanaczam, ze tak jest jesli chcialbys ujednolicic}
+A \emph{cut} is any subset $S\subseteq V$, such that $S\neq \emptyset$, $S\neq V$ and we denote it either by just $S$ or we write $\br{S, \bar{S}}$ to explicitly indicate the two sides of the cut.
+We define the demand \emph{cut} by a subset of edges $C\subseteq E$ to be $\sum_{uv\in F}w(u,v)$, where $uv\in F$ if and only if $u$ and $v$ belong to different connected components of $G-E$.
