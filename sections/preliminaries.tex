@@ -1,18 +1,22 @@
 \section{Preliminaries}
 
-Most of the instances of the problem considered in this work consist of a graph $G=\br{V,E,c,w}$, where $V$ is the vertex set, $E$ is the edge set, $c\colon E \to \mathbb{N}$ is the \emph{capacity} function which denotes the cost of cutting an edge, and $w\colon V\times V\to \mathbb{N}$ is the \emph{demand} function which, informally speaking, tells how important separating a given vertex pair is.
+\DD{uklad preliminaries: pierwszy paragraf to definicje ogolno-grafowe, a drugi to cuty, demandy i ich notacja.}
+
+Most of the instances of the problem considered in this work consist of a graph $G=\br{V,E,c,w}$, where $V$ is the vertex set, $E$ is the edge set, $c\colon E \to \mathbb{N}$ is the \emph{capacity} function which encodes the cost of cutting an edge, and $w\colon V\times V\to \mathbb{N}$ is the \emph{demand} function which, informally speaking, tells how important separating a given vertex pair is.
 For adjacent vertices $u,v\in V$, we denote by $uv$ the edge between $u$ and $v$.
-We write $\br{V_H,E_H,c_H,w_H}$ to point out that given parameters represent a particular graph or subgraph $H$.
-For any function $f\colon V\times V\to \mathbb{N}$ and disjoint subsets $A, B\subseteq V$, we define:
+For any $C\subseteq E$, $G-C$ is the graph obtained by removing the edges in $C$ from $G$.
+We write $\br{V_H,E_H,c_H,w_H}$ to point out that given parameters represent a particular graph or subgraph $H$, different than $G$.
+
+For any function $f\colon V\times V\to \mathbb{N}$ and \DD{usunalem ``disjoint'' ...} subsets $A, B\subseteq V$, we define:
 \[
 f\br{A}=\sum_{u,v\in A}f\br{u, v}, \quad f\br{A, B}=\sum_{u\in A}\sum_{v\in B}f\br{u, v}
 \]
 with a convention that if the domain of $f$ is the edge set and $uv\notin E$, then $f\br{u,v}=0$.
-Whenever $A, B\subseteq V$ are not disjoint we define $f\br{A, B}=f\br{A}+f\br{A, B\setminus A}$.
-We remark that the lack of symmetry here, i.e., that $f(A,B)\neq f(B,A)$ in general, is intentional.
-For a subset $C\subseteq E$, $f\br{C}=\sum_{uv\in C}f\br{u,v}$.
+Note that whenever $A, B\subseteq V$ are not disjoint, \DD{... i wtedy to jest konsekwencja tej definicji powyzej.} we have $f\br{A, B}=f\br{A}+f\br{A, B\setminus A}$.
+For a subset $C\subseteq E$ and a function $f$ on the edge set, $f\br{C}=\sum_{uv\in C}f\br{u,v}$.
+\DD{todo: czy zdarza sie, ze mamy funkcje zdefiniowana na $V\times V$, ale argumentem jest zbior krawedzi?}
 For a subset $S\subseteq V$, we denote by $\bar{S}$ the complement of $S$ in $V$, i.~e. $\bar{S}=V\setminus S$.
-It will be sometimes more convienient to call a cut the set of edges having one endpoint in $S$ and the other in $\bar{S}$.
-\DD{uwaga: tutaj sa de facto 3 definicje cutow ktore dalej zamiennie sa uzywane. Mysle, ze to ok, ale zanaczam, ze tak jest jesli chcialbys ujednolicic}
 A \emph{cut} is any subset $S\subseteq V$, such that $S\neq \emptyset$, $S\neq V$ and we denote it either by just $S$ or we write $\br{S, \bar{S}}$ to explicitly indicate the two sides of the cut.
-We define the demand \emph{cut} by a subset of edges $C\subseteq E$ to be $\sum_{uv\in F}w(u,v)$, where $uv\in F$ if and only if $u$ and $v$ belong to different connected components of $G-E$.
+It will be sometimes more convienient to call a cut the set of edges having one endpoint in $S$ and the other in $\bar{S}$.
+Which definition is used will be clear from the context.
+We define the demand \emph{cut} by a subset of edges $C\subseteq E$ to be the sum of all $w(u,v)$ such that $u$ and $v$ belong to different connected components of $G-C$.
