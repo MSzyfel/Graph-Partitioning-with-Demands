@@ -1,0 +1,85 @@
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[>=stealth,line cap=round,line join=round,line width=1.0pt,
+      every node/.style={font=\footnotesize},
+      vtx/.style={circle,minimum size=5mm,inner sep=0pt,
+                  preaction={fill=black,opacity=0.28,transform canvas={xshift=1.2pt,yshift=-1.2pt}}}]
+    \draw[fill=gray!8,draw=gray!55,line width=1.2pt,rounded corners=8pt] (-0.4,-1.5) rectangle (4.0,2.0);
+    \draw[fill=gray!8,draw=gray!55,line width=1.2pt,rounded corners=8pt] (4.4,-1.5) rectangle (8.8,2.0);
+    \draw[fill=gray!8,draw=gray!55,line width=1.2pt,rounded corners=8pt] (9.2,-1.5) rectangle (14.4,2.0);
+
+    \node[font=\bfseries\footnotesize,gray!70] at (1.8,2.35) {(a) multicut on $G$};
+    \node[font=\bfseries\footnotesize,gray!70] at (6.6,2.35) {(b) component graph $R$};
+    \node[font=\bfseries\footnotesize,gray!70] at (11.8,2.35) {(c) max-cut};
+
+    \node[vtx,draw=cutA!80!black,fill=cutA!18] (a1) at (0.6, 1.45) {$H_1$};
+    \node[vtx,draw=cutB!80!black,fill=cutB!18] (a2) at (2.2, 1.45) {$H_2$};
+    \node[vtx,draw=cutA!80!black,fill=cutA!18] (a3) at (3.0, 0.55) {$H_3$};
+    \node[vtx,draw=cutB!80!black,fill=cutB!18] (a4) at (1.8, 0.55) {$H_4$};
+    \node[vtx,draw=gray!70,fill=gray!18] (a5) at (0.5,-0.25) {$H_5$};
+    \node[vtx,draw=cutA!80!black,fill=cutA!18] (a6) at (1.2,-0.95) {$H_6$};
+    \node[vtx,draw=cutB!80!black,fill=cutB!18] (a7) at (2.5,-0.75) {$H_7$};
+
+    \draw[cutA,dashed,shorten <=2pt,shorten >=2pt] (a1)--(a2);
+    \draw[cutA,dashed,shorten <=2pt,shorten >=2pt] (a2)--(a3);
+    \draw[cutA,dashed,shorten <=2pt,shorten >=2pt] (a3)--(a7);
+    \draw[cutA,dashed,shorten <=2pt,shorten >=2pt] (a5)--(a6);
+    \draw[cutA,dashed,shorten <=2pt,shorten >=2pt] (a1) to[bend left=12] (a4);
+    \draw[cutA,dashed,shorten <=2pt,shorten >=2pt] (a1) to[bend right=12] (a4);
+    \draw[cutA,dashed,shorten <=2pt,shorten >=2pt] (a2) to[bend left=10] (a4);
+    \draw[cutA,dashed,shorten <=2pt,shorten >=2pt] (a2) to[bend right=10] (a4);
+    \draw[cutA,dashed,shorten <=2pt,shorten >=2pt] (a4) to[bend left=12] (a6);
+    \draw[cutA,dashed,shorten <=2pt,shorten >=2pt] (a4) to[bend right=12] (a6);
+    \draw[cutA,dashed,shorten <=2pt,shorten >=2pt] (a6) to[bend left=12] (a7);
+    \draw[cutA,dashed,shorten <=2pt,shorten >=2pt] (a6) to[bend right=12] (a7);
+    \draw[cutA,dashed,shorten <=2pt,shorten >=2pt] (a4) to[bend left=18] (a5);
+    \draw[cutA,dashed,shorten <=2pt,shorten >=2pt] (a4)--(a5);
+    \draw[cutA,dashed,shorten <=2pt,shorten >=2pt] (a4) to[bend right=18] (a5);
+
+    \draw[->,cutB,line width=2.0pt] (4.1,0.0) -- (4.35,0.0);
+    \draw[->,cutB,line width=2.0pt] (8.9,0.0) -- (9.15,0.0);
+
+    \node[vtx,draw=cutB!80!black,fill=cutB!12] (r1) at (5.6, 1.45) {$H_1$};
+    \node[vtx,draw=cutB!80!black,fill=cutB!12] (r2) at (7.1, 1.45) {$H_2$};
+    \node[vtx,draw=cutB!80!black,fill=cutB!12] (r3) at (7.8, 0.55) {$H_3$};
+    \node[vtx,draw=cutB!80!black,fill=cutB!12] (r4) at (6.7, 0.55) {$H_4$};
+    \node[vtx,draw=cutB!80!black,fill=cutB!12] (r5) at (5.4,-0.25) {$H_5$};
+    \node[vtx,draw=cutB!80!black,fill=cutB!12] (r6) at (6.3,-0.95) {$H_6$};
+    \node[vtx,draw=cutB!80!black,fill=cutB!12] (r7) at (7.3,-0.75) {$H_7$};
+
+    \draw[gray!55,shorten <=2pt,shorten >=2pt] (r1)--(r2);
+    \draw[gray!55,shorten <=2pt,shorten >=2pt] (r1)--(r4);
+    \draw[gray!55,shorten <=2pt,shorten >=2pt] (r2)--(r3);
+    \draw[gray!55,shorten <=2pt,shorten >=2pt] (r2)--(r4);
+    \draw[gray!55,shorten <=2pt,shorten >=2pt] (r3)--(r7);
+    \draw[gray!55,shorten <=2pt,shorten >=2pt] (r4)--(r5);
+    \draw[gray!55,shorten <=2pt,shorten >=2pt] (r4)--(r6);
+    \draw[gray!55,shorten <=2pt,shorten >=2pt] (r5)--(r6);
+    \draw[gray!55,shorten <=2pt,shorten >=2pt] (r6)--(r7);
+    \node[font=\footnotesize] at (6.6,1.85) {$w_R(H_i,H_j)=w_G(H_i,H_j)$};
+
+    \node[vtx,draw=cutA!80!black,fill=cutA!22] (c1) at (9.9, 1.45) {$H_1$};
+    \node[vtx,draw=cutA!80!black,fill=cutA!22] (c4) at (10.7, 0.55) {$H_4$};
+    \node[vtx,draw=cutA!80!black,fill=cutA!22] (c5) at (10.0,-0.75) {$H_5$};
+    \node[vtx,draw=cutB!80!black,fill=cutB!22] (c2) at (13.0, 1.45) {$H_2$};
+    \node[vtx,draw=cutB!80!black,fill=cutB!22] (c3) at (13.7, 0.55) {$H_3$};
+    \node[vtx,draw=cutB!80!black,fill=cutB!22] (c6) at (12.6,-0.75) {$H_6$};
+    \node[vtx,draw=cutB!80!black,fill=cutB!22] (c7) at (13.4,-1.00) {$H_7$};
+
+    \draw[cutA,shorten <=2pt,shorten >=2pt] (c1)--(c4);
+    \draw[cutA,shorten <=2pt,shorten >=2pt] (c1)--(c5);
+    \draw[cutA,shorten <=2pt,shorten >=2pt] (c4)--(c5);
+    \draw[cutB,shorten <=2pt,shorten >=2pt] (c2)--(c3);
+    \draw[cutB,shorten <=2pt,shorten >=2pt] (c2)--(c6);
+    \draw[cutB,shorten <=2pt,shorten >=2pt] (c3)--(c7);
+    \draw[cutB,shorten <=2pt,shorten >=2pt] (c6)--(c7);
+    \draw[cutC,dashed,shorten <=2pt,shorten >=2pt] (c1)--(c2);
+    \draw[cutC,dashed,shorten <=2pt,shorten >=2pt] (c4)--(c3);
+    \draw[cutC,dashed,shorten <=2pt,shorten >=2pt] (c5)--(c6);
+    \node[cutA,font=\bfseries\small,draw=none,fill=none] at (10.55, 1.75) {$A$};
+    \node[cutB,font=\bfseries\small,draw=none,fill=none] at (13.85, 1.50) {$B$};
+    \draw[dashed,gray!60,line width=1.2pt] (11.7,-1.5) -- (11.7,2.0);
+  \end{tikzpicture}
+  \caption{The second branch of the algorithm: a generalized $k$-multicut produces components, these become vertices of $R$, and max-cut on $R$ determines the final split.}
+  \label{fig:multicut-maxcut-steps}
+\end{figure}

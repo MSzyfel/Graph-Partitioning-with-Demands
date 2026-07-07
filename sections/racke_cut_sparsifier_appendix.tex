@@ -1,31 +1,31 @@
 \subsection{Proof of Theorem~\ref{thm:racke-dual}}\label{app:racke-proof}
 
 \begin{theorem}[Dual cut bound from Racke]
-Let $G=(V,E,c)$ and let $(T_i,\lambda_i)$ be as in Racke's Theorem~4.
+Let $G=(V,E,c_G)$ and let $(T_i,\lambda_i)$ be as in Racke's Theorem~4.
 Define $\mu$ by $\Pr_{T\sim\mu}[T=T_i]=\lambda_i$ and set
 $\rho=O(\log n)$. Then for every cut $U\subsetneq V$:
 \begin{enumerate}
-  \item[(i)] $c_G(\cut(U))\le c_T(\cut(U))$ for every $T$ in the support of $\mu$.
-  \item[(ii)] $\Etree[c_T(\cut(U))]\le \rho\,c_G(\cut(U))$.
+  \item[(i)] $c_G\br{U,\bar U}\le c_T\br{U,\bar U}$ for every $T$ in the support of $\mu$.
+  \item[(ii)] $\Etree\!\left[c_T\br{U,\bar U}\right]\le \rho\cdot c_G\br{U,\bar U}$.
 \end{enumerate}
 \end{theorem}
 
 \begin{proof}
 Fix a cut $U\subsetneq V$.
 
-For (i), let $F^*=c_G(\cut(U))$. By max-flow/min-cut in $G$, there is a
+For (i), let $F^*=c_G\br{U,\bar U}$. By max-flow/min-cut in $G$, there is a
 single-commodity flow from $U$ to $\bar U$ of value $F^*$ and congestion $1$.
 Apply Racke's Theorem~2 to map this flow to any tree $T$ in support. The mapped
 flow in $T$ still has congestion at most $1$, hence can use at most the capacity
-of the tree cut $\cut_T(U)$. Therefore
+of the tree cut between $U$ and $\bar U$. Therefore
 \[
-  F^*=c_G(\cut(U))\le c_T(\cut(U)).
+  F^*=c_G\br{U,\bar U}\le c_T\br{U,\bar U}.
 \]
 
 For (ii), for each tree $T_i$ choose a maximum $\br{U,\bar U}$ flow $f_i$ in $T_i$.
 Since $T_i$ is a tree and capacities are $c_{T_i}$, max-flow/min-cut gives
 \[
-  \mathrm{val}(f_i)=c_{T_i}(\cut(U)),
+  \mathrm{val}(f_i)=c_{T_i}\br{U,\bar U},
 \]
 and $f_i$ has congestion at most $1$ in $T_i$.
 Apply Racke's Theorem~4 to the family $(f_i)$: the mapped convex combination
@@ -35,17 +35,17 @@ Apply Racke's Theorem~4 to the family $(f_i)$: the mapped convex combination
 has congestion at most $\rho$ in $G$. Its value is
 \[
   F:=\sum_i \lambda_i\,\mathrm{val}(f_i)
-   =\sum_i\lambda_i c_{T_i}(\cut(U))
-   =\Etree[c_T(\cut(U))].
+   =\sum_i\lambda_i c_{T_i}\br{U,\bar U}
+  =\Etree\!\left[c_T\br{U,\bar U}\right].
 \]
 Any $\br{U,\bar U}$ flow of value $F$ in $G$ must have congestion at least
-$F/c_G(\cut(U))$ (again by max-flow/min-cut), so
+$F/c_G\br{U,\bar U}$ (again by max-flow/min-cut), so
 \[
-  \frac{F}{c_G(\cut(U))}\le \rho.
+  \frac{F}{c_G\br{U,\bar U}}\le \rho.
 \]
-Substituting $F=\Etree[c_T(\cut(U))]$ gives
+Substituting $F=\Etree\!\left[c_T\br{U,\bar U}\right]$ gives
 \[
-  \Etree[c_T(\cut(U))]\le \rho\,c_G(\cut(U)).
+  \Etree\!\left[c_T\br{U,\bar U}\right]\le \rho\cdot c_G\br{U,\bar U}.
 \]
 This proves (ii).
 \end{proof}

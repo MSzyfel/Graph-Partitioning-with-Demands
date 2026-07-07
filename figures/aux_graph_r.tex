@@ -1,0 +1,25 @@
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[>=stealth,line width=1.0pt,
+      vn/.style={circle,draw=cutB,fill=white,minimum size=7mm,inner sep=0pt,line width=1pt,font=\small,
+             preaction={fill=black,opacity=0.28,transform canvas={xshift=1.3pt,yshift=-1.3pt}}}]
+    \node[vn,draw=cutA,fill=cutA!15] (r) at (-5.0,0.0) {$r$};
+        \draw[draw=cutB,fill=cutB!8,line width=1.2pt,
+          preaction={fill=black,opacity=0.24,transform canvas={xshift=1.5pt,yshift=-1.5pt}}]
+      (1.3,-0.1) ellipse (1.1 and 2.1);
+    \node[font=\bfseries\small,text=cutB] at (1.3,2.8) {$G$};
+
+    \node[vn] (u) at (1.2, 1.3) {};
+    \node[vn] (v) at (1.8, 0.6) {};
+    \node[vn] (x) at (1.0,-0.6) {};
+    \node[vn] (w) at (1.6,-1.5) {};
+
+    \draw[cutB!70,line width=1.0pt] (u)--(v)--(w)--(x)--(u) (u)--(x) (v)--(x);
+    \draw[cutA,dashed,line width=1.1pt] (r) -- (u);
+    \draw[cutA,dashed,line width=1.1pt] (r) -- (v);
+    \draw[cutA,dashed,line width=1.1pt] (r) -- (x);
+    \draw[cutA,dashed,line width=1.1pt] (r) -- (w);
+  \end{tikzpicture}
+  \caption{The auxiliary graph $G'$ defined by adding a universal vertex $r$. The new demand from $r$ to each $u\in V$ equals $w(u,V)$, all other demands are 0. The costs stay the same and the edges from $r$ to $V$ have cost 0.}
+  \label{fig:aux-graph-r}
+\end{figure}

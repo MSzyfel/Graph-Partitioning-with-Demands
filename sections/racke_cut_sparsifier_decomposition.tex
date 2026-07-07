@@ -1,52 +1,40 @@
 ﻿\newcommand{\paths}{P^*}
 
-\section{The algorithm for bounded sparsest cut}
+\section{Algorithm for the sparsest $K$-bounded cut}
+\label{sec:alpha}
 
 Since solving tasks related to sparsest cut is easier on trees, an efficient approach to solving such problems is to first embed the graph into a tree while partially preserving the value of all cuts. To do so, one can use the cut-sparsifier tree decomposition of Racke \cite{OptimalHierarchicalDecompositionsForCongestionMinimizationInNetworks}. This decomposition allows for an embedding of any graph into a probability distribution over a polynomial number of trees such that for every cut, the expected value of the cut in the tree is at most $O\br{\log n}$ times the value of the cut in the original graph, and for every cut, its value in the original graph is at most its value in every tree in the support of the distribution. Therefore, if we can solve our problem on trees, then we can solve it on general graphs with an $O\br{\log n}$-approximation ratio by first embedding it into a distribution over trees and then solving it on each tree in the support of the distribution. Then, the approximation ratio is achieved by choosing the best cut among all cuts produced for these trees. In what follows we make this ideas more precise.
 
-More precisely, in this section we focus on the approximation algorithm for the problem of minimizing $\phi_w\br{S}$ subject to $w\br{S, V}\leq K$, i.e., which is used in step~\ref{it:S1:alpha}.
-Formally, we obtain (using Lemmas~\ref
-{lem:fixed-K} and~\ref{lem:single-edge} proven below):
-\begin{theorem}
-  There exists an $\alpha=\bigo\br{\log n}$-approximation algorithm for general graphs and an exact algorithm for trees for the problem of minimizing $\phi_w\br{S}$ subject to $w\br{S, V}\leq K$.
-\end{theorem}
-Our main tool for proving the result is cut sparcifiers.
-We recall the necessary notation in the next section.
-
-\DD{to by moze poszlo do frontu do our results}
-\begin{corollary}
-  There is a polynomial-time $O(\log n)$-approximation algorithm for the problem of minimizing $\psi_w\br{G}$ on general graphs as well as an $O(1)$-approximation algorithm for the problem of minimizing $\psi_w\br{G}$ on trees.
-\end{corollary}
-
+% Our main tool for proving the result is the notion of cut sparcifiers.
+% We recall the necessary notation in the next section.
 
 \subsection{Decomposition trees and multicommodity flows}
 Given a graph $G=(V,E,c)$, denote by $\paths$ the set of all paths in $G$.
-A \emph{decomposition tree} for a graph $G=(V,E,c)$ is a rooted tree
+A \emph{decomposition tree} for $G$ is a rooted tree
 $T=(V_T,E_T, c_T)$ together with:
 \begin{enumerate}
   \item a node map $m_V:V_T\to V$ that is bijective on leaves of $T$ and $V$,
-  \item an edge map $m_E:E_T\to \paths$ sending each tree edge $uv$ \DD{notacja krawedziowa do ujednolicenia} to a path in $G$
+  \item an edge map $m_E:E_T\to \paths$ sending each tree edge $uv$ to a path in $G$
   between the mapped endpoints $m_V(u)$ and $m_V(v)$,
   \item induced maps $m'_V:V\to V_T$ which maps each vertex of $V$ to the corresponding leaf of $T$ and $m'_E:E\to \paths_T$ which maps an edge $uv\in E$ to the unique (shortest) path between $m'_V(u)$ and $m'_V(v)$ in $T$,
   \item For a tree edge $e=(u,v)$ of $T$, let $V_{u},V_{v}$ be the leaf partition
 induced by deleting $e$. Its capacity is then defined as
 \[
-  c_T(e):=\sum_{x\in V_{u}, y\in V_{v}} c(x,y).
+  c_T(e)=\sum_{x\in V_{u}, y\in V_{v}} c(x,y).
 \]
 \end{enumerate}
 
 
 A \emph{multicommodity flow} in a graph $G$ is a collection of flows $f^{(i)}:E\to\mathbb{R}_{\ge 0}$ for $i=1,\ldots,k$, where each flow $f^{(i)}$ routes $d_i$ units between a source-sink pair $(s_i,t_i)$. The flows needs to satisfy the demand constraints and should respect edge capacities.
-\DD{dobrze byloby dodefiniowac co to oznacza (a moze usunac ostatnie zdanie?)}
 
 The \emph{congestion} of a multicommodity flow is a way to measure how much these capacities are violated.
 Formally, we define it as the maximum ratio of total flow to capacity over all edges:
 \[
-  \xi_G := \max_{e\in E} \frac{\sum_i f^{(i)}(e)}{c(e)}.
+  \xi_G = \max_{e\in E} \frac{\sum_i f^{(i)}(e)}{c(e)}.
 \]
 A multicommodity flow is \emph{feasible} if its congestion is at most $1$. Given a flow $f$ in $G$, we can map it to a flow in a decomposition tree $T$ using the edge map $m_E$. The mapped flow $m'(f)$ is defined as follows: for each tree edge $e_t\in E_T$, we sum the flow of all edges in $G$ that are mapped to paths in $T$ that include $e_t$. Formally:
 \[
-  m'(f)(e_t) := \sum_{e\in E: e_t\in m'_E(e)} f(e).
+  m'(f)(e_t) = \sum_{e\in E: e_t\in m'_E(e)} f(e).
 \]
 
 Racke's theorems relate the congestion of flows in a graph to the congestion in decomposition trees:
@@ -61,94 +49,91 @@ There exists a polynomial-time computable convex combination of decomposition
 trees $(T_i,\lambda_i)$, $\sum_i\lambda_i=1$, such that for any family of multicommodity flows
 $f_i$ with congestion at most $1$ in $T_i$, the mapped flow
 \[
-  f:=\sum_i \lambda_i m(f_i)
+  f=\sum_i \lambda_i m(f_i)
 \]
 has congestion at most $\rho=O(\log n)$ in $G$.
 \end{theorem}
 
-\subsection{Approximating sparsest cut with fixed $K$}
+\subsection{Cut value preservation bounds}
 
-For a graph $G$ and $U\subseteq V$, define $\delta(U)=\brc{uv\in E\colon u\in U \land v\notin U}$.
-\DD{w sumie wczesniej pisalismy $E(U,\bar{U})$ wiec trzebaby ujednolicic moze.}
+To bound how well cuts are preserved by Racke's decomposition, we use an argument analogous to max-flow/min-cut duality: capacities in each tree dominate the original cut capacities pointwise, and by combining tree flows through the convex decomposition we obtain a matching upper bound in expectation.
+This gives the following cut-value preservation statement.
 
 \begin{theorem}[Dual cut bound from Racke]\label{thm:racke-dual}
 Let $G=(V,E,c_G)$ and let $(T_i,\lambda_i)$ be as in Racke's Theorem~4.
 Define $\mu$ by $\Pr_{T\sim\mu}[T=T_i]=\lambda_i$ and set
 $\rho=O(\log n)$. Then for every cut $U\subsetneq V$:
 \begin{enumerate}
-  \item[(i)] $c_G(\cut(U))\le c_T(\cut(U))$ for every $T$ in the support of $\mu$.
-  \item[(ii)] $\Etree[c_T(\cut(U))]\le \rho\,c_G(\cut(U))$.
+  \item[(i)] $c_G\br{U,\bar{U}}\le c_T\br{U,\bar{U}}$ for every $T$ in the support of $\mu$.
+  \item[(ii)] $\Etree\!\left[c_T\br{U,\bar{U}}\right]\le \rho\,c_G\br{U,\bar{U}}$.
 \end{enumerate}
 The proof is deferred to Appendix~\ref{app:racke-proof}.
 \end{theorem}
 
+\subsection{Algorithm for the sparsest $K$-bounded cut}
 
-\begin{lemma}\label{lem:fixed-K}
-  Apply Theorem~\ref{thm:racke-dual} to $G$, obtaining distribution $\mu$.
-  There exists a tree $T$ in the support of $\mu$ such that $\OPT_K(T) = \bigo\br{\log n}\cdot\OPT_K(G)$.
-\end{lemma}
-
+Armed with Theorem~\ref{thm:racke-dual}, we can now show the main result of this section:
+\begin{theorem} \label{thm:phiK}
+  There exists an $\alpha=\bigo\br{\log n}$-approximation algorithm for general graphs and an exact algorithm for trees for the sparsest $K$-bounded cut problem, for any choice of $K$.
+\end{theorem}
 \begin{proof}
-  Let $X^*$ be an optimal cut for $\OPT_K(G)$.
-  Since the demand function $w$ is the same in $G$ and in every tree $T$,
-  the cut $X^*$ satisfies $0<w(\cut(X^*))\le K$, hence the cut $X^*$ is feasible in every tree.
-  Therefore by Theorem~\ref{thm:racke-dual},
-  \begin{align*}
-    \Etree\!\left[\OPT_K(T)\right]
-    \;&\le\;
-    \Etree\!\left[\frac{c_T(\cut(X^*))}{w(\cut(X^*))}\right]
-    \;
-    \\&=\;
-    \frac{1}{w(\cut(X^*))}\,\Etree\!\left[c_T(\cut(X^*))\right]
-    \;\\&\le\;
-    \frac{\rho\,c_G(\cut(X^*))}{w(\cut(X^*))}
-    \;\\&=\;
-    \rho\,\OPT_K(G).
-  \end{align*}
-  By averaging, some tree $T$ in the support satisfies
-  $\OPT_K(T)\le \rho\,\OPT_K(G)$.
-\end{proof}
+The algorithm is as follows:
+\begin{enumerate}
+  \item Compute the convex combination of decomposition trees $(T_i,\lambda_i)$ as in Theorem~\ref{thm:Racke4} with respect to the values of $c$ in $G$.
+  \item For any $u,v\in V$, set $w_{T_i}(m'_V(u),m'_V(v))=w(u,v)$, i.e., the demand function is the same in $G$ and in every tree $T_i$. For any non-leaf vertex of $T_i$, $u$ and every $v\in V\br{T_i}$, set $w_{T_i}(u,v)=0$.
+  \item For each tree $T_i$, compute the optimal sparsest $K$-bounded cut $\br{X_i,\bar{X}_i}$ in $T_i$.
+  \item Return the cut $\br{X_i,\bar{X}_i}$ with the minimum sparsity among all trees $T_i$, i.~e., $\argmin_{X_i} \phiwK(T_i)$.
+\end{enumerate}
 
-\subsection{Solving the \DD{sparsest cut} problem on a tree}
+To prove the approximation guarantee, let $\br{X^*,\bar{X}^*}$ be an optimal cut for the generalized sparsest $K$-bounded cut in $G$.
+Since the demand function $w$ is the same in $G$ and in every tree $T$, the cut $X^*$ is feasible in every tree, i.e., $0<w_{T}\br{X^*,\bar{X}^*}\le K$.
+Therefore by Theorem~\ref{thm:racke-dual},
+\begin{align*}
+  \Etree\!\left[\phiwK(T)\right]
+  \;&\le\;
+  \Etree\!\left[\frac{c_T\br{E_T\br{X^*,\bar{X}^*}}}{w_T\br{X^*,\bar{X}^*}}\right]
+  \;
+  \\&=\;
+  \frac{1}{w\br{X^*,\bar{X}^*}}\,\Etree\!\left[c_T\br{E_T\br{X^*,\bar{X}^*}}\right]
+  \;\\&\le\;
+  \frac{\rho\,c\br{E\br{X^*,\bar{X}^*}}}{w\br{X^*,\bar{X}^*}}
+  \;\\&=\;
+  \rho\cdot\phiwK(G).
+\end{align*}
+By averaging, some tree $T$ in the support satisfies
+$\phiwK(T)\le \rho\,\phiwK(G)$, so the returned cut is an $\bigo\br{\log n}$-approximation.
 
-It is a well known fact that the optimal value of the sparsest cut problem on trees is achieved by a single edge removal.
-Below, we show that this is also the case if we have the additional constraint on the demand.
-    \DD{For each edge $e$ of the tree $T$ we define $w_e$ to be the total demand cut by removing $e$ from $T$. (?)}
-\begin{lemma}[Tree optimum is attained by a single edge]\label{lem:single-edge}
-For a tree $T=(V,E,c,w)$,
-  \[
-    \OPT_K(T)
-    \;=\;
-    \min_{\substack{e\in E \\ 0<w_e\le K}} \frac{c(e)}{w_e}.
-  \]
-\end{lemma}
-\begin{proof}
-Root $T$ at $r$.
+It remains to justify exact solvability on trees.
+It is a well known fact that an optimal sparsest cut in a tree is achieved by a single edge removal.
+Below, we show that this is also the case for the $K$-bounded generalization.
+For each edge $e$ of a tree $T$ we define $w_e$ to be the total demand cut by removing $e$ from $T$.
+For a tree $T=(V_T,E_T,c_T,w_T)$,
+\[
+  \phiwK(T)
+  \;=\;
+  \min_{\substack{e\in E_T \\ 0<w_e\le K}} \frac{c_T(e)}{w_e}.
+\]
+Indeed, root $T$ at $r$.
 For each edge $e$, let $A_e$ be the component away from $r$.
-%  Define $c(e):=c_T(e)$ and $w_e:=w(\cut_T(A_e))$. Let $S$ be any feasible cut with $w(\cut(S))\le K$.
-Take an arbitrary cut $(S,\bar{S})$ and denote for brevity $E'=E(S,\bar{S})$.
+Take an arbitrary cut $(S,\bar{S})$ and denote for brevity $E'=E_T(S,\bar{S})$.
 Then,
-  \[
-    w(S,\bar{S}) \leq \sum_{e\in E'} w_e.
-  \]
-  Since $w\br{S,\bar{S}}\le K$ and all $w_e\ge 0$, we have
-  $w_e\le w(S,\bar{S})\le K$ for every $e\in E'$.
-  Also $w_e>0$ whenever $e\in E'$ (otherwise the edge can be trivially dropped from $E'$).
-  Therefore,
-  \[
-    \frac{c(E')}{w(S,\bar{S})}
-    \geq
-    \sum_{e\in E'} \frac{w_e}{\sum_{f\in E'}w_f}\cdot\frac{c(e)}{w_e}
-    \;\ge\;
-    \min_{e\in T, 0<w_e\le K} \brc{\frac{c(e)}{w_e}},
-  \]
-  where the inequality is due to the fact that the left-hand side is a weighted sum with coefficients $w_e/\sum_{f\in E'}w_f$ that sum up to $1$.
-  In particular, we observe that by averaging, at least one of the terms in the sum must be at most the minimum of the terms.
+\[
+  w_T\br{S,\bar{S}} \leq \sum_{e\in E'} w_e.
+\]
+Since $w_T\br{S,\bar{S}}\le K$ and all $w_e\ge 0$, we have
+$w_e\le w_T\br{S,\bar{S}}\le K$ for every $e\in E'$.
+Also $w_e>0$ whenever $e\in E'$ (otherwise the edge can be trivially dropped from $E'$).
+Therefore,
+\[
+  \frac{c_T(E')}{w_T\br{S,\bar{S}}}
+  \geq
+  \sum_{e\in E'} \frac{w_e}{\sum_{f\in E'}w_f}\cdot\frac{c_T(e)}{w_e}
+  \;\ge\;
+  \min_{e\in E_T, 0<w_e\le K} \brc{\frac{c_T(e)}{w_e}}.
+\]
+Thus an optimal $K$-bounded sparsest cut in a tree is achieved by removing a single edge.
+Hence it suffices to scan all edges and pick the minimum feasible ratio $c_T(e)/w_e$, which is polynomial-time (in particular linear in the number of edges).
 \end{proof}
-
-\begin{corollary}
-  $\OPT_K(T)$ can be computed in $O(n)$ time by a single scan over the edges of $T$.
-\end{corollary}
 
 
 % \section{Semi-definite programming formulation of $h\br{S}$}
@@ -181,7 +166,7 @@ Then,
 % a_c(f) = \frac{\sum_{x,y \in X}c(x,y)\cdot d(x,y)}{\sum_{x,y \in X}c(x,y)\cdot |f(x)-f(y)|}
 % \]
 
-% Bourgains theorem states that for every such $w$ there exists an efficiently computable map $f$ such that $a_c(f)=O(\log n)$. Observe, that the objective function of the SDP can be rewritten as $$\frac{1}{2K} \sum_{u,v \in V} c(u,v)\cdot d(u,v)$$
+% Bourgains theorem states that for every such $w$ there exists an efficiently computable map $f$ such that $a_c(f)=\bigo(\log n)$. Observe, that the objective function of the SDP can be rewritten as $$\frac{1}{2K} \sum_{u,v \in V} c(u,v)\cdot d(u,v)$$
 
 % Therefore, we know that there exists an efficiently computable map $f$ such that the following holds:
 % $$
@@ -189,7 +174,7 @@ Then,
 % $$
 % where the first inequality is by the fact that $f$ is 1-Lipshitz and the second inequality is by definition of $a_c(f)$.
 
-% Since by Bourgains theorem $f$ with $a_c(f)=O(\log n)$ can be found in polynomial time we have that the objective function of the SDP embeds into $\mathbb{R}$ with $O(\log n)$ distortion.
+% Since by Bourgains theorem $f$ with $a_c(f)=\bigo(\log n)$ can be found in polynomial time we have that the objective function of the SDP embeds into $\mathbb{R}$ with $O(\log n)$ distortion.
 
 % The remaining objective is to use the fact in design of a rounding procedure for the above SDP.
 

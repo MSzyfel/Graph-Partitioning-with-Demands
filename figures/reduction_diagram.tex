@@ -1,5 +1,8 @@
 \begin{tikzpicture}[>=stealth, line width=0.9pt]
-  \tikzstyle{box}=[draw, rounded corners, align=center, inner sep=4pt, minimum width=3cm, minimum height=1.10cm]
+  \tikzstyle{box}=[draw, rounded corners, align=center, inner sep=4pt,
+    minimum width=3cm, minimum height=1.10cm,
+    fill=white,
+    preaction={fill=black,opacity=0.24,transform canvas={xshift=1.4pt,yshift=-1.4pt}}]
 
   % Left: tree problems
   \node[box] (cst) at (0, 2.6) {Constrained sparsest cut\\on trees};

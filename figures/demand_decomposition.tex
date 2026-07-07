@@ -1,0 +1,37 @@
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[>=stealth,line width=0.9pt,
+      vnA/.style={circle,draw=cutA,fill=cutA!12,minimum size=4.5mm,inner sep=0pt,line width=0.8pt,
+          preaction={fill=black,opacity=0.32,transform canvas={xshift=1.3pt,yshift=-1.3pt}}},
+      vnB/.style={circle,draw=cutB,fill=cutB!12,minimum size=4.5mm,inner sep=0pt,line width=0.8pt,
+          preaction={fill=black,opacity=0.32,transform canvas={xshift=1.3pt,yshift=-1.3pt}}}]
+        \draw[draw=cutA,fill=cutA!8,line width=1.2pt,
+          preaction={fill=black,opacity=0.22,transform canvas={xshift=1.5pt,yshift=-1.5pt}}]
+      (-3.1,0) ellipse (2.1 and 1.4);
+        \draw[draw=cutB,fill=cutB!8,line width=1.2pt,
+          preaction={fill=black,opacity=0.22,transform canvas={xshift=1.5pt,yshift=-1.5pt}}]
+      (3.3,0) ellipse (2.1 and 1.4);
+    \node[font=\bfseries,text=cutA] at (-3.1,2.2) {$S$};
+    \node[font=\bfseries,text=cutB] at (3.3,2.2) {$\bar S$};
+
+    \node[vnA] (s1) at (-3.7, 0.7) {};
+    \node[vnA] (s2) at (-2.9, 0.8) {};
+    \node[vnA] (s3) at (-2.3, 0.0) {};
+    \node[vnA] (s4) at (-3.0,-0.7) {};
+    \draw[cutA!70] (s1)--(s2)--(s3)--(s4)--(s1) (s1)--(s3) (s2)--(s4);
+
+    \node[vnB] (t1) at (2.3, 0.7) {};
+    \node[vnB] (t2) at (3.3, 0.8) {};
+    \node[vnB] (t3) at (3.9, 0.1) {};
+    \node[vnB] (t4) at (3.3,-0.7) {};
+    \node[vnB] (t5) at (2.4,-0.7) {};
+    \draw[cutB!70] (t1)--(t2)--(t3)--(t4)--(t5)--(t1) (t1)--(t3) (t2)--(t4) (t3)--(t5);
+
+    \draw[cutC,dashed,line width=1.1pt] (s2) -- (t1);
+    \draw[cutC,dashed,line width=1.1pt] (s2) to[out=-12,in=160] (t4);
+    \draw[cutC,dashed,line width=1.1pt] (s3) to[out=-42,in=222] (t2);
+    \draw[cutC,dashed,line width=1.1pt] (s4) to[out=-18,in=200] (t5);
+  \end{tikzpicture}
+  \caption{$f(S,V)=\textcolor{cutA}{f(S)}+\textcolor{cutC}{f(S,\bar S)}$: the total mass incident to $S$ decomposes into the mass inside $S$ and the mass crossing the cut.}
+  \label{fig:demand-decomposition}
+\end{figure}
