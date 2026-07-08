@@ -1,6 +1,6 @@
 ﻿\section{Applications}
 
-Below we show few applications of the \textsc{Minimum Generalized Conductance Problem}. We show how to use the approximation algorithm for the \textsc{Minimum Generalized Conductance Problem} to obtain approximation algorithms for the \textsc{Quadratic Sparsest Cut}, \textsc{Graph Partitioning with Demands} and \textsc{Hierarchical Clustering with Demands} problems.
+Below we show few applications of the \textsc{Generalized Conductance}. We show how to use the approximation algorithm for the \textsc{Generalized Conductance} to obtain approximation algorithms for the \textsc{Quadratic Sparsest Cut}, \textsc{Graph Partitioning with Demands} and \textsc{Hierarchical Clustering with Demands} problems.
 \subsection{Warm up: Quadratic Sparsest Cut}
 
 In the problem we call the \textsc{Quadratic Sparsest Cut}, one is required to find a subset of vertices $S$ that minimizes 
@@ -14,13 +14,13 @@ Since $\spr{S},\spr{\bar{S}}\geq 1$, we get that
 \]
 and the two objectives are equivalent up to a factor of $4$. Since $w$ is multiplicative, we obtain the following corollary:
 \begin{corollary}
-    There is a polynomial-time $O(\sqrt{\log n})$-approximation algorithm for the \textsc{Quadratic Sparsest Cut Problem}.
+    There is a polynomial-time $\bigo(\sqrt{\log n})$-approximation algorithm for the \textsc{Quadratic Sparsest Cut Problem}.
 \end{corollary}
 
 \subsection{Graph Partitioning with Demands}
-Below, we show how to use the approximation algorithm for the \textsc{Minimum Generalized Conductance Problem} to obtain an approximation algorithm for \textsc{Graph Partitioning with Demands}. In this problem, we are given a graph $G=(V,E,c,w)$ and a fixed constant $\rho\in(0,1)$, and the goal is to find a subset of edges $C\subseteq E$ that minimizes $c\br{C}$ such that for every $H\in V-C$, we have $w\br{H}\leq \rho\cdot w\br{V}$.
+Below, we show how to use the approximation algorithm for the \textsc{Generalized Conductance} to obtain an approximation algorithm for \textsc{Graph Partitioning with Demands}. In this problem, we are given a graph $G=(V,E,c,w)$ and a fixed constant $\rho\in(0,1)$, and the goal is to find a subset of edges $C\subseteq E$ that minimizes $c\br{C}$ such that for every $H\in V-C$, we have $w\br{H}\leq \rho\cdot w\br{V}$.
 
-Let $\rho<\eta<1$ be a constant. We show how to obtain a bi-criteria approximation algorithm for \textsc{Graph Partitioning with Demands} that returns a subset of edges $C$ such that $c\br{C}=O_{\rho, \eta}\br{\gamma}\cdot c\br{C^*}$ and for every $H\in V-C$, we have $w\br{H}\leq \eta \cdot w\br{V}$, where $C^*$ is the optimal solution and $\gamma$ is the approximation ratio for the \textsc{Minimum Generalized Conductance Problem}. This is done in two parts. Firstly, we show how to do it for a limited range of $\eta$ and then we show how to extend it to the whole range of $\eta\in(\rho,1)$.
+Let $\rho<\eta<1$ be a constant. We show how to obtain a bi-criteria approximation algorithm for \textsc{Graph Partitioning with Demands} that returns a subset of edges $C$ such that $c\br{C}=O_{\rho, \eta}\br{\gamma}\cdot c\br{C^*}$ and for every $H\in V-C$, we have $w\br{H}\leq \eta \cdot w\br{V}$, where $C^*$ is the optimal solution and $\gamma$ is the approximation ratio for the \textsc{Generalized Conductance}. This is done in two parts. Firstly, we show how to do it for a limited range of $\eta$ and then we show how to extend it to the whole range of $\eta\in(\rho,1)$.
 
 Define $
 \delta_{\rho}:=\min\brc{1/4,1-\rho}.$ and $
@@ -31,7 +31,7 @@ The analysis uses a generalization of the standard technique of dealing with bal
     \item $G'\gets \br{V, E,c,w}$
     \item While $w\br{V\br{G'}}> \eta \cdot w\br{V}$ do
     \begin{itemize}
-        \item Use the $\gamma$-approximation algorithm for the \textsc{Minimum Generalized Conductance Problem} to find a cut $(S,\bar{S})$ in $G'$, where $w\br{S}\leq w\br{\bar{S}}$.
+        \item Use the $\gamma$-approximation algorithm for the \textsc{Generalized Conductance} to find a cut $(S,\bar{S})$ in $G'$, where $w\br{S}\leq w\br{\bar{S}}$.
         \item $C\gets C\cup E\br{S, \bar{S}}$
         \item Remove the vertices in $S$ from $G'$, i.e., $G'\gets G'[V\br{G'}\setminus S]$
     \end{itemize}
@@ -42,13 +42,13 @@ The above algorithm is characterized by the following claim.
 \begin{theorem}\label{thm:gpd-bicriteria}
     For every fixed $\rho\in(0,1)$ and every fixed $\eta\in\br{\max\brc{1/2,1-\delta_{\rho}},1}$, there exists a polynomial-time algorithm that returns, for any input graph, a subset of edges $C$ such that
     \[
-    c\br{C}=O\br{\gamma/(\eta+\delta_{\rho}-1)^2}\cdot c\br{C^*}
+    c\br{C}=\bigo\br{\gamma/(\eta+\delta_{\rho}-1)^2}\cdot c\br{C^*}
     \]
     and for every $H\in V-C$, we have
     \[
     w\br{H}\leq \eta \cdot w\br{V},
     \]
-    where $\delta_{\rho}:=\min\brc{1/4,1-\rho}$, $C^*$ is the optimal solution and $\gamma$ is the approximation ratio for the \textsc{Minimum Generalized Conductance Problem}.
+    where $\delta_{\rho}:=\min\brc{1/4,1-\rho}$, $C^*$ is the optimal solution and $\gamma$ is the approximation ratio for the \textsc{Generalized Conductance}.
 \end{theorem}
 \begin{proof}
     We first prove the component-size guarantee. Consider all components $H\in G\setminus C$. If $H$ is $G'$ after the last iteration of the while loop, then by the stopping condition of this loop we have $w\br{H}\leq \eta \cdot w\br{V}$. Otherwise, $H$ was the smaller side of the cut in some iteration of the while loop, and thus $w\br{H}\leq w\br{V}/2\leq \eta \cdot w\br{V}$, where we use the assumption $\eta\in\br{\max\brc{1/2,1-\delta_{\rho}},1}$ (in particular, $\eta\geq 1/2$). In either case, $w\br{H}\leq \eta \cdot w\br{V}$.
@@ -95,7 +95,7 @@ The above algorithm is characterized by the following claim.
         w\br{A\cap V\br{G'}, V\br{G'}}\geq w\br{A, V}-w\br{V\setminus V\br{G'}}\geq \delta_{\rho}w\br{V}-\br{1-\eta}w\br{V}=\br{\eta+\delta_{\rho}-1}w\br{V}.
     \]
         Here we used the stopping condition $w\br{V\br{G'}}>\eta \cdot w\br{V}$, i.e. $w\br{V\setminus V\br{G'}}<\br{1-\eta}w\br{V}$.
-        Symmetrically, for $B$ we get that, $w\br{B\cap V\br{G'}, V\br{G'}}\geq \br{\eta+\delta_{\rho}-1}w\br{V}$. Since $\eta>1-\delta_{\rho}$ by assumption on $\eta$, we have $\eta+\delta_{\rho}-1>0$. Let $\br{S, \bar{S}}$ be the cut returned by the $\gamma$-approximation algorithm for the \textsc{Minimum Generalized Conductance Problem} in $G'$. We have
+        Symmetrically, for $B$ we get that, $w\br{B\cap V\br{G'}, V\br{G'}}\geq \br{\eta+\delta_{\rho}-1}w\br{V}$. Since $\eta>1-\delta_{\rho}$ by assumption on $\eta$, we have $\eta+\delta_{\rho}-1>0$. Let $\br{S, \bar{S}}$ be the cut returned by the $\gamma$-approximation algorithm for the \textsc{Generalized Conductance} in $G'$. We have
 \begin{align*}
         \frac{c\br{S, \bar{S}}}{w\br{S, V\br{G'}}\cdot w\br{\bar{S}, V\br{G'}}} & \leq \gamma \cdot \frac{c\br{A, B}}{w\br{A\cap V\br{G'}, V\br{G'}}\cdot w\br{B\cap V\br{G'}, V\br{G'}}} \\
         &\leq \frac{\gamma\cdot c\br{A, B}}{\br{\eta+\delta_{\rho}-1}^2w\br{V}^2}
@@ -120,15 +120,15 @@ As an immediate corollary we get:
 \begin{corollary}
     For fixed $\rho\in(0,1)$ and $\eta\in\br{\max\brc{1/2,1-\delta_{\rho}},1}$ (where $\delta_{\rho}=\min\brc{1/4,1-\rho}$), there is a pseudo-approximation algorithm for \textsc{Graph Partitioning with Demands} with the following guarantees:
     \[
-    c\br{C}\leq O\br{\frac{\log n}{\br{\eta+\delta_{\rho}-1}^2}}\cdot c\br{C^*}
+    c\br{C}\leq \bigo\br{\frac{\log n}{\br{\eta+\delta_{\rho}-1}^2}}\cdot c\br{C^*}
     \quad\text{on general graphs,}
     \]
     \[
-    c\br{C}\leq O\br{\frac{1}{\br{\eta+\delta_{\rho}-1}^2}}\cdot c\br{C^*}
+    c\br{C}\leq \bigo\br{\frac{1}{\br{\eta+\delta_{\rho}-1}^2}}\cdot c\br{C^*}
     \quad\text{on trees,}
     \]
     \[
-    c\br{C}\leq O\br{\frac{\sqrt{\log n}}{\br{\eta+\delta_{\rho}-1}^2}}\cdot c\br{C^*}
+    c\br{C}\leq \bigo\br{\frac{\sqrt{\log n}}{\br{\eta+\delta_{\rho}-1}^2}}\cdot c\br{C^*}
     \quad\text{for multiplicative demands.}
     \]
     In all cases, every connected component $H$ of $G\setminus C$ satisfies
@@ -158,7 +158,7 @@ Fix $k'=\eta\cdot w\br{V}$ and $k=\rho\cdot w\br{V}$ to be global parameters for
     \[
         c\br{C_G}\leq d\cdot \kappa\br{\rho,\eta}\cdot \gamma\cdot c\br{C^*},
     \]
-    where $d:=\cl{\log_{5/4}\br{1/\eta}}$, $C^*$ is the optimal solution and $\gamma$ is the approximation ratio for the \textsc{Minimum Generalized Conductance Problem}.
+    where $d:=\cl{\log_{5/4}\br{1/\eta}}$, $C^*$ is the optimal solution and $\gamma$ is the approximation ratio for the \textsc{Generalized Conductance}.
 \end{theorem}
 \begin{proof}
     It is easy to see that the algorithm runs in polynomial time. Hence, we focus on the approximation ratio.
@@ -208,47 +208,47 @@ As an immediate corollary we get:
 \begin{corollary}
     For fixed $\rho\in(0,1)$ and $\eta\in(0,1)$, there is an approximation algorithm for \textsc{Graph Partitioning with Demands} that returns a subset of edges $C_G$ such that every connected component $H$ of $G\setminus C_G$ satisfies $w\br{H}\leq \eta\cdot w\br{V}$ and, writing $\Lambda:=d\cdot \kappa\br{\rho,\eta}$ with $d=\cl{\log_{5/4}\br{1/\eta}}$ and $\kappa\br{\rho,\eta}=\max\brc{400,\,1/\br{\br{1-\rho/\eta}\cdot4/5}^2}$, the following holds:
     \[
-    c\br{C_G}\leq O\br{\Lambda\cdot\log n}\cdot c\br{C^*}
+    c\br{C_G}\leq \bigo\br{\Lambda\cdot\log n}\cdot c\br{C^*}
     \quad\text{on general graphs,}
     \]
     \[
-    c\br{C_G}\leq O\br{\Lambda}\cdot c\br{C^*}
+    c\br{C_G}\leq \bigo\br{\Lambda}\cdot c\br{C^*}
     \quad\text{on trees,}
     \]
     \[
-    c\br{C_G}\leq O\br{\Lambda\cdot\sqrt{\log n}}\cdot c\br{C^*}
+    c\br{C_G}\leq \bigo\br{\Lambda\cdot\sqrt{\log n}}\cdot c\br{C^*}
     \quad\text{for multiplicative demands.}
     \]
-    In particular, for any fixed $\rho\in(0,1)$ and $\eta\in(0,1)$, the value $\Lambda$ is a constant, and the above bounds are $O\br{\log n}$, $O\br{1}$ and $O\br{\sqrt{\log n}}$, respectively.
+    In particular, for any fixed $\rho\in(0,1)$ and $\eta\in(0,1)$, the value $\Lambda$ is a constant, and the above bounds are $\bigo\br{\log n}$, $\bigo\br{1}$ and $\bigo\br{\sqrt{\log n}}$, respectively.
 \end{corollary}
 
 
 \subsection{Hierarchical clustering with demands}
 
-In this problem one is given a graph $G=(V,E,c,w)$ with cost and demand functions $c\colon E\to \mathbb{N}$ and $w\colon V\to \mathbb{N}$, and the goal is to find a hierarchical clustering tree of $G$. The \emph{clustering tree} $T=(V_T,E_T)$ of $G$ is a binary tree where each node $u\in V_T$ is associated with a subset of $S_u\subseteq V$, that we called a \emph{cluster}, such that the subsets associated with children of $u$ form a partition of $S_u$.
+In this problem one is given a graph $G=(V,E,c,w)$ with cost and demand functions $c\colon E\to \mathbb{N}$ and $w\colon V\to \mathbb{N}$, and the goal is to find a hierarchical clustering tree of $G$. The \emph{clustering tree} $T=(V_T,E_T)$ of $G$ is a binary tree where each node $u\in V_T$ is associated with a subgraph $H_u$ of $G$, that we call a \emph{cluster}, such that the subsets associated with children of $u$ form a partition of $H_u$.
 The root's cluster is $V$ and the leafs of $T$ are associated with singletons. The Dasgupta's clustering objective is to find a tree $T$ minimizing \[
-c\br{T} = \sum_{u\in V\br{T}} w\br{S_u}\cdot c\br{S_u, V\setminus S_u}.
+c\br{T} = \sum_{u\in V\br{T}} w\br{H_u}\cdot c\br{H_u, V\setminus H_u}.
 \]
 We refer to the above problem as \textsc{Hierarchical Clustering with Demands}.
-We show how to use the approximation algorithm for \textsc{Graph Partitioning with Demands} to obtain an approximation algorithm for \textsc{Hierarchical Clustering with Demands}. We note that the assumption of $T$ being binary is technical and can be relaxed due to an artibrary tree transformation into a binary one without increasing the cost.
+We show how to use the approximation algorithm for \textsc{Graph Partitioning with Demands} to obtain an approximation algorithm for the former task. We note that the assumption of $T$ being binary can be relaxed due since it is easy to see that any non-binary tree can be transformed into one without increasing the cost \cite{ACostFunctionForSimilarityBasedHierarchicalClustering}.
 
-The algorithm for \textsc{Hierarchical Clustering with Demands} is as follows:
+The for \textsc{Hierarchical Clustering with Demands} is as follows:
 \begin{enumerate}
  \item Let initially $T$ be a single (root) node associated with $V$.
- \item While $T$ has a node $v$ with $\spr{S_u}>1$, call a $\gamma$-approximation algorithm for \textsc{Graph Partitioning with Demands} on the graph induced by $S_u$ with $
-\rho=1/2$ and $\eta=4/5.$. If $(S,S_u\setminus S)$ is the output, then introduce to $T$ two children with clusters $S$ and $S_u\setminus S$.
+ \item While $T$ has a node $u$ with $\w\br{H_u}>0$, call a $\gamma$-approximation algorithm for \textsc{Graph Partitioning with Demands} on $H_u$ with $
+\rho=1/2$ and $\eta=4/5$. Let $C_u$ be the set of edges returned by the algorithm. For each connected component $H\in H_u\setminus C_u$, add a child node $v$ to $u$ in $T$ associated with the cluster $H_v=H$.
 \end{enumerate}
 
-In order to show that the above algorithm achieves an $O\br{\gamma}$-approximation ratio, where $\gamma$ is the approximation ratio for the \textsc{Graph Partitioning with Demands}, we use a generalized decomposition technique into levels due to \cite{ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics}. Let $\cS_{t}$ be the set of all maximal clusters $S$ in $T^*$ such that $w\br{S}\leq t$. Observe that $\cS_t$ is a partition of $V$. Let $E_t^*$ be the set of all edges between clusters in $\cS_t$. For convenience let $E_0^*=E$. We call $E_t^*$ the \emph{cut at level} $t$. We have the following lemma:
+In order to show that the above algorithm achieves an $\bigo\br{\gamma}$-approximation ratio, where $\gamma$ is the approximation ratio for the \textsc{Graph Partitioning with Demands}, we use a generalized decomposition technique into levels due to \cite{ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics}. Let $\cH_{t}$ be the set of all maximal clusters $H$ in $T^*$ such that $w\br{H}\leq t$. Observe that $\cH_t$ is a partition of $V$. Let $E_t^*$ be the set of all edges between clusters in $\cH_t$. For convenience let $E_0^*=E$. We call $E_t^*$ the \emph{cut at level} $t$. We have the following lemma:
 \begin{lemma}
     $c\br{T^*} = \sum_{t=1}^{w\br{V}-1}c\br{E_t^*}$
 \end{lemma}
 \begin{proof}
-    Consider any edge $uv$. Let $S$ be the minimal cluster in $T^*$ containing both $u$ and $v$. We get that the contribution of $uv$ to $c\br{T^*}$ is $w\br{S}\cdot c\br{uv}$. Moreover, we have that $uv\in E_t^*$ for every $t$ such that $t < w\br{S}$, so it contributes $c\br{uv}$ to $c\br{E_t^*}$ for every $t < w\br{S}$ which gives the claim.
+    Consider any edge $uv$. Let $H$ be the minimal cluster in $T^*$ containing both $u$ and $v$. We get that the contribution of $uv$ to $c\br{T^*}$ is $w\br{H}\cdot c\br{uv}$. Moreover, we have that $uv\in E_t^*$ for every $t$ such that $t < w\br{H}$, so it contributes $c\br{uv}$ to $c\br{E_t^*}$ for every $t < w\br{H}$ which gives the claim.
 \end{proof}
 
 We also use the following upper bound on the $c\br{T^*}$ which is a direct consequence of the previous lemma:
-\begin{corollary}
+\begin{corollary}\label{cor:upper-bound}
   It holds
     $2\cdot c\br{T^*} = 2\cdot \sum_{t=1}^{w\br{V}-1}c\br{E_t^*}\geq \sum_{t=0}^{w\br{V}}c\br{E_{\fl{t/2}}^*}$
 \end{corollary}
@@ -261,7 +261,7 @@ With the above choice $\eta=4/5$, we have $s_H\leq 4r_H/5$. Edges cut in $H$ con
 \end{align*}
 since as the level $t$ decreases, the more edges belong to $E_t^*$. 
 
-The contribution of $C_H$ to the objective $c\br{T}$ to be at most:
+The contribution of $C_H$ to the objective $c\br{T}$ is:
 \begin{align*}
     r_H\cdot c\br{C_H} \leq 5\cdot\br{r_H-s_H}\cdot c\br{E_{r_H/2}^*\cap H}\leq 5\cdot \sum_{t=s_H+1}^{r_H}c\br{E_{\fl{t/2}}^*\cap H}
 \end{align*}
@@ -277,15 +277,15 @@ Thus by summing up over the conitribution of all cuts $C_H$ we get that the cost
     \sum_{H} r_H\cdot c\br{C_H} & \leq 5\cdot \sum_{H} \sum_{t=s_H+1}^{r_H}c\br{E_{t}^*\cap H} \\
     &\leq 5\cdot \sum_{t=0}^{w\br{V}} c\br{E_{\fl{t/2}}^*}\leq 10\cdot c\br{T^*}
 \end{align*}
-where the last inequality is by the previous corollary.
+where the last inequality is by the Corollary~\ref{cor:upper-bound}.
 
 We get the following theorem:
 \begin{theorem}
-    The above algorithm achieves an $O\br{\gamma}$-approximation ratio, where $\gamma$ is the approximation ratio for the \textsc{Graph Partitioning with Demands}.
+    The above algorithm achieves an $\bigo\br{\gamma}$-approximation ratio, where $\gamma$ is the approximation ratio for the \textsc{Graph Partitioning with Demands}.
 \end{theorem}
 
 And as an immediate corollary we get:
 \begin{corollary}
-    There exists an $O\br{\log n}$-approximation algorithm for the \textsc{Hierarchical Clustering with Demands Problem} on general graphs and an $O\br{1}$-approximation algorithm for the \textsc{Hierarchical Clustering with Demands Problem} on trees. Moreover, if the demand function is multiplicative, then there exists an $O\br{\sqrt{\log n}}$-approximation algorithm.
+    There exists an $\bigo\br{\log n}$-approximation algorithm for the \textsc{Hierarchical Clustering with Demands} on general graphs and an $\bigo\br{1}$-approximation algorithm for trees. Moreover, if the demand function is multiplicative, then there exists an $\bigo\br{\sqrt{\log n}}$-approximation algorithm.
 \end{corollary}
 

@@ -1,6 +1,6 @@
 ﻿\section{The main algorithm}
 
-In order to tackle the \textsc{Minimum Generalized Conductance Problem}, we simplify the optimization criterion by considering the problem, for a given input graph $G=(V,E,c,w)$, of finding a cut $S$ that minimizes the following:
+In order to tackle the \textsc{Generalized Conductance}, we simplify the optimization criterion by considering the following problem: for a given input graph $G=(V,E,c,w)$, find a cut $S$ that minimizes the following:
 \begin{equation} \label{eq:h}
 \hw\br{S}:=\frac{c\br{S, \bar{S}}}{w\br{S, V}}, \quad \text{subject to}
 \quad w\br{\bar{S}, V}\geq \delta\cdot w\br{V}
@@ -9,7 +9,7 @@ In order to tackle the \textsc{Minimum Generalized Conductance Problem}, we simp
 for some constant $0<\delta\leq 1$ to be determined later.
 We refer to the above as the \textsc{Simplified Conductance} problem.
 For any graph $G$, we denote by $\OPTh(G)$ the minimum achievable value of $\hw$ for $G$, i.e., an optimal solution to \eqref{eq:h}.
-Likewise, $\OPTc(G)$ is the optimal solution to the \textsc{Minimum Generalized Conductance Problem}.
+Likewise, $\OPTc(G)$ is the optimal solution to the \textsc{Generalized Conductance}.
 %We may without loss of generality assume that $w\br{S, V}\le w\br{\bar{S}, V}$.
 We have the following observation.
 \begin{lemma} \label{lem:h-equivalent}
@@ -20,32 +20,32 @@ For any graph $G$, $\OPTc(G)=\Theta\br{\OPTh(G)}/w(V)$.
 %This still preserves the approximation ratio up to a factor dependent on $\C$ by a similar discussion.
 
 We now list three problems that will be used  as black-box subroutines in our main algorithm below.
-First, we will use the \textsc{Sparsest $K$-Bounded Cut Problem} that adds to the \textsc{Sparsest Cut} computation a demand restriction (cf. step~\ref{it:S1:alpha} of the algorithm below).
+First, we will use the \textsc{Generalized Sparsest $K$-Bounded Cut} that adds a demand restriction to the classic \textsc{Generalized Sparsest Cut} (cf. step~\ref{it:S1:alpha} of the algorithm below).
 Formally, given a graph $G=(V,E,c,w)$, we consider the problem of finding $S$ that minimizes:
     \begin{equation} \label{eq:K}
       \frac{c\br{S,\bar S}}{w\br{S,\bar S}}
       \quad\text{subject to}\quad 0<w\br{S,\bar S}\le K.
     \end{equation}
-Denote by $\phiwK$ the value of the optimal solution to~\eqref{eq:K}.
+Denote by $\phiwK\br{G}$ the value of the optimal solution to~\eqref{eq:K}.
 
-Then, we will utilize (cf. step~\ref{it:S2:beta}) the \textsc{Generalized $k$-Multicut Problem}: given a graph $G=(V,E,c,w)$ with capacities and demands, find a minimum-cost set of edges $C\subseteq E$, such that the demand cut by $C$ is at least $k$.
+We will also utilize (cf. step~\ref{it:S2:beta}) the \textsc{Generalized $k$-Multicut}: given a graph $G=(V,E,c,w)$ with capacities and demands, find a minimum-cost set of edges $C\subseteq E$, such that the demand cut by $C$ is at least $k$.
 
-Finally, we recall the classical \textsc{Max-Cut Problem} that in our context is defined, for a given graph $G$, as finding a cut $\br{C_G, \bar{C}_G}$ that maximizes $w\br{C_G, \bar{C}_G}$.
+Finally, we recall the classical \textsc{Max-Cut} problem, where for a given graph $G$, as finding a cut $\br{C_G, \bar{C}_G}$ that maximizes $w\br{C_G, \bar{C}_G}$.
 To solve the latter (approximately due to its NP-hardness), we utilize a folklore greedy procedure (in step~\ref{it:S2:R-cut} below) that we recall in the following form.
-\begin{proposition}[Folklore] \label{pro:max-cut}
-For any graph $G=(V,E,w)$ with demands there exists a polynomial-time greedy algorithm that computes a cut $(C_G,\bar{C}_G)$ such that $w\br{C_G,\bar{C}_G}\geq\frac{1}{2}w\br{V}$.
-\end{proposition}
+\begin{lemma}[Folklore] \label{pro:max-cut}
+For any graph $G=(V,E,w)$ with demands there exists a polynomial-time greedy algorithm that computes a cut $(C_G,\bar{C}_G)$ such that $w\br{C_G,\bar{C}_G}\geq\frac{1}{2}\cdot w\br{V}$.
+\end{lemma}
 \begin{proof}
 Order the vertices of $G$ arbitrarily as $v_1,\ldots,v_l$.
-Start with $C_G=\brc{v_1}$ adn $\bar{C}_G=\emptyset$.
+Start with $C_G=\brc{v_1}$ and $\bar{C}_G=\emptyset$.
 For each $i\in\brc{2,\ldots,l}$, if $w\br{\brc{v_i},\bar{C}_G}>w\br{C_G,\brc{v_i}}$, then add $v_i$ to $C_G$, otherwise add $v_i$ to $\bar{C}_G$.
 
 The final $(C_G,\bar{C}_G)$ is a cut because $C_G\cup\bar{C}_G=V$.
 For each $i\in\brc{2,\ldots,l}$ define $X_i=\brc{\br{v_j,v_i}\colon j<i}$.
-For each $i\in\brc{2,\ldots,l}$, $w\br{\br{C_G,\bar{C}_G}\cap X_i}\geq \frac{1}{2}w\br{X_i}$, which follows from the algorithm's greedy rule.
+For each $i\in\brc{2,\ldots,l}$, $w\br{\br{C_G,\bar{C}_G}\cap X_i}\geq \frac{1}{2}\cdot w\br{X_i}$, which follows from the algorithm's greedy rule.
 Because $X_i$'s are pairwise disjoint and the union of $X_i$'s is $V\times V$, we get
 \[
-w\br{C_G,\bar{C}_G}=\sum_{i=1}^l w\br{\br{C_G,\bar{C}_G}\cap X_i}\geq\frac{1}{2}\sum_{i=1}^l w\br{X_i}=\frac{1}{2}w(V).
+w\br{C_G,\bar{C}_G}=\sum_{i=1}^l w\br{\br{C_G,\bar{C}_G}\cap X_i}\geq\frac{1}{2}\cdot\sum_{i=1}^l w\br{X_i}=\frac{1}{2}\cdot w(V).
 \qedhere
 \]
 \end{proof}
@@ -76,15 +76,14 @@ Formally, the scheme is the following:
 \input{figures/aux_graph_r.tex}
 \input{figures/multicut_maxcut.tex}
 
-Let for the rest of this section $\Sopt$ be an optimal cut for the Simplified Conductance Objective $\psi_w\br{S}$, where we without loss of generality assume $w\br{\Sopt, V}\le w\br{\SoptBar, V}$.
-\DD{wczesniej to bylo $S^*$, ale $h$ latwiej przypomina czym to jest w dalszej czesci. Mozna latwo zmienic, bo jest komenda.}
+Let for the rest of this section $\Sopt$ be an optimal cut for the \textsc{Simplified Conductance}, where we without loss of generality assume $w\br{\Sopt, V}\le w\br{\SoptBar, V}$.
 Our analysis consists of two separate cases depending on the size of $w\br{\Sopt, \SoptBar}$.
 First we prove (cf. Lemma~\ref{lem:S1}) that if $w\br{\Sopt, \SoptBar}$ is sufficiently small, then the candidate solution $S_1$ is the one that guarantees the required approximation ratio (determined in Section~\ref{sec:alpha}).
 The complementary case is handled by Lemma~\ref{lem:S2} (where the appropriate approximation ratio of $\beta=\bigo\br{\log n}$ will come from \cite{AUnifiedApproachToApproximatingPartialCoveringProblems,OptimalHierarchicalDecompositionsForCongestionMinimizationInNetworks}).
 (We remark that the exact choice of constants in our construction, like the one in Lemma~\ref{lem:S1}, is somewhat arbitrary and we do not attempt to optimize them).
 \begin{lemma} \label{lem:S1}
   Assume that $w\br{\Sopt, \SoptBar}\leq w\br{V}/3$. %Moreover, let $\alpha$ be an approximation ratio of some approximation algorithm for the problem of minimizing $\phi_w\br{S}$ in $G$ subject to $w_{G}\br{S, \bar{S}}\leq K$.
-  Then, $S_1$ is an $O\br{\alpha}$-approximate solution to the Generalized Conductance Problem.
+  Then, $S_1$ is an $\bigo\br{\alpha}$-approximate solution to the \textsc{Simplified Conductance} problem with $\delta=1/6$.
 \end{lemma}
 \begin{proof}
 %To obtain a good approximation for $h\br{S}$, we proceed as follows. Firstly, we create an auxiliary graph $G'$, such that $V'=V\cup \brc{r}$. We set $c\br{r, u}=0$ for every $u\in V$ and we set $w\br{r, u}=\sum_{v\in V} w\br{u, v}$ for every $u\in V$.
@@ -111,7 +110,7 @@ w_{G'}\br{\Sopt, \SoptBar}\leq 2\cdot w\br{\Sopt, V}\leq \frac{4}{3}\cdot w\br{V
 \]
 Therefore, we get that $\Sopt$ is a valid solution to the problem in~\eqref{eq:K}.
 
-Now we analyze the opposite direction, namely, that any solution to the problem in~\eqref{eq:K}, in particular $S_1$, gives a solution to the Simplified Conductance Objective.
+Now we analyze the opposite direction, namely, that any solution to the problem in~\eqref{eq:K}, in particular $S_1$, gives a solution to the \textsc{Simplified Conductance}.
 There are 3 cases:
 \begin{enumerate}
   \item $w_{G}\br{S_1, V}\leq \frac{5}{6}\cdot w\br{V}$. This means that  \[w\br{\bar{S}_1, V}\geq w\br{V}-w_{G}\br{S_1, V}\geq w\br{V}/6.
@@ -127,10 +126,9 @@ There are 3 cases:
     \]
   \item $w\br{S_1, \bar{S}_1}\geq w\br{V}/3$. Here, we trivially get that $w\br{\bar{S}_1, V}\geq w\br{S_1, \bar{S}_1}\geq w\br{V}/3$.
   \end{itemize}
-  It should be noted that at least one of the two above conditions must hold since $w\br{S_1}+w\br{S, \bar{S}_1}=w_{G}\br{S_1, V}$.
-  Moreover, by taking $\delta=1/6$, the condition for the generalized conductance objective is satisfied in all cases.
+  It should be noted that at least one of the two above conditions must hold since $w\br{S_1}+w\br{S_1, \bar{S}_1}=w_{G}\br{S_1, V}$.
 \end{enumerate}
-Since the first branch yields an $\bigo(\alpha)$-approximation for the \textsc{Sparsest $K$-Bounded Cut Problem} in~\eqref{eq:K}, we have proved that the approximation ratio carries on to the Simplified Conductance Objective and, by the same equivalence, also to the Generalized Conductance Problem, as required in the lemma.
+Since the first branch yields an $\bigo(\alpha)$-approximation for the \textsc{Sparsest $K$-Bounded Cut Problem} in~\eqref{eq:K}, we have proved that the approximation ratio carries on to the \textsc{Simplified Conductance} problem with $\delta=1/6$.
 \end{proof}
 
 Now we analyze, the second case regarding the size of the cut $\br{\Sopt, \SoptBar}$, which is handled by finding $S_2$ in the algorithm.
@@ -138,13 +136,13 @@ Now we analyze, the second case regarding the size of the cut $\br{\Sopt, \SoptB
 \begin{lemma} \label{lem:S2}
   Assume that $w\br{\Sopt, \SoptBar}\geq w\br{V}/3$.
   %Moreover, let $\beta$ be an approximation ratio of some approximation algorithm for the (generalized) $k$-multicut problem.
-  Then, $S_2$ is an $O\br{\beta}$-approximate solution to the \textsc{Minimum Generalized Conductance Problem}.
+  Then, $S_2$ is an $\bigo\br{\beta}$-approximate solution to the \textsc{Simplified Conductance} problem with $\delta=1/3$.
 \end{lemma}
 \begin{proof}
-  By assumption $w\br{V}\geq w\br{\Sopt,V}\geq w\br{\Sopt,\SoptBar}\geq w\br{V}/3$, which gives $w\br{\Sopt, V}=\Theta\br{w\br{V}}$.
+  By assumption $w\br{V}\geq w\br{\Sopt,V}\geq w\br{\Sopt,\SoptBar}\geq w\br{V}/3$, which gives $w\br{\Sopt, V}=\geq w\br{V}/3$ so that $\delta=1/3$ suffices.
   Analogously, $w\br{\SoptBar, V}=\Theta\br{w\br{V}}$.
   Therefore, by the same equivalence
-  it suffices to minimize $c\br{S, \bar{S}}$ subject to $w\br{S, \bar{S}}\geq w\br{V}/3$ with a constant factor loss.
+  it suffices to minimize $c\br{S, \bar{S}}$ subject to $w\br{S, \bar{S}}\geq w\br{V}/3$ with a constant-factor loss.
   Notably, this task is not equivalent to the \textsc{Generalized $k$-Multicut Problem}, which is approximated in the second branch.
   The reason for this is that $G-C$ has in general many connected components.
 
@@ -156,18 +154,18 @@ Since $E\br{S_2, \bar{S}_2}\subseteq C$, the cost of the outputed cut is $c\br{E
 \end{proof}
 
 
-Lemmas~\ref{lem:S1} and~\ref{lem:S2} give together the following.
-\begin{lemma}
-  There exists an $O\br{\alpha+\beta}$-approximation polynomial-time algorithm for the Generalized Conductance Problem.
+Lemmas~\ref{lem:h-equivalent}, \ref{lem:S1} and~\ref{lem:S2} give together the following result.
+\begin{theorem}
+  There exists an $\bigo\br{\alpha+\beta}$-approximation polynomial-time algorithm for the \textsc{Generalized Conductance} problem.
   \qed
-\end{lemma}
+\end{theorem}
 
 In the next section we develop an algorithm that determines the ratios of $\alpha$.
 We finish this section with a remark that our method can be improved for a natural class of multiplicative demand functions.
 Formally, $w$ is \emph{multiplicative} if there exists a potential function $\pi\colon V\to \mathbb{N}$ such that for every $u,v\in V$, $w\br{u,v}=\pi\br{u}\cdot \pi\br{v}$.
 Notably, unit demand is multiplicative with $\pi\br{u}=1$ for every $u\in V$. For such demand functions, we have the following strengthening of the approximation guarantee:
 \begin{theorem}
-  If the demand function $w$ is multiplicative, then there is a polynomial-time $O\br{\sqrt{\log n}}$-approximation algorithm for the Generalized Conductance Problem.
+  If the demand function $w$ is multiplicative, then there is a polynomial-time $\bigo\br{\sqrt{\log n}}$-approximation algorithm for the \textsc{Generalized Conductance} Problem.
 \end{theorem}
 \begin{proof}
   Consider any graph $G=(V,E,c,w)$.
@@ -177,23 +175,23 @@ Notably, unit demand is multiplicative with $\pi\br{u}=1$ for every $u\in V$. Fo
   w\br{A, B}= \sum_{u\in A}\sum_{v\in B}w\br{u,v} = \sum_{u\in A}\pi\br{u}\cdot \sum_{v\in B}\pi\br{v}= \pi\br{A}\cdot \pi\br{B}.
   \] 
   Also, for any vertex subset $A$,
-  \[w(A) = \frac{1}{2}\br{\sum_{v\in A} \pi\br{v}}^2 = \frac{\pi\br{A}^2}{2}.\]
+  \[w(A) = \frac{1}{2}\cdot\br{\sum_{v\in A} \pi\br{v}}^2 = \frac{\pi\br{A}^2}{2}.\]
  We get that
  \[w\br{S, V} = w\br{S}+w\br{S,\bar{S}} = \frac{\pi\br{S}^2}{2}+w\br{S,\bar{S}} \leq \frac{\pi\br{\bar{S}}^2}{2}+w\br{S,\bar{S}}=w\br{\bar{S}, V}.\]
 Moreover,
-\[w\br{S} = \frac{\pi\br{S}^2}{2} \leq \frac{1}{2}\pi\br{S}\pi\br{\bar{S}}= \frac{1}{2}w\br{S, \bar{S}}.\]
+\[w\br{S} = \frac{\pi\br{S}^2}{2} \leq \frac{1}{2}\cdot\pi\br{S}\pi\br{\bar{S}}= \frac{1}{2}\cdot w\br{S, \bar{S}}.\]
 We have by the above
   \[\frac{c\br{S, \bar{S}}}{3w\br{S,\bar{S}}/2} \leq \frac{c\br{S, \bar{S}}}{w\br{S}+w\br{S,\bar{S}}} \leq \frac{c\br{S, \bar{S}}}{w\br{S,\bar{S}}}.
   \]
-Thus, minimizing $\psi_w\br{G}$ is up to a constant factor equivalent to minimizing
+Thus, minimizing $\psi_w\br{G}$ is up to a constant-factor equivalent to minimizing
   \[\frac{c\br{S, \bar{S}}}{w\br{S, \bar{S}}}=\frac{c\br{S, \bar{S}}}{\pi\br{S}\cdot \pi\br{\bar{S}}}.
   \]
   This can be then reduced to the \textsc{Min-Ratio Vertex Cut} problem which is as follows: Given a graph $H=\br{V_H,E_H,c_H,w_H}$ with a capacity vertex function $c_H\colon V_H\to \mathbb{N}$ and a weight function $w_H\colon V_H\to \mathbb{N}$, find a partition $A, S, B$ of $V_H$ that minimizes
   \[\frac{c_H\br{S}}{w_H\br{A\cup S}\cdot w_H\br{B\cup S}}
   \]
   such that there are no edges between $A$ and $B$ in $H$.
-  This problem admits an $O\br{\sqrt{\log n}}$-approximation algorithm \cite{ImprovedApproximationAlgorithmsForMinimumWeightVertexSeparators}.
-  To reduce the Generalized Conductance Problem on $G$ to this problem we construct $H$ as follows.
+  This problem admits an $\bigo\br{\sqrt{\log n}}$-approximation algorithm \cite{ImprovedApproximationAlgorithmsForMinimumWeightVertexSeparators}.
+  To reduce the \textsc{Generalized Conductance} on $G$ to this problem we construct $H$ as follows.
   Take initially $H:=G$ and then each edge $uv\in E_{H}$ is subdivided by introducing a new vertex of capacity $c\br{u,v}$ and weight $0$ and each `old' vertex $u\in V$ is assigned the capacity $\infty$ and weight $\pi\br{u}$. It is easy to see that any optimal solution to the Min-Ratio Vertex Cut problem on $H$ corresponds to an optimal solution to our problem on the original graph, and thus we get the desired approximation ratio.
 \end{proof}
 
