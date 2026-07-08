@@ -18,21 +18,18 @@ and the two objectives are equivalent up to a factor of $4$. Since $w$ is multip
 \end{corollary}
 
 \subsection{Graph Partitioning with Demands}
-Below, we show how to use the approximation algorithm for the \textsc{Minimum Generalized Conductance Problem} to obtain an approximation algorithm for \textsc{Graph Partitioning with Demands}. In this problem, we are given a graph $G=(V,E,c,w)$ and a fixed constant $\rho\in(0,1)$, and the goal is to find a subset of edges $C\subseteq E$ that minimizes $c\br{C}$ such that for every $H\in V-C$, we have $w\br{H}\leq \rho\,w\br{V}$.
+Below, we show how to use the approximation algorithm for the \textsc{Minimum Generalized Conductance Problem} to obtain an approximation algorithm for \textsc{Graph Partitioning with Demands}. In this problem, we are given a graph $G=(V,E,c,w)$ and a fixed constant $\rho\in(0,1)$, and the goal is to find a subset of edges $C\subseteq E$ that minimizes $c\br{C}$ such that for every $H\in V-C$, we have $w\br{H}\leq \rho\cdot w\br{V}$.
 
-Define
-\[
-\delta_{\rho}:=\min\brc{1/4,1-\rho}.
-\]
-We exhibit a bi-criteria approximation algorithm with an additional constant parameter $\eta$. For any
-\[
-\eta\in\br{\max\brc{1/2,1-\delta_{\rho}},1},
-\]
-the algorithm returns a subset $C$ such that $c\br{C}=O\br{\gamma/(\eta+\delta_{\rho}-1)^2}\cdot c\br{C^*}$ and for every $H\in V-C$, we have $w\br{H}\leq \eta w\br{V}$, where $C^*$ is the optimal solution and $\gamma$ is the approximation ratio for the \textsc{Minimum Generalized Conductance Problem}. The analysis uses a generalization of the standard technique of dealing with balanced cut/graph partitioning problems using \textsc{Sparsest Cut} \cite{ExpanderFlowsGeometricEmbeddingsAndGraphPartitioning,ExpanderFlowsGeometricEmbeddingsAndGraphPartitioning}. \DD{$\leftarrow$ tutaj mialo byc cos innego docytowane, czy ma byc jeden cite?} However, due to the fact that we need to control both the demand in the components and the demand crossing the cut, a more careful analysis is required. The algorithm is simple:
+Let $\rho<\eta<1$ be a constant. We show how to obtain a bi-criteria approximation algorithm for \textsc{Graph Partitioning with Demands} that returns a subset of edges $C$ such that $c\br{C}=O_{\rho, \eta}\br{\gamma}\cdot c\br{C^*}$ and for every $H\in V-C$, we have $w\br{H}\leq \eta \cdot w\br{V}$, where $C^*$ is the optimal solution and $\gamma$ is the approximation ratio for the \textsc{Minimum Generalized Conductance Problem}. This is done in two parts. Firstly, we show how to do it for a limited range of $\eta$ and then we show how to extend it to the whole range of $\eta\in(\rho,1)$.
+
+Define $
+\delta_{\rho}:=\min\brc{1/4,1-\rho}.$ and $
+\eta\in\br{\max\brc{1/2,1-\delta_{\rho}},1}$.
+The analysis uses a generalization of the standard technique of dealing with balanced cut/graph partitioning problems using \textsc{Sparsest Cut} \cite{MulticommodityMaxFlowMinCutTheoremsAndTheirUseInDesigningApproximationAlgorithms,ExpanderFlowsGeometricEmbeddingsAndGraphPartitioning,ImprovedApproximationAlgorithmsForMinimumWeightVertexSeparators}. However, due to the fact that we need to control both the demand in the components and the demand crossing the cut, a more careful analysis is required. The algorithm is simple:
 \begin{enumerate}
     \item $C\gets\emptyset$
     \item $G'\gets \br{V, E,c,w}$
-    \item While $w\br{V\br{G'}}> \eta w\br{V}$ do
+    \item While $w\br{V\br{G'}}> \eta \cdot w\br{V}$ do
     \begin{itemize}
         \item Use the $\gamma$-approximation algorithm for the \textsc{Minimum Generalized Conductance Problem} to find a cut $(S,\bar{S})$ in $G'$, where $w\br{S}\leq w\br{\bar{S}}$.
         \item $C\gets C\cup E\br{S, \bar{S}}$
@@ -49,29 +46,29 @@ The above algorithm is characterized by the following claim.
     \]
     and for every $H\in V-C$, we have
     \[
-    w\br{H}\leq \eta w\br{V},
+    w\br{H}\leq \eta \cdot w\br{V},
     \]
     where $\delta_{\rho}:=\min\brc{1/4,1-\rho}$, $C^*$ is the optimal solution and $\gamma$ is the approximation ratio for the \textsc{Minimum Generalized Conductance Problem}.
 \end{theorem}
 \begin{proof}
-    We first prove the component-size guarantee. Consider all components $H\in G-C$. If $H$ is $G'$ after the last iteration of the while loop, then by the stopping condition of this loop we have $w\br{H}\leq \eta w\br{V}$. Otherwise, $H$ was the smaller side of the cut in some iteration of the while loop, and thus $w\br{H}\leq w\br{V}/2\leq \eta w\br{V}$, where we use the assumption $\eta\in\br{\max\brc{1/2,1-\delta_{\rho}},1}$ (in particular, $\eta\geq 1/2$). In either case, $w\br{H}\leq \eta w\br{V}$.
+    We first prove the component-size guarantee. Consider all components $H\in G\setminus C$. If $H$ is $G'$ after the last iteration of the while loop, then by the stopping condition of this loop we have $w\br{H}\leq \eta \cdot w\br{V}$. Otherwise, $H$ was the smaller side of the cut in some iteration of the while loop, and thus $w\br{H}\leq w\br{V}/2\leq \eta \cdot w\br{V}$, where we use the assumption $\eta\in\br{\max\brc{1/2,1-\delta_{\rho}},1}$ (in particular, $\eta\geq 1/2$). In either case, $w\br{H}\leq \eta \cdot w\br{V}$.
 
     Now we want to reason about $c\br{C}$.
-    We partition the components of $G-C^*$ into two vertex sets $A$ and $B$, each inducing enough fraction of the total demand as stated in the next lemma.
+    We partition the components of $G\setminus C^*$ into two vertex sets $A$ and $B$, each inducing enough fraction of the total demand as stated in the next lemma.
     \begin{lemma} \label{lem:ABpartition}
-                For every graph $G$ and demand function $w$, there exists a partition of the components of $G-C^*$ into two vertex sets $A$ and $B$ such that $w\br{A, V}\geq \delta_{\rho}w\br{V}$ and $w\br{B, V}\geq \delta_{\rho}w\br{V}$.
+                For every graph $G$ and demand function $w$, there exists a partition of the components of $G\setminus C^*$ into two vertex sets $A$ and $B$ such that $w\br{A, V}\geq \delta_{\rho}w\br{V}$ and $w\br{B, V}\geq \delta_{\rho}w\br{V}$.
     \end{lemma}
     \begin{proof}
     We have the following cases:
     \begin{enumerate}
-                \item There exists $H\in G-C^*$ such that $w\br{V_H}\geq \delta_{\rho}w\br{V}$, where $V_H$ is the vertex set of $H$.
+                \item There exists $H\in G\setminus C^*$ such that $w\br{V_H}\geq \delta_{\rho}w\br{V}$, where $V_H$ is the vertex set of $H$.
         In this case, we can set $A=V_H$ and $B=V\setminus V_H$. We have
                 \[w\br{A, V}\geq w\br{A} \geq \delta_{\rho}w\br{V}\]
          and 
                 \[w\br{B, V}=w\br{V}-w\br{A}\geq \br{1-\rho}w\br{V}\geq \delta_{\rho}w\br{V}\]
-                since $w\br{A}=w\br{H}\leq \rho w\br{V}$.
-            The latter is by the fact that $C^*$ is optimal and the condition on each connected component $H$ to satisfy $w(V_H)\leq \rho w(V)$; the last inequality uses the definition $\delta_{\rho}=\min\brc{1/4,1-\rho}$.
-                \item For every $H\in G-C^*$, we have $w\br{H}\leq \delta_{\rho}w\br{V}$. We proceed in iterations. Start with $A=\emptyset$ and keep adding vertices of components of $G-C^*$ to $A$ until $w\br{A}\geq \delta_{\rho}w\br{V}$. Let $H$ be the last component added to $A$ and let $A'$ be $A$ one iteration before that, i.e., $A'=A\setminus V_H$.
+                since $w\br{A}=w\br{H}\leq \rho \cdot w\br{V}$.
+            The latter is by the fact that $C^*$ is optimal and the condition on each connected component $H$ to satisfy $w(V_H)\leq \rho \cdot w(V)$; the last inequality uses the definition $\delta_{\rho}=\min\brc{1/4,1-\rho}$.
+                \item For every $H\in G\setminus C^*$, we have $w\br{H}\leq \delta_{\rho}w\br{V}$. We proceed in iterations. Start with $A=\emptyset$ and keep adding vertices of components of $G\setminus C^*$ to $A$ until $w\br{A}\geq \delta_{\rho}w\br{V}$. Let $H$ be the last component added to $A$ and let $A'$ be $A$ one iteration before that, i.e., $A'=A\setminus V_H$.
         Consider the two cases:
         \begin{itemize}
                         \item If $w\br{A', H}\geq \delta_{\rho}w\br{V}$, then $A=A'$ and $B=V\setminus A'$. We have
@@ -93,11 +90,11 @@ The above algorithm is characterized by the following claim.
     This concludes the proof of the lemma.
   \end{proof}
     Take a partition $\br{A,B}$ as in Lemma~\ref{lem:ABpartition}.
-        Suppose that we are at some iteration when $w\br{V\br{G'}}> \eta w\br{V}$. We have that
+        Suppose that we are at some iteration when $w\br{V\br{G'}}> \eta \cdot w\br{V}$. We have that
     \[
         w\br{A\cap V\br{G'}, V\br{G'}}\geq w\br{A, V}-w\br{V\setminus V\br{G'}}\geq \delta_{\rho}w\br{V}-\br{1-\eta}w\br{V}=\br{\eta+\delta_{\rho}-1}w\br{V}.
     \]
-        Here we used the stopping condition $w\br{V\br{G'}}>\eta w\br{V}$, i.e. $w\br{V\setminus V\br{G'}}<\br{1-\eta}w\br{V}$.
+        Here we used the stopping condition $w\br{V\br{G'}}>\eta \cdot w\br{V}$, i.e. $w\br{V\setminus V\br{G'}}<\br{1-\eta}w\br{V}$.
         Symmetrically, for $B$ we get that, $w\br{B\cap V\br{G'}, V\br{G'}}\geq \br{\eta+\delta_{\rho}-1}w\br{V}$. Since $\eta>1-\delta_{\rho}$ by assumption on $\eta$, we have $\eta+\delta_{\rho}-1>0$. Let $\br{S, \bar{S}}$ be the cut returned by the $\gamma$-approximation algorithm for the \textsc{Minimum Generalized Conductance Problem} in $G'$. We have
 \begin{align*}
         \frac{c\br{S, \bar{S}}}{w\br{S, V\br{G'}}\cdot w\br{\bar{S}, V\br{G'}}} & \leq \gamma \cdot \frac{c\br{A, B}}{w\br{A\cap V\br{G'}, V\br{G'}}\cdot w\br{B\cap V\br{G'}, V\br{G'}}} \\
@@ -134,97 +131,102 @@ As an immediate corollary we get:
     c\br{C}\leq O\br{\frac{\sqrt{\log n}}{\br{\eta+\delta_{\rho}-1}^2}}\cdot c\br{C^*}
     \quad\text{for multiplicative demands.}
     \]
-    In all cases, every connected component $H$ of $G-C$ satisfies
+    In all cases, every connected component $H$ of $G\setminus C$ satisfies
     \[
-    w\br{H}\leq \eta w\br{V}.
+    w\br{H}\leq \eta \cdot w\br{V}.
     \]
 \end{corollary}
 
-Observe that the above procedure does not work for all values of $\eta$: it requires $\eta>\max\brc{1/2,1-\delta_{\rho}}$. To remedy this issue we extend it into a recursive procedure that works for every $\eta\in(0,1)$.
+Next, we show how to extend the above procedure into a recursive algorithm that works for every $0<\rho\leq \eta<1$. 
+% Since for $\rho\geq 1/2$ we have $\delta_{\rho}\geq 1/2$, the above algorithm works, therefore we assume 
 
-Let $k'=\eta\,w\br{V}$ and $k=\rho\,w\br{V}$, and note that $k/k'=\rho/\eta$. Given a graph $H$, the recursive algorithm proceeds as follows:
+Fix $k'=\eta\cdot w\br{V}$ and $k=\rho\cdot w\br{V}$ to be global parameters for the recursion, and note that $k/k'=\rho/\eta$. Given a graph $H$, the recursive algorithm proceeds as follows:
 \begin{enumerate}
-    \item If $\spr{H}\leq k'$, return $\emptyset$.
-    \item $\eta_0\gets \max\brc{4/5,\, k'/\spr{H}}$.
-    \item Run the algorithm of Theorem~\ref{thm:gpd-bicriteria} on $H$ with parameter $\eta_0$ and let $C_H$ be the returned subset of edges.
-    \item $C\gets C_H$.
-    \item For every connected component $H'$ of $H-C_H$, recursively partition $H'$ and add the returned edges to $C$.
-    \item Return $C$.
+    \item If $w\br{H}\leq k'$, return $\emptyset$.
+    \item $\eta_0\gets \max\brc{4/5,\, k'/w\br{H}}$.
+    \item Run the algorithm of Theorem~\ref{thm:gpd-bicriteria} on $H$ with parameter $\eta_0$ and let $C$ be the returned subset of edges.
+    \item $C_H\gets C$.
+    \item For every connected component $H'$ of $H\setminus C$, recursively partition $H'$ and add the returned edges $C_{H'}$ to $C_H$.
+    \item Return $C_H$.
 \end{enumerate}
 
 
 \begin{theorem}\label{thm:gpd-extension}
     Fix $0<\rho\leq \eta< 1$, and let $
         \kappa\br{\rho,\eta}:=\max\brc{400,\ \frac{1}{\br{\br{1-\rho/\eta}\cdot 4/5}^2}}.$
-    The recursive algorithm runs in polynomial time and returns a subset of edges $C$ such that every connected component $H$ of $G-C$ satisfies $w\br{H}\leq \eta\,w\br{V}$, and
+    The recursive algorithm runs in polynomial time and returns a subset of edges $C_G$ such that every connected component $H$ of $G\setminus C_G$ satisfies $w\br{H}\leq \eta\cdot w\br{V}$, and
     \[
-        c\br{C}\leq d\cdot \kappa\br{\rho,\eta}\cdot \gamma\cdot c\br{C^*},
+        c\br{C_G}\leq d\cdot \kappa\br{\rho,\eta}\cdot \gamma\cdot c\br{C^*},
     \]
     where $d:=\cl{\log_{5/4}\br{1/\eta}}$, $C^*$ is the optimal solution and $\gamma$ is the approximation ratio for the \textsc{Minimum Generalized Conductance Problem}.
 \end{theorem}
 \begin{proof}
     It is easy to see that the algorithm runs in polynomial time. Hence, we focus on the approximation ratio.
 
-    For a graph $H$ with $\spr{H}\geq k'$ we set $\eta_H:=k'/\spr{H}$ and $\rho_H:=k/\spr{H}$; observe that $\rho_H/\eta_H=k/k'=\rho/\eta$. We denote by $\OPT\br{H}$ the cost of the optimal \textsc{Graph Partitioning with Demands} solution on $H$ with threshold $\rho_H$, so that $\OPT\br{G}=c\br{C^*}$.
+    For a graph $H$ with $w\br{H}\geq k'$ we set $\eta_H:=k'/w\br{H}$ and $\rho_H:=k/w\br{H}$; observe that $\rho_H/\eta_H=k/k'=\rho/\eta$. We denote by $\OPT\br{H}$ the cost of the optimal \textsc{Graph Partitioning with Demands} solution on $H$ with threshold $\rho_H$. In particular this means that $\OPT\br{G}=c\br{C^*}$.
 
-For a graph $H$, let $d\br{\spr{H}}$ denote the number of recursion levels the algorithm performs on $H$. Since every non-terminating recursive call is invoked with $\eta_0\geq 4/5$ and produces components of demand at most $\eta_0\spr{H}\leq \tfrac{4}{5}\spr{H}$, this also means that for every child $H'$ of $H$ in the recursion tree, we get $\eta_{H'}\geq 5/4\cdot \eta_H$. Because the last partitioning step happens when $\eta_H\geq 4/5$, the recursion depth is bounded by
+For a graph $H$, let $d\br{w\br{H}}$ denote the number of recursion levels the algorithm performs on $H$. Since every recursive call is invoked with $\eta_0\geq 4/5$ and produces components of demand at most $\eta_0 \cdot w\br{H}\leq \tfrac{4}{5} w\br{H}$, this also means that for every child $H'\in H\setminus C$ in the recursion tree, we get $\eta_{H'}\geq 5/4\cdot \eta_H$. Because the last partitioning step happens when $\eta_0=\eta_H\geq 4/5$, the recursion depth is bounded by
 \[
-    d\br{\spr{H}}\leq \cl{\log_{5/4}\br{\spr{H}/k'}}.
+    d\br{w\br{H}}\leq \cl{\log_{5/4}\br{w\br{H}/k'}}.
 \]
-due to the fact after reaching $\eta_{H}\geq 4/5$ the algorithm perform one last partitioning step and a recursion call. Since $\log_{5/4}\br{\spr{H}/k'}$ is the amount of iterations required to reach $\eta_H\geq 1$, which is one more then we need to reach $\eta_H\geq 4/5$, we get that the above quantity is correct. 
+due to the fact after reaching $\eta_{H}\geq 4/5$ the algorithm perform one last partitioning step and a recursion call. Since $\log_{5/4}\br{w\br{H}/k'}$ is the amount of iterations required to reach $\eta_H\geq 1$, which is one more then we need to reach $\eta_H\geq 4/5$, we get that the above quantity is correct. 
 
-Now, we prove by induction on $d\br{\spr{H}}$ that the recursive algorithm returns a subset of edges of cost at most $d\br{\spr{H}}\cdot \kappa\br{\rho,\eta}\cdot \gamma\cdot \OPT\br{H}$.
+Now, we prove by induction on $d\br{w\br{H}}$ that the recursive algorithm returns a subset of edges of cost at most $d\br{w\br{H}}\cdot \kappa\br{\rho,\eta}\cdot \gamma\cdot \OPT\br{H}$.
 
-    \emph{Base cases, $d\br{\spr{H}}=0$ and $d\br{\spr{H}}=1$.} If $d\br{\spr{H}}=0$, then $\spr{H}\leq k'$, so the algorithm terminates without any partitioning, and the cost is $0$. If $d\br{\spr{H}}=1$, then $k'/\spr{H}\geq 4/5$, so $\eta_0=\eta_H=k'/\spr{H}$, and after a single partitioning step every component has demand at most $\eta_0\spr{H}=k'$; hence the algorithm terminates. By the explicit bound established in the proof of Theorem~\ref{thm:gpd-bicriteria}, this step has cost at most $\frac{\gamma}{\br{\eta_H+\delta_{\rho_H}-1}^2}\cdot \OPT\br{H}$. We bound $\frac{1}{\br{\eta_H+\delta_{\rho_H}-1}^2}\leq \kappa\br{\rho,\eta}$ in two cases:
+    \emph{Base cases, $d\br{w\br{H}}=0$ and $d\br{w\br{H}}=1$.} If $d\br{w\br{H}}=0$, then $w\br{H}\leq k'$, so the algorithm terminates without any partitioning, and the cost is $0$. If $d\br{w\br{H}}=1$, then $k'/w\br{H}\geq 4/5$, so $\eta_0=\eta_H=k'/w\br{H}$, and after a single partitioning step for each $H'\in H\setminus C$, $w\br{H'}\leq \eta_0 \cdot w\br{H}=k'$; hence the algorithm terminates. By the explicit bound established in the proof of Theorem~\ref{thm:gpd-bicriteria}, this step has cost at most $\frac{\gamma}{\br{\eta_H+\delta_{\rho_H}-1}^2}\cdot \OPT\br{H}$. We bound $\frac{1}{\br{\eta_H+\delta_{\rho_H}-1}^2}\leq \kappa\br{\rho,\eta}$ in two cases:
     \begin{enumerate}
         \item If $\rho_H\leq 3/4$, then $\delta_{\rho_H}=1/4$ and $\eta_H+\delta_{\rho_H}-1\geq 4/5+1/4-1=1/20$, using $\eta_H\geq 4/5$. Hence $\frac{1}{\br{\eta_H+\delta_{\rho_H}-1}^2}\leq 400\leq \kappa\br{\rho,\eta}$.
-        \item If $\rho_H> 3/4$, then $\delta_{\rho_H}=1-\rho_H$ and, using $\rho_H=\br{\rho/\eta}\eta_H$ and $\eta_H\geq 4/5$,
+        \item If $\rho_H> 3/4$, then $\delta_{\rho_H}=1-\rho_H$ and, using $\rho_H=\br{\rho/\eta}\cdot\eta_H$ and $\eta_H\geq 4/5$,
         \[
-            \eta_H+\delta_{\rho_H}-1=\eta_H-\rho_H=\br{1-\rho/\eta}\eta_H\geq \br{1-\rho/\eta}\cdot\tfrac{4}{5}.
+            \eta_H+\delta_{\rho_H}-1=\eta_H-\rho_H=\br{1-\rho/\eta}\cdot\eta_H\geq \br{1-\rho/\eta}\cdot\tfrac{4}{5}.
         \]
         Hence $\frac{1}{\br{\eta_H+\delta_{\rho_H}-1}^2}\leq \frac{1}{\br{\br{1-\rho/\eta}\cdot 4/5}^2}\leq \kappa\br{\rho,\eta}$.
     \end{enumerate}
-    In both cases the cost is at most $\kappa\br{\rho,\eta}\cdot\gamma\cdot \OPT\br{H}=d\br{\spr{H}}\cdot \kappa\br{\rho,\eta}\cdot\gamma\cdot\OPT\br{H}$.
+    In both cases the cost is at most $\kappa\br{\rho,\eta}\cdot\gamma\cdot \OPT\br{H}=d\br{w\br{H}}\cdot \kappa\br{\rho,\eta}\cdot\gamma\cdot\OPT\br{H}$.
 
-    \emph{Inductive step.} Suppose the claim holds for every graph $H'$ with $d\br{\spr{H'}}\leq d-1$, and let $H$ satisfy $d\br{\spr{H}}=d\geq 2$. Then $k'/\spr{H}<4/5$, so $\eta_0=4/5$, and every component $H'$ of $H-C_H$ has demand at most $\eta_0\spr{H}=\tfrac{4}{5}\spr{H}$, hence $d\br{\spr{H'}}\leq d-1$. The top-level partitioning step has cost at most $\frac{\gamma}{\br{\eta_0+\delta_{\rho_H}-1}^2}\cdot\OPT\br{H}$, and we again bound $\frac{1}{\br{\eta_0+\delta_{\rho_H}-1}^2}\leq \kappa\br{\rho,\eta}$:
+    \emph{Inductive step.} Suppose the claim holds for every graph $H'$ with $d\br{w\br{H'}}\leq d-1$, and let $H$ satisfy $d\br{w\br{H}}=d\geq 2$. Then $k'/w\br{H}<4/5$, so $\eta_0=4/5$, and every $H'\in H\setminus C$ has demand at most $\eta_0\cdot w\br{H}=\tfrac{4}{5}w\br{H}$, hence $d\br{w\br{H'}}\leq d-1$. By Theorem \ref{thm:gpd-bicriteria}, the current partitioning step has cost at most $\frac{\gamma}{\br{\eta_0+\delta_{\rho_H}-1}^2}\cdot\OPT\br{H}$, and we again bound $\frac{1}{\br{\eta_0+\delta_{\rho_H}-1}^2}\leq \kappa\br{\rho,\eta}$:
     \begin{enumerate}
         \item If $\rho_H\leq 3/4$, then $\delta_{\rho_H}=1/4$ and $\eta_0+\delta_{\rho_H}-1=4/5+1/4-1=1/20$, so the term is at most $400\leq \kappa\br{\rho,\eta}$.
-        \item If $\rho_H> 3/4$, then $\delta_{\rho_H}=1-\rho_H$ and, using $\rho_H=\br{\rho/\eta}\eta_H<\br{\rho/\eta}\cdot\tfrac{4}{5}=\br{\rho/\eta}\eta_0$,
+        \item If $\rho_H> 3/4$, then $\delta_{\rho_H}=1-\rho_H$ and, using $\rho_H=\br{\rho/\eta}\cdot\eta_H<\br{\rho/\eta}\cdot\eta_0$,
         \[
-            \eta_0+\delta_{\rho_H}-1=\eta_0-\rho_H> \eta_0-\br{\rho/\eta}\eta_0=\br{1-\rho/\eta}\cdot\tfrac{4}{5},
+            \eta_0+\delta_{\rho_H}-1=\eta_0-\rho_H> \eta_0-\br{\rho/\eta}\cdot\eta_0=\br{1-\rho/\eta}\cdot\tfrac{4}{5},
         \]
         so the term is at most $\frac{1}{\br{\br{1-\rho/\eta}\cdot 4/5}^2}\leq \kappa\br{\rho,\eta}$.
     \end{enumerate}
-    Thus the top level contributes at most $\kappa\br{\rho,\eta}\cdot\gamma\cdot\OPT\br{H}$. By the inductive hypothesis, each recursive call on a component $H'$ contributes at most $\br{d-1}\cdot \kappa\br{\rho,\eta}\cdot\gamma\cdot\OPT\br{H'}$. Since the components $H'$ are vertex-disjoint, $\sum_{H'}\OPT\br{H'}\leq \OPT\br{H}$, and therefore
-    \[
-        c\br{C}\leq \kappa\br{\rho,\eta}\,\gamma\,\OPT\br{H}+\br{d-1}\,\kappa\br{\rho,\eta}\,\gamma\sum_{H'}\OPT\br{H'}\leq d\cdot \kappa\br{\rho,\eta}\cdot\gamma\cdot\OPT\br{H}.
-    \]
-    This proves the claim. Applying it to $H=G$, where $\spr{G}=w\br{V}$ and $k'=\eta\,w\br{V}$, gives $d\br{\spr{G}}\leq \cl{\log_{5/4}\br{1/\eta}}$, which yields the statement of the theorem.
+    Thus the top level contributes at most $\kappa\br{\rho,\eta}\cdot\gamma\cdot\OPT\br{H}$. By the inductive hypothesis, for each $H'\in H\setminus C$, $c\br{C_{H'}}\leq \br{d-1}\cdot \kappa\br{\rho,\eta}\cdot\gamma\cdot\OPT\br{H'}$. Since the components in $H\setminus C$ are vertex and edge-disjoint and $C^*\cap E\br{H'}$ is a valid solution for \textsc{Graph Partitioning with Demands} on $H'\in H\setminus C$ with $\rho_{H'}$, we have that $\OPT\br{H'}\leq c\br{C^*\cap E\br{H'}}$. Moreover, by summing up over all $H'$ we get 
+    $\sum_{H'\in H\setminus C}\OPT\br{H'}\leq \OPT\br{H}$, and therefore
+    \begin{align*}
+        c\br{C}&=c\br{C_H}+\sum_{H'\in H\setminus C}c\br{C_{H'}}
+        \\&\leq \kappa\br{\rho,\eta}\cdot\gamma\cdot\OPT\br{H}+\br{d-1}\cdot\kappa\br{\rho,\eta}\cdot \gamma\sum_{H'\in H\setminus C}\OPT\br{H'}
+        \\&\leq 
+        d\cdot \kappa\br{\rho,\eta}\cdot\gamma\cdot\OPT\br{H}.
+    \end{align*}
+    Therefore, the induction is complete. Applying it to $H=G$, where $\spr{G}=w\br{V}$ and $k'=\eta\cdot w\br{V}$, gives $d\br{\spr{G}}\leq \cl{\log_{5/4}\br{1/\eta}}$, which yields the statement of the theorem.
 \end{proof}
 
 As an immediate corollary we get:
 \begin{corollary}
-    For fixed $\rho\in(0,1)$ and $\eta\in(0,1)$, there is an approximation algorithm for \textsc{Graph Partitioning with Demands} that returns a subset of edges $C$ such that every connected component $H$ of $G-C$ satisfies $w\br{H}\leq \eta\,w\br{V}$ and, writing $\Lambda:=d\cdot \kappa\br{\rho,\eta}$ with $d=\cl{\log_{5/4}\br{1/\eta}}$ and $\kappa\br{\rho,\eta}=\max\brc{400,\,1/\br{\br{1-\rho/\eta}\cdot4/5}^2}$, the following holds:
+    For fixed $\rho\in(0,1)$ and $\eta\in(0,1)$, there is an approximation algorithm for \textsc{Graph Partitioning with Demands} that returns a subset of edges $C_G$ such that every connected component $H$ of $G\setminus C_G$ satisfies $w\br{H}\leq \eta\cdot w\br{V}$ and, writing $\Lambda:=d\cdot \kappa\br{\rho,\eta}$ with $d=\cl{\log_{5/4}\br{1/\eta}}$ and $\kappa\br{\rho,\eta}=\max\brc{400,\,1/\br{\br{1-\rho/\eta}\cdot4/5}^2}$, the following holds:
     \[
-    c\br{C}\leq O\br{\Lambda\log n}\cdot c\br{C^*}
+    c\br{C_G}\leq O\br{\Lambda\cdot\log n}\cdot c\br{C^*}
     \quad\text{on general graphs,}
     \]
     \[
-    c\br{C}\leq O\br{\Lambda}\cdot c\br{C^*}
+    c\br{C_G}\leq O\br{\Lambda}\cdot c\br{C^*}
     \quad\text{on trees,}
     \]
     \[
-    c\br{C}\leq O\br{\Lambda\sqrt{\log n}}\cdot c\br{C^*}
+    c\br{C_G}\leq O\br{\Lambda\cdot\sqrt{\log n}}\cdot c\br{C^*}
     \quad\text{for multiplicative demands.}
     \]
-    In particular, for any fixed $\rho\in(0,1)$ and $\eta\in(0,1)$, thee value $\Lambda$ is a constant, and the above bounds are $O\br{\log n}$, $O\br{1}$ and $O\br{\sqrt{\log n}}$, respectively.
+    In particular, for any fixed $\rho\in(0,1)$ and $\eta\in(0,1)$, the value $\Lambda$ is a constant, and the above bounds are $O\br{\log n}$, $O\br{1}$ and $O\br{\sqrt{\log n}}$, respectively.
 \end{corollary}
 
 
 \subsection{Hierarchical clustering with demands}
 
 In this problem one is given a graph $G=(V,E,c,w)$ with cost and demand functions $c\colon E\to \mathbb{N}$ and $w\colon V\to \mathbb{N}$, and the goal is to find a hierarchical clustering tree of $G$. The \emph{clustering tree} $T=(V_T,E_T)$ of $G$ is a binary tree where each node $u\in V_T$ is associated with a subset of $S_u\subseteq V$, that we called a \emph{cluster}, such that the subsets associated with children of $u$ form a partition of $S_u$.
-The root's claster is $V$ and the leafs of $T$ are associated with singletons. The Dasgupta's clustering objective is to find a tree $T$ minimizing \[
+The root's cluster is $V$ and the leafs of $T$ are associated with singletons. The Dasgupta's clustering objective is to find a tree $T$ minimizing \[
 c\br{T} = \sum_{u\in V\br{T}} w\br{S_u}\cdot c\br{S_u, V\setminus S_u}.
 \]
 We refer to the above problem as \textsc{Hierarchical Clustering with Demands}.
