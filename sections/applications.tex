@@ -235,7 +235,7 @@ We show how to use the approximation algorithm for \textsc{Graph Partitioning wi
 The for \textsc{Hierarchical Clustering with Demands} is as follows:
 \begin{enumerate}
  \item Let initially $T$ be a single (root) node associated with $V$.
- \item While $T$ has a node $u$ with $\w\br{H_u}>0$, call a $\gamma$-approximation algorithm for \textsc{Graph Partitioning with Demands} on $H_u$ with $
+ \item While $T$ has a node $u$ with $w\br{H_u}>0$, call a $\gamma$-approximation algorithm for \textsc{Graph Partitioning with Demands} on $H_u$ with $
 \rho=1/2$ and $\eta=4/5$. Let $C_u$ be the set of edges returned by the algorithm. For each connected component $H\in H_u\setminus C_u$, add a child node $v$ to $u$ in $T$ associated with the cluster $H_v=H$.
 \end{enumerate}
 
