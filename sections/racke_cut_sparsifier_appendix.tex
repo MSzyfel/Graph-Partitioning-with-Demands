@@ -5,8 +5,8 @@ Let $G=(V,E,c_G)$ and let $\brc{(T_i,\lambda_i)}_{i=1}^{N}$ be as in Theorem~\re
 Define $\mu$ by $\Pr_{T\sim\mu}[T=T_i]=\lambda_i$ and set
 $\rho=\bigo(\log n)$. Then for every cut $U\subsetneq V$:
 \begin{enumerate}
-  \item[(i)] $c_G\br{U,\bar U}\le c_T\br{U,\bar U}$ for every $T$ in the support of $\mu$.
-  \item[(ii)] $\Etree\left[c_T\br{U,\bar U}\right]\le \rho\cdot c_G\br{U,\bar U}$.
+  \item[(i)] $c_G\br{U,\bar U}\le \minCut{U}{V\setminus U}{T}$ for every $T$ in the support of $\mu$.
+  \item[(ii)] $\Etree\left[\minCut{U}{V\setminus U}{T}\right]\le \rho\cdot c_G\br{U,\bar U}$.
 \end{enumerate}
 \end{theorem}
 
@@ -17,12 +17,15 @@ For (i), let $F^*=c_G\br{U,\bar U}$. By max-flow/min-cut in $G$, there is a
 single-commodity flow from $U$ to $\bar U$ of value $F^*$ and congestion $1$.
 Apply Theorem~\ref{thm:flow_mapping} to map this flow to any tree $T$ in support. The mapped
 flow in $T$ still has congestion at most $1$, hence can use at most the capacity
-of the tree cut between $U$ and $\bar U$. Therefore $
-  F^*=c_G\br{U,\bar U}\le c_T\br{U,\bar U}.$
+of the tree cut between $U$ and $\bar U$. Therefore,
+\[
+  F^*=c_G\br{U,\bar U}\le \minCut{U}{V\setminus U}{T}
+\]
+.
 
 For (ii), for each tree $T_i$ choose a maximum $\br{U,\bar U}$ flow $f_i$ in $T_i$.
 Since $T_i$ is a tree and capacities are $c_{T_i}$, max-flow/min-cut gives $
-  \mathrm{val}(f_i)=c_{T_i}\br{U,\bar U}$,
+  \mathrm{val}(f_i)=\minCut{U}{V\setminus U}{T_i}$,
 and $f_i$ has congestion at most $1$ in $T_i$.
 Apply Theorem~\ref{thm:convex_decomposotion} to the family $\brc{f_i}_{i=1}^{N}$: the mapped convex combination, denote it by
 \[
@@ -31,14 +34,14 @@ Apply Theorem~\ref{thm:convex_decomposotion} to the family $\brc{f_i}_{i=1}^{N}$
 has congestion at most $\rho$ in $G$. Its value is
 \[
   F:=\sum_{i=1}^{N} \lambda_i\cdot \mathrm{val}(f_i)
-   =\sum_{i=1}^{N}\lambda_i \cdot c_{T_i}\br{U,\bar U}
-  =\Etree\left[c_T\br{U,\bar U}\right].
+   =\sum_{i=1}^{N}\lambda_i \cdot \minCut{U}{V\setminus U}{T_i}
+  =\Etree\left[\minCut{U}{V\setminus U}{T}\right].
 \]
 Any $\br{U,\bar U}$ flow of value $F$ in $G$ must have congestion at least
 $F/c_G\br{U,\bar U}$ (again by max-flow/min-cut), so
 \[
   \frac{F}{c_G\br{U,\bar U}}\le \rho.
 \]
-Substituting $F=\Etree\left[c_T\br{U,\bar U}\right]$ gives $
-  \Etree\left[c_T\br{U,\bar U}\right]\le \rho\cdot c_G\br{U,\bar U}$ which gives (ii).
+Substituting $F=\Etree\left[\minCut{U}{V\setminus U}{T}\right]$ gives $
+  \Etree\left[\minCut{U}{V\setminus U}{T}\right]\le \rho\cdot c_G\br{U,\bar U}$ which gives (ii).
 \end{proof}
