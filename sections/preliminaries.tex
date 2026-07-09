@@ -1,8 +1,6 @@
 \section{Preliminaries}
 
-\DD{uklad preliminaries: pierwszy paragraf to definicje ogolno-grafowe, a drugi to cuty, demandy i ich notacja.}
-
-Most of the instances of the problem considered in this work consist of a graph $G=\br{V,E,c,w}$, where $V$ is the vertex set, $E$ is the edge set, $c\colon E \to \mathbb{N}$ is the \emph{capacity} function which encodes the cost of cutting an edge, and $w\colon V\times V\to \mathbb{N}$ is the \emph{demand} function which, informally speaking, tells how important separating a given vertex pair is.
+Most instances of the problems considered in this work consist of a graph $G=\br{V,E,c,w}$, where $V$ is the vertex set, $E$ is the edge set, $c\colon E \to \mathbb{N}$ is the \emph{capacity} function which encodes the cost of cutting an edge, and $w\colon V\times V\to \mathbb{N}$ is the \emph{demand} function which, informally speaking, tells how important separating a given vertex pair is.
 For adjacent vertices $u,v\in V$, we denote by $uv$ the edge between $u$ and $v$.
 For any $C\subseteq E$, $G\setminus C$ is the graph obtained by removing the edges in $C$ from $G$.
 We write $\br{V_H,E_H,c_H,w_H}$ to point out that given parameters represent a particular graph or subgraph $H$, different than $G$.
@@ -12,8 +10,8 @@ For any function $f\colon V\times V\to \mathbb{N}$ and disjoint subsets $A, B\su
 f\br{A}=\sum_{u,v\in A}f\br{u, v}, \quad f\br{A, B}=\sum_{u\in A}\sum_{v\in B}f\br{u, v}
 \]
 with a convention that if the domain of $f$ is the edge set and $uv\notin E$, then $f\br{u,v}=0$.
-Whenever $A, B\subseteq V$ are not disjoint, we define $f\br{A, B}=f\br{A}+f\br{A, B\setminus A}$. See Figure \ref{fig:demand-decomposition} for an illustration of this.
-For a subset $C\subseteq E$ and a function $f$ on the edge set, $f\br{C}=\sum_{uv\in C}f\br{u,v}$. 
+Whenever $A, B\subseteq V$ are not disjoint, we define $f\br{A, B}=f\br{A}+f\br{A, B\setminus A}$ (see Figure \ref{fig:demand-decomposition} for an illustration).
+For a subset $C\subseteq E$ and a function $f$ on the edge set, $f\br{C}=\sum_{e\in C}f\br{e}$.
 \DD{todo: czy zdarza sie, ze mamy funkcje zdefiniowana na $V\times V$, ale argumentem jest zbior krawedzi?}
 For a subset $S\subseteq V$, we denote by $\bar{S}$ the complement of $S$ in $V$, i.~e. $\bar{S}=V\setminus S$.
 A \emph{cut} is any subset $S\subseteq V$, such that $S\neq \emptyset$, $S\neq V$ and we denote it either by just $S$ or we write $\br{S, \bar{S}}$ to explicitly indicate the two sides of the cut.
