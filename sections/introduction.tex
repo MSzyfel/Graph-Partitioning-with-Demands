@@ -55,7 +55,7 @@ In this work, we show a series of algorithmic reductions between various graph p
 
 To obtain the above result, we combine a variety of techniques in order to simplify the problem to some easy enough primitive task. Intuitively, our algorithm is sensitive to two types of instances which are tackled differentily. Although they are never distinguished explicitly, by choosing the best among two obtained solutions we get a non-trivial approximation ratio of $\bigo\br{\log n}$. The two cases are dictated by the size of $w\br{S^*, \bar{S^*}}$ in an optimal solution. If this quantity is large, then the problem (up to a constant factor approximation loss) essentially becomes the well known \textsc{$k$-Multicut} problem, where the task is to find a minimum cost partition of the graph while ensuring that at least $k$ units of demand are cut in total.
 This problem admits an $\beta=\bigo\br{\log n}$-approximation algorithm by combining \cite{AUnifiedApproachToApproximatingPartialCoveringProblems} with \cite{OptimalHierarchicalDecompositionsForCongestionMinimizationInNetworks}.
-\DDfix{Such a solution is not fully suitable for our purposes, because the number of connected components obtained via \textsc{$k$-Multicut} might be arbitrarily large.} To remedy this we employ a \textsc{Max-Cut} algorithm which ensures that a significant portion of the demand is still cut while partitioning the components into two groups as required.
+Such a solution is not fully suitable for our purposes, because the number of connected components obtained via \textsc{$k$-Multicut} might be arbitrarily large. To remedy this we employ a \textsc{Max-Cut} algorithm which ensures that a significant portion of the demand is still cut while partitioning the components into two groups as required.
 
 If the aforementioned quantity is small, then we show that we can reduce the problem to the  \textsc{Generalized Sparsest Cut} with additional constraint that the demand to be cut cannot be too large. This is done by constructing an auxiliary graph with new demand function such that cutting demand in this new instance roughly corresponds to minimizing the conductance in the original instance. This reduction preserves the approximation ratio, however its analysis is sensitive and crucially relies on the fact that $w\br{S^*, \bar{S}^*}$ is assumed to be of small value.
 
@@ -69,8 +69,8 @@ In the second part of the paper we move ourselves towards applications of the \t
 % It should be noted, that there is an evidence that no true polylogarithmic approximation for this task exists [cite here].
 
 Then, we show that the above bicriteria approximation algorithm can be used to obtain an $\bigo\br{\log \gamma}$-approximation for \textsc{Hierarchical Clustering with Demands}. This is done in a recursive top-down manner.
-\DDfix{A single call to the algorithm partitions the graph into components with `internal' demand at most $\frac{4}{5}\cdot w\br{V}$.
-Then, the rest of hierarchy is build by applying the algorithm recursively in those of the resulting components that need to be futher partitioned.}
+A single call to the algorithm partitions the graph into components with `internal' demand at most $\frac{4}{5}\cdot w\br{V}$.
+Then, the rest of hierarchy is built by applying the algorithm recursively in those of the resulting components that need to be further partitioned.
 Using a tight analysis generalizing the framework of \cite{ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics} we show that the approximation ratio is indeed preserved.
 
 \begin{corollary}
