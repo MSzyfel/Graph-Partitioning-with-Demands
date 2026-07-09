@@ -66,7 +66,7 @@ Formally, the scheme is the following:
   \begin{enumerate}[label=(\theenumi\alph*)]
     \item\label{it:S2:beta} Run a $\beta$-approximation algorithm for the \textsc{Generalized $k$-Multicut} with $k=w\br{V}/3$ to obtain a multicut $C$.
     \item\label{it:S2:R} Build a complete graph $R$ whose vertices are the components of $G\setminus C$, with edge weights $w_R\br{H_1,H_2}=w\br{V_{H_1},V_{H_2}}$ for any pair of components $H_1$ and $H_2$.
-    \item\label{it:S2:R-cut} Compute a cut $(C_R,\bar{C}_R)$ by solving \textsc{Max-Cut} on $R$ by using Proopsition~\ref{pro:max-cut}.
+    \item\label{it:S2:R-cut} Compute a cut $(C_R,\bar{C}_R)$ by solving \textsc{Max-Cut} on $R$ by using Proposition~\ref{pro:max-cut}.
     \item\label{it:S2:S2} Map $(C_R,\bar{C}_R)$ back to a cut $S_2$ in $G$: $S_2=\bigcup_{H\in C_R}V_H$.
 %    if $v\in V$ belongs to a component corresponding to a vertex of $R$ in $C_R$, then add $v$ to $S_2$; otherwise $v$ goes to $\bar{S}_2$.
   \end{enumerate}
@@ -127,7 +127,7 @@ There are 3 cases:
   \end{itemize}
   It should be noted that at least one of the two above conditions must hold since $w\br{S_1}+w\br{S_1, \bar{S}_1}=w_{G}\br{S_1, V}$.
 \end{enumerate}
-Therefore, $S_1$ is a valid solution to the \textsc{Simplified Conductance} problem with $\delta=1/6$. We now obtain that
+Therefore, $S_1$ is a valid solution to the \textsc{Simplified Conductance} problem with $\delta=1/6$. We now obtain, by the construction of $G'$, \eqref{eq:Stwo} and the fact that an $\alpha$-approximation is used in step~\ref{it:S1:alpha} that
 \[
  \hw\br{S_1} = \frac{c_G\br{S_1,\bar{S}_1}}{w_G\br{S_1,V}} \leq 2\cdot \frac{c_{G'}\br{S_1,\bar{S}_1}}{w_{G'}\br{S_1,\bar{S_1}}} \leq 2\alpha\cdot \frac{c_{G'}\br{\Sopt,\SoptBar}}{w_{G'}\br{\Sopt,\SoptBar}} \leq 2\alpha\cdot \frac{c_G\br{\Sopt,\SoptBar}}{w_G\br{\Sopt,V}} 
 \]
@@ -148,7 +148,7 @@ Now we analyze, the second case regarding the size of $w\br{\Sopt, \SoptBar}$, w
   Notably, this task is not equivalent to the \textsc{Generalized $k$-Multicut}, which is approximated in the second branch.
   The reason for this is that $G\setminus C$ has in general many connected components.
   Observe that the cut $\Sopt$ gives a $k$-multicut in $R$.
-  Hence, the cost of an optimal $k$-multicut $C^*$ is bouned $c\br{C^*}\leq c\br{\Sopt,\SoptBar}$.
+  Hence, the cost of an optimal $k$-multicut $C^*$ is bounded $c\br{C^*}\leq c\br{\Sopt,\SoptBar}$.
   Therefore, $c\br{C}\leq \beta\cdot c\br{\Sopt,\SoptBar}$.
 
 %  To remedy this issue we proceeed as follows:

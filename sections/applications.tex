@@ -23,7 +23,7 @@ and the two objectives are equivalent up to a factor of $4$. Since $w$ is multip
 Below, we show how to use the approximation algorithm for the \textsc{Generalized Conductance} to obtain an approximation algorithm for \textsc{Graph Partitioning with Demands}. In the latter problem, we are given a graph $G=(V,E,c,w)$ and a fixed constant $\rho\in(0,1)$, and the goal is to find a subset of edges $C\subseteq E$ that minimizes $c\br{C}$ such that for every $H\in G\setminus C$, we have $w\br{V_H}\leq \rho\cdot w\br{V}$.
 Let $\OPTdem{G}{\rho}=c\br{C^*}$, where $C^*$ is an optimal cut.
 
-Let $\rho<\eta<1$ be a constant. We will obtain a bi-criteria approximation algorithm for \textsc{Graph Partitioning with Demands} that returns a subset of edges $C$ such that $c\br{C}=\bigo_{\rho, \eta}\br{\gamma}\cdot \OPTdem{G}{\rho}$ and for every $H\in G\setminus C$, we have $w\br{V_H}\leq \eta \cdot w\br{V}$, where $\gamma$ is the approximation ratio for the \textsc{Generalized Conductance}. This is done in two parts. Firstly, we show an algoritihm for a limited range of $\eta$ and then extend it to the entirety of $\eta\in(\rho,1)$.
+Let $\rho<\eta<1$ be a constant. We will obtain a bi-criteria approximation algorithm for \textsc{Graph Partitioning with Demands} that returns a subset of edges $C$ such that $c\br{C}=\bigo_{\rho, \eta}\br{\gamma}\cdot \OPTdem{G}{\rho}$ and for every $H\in G\setminus C$, we have $w\br{V_H}\leq \eta \cdot w\br{V}$, where $\gamma$ is the approximation ratio for the \textsc{Generalized Conductance}. This is done in two parts. Firstly, we show an algorithm for a limited range of $\eta$ and then extend it to the entirety of $\eta\in(\rho,1)$.
 
 Let $
 \delta_{\rho}=\min\brc{1/4,1-\rho}$ and $
@@ -77,7 +77,7 @@ The above algorithm is characterized by the following claim.
             \[
                         w\br{A, V}\geq w\br{A, B} \geq w\br{A', V_H}\geq \delta_{\rho}\cdot w\br{V}
             \]
-                        and similarily, using $w\br{A,B}=w\br{B,A}$ for disjoint $A$ and $B$, $w\br{B, V}\geq \delta_{\rho}\cdot w\br{V}$.
+                        and similarly, using $w\br{A,B}=w\br{B,A}$ for disjoint $A$ and $B$, $w\br{B, V}\geq \delta_{\rho}\cdot w\br{V}$.
             \item Otherwise, $A$ stays unchanged and we set $B=V\setminus A$. We have $w\br{A, V}\geq \delta_{\rho}\cdot w\br{V}$ by to the halting condition of the above greedy rule, and
               \begin{align*}
               w\br{B, V}
@@ -279,7 +279,7 @@ Now, since all child clusters of $H$ have size at most $s_H$, they do not contri
     \sum_{H} \sum_{t=s_H+1}^{r_H}c\br{E_{t}^*\cap E_H} \leq \sum_{t=0}^{w\br{V}} c\br{E_{\fl{t/2}}^*}
 \end{align*}
 
-Thus by summing up over the conitribution of all cuts $C_H$ we get that the cost of the tree returned by the algorithm is at most:
+Thus by summing up over the contribution of all cuts $C_H$ we get that the cost of the tree returned by the algorithm is at most:
 \begin{align*}
     \Dasgupta\br{T}=\sum_{H} r_H\cdot c\br{C_H} & \leq 5\cdot \sum_{H} \sum_{t=s_H+1}^{r_H}c\br{E_{t}^*\cap E_H} \\
     &\leq 5\cdot \sum_{t=0}^{w\br{V}} c\br{E_{\fl{t/2}}^*}\leq 10\cdot \Dasgupta\br{T^*}
