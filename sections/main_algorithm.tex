@@ -12,7 +12,6 @@ We refer to the above as the \textsc{Simplified Conductance} problem.
 %Likewise, $\OPTc(G)$ is the optimal solution to the \textsc{Generalized Conductance}.
 %We may without loss of generality assume that $w\br{S, V}\le w\br{\bar{S}, V}$.
 We have the following observation.
-\DD{uwaga: usunalem OPT-y i stosuje jak w lemacie ponizej}
 \begin{lemma} \label{lem:h-equivalent}
 For any graph $G=(V,E,c,w)$, $\OPTc(G)=\Theta\br{\OPTh(G)}/w(V)$.
 \end{lemma}
@@ -28,7 +27,6 @@ Formally, given a graph $G=(V,E,c,w)$, we consider the problem of finding $S$ th
       \quad\text{subject to}\quad 0<w\br{S,\bar S}\le K.
     \end{equation}
 %Denote by $\phiwK\br{G}$ the value of the optimal solution to~\eqref{eq:K}.
-\DD{uwaga: kryterium przenioslem do def. i mozemy uzywac z $G$ jako argumentem, tak jak inne ryteria}
 
 We will also utilize (cf. step~\ref{it:S2:beta}) the \textsc{Generalized $k$-Multicut}: given a graph $G=(V,E,c,w)$ with capacities and demands, find a minimum-cost set of edges $C\subseteq E$, such that the demand cut by $C$ is at least $k$.
 
@@ -56,7 +54,6 @@ w\br{C_G,\bar{C}_G}=\sum_{i=1}^l w\br{\br{C_G,\bar{C}_G}\cap X_i}\geq\frac{1}{2}
 We now introduce a reduction\footnote{We use the word `reduction' since both $S_1$ and $S_2$ are obtained via an algorithmic reduction to another combinatorial problem, either \textsc{Generalized Sparsest Cut} (with restrictions) or \textsc{Generalized $k$-Multicut}.} scheme (an algorithm) used in this section.
 The scheme is applied to an input graph $G=(V,E,c,w)$ and it computes independently two candidate cuts $S_1$ and $S_2$ via two different methods.
 The returned solution is $S_i$ that minimizes the generalized conductance.
-\DD{moze na rys.3 daloby sie napisac wartosci $c$ oraz $w$ w rysunku, a nie caption, gdzies przy krawedziach z $r$ napisac np. $c_{G'}\equiv 0$ itd.}
 Formally, the scheme is the following:
 \begin{enumerate}
   \item \label{it:S1} Compute a candidate set $S_1$ (see Figure~\ref{fig:aux-graph-r}):
@@ -89,7 +86,6 @@ The complementary case is handled by Lemma~\ref{lem:S2} (where the appropriate a
   Then, $S_1$ is an $\bigo\br{\alpha}$-approximate solution to the \textsc{Simplified Conductance} problem with $\delta=1/6$.
 \end{lemma}
 \begin{proof}
-\DD{tutaj zakomentowalem powtarzanie def. $G'$}
 %Firstly, we create an auxiliary graph $G'$, such that $V'=V\cup \brc{r}$. We set $c\br{r, u}=0$ for every $u\in V$ and we set $w\br{r, u}=\sum_{v\in V} w\br{u, v}$ for every $u\in V$.
 Recall the auxiliary graph $G'$ defined in step~\ref{it:S1:Gprime}.
 For any cut $S\subseteq V$ for which we have without loss of generality that $r\in \bar{S}$, it holds
@@ -135,25 +131,35 @@ Since the first branch yields an $\bigo(\alpha)$-approximation for the \textsc{S
 \end{proof}
 
 Now we analyze, the second case regarding the size of the cut $\br{\Sopt, \SoptBar}$, which is handled by finding $S_2$ in the algorithm.
-\DD{upewnic sie: algo, ktory uzywamy, $\beta$ dot. $c$, natomiast lower bound $k$ na demand jest gwarantowany?}
 \begin{lemma} \label{lem:S2}
   Assume that $w\br{\Sopt, \SoptBar}\geq w\br{V}/3$.
   %Moreover, let $\beta$ be an approximation ratio of some approximation algorithm for the (generalized) $k$-multicut problem.
-  Then, $S_2$ is an $\bigo\br{\beta}$-approximate solution to the \textsc{Simplified Conductance} problem with $\delta=1/3$.
+  Then, $S_2$ is an $\bigo\br{\beta}$-approximate solution to the \textsc{Simplified Conductance} problem with $\delta=1/6$.
 \end{lemma}
 \begin{proof}
-  By assumption $w\br{V}\geq w\br{\Sopt,V}\geq w\br{\Sopt,\SoptBar}\geq w\br{V}/3$, which gives $w\br{\Sopt, V}\geq w\br{V}/3$ so that $\delta=1/3$ suffices.
-  Analogously, $w\br{\SoptBar, V}=\Theta\br{w\br{V}}$.
+  By assumption $w\br{V}\geq w\br{\Sopt,V}\geq w\br{\Sopt,\SoptBar}\geq w\br{V}/3$, which gives $w\br{\Sopt, V}\geq w\br{V}/3$.
+  Analogously, $w\br{\SoptBar, V}\ge w\br{V}/3$.
   Therefore, by the same equivalence
   it suffices to minimize $c\br{S, \bar{S}}$ subject to $w\br{S, \bar{S}}\geq w\br{V}/3$ with a constant-factor loss.
   Notably, this task is not equivalent to the \textsc{Generalized $k$-Multicut}, which is approximated in the second branch.
   The reason for this is that $G\setminus C$ has in general many connected components.
+  Observe that the cut $\Sopt$ gives a $k$-multicut in $R$.
+  Hence, the cost of an optimal $k$-multicut $C^*$ is bouned $c\br{C^*}\leq c\br{\Sopt,\SoptBar}$.
+  Therefore, $c\br{C}\leq \beta\cdot c\br{\Sopt,\SoptBar}$.
 
 %  To remedy this issue we proceeed as follows:
 %  We find an $\beta$-approximate multicut $C$. Then, we build a complete graph $R$, on vertex set consisting of components of $G\setminus C$. For any $H_1, H_2\in G\setminus C$, we set a weight $w_R\br{H_1, H_2}=w\br{H_1, H_2}$ (be weary of the fact that $H_1, H_2$ are vertices of $R$, but subsets of vertices of $G$). We now wish to solve a max-cut problem on $R$ in order to partition components of $G\setminus C$ in such a way to preserve a significant amount of demand being cut.
 %It is well known that for any graph, there exists a cut $\br{A, B}$, such that $w\br{A, B}\geq w\br{V\br{R}}/2$. It is easy to see, that such a solution is $2$-approximation for max-cut, however for our purposes the crucial property is that since the demand cut by $C^*$ is at least $w_R\br{V\br{R}}=w\br{V}/3$, \DD{czy jesli sie poronujemy do oryginalnego $G$, to czy nie zgubilismy $\beta$? Tzn czy nie bedzie to $w_R\br{V\br{R}}=\beta w\br{V}/3$; nie bo $\beta$ dot. $c$.} finding $(A, B)$ produces a cut of $G$ cutting at least $w\br{V}/6$ amount of demand which is sufficient for our purposes.
+
 Since the total demand in $(R,w_R')$ is lower-bounded by $w_R'(V_R)\geq w\br{V}/3$, the standard \textsc{Max-Cut} guarantee gives that $S_2$ cuts at least $w\br{V}/6$ of the total demand in $G$.
-Since $E\br{S_2, \bar{S}_2}\subseteq C$, the cost of the outputed cut is $c\br{E\br{S_2, \bar{S}_2}}\leq c\br{C}$.
+Therefore, $w\br{S_2,V},w\br{\bar{S}_2,V}\geq w\br{V}/6$.
+Hence, $\delta=1/6$ suffices.
+Since $E\br{S_2, \bar{S}_2}\subseteq C$, the cost of the outputed cut is $c\br{S_2, \bar{S}_2}\leq c\br{C}$.
+We obtain
+\[
+ \hw\br{S_2} = \frac{c\br{S_2,\bar{S}_2}}{w\br{S_2,V}} \leq \frac{c\br{C}}{w\br{V}/6} \leq 2\beta\cdot \frac{c\br{\Sopt,\SoptBar}}{w\br{\Sopt,\SoptBar}},
+\]
+as required by the lemma.
 \end{proof}
 
 
