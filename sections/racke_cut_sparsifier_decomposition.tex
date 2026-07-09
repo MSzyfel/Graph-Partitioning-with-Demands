@@ -57,7 +57,9 @@ has congestion at most $\rho=\bigo(\log n)$ in $G$.
 \subsection{Cut value preservation bounds}
 
 
-For $U\subseteq V$ and a Decomposition tree $T$, define $\minCut{U}{T}$ to be a cut $C$ in $T$ of minimum cost $c_T\br{C}$ that separates the leaves in $m_V'\br{U}$ from the leaves in $m_V'\br{\bar{U}}$.
+For disjoint sets $A,B\subseteq V$ and any graph $G$, define
+$\minCut{A}{B}{G}$ to be a cut $C$ in $G$ of minimum cost $c_G\br{C}$ that
+separates $A$ from $B$.
 
 To bound how well cuts are preserved by R\"{a}cke's decomposition, we use an argument analogous to max-flow/min-cut duality: capacities in each tree dominate the original cut capacities pointwise, and by combining tree flows through the convex decomposition we obtain a matching upper bound in expectation.
 This gives the following cut-value preservation statement.
@@ -66,8 +68,8 @@ Let $G=(V,E,c_G)$ and let $\brc{(T_i,\lambda_i)}_{i=1}^{N}$ be as in Theorem~\re
 Define $\mu$ by $\Pr_{T\sim\mu}[T=T_i]=\lambda_i$ and set
 $\rho=\bigo(\log n)$. Then for every cut $U\subsetneq V$:
 \begin{enumerate}
-  \item[(i)] $c_G\br{U,\bar{U}}\le \minCut{U}{T}$ for every $T$ in the support of $\mu$.
-  \item[(ii)] $\Etree\left[\minCut{U}{T}\right]\le \rho\cdot c_G\br{U,\bar{U}}$.
+  \item[(i)] $c_G\br{U,\bar{U}}\le \minCut{U}{V\setminus U}{T}$ for every $T$ in the support of $\mu$.
+  \item[(ii)] $\Etree\left[\minCut{U}{V\setminus U}{T}\right]\le \rho\cdot c_G\br{U,\bar{U}}$.
 \end{enumerate}
 The proof is deferred to Appendix~\ref{app:racke-proof}.
 \end{theorem}
@@ -79,31 +81,32 @@ Armed with Theorem~\ref{thm:racke-dual}, we can now show the main result of this
   There exists an $\alpha=\bigo\br{\log n}$-approximation algorithm for general graphs and an exact algorithm for trees for the \textsc{Generalized Sparsest $K$-Bounded Cut} problem, for any choice of $K$.
 \end{theorem}
 \begin{proof}
+In order to avoid ambiguity, by $\phi_{w,G}^K(X_{T_i})$ we mean the sparsity of the cut $\br{X_{T_i},\bar{X}_{T_i}}$ in the graph $G$ with respect to the demand function $w$ and the bound $K$.
 The algorithm is as follows:
 \begin{enumerate}
   \item Compute the convex combination of decomposition trees $\brc{(T_i,\lambda_i)}_{i=1}^{N}$ as in Theorem~\ref{thm:convex_decomposotion} with respect to the values of $c$ in $G$.
   \item For any $u,v\in V$, set $w_{T_i}(m'_V(u),m'_V(v))=w(u,v)$, i.e., the demand function is the same in $G$ and in every tree $T_i$. For any non-leaf vertex of $T_i$, $u$ and every $v\in V\br{T_i}$, set $w_{T_i}(u,v)=0$.
   \item For each tree $T_i$, compute an optimal sparsest $K$-bounded cut $\br{X_{T_i},\bar{X}_{T_i}}$ in $T_i$.
-  \item Return the cut $\br{X_{T_i},\bar{X}_{T_i}}$ with the minimum sparsity in $G$, i.~e., $\argmin_{X_{T_i}, i\in [N]} \phiwK(G; X_{T_i})$.
-  \DD{notacja?}
+  \item Return the cut $\br{X_{T_i},\bar{X}_{T_i}}$ with the minimum sparsity in $G$, i.~e., $\argmin_{X_{T_i}, i\in [N]} \brc{\phi_{w,G}^K(X_{T_i})}$.
+  % \DD{notacja?}
 \end{enumerate}
 
 To prove the approximation guarantee, let $\br{X^*,\bar{X}^*}$ be an optimal cut for the \textsc{Generalized Sparsest $K$-Bounded Cut} in $G$.
 Since the demand function $w$ is the same in $G$ and in every tree $T$, the cut $X^*$ is feasible in every tree, i.e., $0<w_{T}\br{X^*,\bar{X}^*}\le K$.
 Therefore by Theorem~\ref{thm:racke-dual},
 \begin{align*}
-  \Etree\left[\phiwK(G; X_{T_i})\right]
+  \Etree\left[\phi_{w,G}^K(X_{T})\right]
   &\leq
-  \Etree\left[\frac{\minCut{X^*}{T}}{w_T\br{X^*,\bar{X}^*}}\right]
+  \Etree\left[\frac{\minCut{X^*}{V\setminus X^*}{T}}{w_T\br{X^*,\bar{X}^*}}\right]
   \\&=
-  \frac{1}{w\br{X^*,\bar{X}^*}}\,\Etree\left[\minCut{X^*}{T}\right]
+  \frac{1}{w\br{X^*,\bar{X}^*}}\,\Etree\left[\minCut{X^*}{V\setminus X^*}{T}\right]
   \\&\leq
   \frac{\rho\cdot c\br{X^*,\bar{X}^*}}{w\br{X^*,\bar{X}^*}}
   \\&=
-  \rho\cdot\phiwK(G). 
+  \rho\cdot\phi_{w,G}^K(X^*).
 \end{align*}
 By averaging, some tree $T$ in the support satisfies
-$\phiwK(G; T)\le \rho\cdot \phiwK(G)$, so the returned cut is an $\bigo\br{\log n}$-approximation.
+$\phi_{w,G}^K(X_{T})\le \rho\cdot \phi_{w,G}^K(X^*)$, so the returned cut is an $\bigo\br{\log n}$-approximation.
 
 It remains to justify that the problem is exactly solvable on trees.
 It is a well known fact that an optimal sparsest cut in a tree is achieved by a single edge removal.

@@ -230,12 +230,12 @@ As an immediate corollary we get:
 \newcommand{\Dasgupta}{\tilde{c}}
 
 In this problem one is given a graph $G=(V,E,c,w)$ with cost and demand functions $c\colon E\to \mathbb{N}$ and $w\colon V\to \mathbb{N}$, and the goal is to find a (hierarchical) clustering tree of $G$. The \emph{clustering tree} $T=(V_T,E_T)$ of $G$ is a binary tree where each node $u\in V_T$ is associated with a subgraph $H_u$ of $G$, that we call a \emph{cluster}, such that the subsets associated with children of $u$ form a partition of $H_u$.
-The root's cluster is $G$ and the leafs of $T$ are associated with singletons. The Dasgupta's clustering objective is to find a clustering tree $T$ minimizing \DD{zmienilem $c\rightarrow\tilde{c}$ (jako komenda)}
+The root's cluster is $G$ and the leafs of $T$ are associated with singletons. The Dasgupta's clustering objective is to find a clustering tree $T$ minimizing
 \begin{equation} \label{eq:Dasgupta}
 \Dasgupta\br{T} = \sum_{u\in V_T} w\br{V_{H_u}}\cdot c\br{V_{H_u}, V\setminus V_{H_u}}.
 \end{equation}
 We refer to the above problem as \textsc{Hierarchical Clustering with Demands}.
-We show how to use the approximation algorithm for \textsc{Graph Partitioning with Demands} to obtain an approximation algorithm for the former task. We note that the assumption of $T$ being binary can be relaxed since it is easy to see that any non-binary tree\footnote{We remark that the algorithm given belo in fact produces a non-binary clustring tree.} \DD{rzuc okiem na footnote...} can be transformed into a binary one without increasing the cost \cite{ACostFunctionForSimilarityBasedHierarchicalClustering}.
+We show how to use the approximation algorithm for \textsc{Graph Partitioning with Demands} to obtain an approximation algorithm for the former task. We note that the assumption of $T$ being binary can be relaxed since it is easy to see that any non-binary tree\footnote{In fact the algorithm given below produces a clustering tree which might be non-binary.} can be transformed into a binary one without increasing the cost \cite{ACostFunctionForSimilarityBasedHierarchicalClustering}.
 
 The algorithm for \textsc{Hierarchical Clustering with Demands} is as follows:
 \begin{enumerate}
@@ -281,7 +281,7 @@ Now, since all child clusters of $H$ have size at most $s_H$, they do not contri
 
 Thus by summing up over the conitribution of all cuts $C_H$ we get that the cost of the tree returned by the algorithm is at most:
 \begin{align*}
-    \sum_{H} r_H\cdot c\br{C_H} & \leq 5\cdot \sum_{H} \sum_{t=s_H+1}^{r_H}c\br{E_{t}^*\cap E_H} \\
+    \Dasgupta\br{T}=\sum_{H} r_H\cdot c\br{C_H} & \leq 5\cdot \sum_{H} \sum_{t=s_H+1}^{r_H}c\br{E_{t}^*\cap E_H} \\
     &\leq 5\cdot \sum_{t=0}^{w\br{V}} c\br{E_{\fl{t/2}}^*}\leq 10\cdot \Dasgupta\br{T^*}
 \end{align*}
 where the last inequality is by the Corollary~\ref{cor:upper-bound}.

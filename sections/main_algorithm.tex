@@ -99,7 +99,7 @@ Note that a trivial cut $S=V$ has cost $0$ in $G'$.
 Hence, the intuition behind the additional bound using the $K$ in \eqref{eq:K} instead of simply solving \textsc{Generalized Sparsest Cut} on $G'$ is that when $w\br{S, V}$ is forced to be roughly smaller than $w\br{\bar{S}, V}$, then this eliminates $S=V$ as a possible solution.
 Hence the choice of $K$ in the first branch for the constraint in \eqref{eq:K}.
 
-We now prove that the optimal solution $\Sopt$ that minimizes $\hw$, i.e., $\hw\br{\Sopt}=\OPTh\br{G}$ is a valid solution to the problem in \eqref{eq:K}.
+We now prove that the optimal solution $\Sopt$ that minimizes $\hw$, i.e., $\hw\br{\Sopt}=\hw\br{G}$ is a valid solution to the problem in \eqref{eq:K}.
 Observe that $\Sopt$ satisfies
 \[
 w\br{\Sopt, V}+w\br{\SoptBar, V}=w\br{V}+w\br{\Sopt, \SoptBar}\leq \frac{4}{3}\cdot w\br{V}
@@ -127,10 +127,14 @@ There are 3 cases:
   \end{itemize}
   It should be noted that at least one of the two above conditions must hold since $w\br{S_1}+w\br{S_1, \bar{S}_1}=w_{G}\br{S_1, V}$.
 \end{enumerate}
-Since the first branch yields an $\bigo(\alpha)$-approximation for the \textsc{Sparsest $K$-Bounded Cut Problem} in~\eqref{eq:K}, we have proved that the approximation ratio carries on to the \textsc{Simplified Conductance} problem with $\delta=1/6$.
+Therefore, $S_1$ is a valid solution to the \textsc{Simplified Conductance} problem with $\delta=1/6$. We now obtain that
+\[
+ \hw\br{S_1} = \frac{c_G\br{S_1,\bar{S}_1}}{w_G\br{S_1,V}} \leq 2\cdot \frac{c_{G'}\br{S_1,\bar{S}_1}}{w_{G'}\br{S_1,\bar{S_1}}} \leq 2\alpha\cdot \frac{c_{G'}\br{\Sopt,\SoptBar}}{w_{G'}\br{\Sopt,\SoptBar}} \leq 2\alpha\cdot \frac{c_G\br{\Sopt,\SoptBar}}{w_G\br{\Sopt,V}} 
+\]
+as required by the lemma.
 \end{proof}
 
-Now we analyze, the second case regarding the size of the cut $\br{\Sopt, \SoptBar}$, which is handled by finding $S_2$ in the algorithm.
+Now we analyze, the second case regarding the size of $w\br{\Sopt, \SoptBar}$, which is handled by the solution $S_2$ found by the algorithm.
 \begin{lemma} \label{lem:S2}
   Assume that $w\br{\Sopt, \SoptBar}\geq w\br{V}/3$.
   %Moreover, let $\beta$ be an approximation ratio of some approximation algorithm for the (generalized) $k$-multicut problem.
@@ -157,7 +161,7 @@ Hence, $\delta=1/6$ suffices.
 Since $E\br{S_2, \bar{S}_2}\subseteq C$, the cost of the outputed cut is $c\br{S_2, \bar{S}_2}\leq c\br{C}$.
 We obtain
 \[
- \hw\br{S_2} = \frac{c\br{S_2,\bar{S}_2}}{w\br{S_2,V}} \leq \frac{c\br{C}}{w\br{V}/6} \leq 2\beta\cdot \frac{c\br{\Sopt,\SoptBar}}{w\br{\Sopt,\SoptBar}},
+ \hw\br{S_2} = \frac{c_G\br{S_2,\bar{S}_2}}{w_G\br{S_2,V}} \leq \frac{c_G\br{C}}{w_G\br{V}/6} \leq 2\beta\cdot \frac{c_G\br{\Sopt,\SoptBar}}{w_G\br{\Sopt,\SoptBar}},
 \]
 as required by the lemma.
 \end{proof}
