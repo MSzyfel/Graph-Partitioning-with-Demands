@@ -21,7 +21,7 @@ and the two objectives are equivalent up to a factor of $4$. Since $w$ is multip
 \newcommand{\OPTdem}[2]{\OPT_{#2}\br{#1}}
 
 Below, we show how to use the approximation algorithm for the \textsc{Generalized Conductance} to obtain an approximation algorithm for \textsc{Graph Partitioning with Demands}. In the latter problem, we are given a graph $G=(V,E,c,w)$ and a fixed constant $\rho\in(0,1)$, and the goal is to find a subset of edges $C\subseteq E$ that minimizes $c\br{C}$ such that for every $H\in G\setminus C$, we have $w\br{V_H}\leq \rho\cdot w\br{V}$.
-\DDfix{Let $\OPTdem{G}{\rho}{\rho}=c\br{C^*}$, where $C^*$ is an optimal cut.}
+Let $\OPTdem{G}{\rho}=c\br{C^*}$, where $C^*$ is an optimal cut.
 
 Let $\rho<\eta<1$ be a constant. We will obtain a bi-criteria approximation algorithm for \textsc{Graph Partitioning with Demands} that returns a subset of edges $C$ such that $c\br{C}=\bigo_{\rho, \eta}\br{\gamma}\cdot \OPTdem{G}{\rho}$ and for every $H\in G\setminus C$, we have $w\br{V_H}\leq \eta \cdot w\br{V}$, where $\gamma$ is the approximation ratio for the \textsc{Generalized Conductance}. This is done in two parts. Firstly, we show an algoritihm for a limited range of $\eta$ and then extend it to the entirety of $\eta\in(\rho,1)$.
 
@@ -165,18 +165,18 @@ Fix $k'=\eta\cdot w\br{V}$ and $k=\rho\cdot w\br{V}$ to be global parameters for
 \begin{proof}
     It is easy to see that the algorithm runs in polynomial time. Hence, we focus on the approximation ratio.
 
-    For a graph $H$ with $w\br{V_H}\geq k'$ (recall $k'=\eta\cdot w\br{V}$) we set $\eta_H=k'/w\br{V_H}$ and $\rho_H=k/w\br{V_H}$ (recall $k=\rho\cdot w\br{V}$); observe that $\rho_H/\eta_H=k/k'=\rho/\eta$. \DDfix{Recall that $\OPTdem{H}{\rho_H}$ is the cost of the optimal \textsc{Graph Partitioning with Demands} solution on $H$ with threshold $\rho_H$.}
-    \DD{do dyskusji: czy $\rho$ sie nie zmieni ponizej dla $H'$?}
+    For a graph $H$ with $w\br{V_H}\geq k'$ (recall $k'=\eta\cdot w\br{V}$) we set $\eta_H=k'/w\br{V_H}$ and $\rho_H=k/w\br{V_H}$ (recall $k=\rho\cdot w\br{V}$); observe that $\rho_H/\eta_H=k/k'=\rho/\eta$.
+    Recall that $\OPTdem{H}{\rho_H}$ is the cost of the optimal \textsc{Graph Partitioning with Demands} solution on $H$ with threshold $\rho_H$.
 
-For a graph $H$, let $d\br{w\br{V_H}}$ denote the number of recursion levels \DD{czy jest powod, by nie oznaczyc tego $d(H)$?} the algorithm performs on $H$. Since every recursive call is invoked with $\eta_0\geq 4/5$ and produces components of demand at most $\eta_0 \cdot w\br{V_H}\leq \frac{4}{5} w\br{V_H}$, this also means that for every child $H'\in H\setminus C$ in the recursion tree, we get $\eta_{H'}\geq 5/4\cdot \eta_H$. Because the last partitioning step happens when $\eta_0=\eta_H\geq 4/5$, the recursion depth is bounded by
+For a graph $H$, let $d\br{H}$ denote the number of recursion levels the algorithm performs on $H$. Since every recursive call is invoked with $\eta_0\geq 4/5$ and produces components of demand at most $\eta_0 \cdot w\br{V_H}\leq \frac{4}{5} w\br{V_H}$, this also means that for every child $H'\in H\setminus C$ in the recursion tree, we get $\eta_{H'}\geq 5/4\cdot \eta_H$. Because the last partitioning step happens when $\eta_0=\eta_H\geq 4/5$, the recursion depth is bounded by
 \[
-    d\br{w\br{V_H}}\leq \cl{\log_{5/4}\br{w\br{V_H}/k'}}.
+    d\br{H}\leq \cl{\log_{5/4}\br{w\br{V_H}/k'}}.
 \]
 due to the fact after reaching $\eta_{H}\geq 4/5$ the algorithm perform one last partitioning step, i.e., the last recursive call. Since $\log_{5/4}\br{w\br{V_H}/k'}$ is the number of iterations required to reach $\eta_H\geq 1$, which is one more than we need to reach $\eta_H\geq 4/5$, we get that the above quantity is correct.
 
-Now, we prove by induction on $d\br{w\br{V_H}}$ that the recursive algorithm returns a subset of edges of cost at most $d\br{w\br{V_H}}\cdot \kappa\br{\rho,\eta}\cdot \gamma\cdot \OPTdem{H}{\rho_H}$.
+Now, we prove by induction on $d\br{H}$ that the recursive algorithm returns a subset of edges of cost at most $d\br{H}\cdot \kappa\br{\rho,\eta}\cdot \gamma\cdot \OPTdem{H}{\rho_H}$.
 
-    \emph{Base cases, $d\br{w\br{V_H}}=0$ and $d\br{w\br{V_H}}=1$.} If $d\br{w\br{V_H}}=0$, then $w\br{V_H}\leq k'$, so the algorithm terminates without any \DD{to by def?} partitioning, and the cost is $0$. If $d\br{w\br{V_H}}=1$, then $k'/w\br{V_H}\geq 4/5$, so $\eta_0=\eta_H=k'/w\br{V_H}$, and after a single partitioning step for each $H'\in H\setminus C$, $w\br{V_{H'}}\leq \eta_0 \cdot w\br{V_H}=k'$; hence the algorithm terminates. By the explicit bound established in the proof of Theorem~\ref{thm:gpd-bicriteria}, this step has cost at most $\frac{\gamma}{\br{\eta_H+\delta_{\rho_H}-1}^2}\cdot \OPTdem{H}{\rho_H}$. We bound $\frac{1}{\br{\eta_H+\delta_{\rho_H}-1}^2}\leq \kappa\br{\rho,\eta}$ in two cases:
+    \emph{Base cases, $d\br{H}=0$ and $d\br{H}=1$.} If $d\br{H}=0$, then $w\br{V_H}\leq k'$, since the algorithm terminates without any partitioning, and the cost is $0$. If $d\br{H}=1$, then $k'/w\br{V_H}\geq 4/5$, so $\eta_0=\eta_H=k'/w\br{V_H}$, and after a single partitioning step for each $H'\in H\setminus C$, $w\br{V_{H'}}\leq \eta_0 \cdot w\br{V_H}=k'$; hence the algorithm terminates. By the explicit bound established in the proof of Theorem~\ref{thm:gpd-bicriteria}, this step has cost at most $\frac{\gamma}{\br{\eta_H+\delta_{\rho_H}-1}^2}\cdot \OPTdem{H}{\rho_H}$. We bound $\frac{1}{\br{\eta_H+\delta_{\rho_H}-1}^2}\leq \kappa\br{\rho,\eta}$ in two cases:
     \begin{enumerate}
         \item If $\rho_H\leq 3/4$, then $\delta_{\rho_H}=1/4$ and $\eta_H+\delta_{\rho_H}-1\geq 4/5+1/4-1=1/20$, using $\eta_H\geq 4/5$. Hence $\frac{1}{\br{\eta_H+\delta_{\rho_H}-1}^2}\leq 400\leq \kappa\br{\rho,\eta}$.
         \item If $\rho_H> 3/4$, then $\delta_{\rho_H}=1-\rho_H$ and, using $\rho_H=\br{\rho/\eta}\cdot\eta_H$ and $\eta_H\geq 4/5$,
@@ -185,9 +185,9 @@ Now, we prove by induction on $d\br{w\br{V_H}}$ that the recursive algorithm ret
         \]
         Hence $\frac{1}{\br{\eta_H+\delta_{\rho_H}-1}^2}\leq \frac{1}{\br{\br{1-\rho/\eta}\cdot 4/5}^2}\leq \kappa\br{\rho,\eta}$.
     \end{enumerate}
-    In both cases the cost is at most $\kappa\br{\rho,\eta}\cdot\gamma\cdot \OPTdem{H}{\rho_H}=d\br{w\br{V_H}}\cdot \kappa\br{\rho,\eta}\cdot\gamma\cdot\OPTdem{H}{\rho_H}$.
+    In both cases the cost is at most $\kappa\br{\rho,\eta}\cdot\gamma\cdot \OPTdem{H}{\rho_H}=d\br{H}\cdot \kappa\br{\rho,\eta}\cdot\gamma\cdot\OPTdem{H}{\rho_H}$.
 
-    \emph{Inductive step.} Suppose the claim holds for every graph $H'$ with $d\br{w\br{V_{H'}}}\leq d-1$, and let $H$ satisfy $d\br{w\br{V_H}}=d\geq 2$. Then $k'/w\br{V_H}<4/5$, so $\eta_0=4/5$, and every $H'\in H\setminus C$ has demand at most $\eta_0\cdot w\br{V_H}=\frac{4}{5}\cdot w\br{V_H}$, hence $d\br{w\br{V_{H'}}}\leq d-1$. By Theorem \ref{thm:gpd-bicriteria}, the current partitioning step has cost at most $\frac{\gamma}{\br{\eta_0+\delta_{\rho_H}-1}^2}\cdot\OPTdem{H}{\rho_H}$, and we again bound $\frac{1}{\br{\eta_0+\delta_{\rho_H}-1}^2}\leq \kappa\br{\rho,\eta}$:
+    \emph{Inductive step.} Suppose the claim holds for every graph $H'$ with $d\br{H'}\leq d-1$, and let $H$ satisfy $d\br{H}=d\geq 2$. Then $k'/w\br{V_H}<4/5$, so $\eta_0=4/5$, and every $H'\in H\setminus C$ has demand at most $\eta_0\cdot w\br{V_H}=\frac{4}{5}\cdot w\br{V_H}$, hence $d\br{H'}\leq d-1$. By Theorem \ref{thm:gpd-bicriteria}, the current partitioning step has cost at most $\frac{\gamma}{\br{\eta_0+\delta_{\rho_H}-1}^2}\cdot\OPTdem{H}{\rho_H}$, and we again bound $\frac{1}{\br{\eta_0+\delta_{\rho_H}-1}^2}\leq \kappa\br{\rho,\eta}$:
     \begin{enumerate}
         \item If $\rho_H\leq 3/4$, then $\delta_{\rho_H}=1/4$ and $\eta_0+\delta_{\rho_H}-1=4/5+1/4-1=1/20$, so the term is at most $400\leq \kappa\br{\rho,\eta}$.
         \item If $\rho_H> 3/4$, then $\delta_{\rho_H}=1-\rho_H$ and, using $\rho_H=\br{\rho/\eta}\cdot\eta_H<\br{\rho/\eta}\cdot\eta_0$,
@@ -204,8 +204,7 @@ Now, we prove by induction on $d\br{w\br{V_H}}$ that the recursive algorithm ret
         \\&\leq 
         d\cdot \kappa\br{\rho,\eta}\cdot\gamma\cdot\OPTdem{H}{\rho_H}.
     \end{align*}
-    Therefore, the induction is complete. Applying it to $H=G$, where $\spr{G}=w\br{V}$ and $k'=\eta\cdot w\br{V}$, gives $d\br{\spr{G}}\leq \cl{\log_{5/4}\br{1/\eta}}$, which yields the statement of the theorem.
-    \DD{$d(|G|)$.}
+    Therefore, the induction is complete. Applying it to $H=G$, where $\spr{G}=w\br{V}$ and $k'=\eta\cdot w\br{V}$, gives $d\br{G}\leq \cl{\log_{5/4}\br{1/\eta}}$, which yields the statement of the theorem.
 \end{proof}
 
 As an immediate corollary we get:
@@ -228,68 +227,72 @@ As an immediate corollary we get:
 
 
 \subsection{Hierarchical clustering with demands}
+\newcommand{\Dasgupta}{\tilde{c}}
 
-In this problem one is given a graph $G=(V,E,c,w)$ with cost and demand functions $c\colon E\to \mathbb{N}$ and $w\colon V\to \mathbb{N}$, and the goal is to find a hierarchical clustering tree of $G$. The \emph{clustering tree} $T=(V_T,E_T)$ of $G$ is a binary tree where each node $u\in V_T$ is associated with a subgraph $H_u$ of $G$, that we call a \emph{cluster}, such that the subsets associated with children of $u$ form a partition of $H_u$.
-The root's cluster is $V$ and the leafs of $T$ are associated with singletons. The Dasgupta's clustering objective is to find a tree $T$ minimizing \[
-c\br{T} = \sum_{u\in V\br{T}} w\br{H_u}\cdot c\br{H_u, V\setminus H_u}.
-\]
+In this problem one is given a graph $G=(V,E,c,w)$ with cost and demand functions $c\colon E\to \mathbb{N}$ and $w\colon V\to \mathbb{N}$, and the goal is to find a (hierarchical) clustering tree of $G$. The \emph{clustering tree} $T=(V_T,E_T)$ of $G$ is a binary tree where each node $u\in V_T$ is associated with a subgraph $H_u$ of $G$, that we call a \emph{cluster}, such that the subsets associated with children of $u$ form a partition of $H_u$.
+The root's cluster is $G$ and the leafs of $T$ are associated with singletons. The Dasgupta's clustering objective is to find a clustering tree $T$ minimizing \DD{zmienilem $c\rightarrow\tilde{c}$ (jako komenda)}
+\begin{equation} \label{eq:Dasgupta}
+\Dasgupta\br{T} = \sum_{u\in V_T} w\br{V_{H_u}}\cdot c\br{V_{H_u}, V\setminus V_{H_u}}.
+\end{equation}
 We refer to the above problem as \textsc{Hierarchical Clustering with Demands}.
-We show how to use the approximation algorithm for \textsc{Graph Partitioning with Demands} to obtain an approximation algorithm for the former task. We note that the assumption of $T$ being binary can be relaxed due since it is easy to see that any non-binary tree can be transformed into one without increasing the cost \cite{ACostFunctionForSimilarityBasedHierarchicalClustering}.
+We show how to use the approximation algorithm for \textsc{Graph Partitioning with Demands} to obtain an approximation algorithm for the former task. We note that the assumption of $T$ being binary can be relaxed since it is easy to see that any non-binary tree\footnote{We remark that the algorithm given belo in fact produces a non-binary clustring tree.} \DD{rzuc okiem na footnote...} can be transformed into a binary one without increasing the cost \cite{ACostFunctionForSimilarityBasedHierarchicalClustering}.
 
-The for \textsc{Hierarchical Clustering with Demands} is as follows:
+The algorithm for \textsc{Hierarchical Clustering with Demands} is as follows:
 \begin{enumerate}
- \item Let initially $T$ be a single (root) node associated with $V$.
- \item While $T$ has a node $u$ with $w\br{H_u}>0$, call a $\gamma$-approximation algorithm for \textsc{Graph Partitioning with Demands} on $H_u$ with $
+ \item Let initially $T$ be a single (root) node associated with $G$.
+ \item While $T$ has a node $u$ whose associated cluster is not a singleton, call a $\gamma$-approximation algorithm for \textsc{Graph Partitioning with Demands} on $H_u$ with $
 \rho=1/2$ and $\eta=4/5$. Let $C_u$ be the set of edges returned by the algorithm. For each connected component $H\in H_u\setminus C_u$, add a child node $v$ to $u$ in $T$ associated with the cluster $H_v=H$.
 \end{enumerate}
 
-In order to show that the above algorithm achieves an $\bigo\br{\gamma}$-approximation ratio, where $\gamma$ is the approximation ratio for the \textsc{Graph Partitioning with Demands}, we use a generalized decomposition technique into levels due to \cite{ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics}. Let $\cH_{t}$ be the set of all maximal clusters $H$ in $T^*$ such that $w\br{V_H}\leq t$. Observe that $\cH_t$ is a partition of $V$. Let $E_t^*$ be the set of all edges between clusters in $\cH_t$. For convenience let $E_0^*=E$. We call $E_t^*$ the \emph{cut at level} $t$. We have the following lemma:
+In order to show that the above algorithm achieves an $\bigo\br{\gamma}$-approximation ratio, where $\gamma$ is the approximation ratio for the \textsc{Graph Partitioning with Demands}, we use a generalized decomposition technique into levels due to \cite{ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics}.
+Denote by $T^*$ a tree that minimizes the objective in~\eqref{eq:Dasgupta}.
+Let $\cH_{t}$ be the set of all maximal clusters $H$ in $T^*$ such that $w\br{V_H}\leq t$. Observe that $\cH_t$ gives a partition of $V$. Let $E_t^*$ be the set of all edges between clusters in $\cH_t$. For convenience let $E_0^*=E$. We call $E_t^*$ the \emph{cut at level} $t$. We have the following lemma:
 \begin{lemma}
-    $c\br{T^*} = \sum_{t=1}^{w\br{V}-1}c\br{E_t^*}$
+    $\Dasgupta\br{T^*} = \sum_{t=1}^{w\br{V}-1}c\br{E_t^*}$
 \end{lemma}
 \begin{proof}
-    Consider any edge $uv$. Let $H$ be the minimal cluster in $T^*$ containing both $u$ and $v$. We get that the contribution of $uv$ to $c\br{T^*}$ is $w\br{V_H}\cdot c\br{uv}$. Moreover, we have that $uv\in E_t^*$ for every $t$ such that $t < w\br{V_H}$, so it contributes $c\br{uv}$ to $c\br{E_t^*}$ for every $t < w\br{V_H}$ which gives the claim.
+    Consider any edge $uv$. Let $H$ be the minimal cluster in $T^*$ containing both $u$ and $v$. The contribution of $uv$ to $\Dasgupta\br{T^*}$, by definition, is $w\br{V_H}\cdot c\br{uv}$. Moreover, we have that $uv\in E_t^*$ for every $t$ such that $t < w\br{V_H}$, so it contributes $c\br{uv}$ to $c\br{E_t^*}$ for every $t < w\br{V_H}$ which gives the claim.
 \end{proof}
 
-We also use the following upper bound on the $c\br{T^*}$ which is a direct consequence of the previous lemma:
+We also use the following upper bound on the $\Dasgupta\br{T^*}$ which is a direct consequence of the previous lemma:
 \begin{corollary}\label{cor:upper-bound}
   It holds
-    $2\cdot c\br{T^*} = 2\cdot \sum_{t=1}^{w\br{V}-1}c\br{E_t^*}\geq \sum_{t=0}^{w\br{V}}c\br{E_{\fl{t/2}}^*}$
+    $2\cdot \Dasgupta\br{T^*} = 2\cdot \sum_{t=1}^{w\br{V}-1}c\br{E_t^*}\geq \sum_{t=0}^{w\br{V}}c\br{E_{\fl{t/2}}^*}$.
 \end{corollary}
 
 Fix some non-leaf cluster $H$ in the tree $T$ computed by the algorithm and let $C_H$ be the cut returned by the \textsc{Graph Partitioning with Demands} algorithm with input $H$.
 Let $r_H=w\br{V_H}$ and $s_H$ be the size of the largest child of $H$ with respect to the total demand.
-With the above choice $\eta=4/5$, we have $s_H\leq 4r_H/5$. Edges cut in $H$ contribute $r_H\cdot c\br{C_H}$ to the objective function. We wish to charge this cost to the edges cut in $E_{r_H/2}^*$, restricted to $H$. We have the following bound:
+With the above choice of $\eta=4/5$, we have $s_H\leq 4r_H/5$. The edges cut in $H$ contribute $r_H\cdot c\br{C_H}$ to the objective function. We wish to charge this cost to the edges cut in $E_{r_H/2}^*$, restricted to $H$. We have the following bound:
 \begin{align*}
-    \br{r_H-s_H}\cdot c\br{E_{r_H/2}^*\cap H}\leq \sum_{t=s_H+1}^{r_H}c\br{E_{\fl{t/2}}^*\cap H}
+    \br{r_H-s_H}\cdot c\br{E_{r_H/2}^*\cap E_H}\leq \sum_{t=s_H+1}^{r_H}c\br{E_{\fl{t/2}}^*\cap E_H}
 \end{align*}
 since as the level $t$ decreases, the more edges belong to $E_t^*$. 
 
-The contribution of $C_H$ to the objective $c\br{T}$ is:
+The contribution of $C_H$ to the objective $\Dasgupta\br{T}$ is:
 \begin{align*}
-    r_H\cdot c\br{C_H} \leq 5\cdot\br{r_H-s_H}\cdot c\br{E_{r_H/2}^*\cap H}\leq 5\cdot \sum_{t=s_H+1}^{r_H}c\br{E_{\fl{t/2}}^*\cap H}
+    r_H\cdot c\br{C_H} \leq 5\cdot\br{r_H-s_H}\cdot c\br{E_{r_H/2}^*\cap E_H}\leq 5\cdot \sum_{t=s_H+1}^{r_H}c\br{E_{\fl{t/2}}^*\cap E_H}
 \end{align*}
 where the first inequality is due to the fact that $r_H-s_H\geq r_H/5$.
 
-Now, since all of child clusters of $H$ have size at most $s_H$, they do not contribute to $c\br{E_{t}^*}$ for $t > s_H$. Combining this observation with the fact that the clusters in $T$ contributing to a given level $t$ form a partition of $V$, and thus are disjoint we get that:
+Now, since all child clusters of $H$ have size at most $s_H$, they do not contribute to $c\br{E_{t}^*}$ for $t > s_H$. Combining this observation with the fact that the clusters in $T$ contributing to a given level $t$ form a partition of $V$, and thus are disjoint, we get that:
 \begin{align*}
-    \sum_{H} \sum_{t=s_H+1}^{r_H}c\br{E_{t}^*\cap H} \leq \sum_{t=0}^{w\br{V}} c\br{E_{\fl{t/2}}^*}
+    \sum_{H} \sum_{t=s_H+1}^{r_H}c\br{E_{t}^*\cap E_H} \leq \sum_{t=0}^{w\br{V}} c\br{E_{\fl{t/2}}^*}
 \end{align*}
 
 Thus by summing up over the conitribution of all cuts $C_H$ we get that the cost of the tree returned by the algorithm is at most:
 \begin{align*}
-    \sum_{H} r_H\cdot c\br{C_H} & \leq 5\cdot \sum_{H} \sum_{t=s_H+1}^{r_H}c\br{E_{t}^*\cap H} \\
-    &\leq 5\cdot \sum_{t=0}^{w\br{V}} c\br{E_{\fl{t/2}}^*}\leq 10\cdot c\br{T^*}
+    \sum_{H} r_H\cdot c\br{C_H} & \leq 5\cdot \sum_{H} \sum_{t=s_H+1}^{r_H}c\br{E_{t}^*\cap E_H} \\
+    &\leq 5\cdot \sum_{t=0}^{w\br{V}} c\br{E_{\fl{t/2}}^*}\leq 10\cdot \Dasgupta\br{T^*}
 \end{align*}
 where the last inequality is by the Corollary~\ref{cor:upper-bound}.
 
 We get the following theorem:
 \begin{theorem}
-    The above algorithm achieves an $\bigo\br{\gamma}$-approximation ratio, where $\gamma$ is the approximation ratio for the \textsc{Graph Partitioning with Demands}.
+    There is a polynomial-time $\bigo\br{\gamma}$-approximation algorithm for \textsc{Hierarchical Clustering with Demands}, where $\gamma$ is the approximation ratio for the \textsc{Graph Partitioning with Demands}.
 \end{theorem}
 
 And as an immediate corollary we get:
 \begin{corollary}
-    There exists an $\bigo\br{\log n}$-approximation algorithm for the \textsc{Hierarchical Clustering with Demands} on general graphs and an $\bigo\br{1}$-approximation algorithm for trees. Moreover, if the demand function is multiplicative, then there exists an $\bigo\br{\sqrt{\log n}}$-approximation algorithm.
+    There exists an $\bigo\br{\log n}$-approximation algorithm for the \textsc{Hierarchical Clustering with Demands} on general graphs and an $\bigo\br{1}$-approximation algorithm for trees. Moreover, if the demand function is multiplicative, then the approximation ratio is $\bigo\br{\sqrt{\log n}}$.
 \end{corollary}
 

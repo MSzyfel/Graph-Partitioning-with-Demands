@@ -56,16 +56,18 @@ has congestion at most $\rho=\bigo(\log n)$ in $G$.
 
 \subsection{Cut value preservation bounds}
 
+
+For $U\subseteq V$ and a Decomposition tree $T$, define $\minCut{U}{T}$ to be a cut $C$ in $T$ of minimum cost $c_T\br{C}$ that separates the leaves in $m_V'\br{U}$ from the leaves in $m_V'\br{\bar{U}}$.
+
 To bound how well cuts are preserved by R\"{a}cke's decomposition, we use an argument analogous to max-flow/min-cut duality: capacities in each tree dominate the original cut capacities pointwise, and by combining tree flows through the convex decomposition we obtain a matching upper bound in expectation.
 This gives the following cut-value preservation statement.
-\DD{do ustalenia: czy $c_T$ vs $c_G$ stosowac do $U$ czy trzeba ``mapowac''?}
 \begin{theorem}\label{thm:racke-dual}
 Let $G=(V,E,c_G)$ and let $\brc{(T_i,\lambda_i)}_{i=1}^{N}$ be as in Theorem~\ref{thm:convex_decomposotion}.
 Define $\mu$ by $\Pr_{T\sim\mu}[T=T_i]=\lambda_i$ and set
 $\rho=\bigo(\log n)$. Then for every cut $U\subsetneq V$:
 \begin{enumerate}
-  \item[(i)] $c_G\br{U,\bar{U}}\le c_T\br{U,\bar{U}}$ for every $T$ in the support of $\mu$.
-  \item[(ii)] $\Etree\left[c_T\br{U,\bar{U}}\right]\le \rho\cdot c_G\br{U,\bar{U}}$.
+  \item[(i)] $c_G\br{U,\bar{U}}\le \minCut{U}{T}$ for every $T$ in the support of $\mu$.
+  \item[(ii)] $\Etree\left[\minCut{U}{T}\right]\le \rho\cdot c_G\br{U,\bar{U}}$.
 \end{enumerate}
 The proof is deferred to Appendix~\ref{app:racke-proof}.
 \end{theorem}
@@ -81,8 +83,8 @@ The algorithm is as follows:
 \begin{enumerate}
   \item Compute the convex combination of decomposition trees $\brc{(T_i,\lambda_i)}_{i=1}^{N}$ as in Theorem~\ref{thm:convex_decomposotion} with respect to the values of $c$ in $G$.
   \item For any $u,v\in V$, set $w_{T_i}(m'_V(u),m'_V(v))=w(u,v)$, i.e., the demand function is the same in $G$ and in every tree $T_i$. For any non-leaf vertex of $T_i$, $u$ and every $v\in V\br{T_i}$, set $w_{T_i}(u,v)=0$.
-  \item For each tree $T_i$, compute an optimal sparsest $K$-bounded cut $\br{X_i,\bar{X}_i}$ in $T_i$.
-  \item Return the cut $\br{X_i,\bar{X}_i}$ with the minimum sparsity in $G$, i.~e., $\argmin_{X_i, i\in [N]} \phiwK(G; X_i)$.
+  \item For each tree $T_i$, compute an optimal sparsest $K$-bounded cut $\br{X_{T_i},\bar{X}_{T_i}}$ in $T_i$.
+  \item Return the cut $\br{X_{T_i},\bar{X}_{T_i}}$ with the minimum sparsity in $G$, i.~e., $\argmin_{X_{T_i}, i\in [N]} \phiwK(G; X_{T_i})$.
   \DD{notacja?}
 \end{enumerate}
 
@@ -90,13 +92,13 @@ To prove the approximation guarantee, let $\br{X^*,\bar{X}^*}$ be an optimal cut
 Since the demand function $w$ is the same in $G$ and in every tree $T$, the cut $X^*$ is feasible in every tree, i.e., $0<w_{T}\br{X^*,\bar{X}^*}\le K$.
 Therefore by Theorem~\ref{thm:racke-dual},
 \begin{align*}
-  \Etree\left[\phiwK(G; T)\right]
+  \Etree\left[\phiwK(G; X_{T_i})\right]
   &\leq
-  \Etree\left[\frac{c_T\br{E_T\br{X^*,\bar{X}^*}}}{w_T\br{X^*,\bar{X}^*}}\right]
+  \Etree\left[\frac{\minCut{X^*}{T}}{w_T\br{X^*,\bar{X}^*}}\right]
   \\&=
-  \frac{1}{w\br{X^*,\bar{X}^*}}\,\Etree\left[c_T\br{E_T\br{X^*,\bar{X}^*}}\right]
+  \frac{1}{w\br{X^*,\bar{X}^*}}\,\Etree\left[\minCut{X^*}{T}\right]
   \\&\leq
-  \frac{\rho\cdot c\br{E\br{X^*,\bar{X}^*}}}{w\br{X^*,\bar{X}^*}}
+  \frac{\rho\cdot c\br{X^*,\bar{X}^*}}{w\br{X^*,\bar{X}^*}}
   \\&=
   \rho\cdot\phiwK(G). 
 \end{align*}
