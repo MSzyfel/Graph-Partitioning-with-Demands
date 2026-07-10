@@ -28,7 +28,7 @@ Let $\rho<\eta<1$ be a constant. We will obtain a bi-criteria approximation algo
 Let $
 \delta_{\rho}=\min\brc{1/4,1-\rho}$ and $
 \eta\in\br{\max\brc{1/2,1-\delta_{\rho}},1}$.
-The analysis uses a generalization of the standard technique of dealing with balanced cut/graph partitioning problems using \textsc{Sparsest Cut} \cite{MulticommodityMaxFlowMinCutTheoremsAndTheirUseInDesigningApproximationAlgorithms,ExpanderFlowsGeometricEmbeddingsAndGraphPartitioning,ImprovedApproximationAlgorithmsForMinimumWeightVertexSeparators}. However, due to the fact that we need to control both the demand in the components and the demand crossing the cut, a more careful consideration is required. The algorithm is simple:
+The analysis uses a generalization of the standard technique of dealing with \textsc{Balanced Cut}/\textsc{Graph Partitioning} problems using \textsc{Sparsest Cut} \cite{MulticommodityMaxFlowMinCutTheoremsAndTheirUseInDesigningApproximationAlgorithms,ImprovedApproximationAlgorithmsForMinimumWeightVertexSeparators}. However, due to the fact that we need to control both the demand in the components and the demand crossing the cut, a more careful consideration is required. The algorithm is simple:
 \begin{enumerate}
     \item $C\gets\emptyset$
     \item $G'\gets \br{V, E,c,w}$

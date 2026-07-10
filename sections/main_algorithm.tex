@@ -23,7 +23,7 @@ We now list three problems that will be used  as black-box subroutines in our ma
 First, we will use the \textsc{Generalized Sparsest $K$-Bounded Cut} that adds a demand restriction to the classic \textsc{Generalized Sparsest Cut} (cf. step~\ref{it:S1:alpha} of the algorithm below).
 Formally, given a graph $G=(V,E,c,w)$, we consider the problem of finding $S$ that minimizes:
     \begin{equation} \label{eq:K}
-      \phiwK\br{S} := \frac{c\br{S,\bar S}}{w\br{S,\bar S}}
+      \phiwK\br{S} = \frac{c\br{S,\bar S}}{w\br{S,\bar S}}
       \quad\text{subject to}\quad 0<w\br{S,\bar S}\le K.
     \end{equation}
 %Denote by $\phiwK\br{G}$ the value of the optimal solution to~\eqref{eq:K}.
