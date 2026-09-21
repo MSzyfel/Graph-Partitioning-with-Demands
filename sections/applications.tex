@@ -196,11 +196,11 @@ Now, we prove by induction on $d\br{H}$ that the recursive algorithm returns a s
         \]
         so the term is at most $\frac{1}{\br{\br{1-\rho/\eta}\cdot 4/5}^2}\leq \kappa\br{\rho,\eta}$.
     \end{enumerate}
-    Thus the top level contributes at most $\kappa\br{\rho,\eta}\cdot\gamma\cdot\OPTdem{H}{\rho_H}$. By the inductive hypothesis, for each $H'\in H\setminus C$, $c\br{C_{H'}}\leq \br{d-1}\cdot \kappa\br{\rho,\eta}\cdot\gamma\cdot\OPTdem{H'}{\rho_H}$. Since the components in $H\setminus C$ are vertex and edge-disjoint and $C^*\cap E_{H'}$ is a valid solution for \textsc{Graph Partitioning with Demands} on $H'\in H\setminus C$ with $\rho_{H'}$, we have that $\OPTdem{H'}{\rho_H}\leq c\br{C^*\cap E_{H'}}$. Moreover, by summing up over all $H'$ we get
-    $\sum_{H'\in H\setminus C}\OPTdem{H'}{\rho_H}\leq \OPTdem{H}{\rho_H}$, and therefore
+    Thus the top level contributes at most $\kappa\br{\rho,\eta}\cdot\gamma\cdot\OPTdem{H}{\rho_H}$. By the inductive hypothesis, for each $H'\in H\setminus C$, $c\br{C_{H'}}\leq \br{d-1}\cdot \kappa\br{\rho,\eta}\cdot\gamma\cdot\OPTdem{H'}{\rho_{H'}}$. Since the components in $H\setminus C$ are vertex and edge-disjoint and $C^*\cap E_{H'}$ is a valid solution for \textsc{Graph Partitioning with Demands} on $H'\in H\setminus C$ with $\rho_{H'}$, we have that $\OPTdem{H'}{\rho_H}\leq c\br{C^*\cap E_{H'}}$. Moreover, by summing up over all $H'$ we get
+    $\sum_{H'\in H\setminus C}\OPTdem{H'}{\rho_{H'}}\leq \OPTdem{H}{\rho_H}$, and therefore
     \begin{align*}
         c\br{C}&=c\br{C_H}+\sum_{H'\in H\setminus C}c\br{C_{H'}}
-        \\&\leq \kappa\br{\rho,\eta}\cdot\gamma\cdot\OPTdem{H}{\rho_H}+\br{d-1}\cdot\kappa\br{\rho,\eta}\cdot \gamma\sum_{H'\in H\setminus C}\OPTdem{H'}{\rho_H}
+        \\&\leq \kappa\br{\rho,\eta}\cdot\gamma\cdot\OPTdem{H}{\rho_H}+\br{d-1}\cdot\kappa\br{\rho,\eta}\cdot \gamma\sum_{H'\in H\setminus C}\OPTdem{H'}{\rho_{H'}}
         \\&\leq 
         d\cdot \kappa\br{\rho,\eta}\cdot\gamma\cdot\OPTdem{H}{\rho_H}.
     \end{align*}
