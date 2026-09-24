@@ -1,0 +1,11 @@
+\begin{algorithm}[H]
+    \caption{Generalized sparsest $K$-bounded cut via tree decomposition}
+    \textbf{Input} Graph $G=(V,E,D,c,w)$ and bound $K$\;
+    \textbf{Output} A cut with minimum $G$-sparsity among the tree candidates\;
+    Compute the convex combination of decomposition trees $\brc{(T_i,\lambda_i)}_{i=1}^{N}$ from Theorem~\ref{thm:convex_decomposotion}\;
+    \ForEach{tree $T_i$ in the support of the decomposition}{
+        Copy every demand edge $uv\in D$ with weight $w(u,v)$ to the corresponding pair of leaves of $T_i$, forming $(D_{T_i},w_{T_i})$\;
+        Compute an optimal sparsest $K$-bounded cut $\br{X_{T_i},\bar{X}_{T_i}}$ in $T_i$\;
+    }
+    \textbf{Return} $\br{X_{T_i},\bar{X}_{T_i}}$ minimizing $\phi_{w,G}^K(X_{T_i})$ over all candidates\;
+\end{algorithm}

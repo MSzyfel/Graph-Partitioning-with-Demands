@@ -1,0 +1,239 @@
+\section{Hardness of Graph Partitioning with Demands}\label{sec:gpd-hardness}
+
+We next provide an approximation-hardness result for \textsc{Graph Partitioning with Demands} based on the Small-Set Expansion Hypothesis. The \emph{Small-Set Expansion Hypothesis} states that, for every constant $\zeta>0$, there is a constant $\delta>0$ for which it is NP-hard, given a regular graph, to distinguish between the existence of a vertex set of normalized size $\delta$ and expansion at most $\zeta$, and the condition that every vertex set of normalized size $\delta$ has expansion at least $1-\zeta$.
+
+We first fix the weighted-graph notation used in the reduction. For a weighted graph $X=(U,F,c)$, let $
+    d_X(u)=c\br{\delta_{X}(u)}$ be its weighted degree and let $
+    \operatorname{vol}_X(S)=\sum_{u\in S}d_X(u)$ be the total volume of $S$.
+Define the normalized vertex measure
+\[
+    \mu(S)=\frac{\operatorname{vol}_X(S)}{\operatorname{vol}_X(U)}.
+\]
+Thus $\mu(U)=1$ and $\mu(u)$ is the stationary probability of stepping into $u$ under the random walk on $X$. Since multiplying all edge weights by the same constant changes neither expansion nor approximation ratios, we normalize $\operatorname{vol}_X(U)=1$. With this normalization, the expansion of a nonempty set $S$ is
+\[
+    \Phi_X(S)=\frac{c\br{S,U\setminus S}}{\mu(S)}.
+\]
+
+We also recall the Gaussian expansion profile used in the source theorem. For $r\in(-1,1)$ and $\alpha\in(0,1)$, let $(Z,Z')$ be jointly Gaussian random variables, each with mean $0$ and variance $1$, and with correlation $r$. Let $t_\alpha\in\mathbb{R}$ be chosen so that $\Pr[Z\geq t_\alpha]=\alpha$. The expansion profile of the Gaussian noise graph $\mathcal{G}(r)$ is
+\[
+    \Phi_{\mathcal{G}(r)}(\alpha)
+    =\Pr\left[Z'<t_\alpha\mid Z\geq t_\alpha\right]
+    =1-\frac{\Pr[Z\geq t_\alpha,\,Z'\geq t_\alpha]}{\alpha}.
+\]
+Borell's Gaussian isoperimetric theorem says that halfspaces minimize noise expansion among all measurable sets of Gaussian measure $\alpha$, which is why the above one-dimensional expression gives the expansion profile.
+
+We first invoke the following result of Raghavendra, Steurer, and Tulsiani~\cite[Theorem~3.5]{ReductionsBetweenExpansionProblems}.
+
+\begin{theorem}[Raghavendra-Steurer-Tulsiani]\label{thm:rst-global-expansion}
+    For every integer $q\geq2$ and every $\varepsilon,\gamma>0$, assuming the Small-Set Expansion Hypothesis, it is hard to distinguish between the following cases for a weighted graph $X=(U,F,c)$:
+    \begin{description}
+        \item[YES:] There is a partition $\cP=\{S_1,\ldots,S_q\}$ of $U$ such that, for every $i\in[q]$, 
+            $\mu(S_i)=\frac{1}{q}$ and $\Phi_X(S_i)\leq\varepsilon+o(\varepsilon)$.
+        \item[NO:] Every $S\subseteq U$ satisfies $
+            \Phi_X(S)
+            \geq
+            \Phi_{\mathcal{G}(1-\varepsilon/2)}(\mu(S))
+            -\frac{\gamma}{\mu(S)}$.
+    \end{description}
+\end{theorem}
+
+We derive from Theorem~\ref{thm:rst-global-expansion} the form of the gap used in our reduction.
+
+\begin{lemma}\label{lem:globalized-long-code-gap}
+    Fix an integer $q\geq2$ and a constant $b\in(0,1/2]$. Assuming the Small-Set Expansion Hypothesis, for every sufficiently small $\varepsilon>0$ it is hard to distinguish between the following cases for a weighted graph $X=(U,F,c)$:
+    \begin{description}
+        \item[YES:] There is a partition $\cP=\brc{S_1,\ldots,S_q}$ of $U$
+        such that, for every $i\in[q]$, $
+            \mu(S_i)=\frac{1}{q}$ and $
+            \Phi_X(S_i)\leq K\varepsilon,$
+        where $K>0$ is a universal constant.
+        \item[NO:] For every $S\subseteq U$, where $b\leq\mu(S)\leq\frac{1}{2}$, $\Phi_X(S)\geq a_b\sqrt{\varepsilon},$
+        where $a_b>0$ depends only on $b$.
+    \end{description}
+\end{lemma}
+\begin{proof}
+    In the YES case of Theorem~\ref{thm:rst-global-expansion}, the sets $S_1,\ldots,S_q$ have total measure $1$ and therefore form a partition of $U$. Moreover, $\varepsilon+o(\varepsilon)\leq K\varepsilon$ for a universal constant $K$ and all sufficiently small $\varepsilon$.
+
+    Consider now the NO case. If $\alpha\in[b,1/2]$, then $t_\alpha$ ranges over a bounded interval depending only on $b$. The standard estimate for the probability that two highly correlated Gaussian variables lie on opposite sides of such a threshold gives $
+        \Phi_{\mathcal{G}(1-\varepsilon/2)}(\alpha)
+        \geq a'_b\sqrt{\varepsilon}$
+    for some constant $a'_b>0$ and all sufficiently small $\varepsilon$. Indeed, the standard deviation of $Z'-Z$ is $\sqrt{\varepsilon}$, while the Gaussian density at $t_\alpha$ is bounded above and below by positive constants depending only on $b$. Taking $\gamma\leq ba'_b\sqrt{\varepsilon}/2$ yields
+    \[
+        \Phi_X(S)\geq\frac{a'_b}{2}\sqrt{\varepsilon}
+    \]
+    whenever $b\leq\mu(S)\leq1/2$. The claim follows with $a_b=a'_b/2$.
+\end{proof}
+
+We carry out the reduction with rational weights. If any of the resulting supply capacities or demand weights are not natural numbers, we may multiply all of them by a common denominator; this does not affect feasibility or any approximation ratio, and hence does not affect the analysis.
+
+A demand graph is \emph{bipartite multiplicative} if its vertex set has a bipartition $L\mathbin{\dot\cup}R$, its demand edges are all pairs with one endpoint in each side, and there is a potential $\pi$ such that $w(uv)=\pi(u)\cdot \pi(v)$ for every demand edge $uv$. Our intention is to show a reduction which establishes the hardness of graph partitioning with bipartite multiplicative demands.
+This class is closed under taking induced subgraphs.
+
+
+    For every $u\in U$, introduce two vertices $u^{\mathrm L}$ and $u^{\mathrm R}$, assign $
+        \pi\br{u^{\mathrm L}}=\pi\br{u^{\mathrm R}}=\mu(u),$
+    and let $
+        \widetilde U
+        =\brc{u^{\mathrm L},u^{\mathrm R}\colon u\in U}.$
+    On $\widetilde U$, define the bipartite multiplicative demand graph to have edge set $
+        D_\times
+        =\brc{u^{\mathrm L}v^{\mathrm R}:u,v\in U}$ and demands $
+        w\br{u^{\mathrm L},v^{\mathrm R}}
+        =\pi\br{u^{\mathrm L}}\cdot \pi\br{v^{\mathrm R}}.$
+    For $S\subseteq U$, write $
+        \widetilde S=\brc{u^{\mathrm L},u^{\mathrm R}\colon u\in S}.$
+\begin{lemma}\label{lem:multiplicative-demands-encode-measure}
+    We have, $
+        {w\br{\widetilde S}}/{w\br{\widetilde U}}
+        =\mu(S)^2$.
+\end{lemma}
+\begin{proof}
+    Every pair $(u,v)\in S\times S$ indexes the unique demand edge $u^{\mathrm L}v^{\mathrm R}$. Therefore,
+    \[
+        w\br{\widetilde S}
+        =\sum_{u,v\in S}\pi\br{u^{\mathrm L}}\cdot \pi\br{v^{\mathrm R}}
+        =\left(\sum_{u\in S}\mu(u)\right)^2
+        =\mu(S)^2.
+    \]
+    The same calculation for $S=U$ gives $w\br{\widetilde U}=1$.
+\end{proof}
+
+We now turn $X$ into a supply graph $\widetilde X$ on $\widetilde U$. For every $uv\in F$, add the supply edge $u^{\mathrm L}v^{\mathrm L}$ with capacity $c(uv)$. For every $u\in U$, also add the \emph{consistency edge} $u^{\mathrm L}u^{\mathrm R}$ with capacity $1$. Thus, unless a consistency edge is cut, the two copies of every vertex belong to the same component. Together with the previously defined bipartite multiplicative demand graph on $\widetilde U$, this completes the construction of the instance $(\widetilde X,D_\times)$.
+
+\begin{lemma}\label{lem:sse-gpd-completeness}
+    Fix $\rho\in(0,1)$ and set $
+        q=\max\left\{2,\left\lceil\rho^{-1/2}\right\rceil\right\}. $
+    In the YES case,
+    \[
+        \OPTdem{\widetilde X}{\rho}\leq K\varepsilon.
+    \]
+\end{lemma}
+\begin{proof}
+    For every $i\in[q]$, replace each vertex $u\in S_i$ by both of its copies and define
+    \[
+        \widetilde S_i
+        =\brc{u^{\mathrm L},u^{\mathrm R}\colon u\in S_i}.
+    \]
+    Since $S_1,\ldots,S_q$ partition $U$, the sets $\widetilde S_1,\ldots,\widetilde S_q$ partition $\widetilde U$. Let $C_{\mathrm{yes}}$ consist of the supply edges $u^{\mathrm L}v^{\mathrm L}$ for which $uv\in F$ has endpoints in distinct parts of the original partition. Thus all consistency edges $u^{\mathrm L}u^{\mathrm R}$ are retained. Every crossing edge of $X$ is counted twice in the sum of the boundaries, and hence
+    \[
+        c\br{C_{\mathrm{yes}}}
+        =\frac{1}{2}\sum_{i=1}^{q}c\br{S_i,U\setminus S_i}.
+    \]
+    By Lemma~\ref{lem:globalized-long-code-gap},
+    \[
+        c\br{C_{\mathrm{yes}}}
+        \leq\frac{1}{2}\sum_{i=1}^{q}\mu(S_i)K\varepsilon
+        =\frac{K\varepsilon}{2}.
+    \]
+
+    Every component $H$ of $\widetilde X\setminus C_{\mathrm{yes}}$ is a union of left-right pairs corresponding to a set $P_H\subseteq S_i$ for some $i$. Therefore, by Lemma~\ref{lem:multiplicative-demands-encode-measure},
+    \[
+        \frac{w\br{V_H}}{w\br{\widetilde U}}
+        =\mu(P_H)^2
+        \leq\mu(S_i)^2
+        =\frac{1}{q^2}
+        \leq\rho.
+    \]
+    Thus $C_{\mathrm{yes}}$ is $\rho$-feasible and has cost at most $K\varepsilon$.
+\end{proof}
+
+We now prove a numerical lemma that will be useful in the soundness analysis.
+\begin{lemma}\label{lem:group-small-components}
+    Let $p_1,\ldots,p_m\geq0$ satisfy $
+        \sum_{i=1}^{m}p_i=1$ and $
+        p_i\leq\sqrt{\eta}<1.$
+    Define $b_\eta=\min\left\{\frac{1}{4},1-\sqrt{\eta}\right\}$.
+    Then, there is a set $I\subseteq[m]$ such that
+    \[
+        b_\eta\leq\sum_{i\in I}p_i\leq\frac{1}{2}.
+    \]
+\end{lemma}
+\begin{proof}
+    If some $p_i>1/2$, take all indices except $i$. Their total is at least $1-\sqrt{\eta}\geq b_\eta$ and is less than $1/2$.
+    Otherwise, we have $p_i\leq1/2$. If some $p_i\geq b_\eta$, take that index. If all $p_i<b_\eta$, add indices until their sum first reaches $b_\eta$. The resulting sum is less than $2b_\eta\leq1/2$.
+\end{proof}
+
+\begin{lemma}\label{lem:sse-gpd-soundness}
+    In the NO case, every $\eta$-feasible cut $C$ satisfies $
+        c\br{C}\geq\beta_\eta\sqrt{\varepsilon}
+    $
+    for some constant $\beta_\eta>0$ depending only on $\eta$, provided that $\varepsilon$ is sufficiently small.
+\end{lemma}
+\begin{proof}
+    Set $\beta_\eta=b_\eta a_{b_\eta}$. We may assume that $\beta_\eta\sqrt{\varepsilon}\leq1$. If $C$ contains a consistency edge, then $c\br{C}\geq1\geq\beta_\eta\sqrt{\varepsilon}$, as required.
+
+    Suppose now that no consistency edge is cut. Let $H_1,\ldots,H_m$ be the components of $\widetilde X\setminus C$. Every $H_i$ is a union of left-right pairs. Let $P_i\subseteq U$ be their projection and put $p_i=\mu(P_i)$. The sets $P_1,\ldots,P_m$ partition $U$. By $\eta$-feasibility and Lemma~\ref{lem:multiplicative-demands-encode-measure},
+    \[
+        p_i^2
+        =\frac{w\br{V_{H_i}}}{w\br{\widetilde U}}
+        \leq\eta,
+    \]
+    and hence $p_i\leq\sqrt{\eta}$. Apply Lemma~\ref{lem:group-small-components} and let $
+        S=\bigcup_{i\in I}P_i.$
+    Then $b_\eta\leq\mu(S)\leq1/2$. Every original-copy supply edge corresponding to an edge of $X$ crossing $\br{S,U\setminus S}$ joins two distinct components of $\widetilde X\setminus C$ and therefore belongs to $C$. Consequently,
+    \[
+        c\br{C}\geq c\br{S,U\setminus S}.
+    \]
+    By Lemma~\ref{lem:globalized-long-code-gap},
+    \[
+        c\br{S,U\setminus S}
+        =\mu(S)\Phi_X(S)
+        \geq b_\eta a_{b_\eta}\sqrt{\varepsilon}
+        =\beta_\eta\sqrt{\varepsilon}.
+    \]
+\end{proof}
+
+\begin{theorem}\label{thm:sse-gpd-bicriteria-hardness}
+    Fix constants $0<\rho<\eta<1$. Assuming the Small-Set Expansion Hypothesis, for every constant $A>0$, there is no polynomial-time $(A,\eta)$-bicriteria approximation for \textsc{Graph Partitioning with Demands}, even for bipartite multiplicative demands.
+\end{theorem}
+\begin{proof}
+    Suppose such an algorithm exists. Choose $\varepsilon>0$ sufficiently small that all preceding statements apply and
+    \[
+        AK\varepsilon<\beta_\eta\sqrt{\varepsilon}.
+    \]
+    Equivalently, it is enough to take
+    \[
+        \varepsilon<\left(\frac{\beta_\eta}{AK}\right)^2.
+    \]
+    In the YES case, Lemma~\ref{lem:sse-gpd-completeness} gives $\OPTdem{\widetilde X}{\rho}\leq K\varepsilon$. The algorithm therefore returns an $\eta$-feasible cut of cost at most
+    \[
+        AK\varepsilon<\beta_\eta\sqrt{\varepsilon}.
+    \]
+    In the NO case, Lemma~\ref{lem:sse-gpd-soundness} says that every $\eta$-feasible cut has cost at least $\beta_\eta\sqrt{\varepsilon}$. Thus the algorithm distinguishes the YES and NO instances of Lemma~\ref{lem:globalized-long-code-gap}, contradicting the Small-Set Expansion Hypothesis.
+\end{proof}
+
+As an immediate consequence, we obtain the following standard approximation-hardness formulation.
+
+\begin{corollary}\label{cor:sse-gpd-hardness}
+    Assuming the Small-Set Expansion Hypothesis, for every fixed $\rho\in(0,1)$, \textsc{Graph Partitioning with Demands} is hard to approximate within any constant factor, even for bipartite multiplicative demands. Moreover, this remains true if the algorithm is allowed any fixed bicriteria relaxation $\eta\in(\rho,1)$ of the component-demand bound.
+\end{corollary}
+\begin{proof}
+    Fix any $\eta\in(\rho,1)$. A constant-factor approximation satisfying the original component bound $\rho\cdot w\br{\widetilde U}$ is, in particular, an $(A,\eta)$-bicriteria approximation for some constant $A$. More generally, even if the algorithm is only required to satisfy the relaxed bound $\eta\cdot w\br{\widetilde U}$, its existence contradicts Theorem~\ref{thm:sse-gpd-bicriteria-hardness}.
+\end{proof}
+
+The hardness also transfers to the primitive used by our approximation algorithm.
+
+\begin{corollary}\label{cor:sse-generalized-conductance-hardness}
+    Assuming the Small-Set Expansion Hypothesis, \textsc{Generalized Conductance} is hard to approximate within any constant factor, even for bipartite multiplicative demands.
+\end{corollary}
+\begin{proof}
+    Theorem~\ref{thm:gpd-extension} certifies that a constant-factor approximation for \textsc{Generalized Conductance} would yield a constant-factor bicriteria approximation for \textsc{Graph Partitioning with Demands}, contradicting Corollary~\ref{cor:sse-gpd-hardness}.
+\end{proof}
+
+The role of multiplicative demands in the proof is to convert the demand bound on each component into a bound on its vertex measure. Lemma~\ref{lem:group-small-components} then combines components into a set of measure bounded away from both $0$ and $1$, to which the expansion lower bound applies.
+
+\begin{corollary}\label{cor:quantitative-sse-hardness}
+    Under a quantitative version of the Small-Set Expansion Hypothesis with parameter $\varepsilon(N)$, where $N$ is the size of the resulting hard instance, both \textsc{Graph Partitioning with Demands} and \textsc{Generalized Conductance} with bipartite multiplicative demands have an inapproximability factor
+    \[
+        \Omega_\eta\left(\frac{1}{\sqrt{\varepsilon(N)}}\right).
+    \]
+    In particular, $\varepsilon(N)=\Theta(1/\log\log N)$ gives an $\Omega_\eta\br{\sqrt{\log\log N}}$ inapproximability factor.
+\end{corollary}
+\begin{proof}
+    For \textsc{Graph Partitioning with Demands}, the ratio between the soundness bound in Lemma~\ref{lem:sse-gpd-soundness} and the completeness bound in Lemma~\ref{lem:sse-gpd-completeness} is
+    \[
+        \frac{\beta_\eta\sqrt{\varepsilon(N)}}{K\varepsilon(N)}
+        =\Omega_\eta\left(\frac{1}{\sqrt{\varepsilon(N)}}\right).
+    \]
+    The same bound transfers to \textsc{Generalized Conductance}, up to the constant factor $d\cdot\kappa\br{\rho,\eta}$, by Theorem~\ref{thm:gpd-extension} and the argument of Corollary~\ref{cor:sse-generalized-conductance-hardness}.
+\end{proof}

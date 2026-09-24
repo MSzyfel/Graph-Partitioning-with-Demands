@@ -1,0 +1,21 @@
+\begin{algorithm}[H]
+    \caption{Recursive degree-budget partitioning}
+    \textbf{Input} Supply tree $T=(V,E,c)$, demand graph $(V,D,w)$, and rational parameters $0<\rho<\eta<1$ and $\alpha\in(1/2,1)$\;
+    \textbf{Output} An $\eta$-feasible cut $F$\;
+    \If{$W=0$}{
+        \textbf{return} $F=\emptyset$\;
+    }
+    Set $B\gets\rho W$, $F\gets\emptyset$, and initialize a queue $\cQ\gets\{T\}$\;
+    \While{$\cQ\neq\emptyset$}{
+        Remove a component $H$ from $\cQ$\;
+        \If{$w\br{V_H}>\eta W$}{
+            Set $\rho_H\gets B/w\br{V_H}$ and $\sigma_H\gets\alpha+(1-\alpha)\rho_H$\;
+            Run the direct degree-budget algorithm on the instance induced by $V_H$ with parameters $\rho_H,\sigma_H$; let $C_H$ be its returned cut\;
+            $F\gets F\cup C_H$\;
+            \ForEach{component $H'$ of $H\setminus C_H$ with $w\br{V_{H'}}>\eta W$}{
+                Add $H'$ to $\cQ$\;
+            }
+        }
+    }
+    \textbf{return} $F$\;
+\end{algorithm}

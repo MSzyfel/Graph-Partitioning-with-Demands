@@ -1,0 +1,25 @@
+\begin{algorithm}[H]
+    \caption{Hybrid LP--DP recursion}
+    \textbf{Input} Supply tree $T=(V,E,c)$, demand graph $(V,D,w)$, and rational parameters $0<\rho<\eta<1$ and $\alpha\in(1/2,1)$\;
+    \textbf{Output} An $\eta$-feasible cut $F$\;
+    \If{$W=0$}{
+        \textbf{return} $F=\emptyset$\;
+    }
+    \If{$2\eta<1$}{
+        Run the anchored-LP algorithm with feasibility target $2\eta$; let $F_0$ be the returned cut and let $\cH_0$ be the components of $T\setminus F_0$\;
+    }
+    \Else{
+        $F_0\gets\emptyset$ and $\cH_0\gets\{T\}$\;
+    }
+    Set $B\gets\rho W$, $F\gets F_0$, and initialize $\cQ$ with every $H\in\cH_0$ satisfying $w\br{V_H}>\eta W$\;
+    \While{$\cQ\neq\emptyset$}{
+        Remove a component $H$ from $\cQ$\;
+        Set $\rho_H\gets B/w\br{V_H}$ and $\sigma_H\gets\alpha+(1-\alpha)\rho_H$\;
+        Run the direct degree-budget algorithm on the instance induced by $V_H$ with parameters $\rho_H,\sigma_H$; let $C_H$ be its returned cut\;
+        $F\gets F\cup C_H$\;
+        \ForEach{component $H'$ of $H\setminus C_H$ with $w\br{V_{H'}}>\eta W$}{
+            Add $H'$ to $\cQ$\;
+        }
+    }
+    \textbf{return} $F$\;
+\end{algorithm}

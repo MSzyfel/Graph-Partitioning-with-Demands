@@ -1,0 +1,21 @@
+\begin{algorithm}[H]
+    \caption{Top-down hierarchical clustering with demands}
+    \textbf{Input} Graph $G$, parameter $\eta\in(1/2,1)$, and the subroutine satisfying~\eqref{eq:hc-gpd-subroutine}\;
+    \textbf{Output} A clustering tree $\cT$\;
+    Initialize $\cT$ with root cluster $G$ and initialize a queue $\cQ\gets\{G\}$\;
+    \While{$\cQ\neq\emptyset$}{
+        Remove a cluster $H$ from $\cQ$ and set $r_H\gets w\br{V_H}$\;
+        \If{$H$ is nonsingleton}{
+            \If{$r_H=0$}{
+                Make the vertices of $H$ singleton children\;
+            }
+            \Else{
+                Apply the subroutine in~\eqref{eq:hc-gpd-subroutine} with $\rho=1/2$ and parameter $\eta$; make the components of $H\setminus C_H$ the children of $H$\;
+            }
+            \ForEach{nonsingleton child $K$ of $H$}{
+                Add $K$ to $\cQ$\;
+            }
+        }
+    }
+    \textbf{return} $\cT$\;
+\end{algorithm}

@@ -80,19 +80,14 @@ Armed with Theorem~\ref{thm:racke-dual}, we can now show the main result of this
 \begin{theorem} \label{thm:phiK}
   There exists an $\alpha=\bigo\br{\log n}$-approximation algorithm for general graphs and an exact algorithm for trees for the \textsc{Generalized Sparsest $K$-Bounded Cut} problem, for any choice of $K$.
 \end{theorem}
-\begin{proof}
-In order to avoid ambiguity, by $\phi_{w,G}^K(X_{T_i})$ we mean the sparsity of the cut $\br{X_{T_i},\bar{X}_{T_i}}$ in the graph $G$ with respect to the demand function $w$ and the bound $K$.
-The algorithm is as follows:
-\begin{enumerate}
-  \item Compute the convex combination of decomposition trees $\brc{(T_i,\lambda_i)}_{i=1}^{N}$ as in Theorem~\ref{thm:convex_decomposotion} with respect to the values of $c$ in $G$.
-  \item For any $u,v\in V$, set $w_{T_i}(m'_V(u),m'_V(v))=w(u,v)$, i.e., the demand function is the same in $G$ and in every tree $T_i$. For any non-leaf vertex of $T_i$, $u$ and every $v\in V\br{T_i}$, set $w_{T_i}(u,v)=0$.
-  \item For each tree $T_i$, compute an optimal sparsest $K$-bounded cut $\br{X_{T_i},\bar{X}_{T_i}}$ in $T_i$.
-  \item Return the cut $\br{X_{T_i},\bar{X}_{T_i}}$ with the minimum sparsity in $G$, i.~e., $\argmin_{X_{T_i}, i\in [N]} \brc{\phi_{w,G}^K(X_{T_i})}$.
-  % \DD{notacja?}
-\end{enumerate}
 
+For clarity, $\phi_{w,G}^K(X_{T_i})$ denotes the sparsity of $\br{X_{T_i},\bar{X}_{T_i}}$ in $G$ with respect to demand function $w$ and bound $K$. The algorithm is as follows.
+
+\input{algorithms/generalized_sparsest_k_bounded_cut.tex}
+
+\begin{proof}
 To prove the approximation guarantee, let $\br{X^*,\bar{X}^*}$ be an optimal cut for the \textsc{Generalized Sparsest $K$-Bounded Cut} in $G$.
-Since the demand function $w$ is the same in $G$ and in every tree $T$, the cut $X^*$ is feasible in every tree, i.e., $0<w_{T}\br{X^*,\bar{X}^*}\le K$.
+Since every demand edge and its weight are copied from $D$ to the corresponding demand-edge set of every tree $T$, the cut $X^*$ is feasible in every tree, i.e., $0<w_{T}\br{X^*,\bar{X}^*}\le K$.
 Therefore by Theorem~\ref{thm:racke-dual},
 \begin{align*}
   \Etree\left[\phi_{w,G}^K(X_{T})\right]
@@ -113,7 +108,7 @@ It is a well known fact that an optimal sparsest cut in a tree is achieved by a 
 Below, we show that this is also the case for the \textsc{Sparsest $K$-Bounded Cut}.
 For each edge $e$ of a tree $T$ we define $w_e$ to be the total demand cut by removing $e$ from $T$.
 \begin{lemma}
-For a tree $T=(V_T,E_T,c_T,w_T)$,
+For a tree $T=(V_T,E_T,D_T,c_T,w_T)$,
 \[
   \phiwK(T)
   =
@@ -151,7 +146,7 @@ Hence it suffices to scan all edges and pick the minimum feasible ratio $c_T(e)/
 % \text{s.t.} \quad 
 % & x_u^2 + y_u^2 = 1 \quad \forall u \in V \\[6pt]
 % & x_u\cdot y_u= 0 \quad \forall u \in V \\[6pt]
-% & \sum_{u,v \in V} w(u,v)\cdot\, x_u^2 = K
+% & \sum_{uv \in D} w(u,v)\cdot\, x_u^2 = K
 % \end{align}
 
 % Note, that in polynomial time, we can guess the value of $K=w(S^*, V)$ up to an arbitrary multiplicative precision.
@@ -164,7 +159,7 @@ Hence it suffices to scan all edges and pick the minimum feasible ratio $c_T(e)/
 % & x_u\cdot y_u= 0 \quad \forall u \in V \\[6pt]
 % & v^2= 1 \\[6pt]
 % & v\cdot x_u = x_u^2, v\cdot y_u = y_u^2 \quad \forall u \in V  \\[6pt]
-% & \sum_{u,v \in V} w(u,v)\cdot\, x_u^2 = K \\[6pt]
+% & \sum_{uv \in D} w(u,v)\cdot\, x_u^2 = K \\[6pt]
 % & (x_u - x_v)^2 \leq (x_u - x_w)^2 + (x_v - x_w)^2 \quad \forall u,v,w \in V
 % \end{align}
 

@@ -4,9 +4,11 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
-\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}\AtBeginDocument{\DontPrintSemicolon}
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
 \usepackage{graphicx}
 \usepackage{cite}
 \usepackage{float}
@@ -49,17 +51,15 @@
 \input{sections/introduction.tex}
 \input{sections/preliminaries.tex}
 \input{sections/main_algorithm.tex}
-\input{sections/racke_cut_sparsifier_decomposition.tex}
+%\input{sections/racke_cut_sparsifier_decomposition.tex}
 \input{sections/applications.tex}
+\input{sections/tree_configuration_lp.tex}
+\input{sections/gpd_hardness.tex}
 \input{sections/conclusions.tex}
 
 
 \bibliographystyle{plain}
 \bibliography{references}
-\appendix
-\section{Appendix}
-\input{sections/racke_cut_sparsifier_appendix.tex}
-
 
 \end{document}
 

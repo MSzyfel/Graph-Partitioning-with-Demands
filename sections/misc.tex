@@ -1,0 +1,177 @@
+% This file archives material that is not included in the paper.
+
+\iffalse
+\subsubsection{An exact configuration LP for the rounded problem}
+
+For $S\in\widehat\cC$, let $
+    q_S=\frac{1}{2}c\br{\delta_E(S)}$ be the cost of cutting the edges in $\delta_E(S)$.
+Note, that the factor $1/2$ compensates for counting each supply edge between two parts in both boundaries. Introduce one variable $\lambda_S$ for each rounded configuration:
+\begingroup
+\renewcommand{\theHequation}{tree-config-primal}
+\begin{equation}\label{lp:tree-config-primal}
+\tag{$P_{\widehat d,L}$}
+\begin{aligned}
+    \min\quad
+        & \sum_{S\in\widehat\cC}q_S\cdot \lambda_S \\
+    \text{subject to}\quad
+        & \sum_{S\in\widehat\cC\colon v\in S}\lambda_S=1
+            && \forall v\in V,\\
+        & \lambda_S\geq0
+            && \forall S\in\widehat\cC.
+\end{aligned}
+\end{equation}
+\endgroup
+Its dual has one unrestricted variable $\alpha_v$ for each vertex:
+\begingroup
+\renewcommand{\theHequation}{tree-config-dual}
+\begin{equation}\label{lp:tree-config-dual}
+\tag{$D_{\widehat d,L}$}
+\begin{aligned}
+    \max\quad
+        & \sum_{v\in V}\alpha_v \\
+    \text{subject to}\quad
+        & \sum_{v\in S}\alpha_v\leq q_S
+            && \forall S\in\widehat\cC,\\
+        & \alpha_v\in\mathbb{R}
+            && \forall v\in V.
+\end{aligned}
+\end{equation}
+\endgroup
+
+For a dual vector $\alpha$, let $
+    \alpha(S)=\sum_{v\in S}\alpha_v.$
+We define the \textsc{Pricing Problem} as
+\begin{equation}\label{eq:tree-pricing}
+    \max_{S\in\widehat\cC}\left\{\alpha(S)-q_S\right\}
+\end{equation}
+In order to solve the dual, using the ellipsoid method, we need to provide a separation oracle for the constraints of type~\eqref{lp:tree-config-dual}. It is easy to see, that this is equivalent to solving the pricing problem~\eqref{eq:tree-pricing}. It what follows we show an exact dynamic program for the pricing problem with runtime polynomial in $L$ and $n$.
+
+For each vertex, let $d_c(v)=\sum_{e\ni v}c_e$ and $\beta_v=\alpha_v-\frac{1}{2}d_c(v).$
+For every connected $S\subseteq V$, we can now rewrite
+\begin{equation}\label{eq:tree-pricing-profit}
+    \alpha(S)-q_S
+    =\sum_{v\in S}\beta_v+c\br{E(S)}.
+\end{equation}
+
+Root $T$ arbitrarily. For a vertex $v$, let $T_v$ be its descendant subtree, and let $P_v(\ell)$ be the maximum value of the right-hand side of~\eqref{eq:tree-pricing-profit} over connected sets $S\subseteq V(T_v)$ containing $v$ and satisfying $\sum_{u\in S}\widehat d(u)=\ell$. An impossible state has value $-\infty$.
+
+If the children of $v$ are $u_1,\ldots,u_k$, denote by
+$P_v^{(j)}(\ell)$ the maximum value of the right-hand side of~\eqref{eq:tree-pricing-profit} over connected sets $S\subseteq V(T_v)$ containing $v$ and the first $j$ children and satisfying $\sum_{u\in S}\widehat d(u)=\ell$.
+Initialize
+\[
+    P_v^{(0)}(\ell)
+    =\begin{cases}
+        \beta_v,&\ell=\widehat d(v),\\
+        -\infty,&\text{otherwise}.
+    \end{cases}
+\]
+After processing the first $j-1$ children, merge the table of $u_j$ by
+\begin{align*}
+    P_v^{(j)}(\ell)
+    =\max\left\{
+        P_v^{(j-1)}(\ell),
+        \max_{0\leq a,b\leq L\colon a+b=\ell}
+        \left[
+            P_v^{(j-1)}(a)+P_{u_j}(b)+c(vu_j)
+        \right]
+    \right\}.
+\end{align*}
+Here, the first term corresponds to not including the $j$-th child in $S$, and the second term corresponds to including it.
+
+After all children are processed, set $P_v=P_v^{(k)}$. Every nonempty connected set has a unique vertex closest to the root, so the optimum in~\eqref{eq:tree-pricing} equals $
+    \max_{v\in V, 0\leq\ell\leq L}\brc{P_v(\ell)}.$ 
+Since the time required to calculate one value of $P_v^{(j)}(\ell)$ is polynomial $O\br{L}$ and there are $O(nL)$ such values for all possible $v$ and $j$, the overall time complexity is $O\br{nL^2}$ as required.
+By Lemma~\ref{lem:rounded-degree-family}, this is polynomial in the input size and in $1/(2\cdot\eta-1-\rho)$.
+
+For a vector $\lambda$ indexed by $\widehat\cC$, define
+\[
+    \supp(\lambda)=\brc{S\in\widehat\cC:\lambda_S>0}.
+\]
+to be the support of the vector $\lambda$.
+
+\begin{lemma}\label{lem:tree-config-primal-recovery}
+    In polynomial time one can compute an optimal solution $\lambda^*$ of~\eqref{lp:tree-config-primal} in polynomial time with $\supp(\lambda^*)$ of polynomial size.
+\end{lemma}
+\begin{proof}
+    Run the rational ellipsoid optimization-separation algorithm for~\eqref{lp:tree-config-dual} in its primal-recovery form. Whenever the dynamic program finds a violated constraint, store its configuration. The ellipsoid algorithm makes polynomially many calls and stores a polynomial-size family $\cR\subseteq\widehat\cC$. Primal recovery states that the LP restricted to $\cR$ has the same optimum as the full primal. Solving that restricted LP and implcitly extending its solution by zero outside $\cR$ proves the claim.
+\end{proof}
+
+\begin{theorem}\label{thm:tree-config-lossless-rounding}
+    Let $\lambda$ be a feasible solution of~\eqref{lp:tree-config-primal} with value $
+        z=\sum_{S\in\widehat\cC}q_S\cdot\lambda_S.
+    $
+    In time polynomial in the size of $\supp(\lambda)$, one can find a partition $\cP\subseteq\widehat\cC$ of $V$ such that
+    \[
+        c\br{\delta_E(\cP)}
+        =\sum_{S\in\cP}q_S
+        \leq z.
+    \]
+\end{theorem}
+\begin{proof}
+    Let $\cF=\supp(\lambda)$. Construct the intersection graph $J$ whose vertices are the configurations in $\cF$, with two configurations adjacent if and only if they intersect.
+
+    Since the members of $\cF$ are subtrees of $T$, the graph $J$ is chordal. Moreover, subtrees of a tree have the Helly property: every pairwise-intersecting family of subtrees has a common vertex. Therefore, every clique $\cK$ of $J$ has a vertex $v\in V$ common to all its configurations, and hence
+    \[
+        \sum_{S\in\cK}\lambda_S
+        \leq
+        \sum_{\substack{S\in\cF\\v\in S}}\lambda_S
+        =1.
+    \]
+    Recall that a graph is perfect if, in every induced subgraph, the chromatic number equals the size of a largest clique. Chordal graphs are perfect. For a graph $J$, its independent-set polytope is the convex hull of the incidence vectors of all independent sets of $J$. A standard polyhedral characterization of perfect graphs states that this polytope is exactly
+    \[
+        \left\{
+            x\in\mathbb{R}_{\geq0}^{\cF}:
+            \sum_{S\in\cK}x_S\leq1
+            \text{ for every clique $\cK$ of $J$}
+        \right\}.
+    \]
+    The displayed inequalities are called the clique inequalities: an independent set contains at most one vertex from each clique. The vector $\lambda$, restricted to $\cF$, is nonnegative and satisfies every clique inequality by the argument above. It therefore belongs to the independent-set polytope of $J$. Equivalently, it is a convex combination of incidence vectors of independent sets of $J$.
+
+    We now give an explicit rounding procedure. Let $
+        Q=\sum_{S\in\cF}q_S$ and $M=Q+1$. Now, give each vertex $S$ of $J$ the weight $
+        p_S=M\spr{S}-q_S.$
+    Compute a maximum-weight independent set $\cI$ of the chordal graph $J$. This can be done in polynomial time. Since $\lambda$ lies in the independent-set polytope of $J$,
+    \begin{align*}
+        \sum_{S\in\cI}p_S
+        &\geq\sum_{S\in\cF}p_S\lambda_S\\
+        &=M\sum_{S\in\cF}\spr{S}\lambda_S-z\\
+        &=M\sum_{v\in V}\sum_{\substack{S\in\cF\\v\in S}}\lambda_S-z\\
+        &=M\spr{V}-z.
+    \end{align*}
+    For every $S\in\cF$, feasibility of $\lambda$ implies $\lambda_S\leq1$. Consequently, $
+        z\leq Q<M.$ and therefore it follows that $
+        M\spr{V}-z>M\br{\spr{V}-1}.$
+
+    The configurations in an independent set are pairwise disjoint. Thus, if $\cI$ failed to cover some vertex of $V$, then
+    \[
+        \sum_{S\in\cI}p_S
+        =M\spr{\bigcup_{S\in\cI}S}-\sum_{S\in\cI}q_S
+        \leq M\br{\spr{V}-1},
+    \]
+    which is a contradiction. Hence, $\cI$ is a partition of $V$. Finally,
+    \[
+        M\spr{V}-\sum_{S\in\cI}q_S
+        =\sum_{S\in\cI}p_S
+        \geq M\spr{V}-z,
+    \]
+    and therefore $ \sum_{S\in\cI}q_S\leq z.$ Since every edge of $\delta_E(\cI)$ belongs to the boundaries of exactly two parts, the definition of $q_S$ gives
+    \[
+        c\br{\delta_E(\cI)}
+        =\sum_{S\in\cI}q_S
+        \leq z.
+    \]
+    Taking $\cP=\cI$ proves the theorem.
+\end{proof}
+
+\begin{theorem}\label{thm:tree-degree-config-direct}
+    Let $0<\rho<1$ and $\eta>(1+\rho)/2$ be rational. For arbitrary demand-edge weights on a supply tree, there is an algorithm, polynomial in the input size and in $
+        \frac{1}{2\cdot\eta-1-\rho}$,
+    that returns an $\eta$-feasible solution $F$ with
+    \[
+        c\br{F}\leq\OPTdem{T}{\rho}.
+    \]
+\end{theorem}
+\begin{proof}
+    Round the demand degrees as in~\eqref{eq:rounded-degree-definition} before constructing any LP. Solve the configuration LP over the resulting family $\widehat\cC$ using the exact separation oracle above, recover a polynomial-support optimum, and apply Theorem~\ref{thm:tree-config-lossless-rounding}. By Lemma~\ref{lem:rounded-degree-family}, every part returned by the rounding is $\eta$-feasible. The same lemma shows that every part of an optimal $\rho$-feasible partition belongs to $\widehat\cC$. Therefore, the rounded configuration-LP optimum, and hence the cost returned by lossless rounding, is at most $\OPTdem{T}{\rho}$.
+\end{proof}
+\fi

@@ -1,0 +1,20 @@
+\begin{algorithm}[H]
+\caption{$O(\log n)$-approximation for minimum one-sided quasi-expansion}
+\textbf{Input} Graph $G=(V,E,D,c,w)$\;
+\textbf{Output} A cut $S^{\dagger}$ with $h(S^{\dagger})\le O(\log n)\cdot\psi$\;
+Compute $\pi(u)=\sum_{uv\in D}w(u,v)$ for all $u\in V$ and $W_{\mathrm{tot}}=\sum_u\pi(u)$\;
+Build $G'=(V\cup\{r\},E,D',c,q)$ with $D'=\{ur,ru:u\in V\}$ and $q(u,r)=q(r,u)=\pi(u)$\;
+Compute a R\"acke decomposition $\mu$ over trees of $G'$, with factor $\rho=O(\log n)$\;
+$\mathrm{best}\gets+\infty$; $S^{\dagger}\gets\emptyset$\;
+\ForEach{$\hat K\in\{1,2,4,8,\dots\}\cap(0,W_{\mathrm{tot}})$}{
+    \ForEach{tree $T$ in the support of $\mu$ (or the single ``winner'' tree in expectation)}{
+        Root $T$ at $r$ and compute $\{C_e,q_e\}$ for all edges by a DFS\;
+        Find $e^*\in\arg\min\{C_e/q_e:0<q_e\leq\hat K\}$\;
+        Set $S\gets A_{e^*}\cap V$, the subtree at $e^*$ restricted to $V$\;
+        \If{$h(S)<\mathrm{best}$}{
+            $\mathrm{best}\gets h(S)$; $S^{\dagger}\gets S$\;
+        }
+    }
+}
+\textbf{return} $S^{\dagger}$\;
+\end{algorithm}

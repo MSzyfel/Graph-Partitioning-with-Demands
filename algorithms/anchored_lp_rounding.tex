@@ -1,0 +1,17 @@
+\begin{algorithm}[H]
+    \caption{Anchored-LP rounding on a supply tree}
+    \textbf{Input} Supply tree $T=(V,E,c)$, demand graph $(V,D,w)$, and parameters $0<\rho<\eta<1$\;
+    \textbf{Output} An $\eta$-feasible cut $F$\;
+    \If{$W=0$}{
+        \textbf{return} $F=\emptyset$\;
+    }
+    Set $B\gets\rho W$ and solve the anchored LP~\eqref{lp:tree-anchored}; let $(x,z)$ be an optimal rational solution\;
+    Set $R\gets(\eta-\rho)/(2\eta)$ and root $T$ at an arbitrary vertex $r$\;
+    Compute $D(v)\gets d_x(r,v)$ for every $v\in V$\;
+    Sort the distinct residues $D(v)\bmod R$ and choose one phase $\theta$ in each nonempty cyclic interval between consecutive residues\;
+    \ForEach{chosen phase $\theta$}{
+        Form $F_\theta\gets\left\{pv\in E:D(p)<\theta+kR\leq D(v)\text{ for some }k\in\mathbb{Z},\ p\text{ is the parent of }v\right\}$\;
+    }
+    Choose $\theta^*\in\arg\min_{\theta}c(F_\theta)$\;
+    \textbf{return} $F_{\theta^*}$\;
+\end{algorithm}

@@ -39,3 +39,4 @@ out/
 
 # PDFs generated from LaTeX (uncomment if PDFs should be ignored)
 *.pdf
+!figures/generated/tree_approximation_ratio_3d_plot.pdf

@@ -2,6 +2,7 @@
 
 \usepackage[size=custom,width=100,height=180,scale=2.0]{beamerposter}
 \usepackage{amsmath,amssymb,amsthm}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}\AtBeginDocument{\DontPrintSemicolon}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,calc,decorations.pathreplacing,shapes.geometric,fit,backgrounds}
 \usepackage{booktabs}
@@ -136,7 +137,7 @@ The denominator $|S|\cdot|\bar S|$ has \emph{two} interpretations:
 \end{itemize}
 
 \medskip
-With a general demand function $w\colon V\times V\to\mathbb{N}$ these two
+With a demand-edge set $D\subseteq V\times V$ and demand function $w\colon D\to\mathbb{N}$ these two
 interpretations \textbf{diverge}.  Existing work
 only regards minimising $\phi_w(S)=c(S,\bar S)/w(S,\bar S)$, \emph{ignores the balance of the cut}.
 \end{tcolorbox}
@@ -144,11 +145,13 @@ only regards minimising $\phi_w(S)=c(S,\bar S)/w(S,\bar S)$, \emph{ignores the b
 
 
 \defterm{Graph with demands}{
-  A graph $G=(V,E,c,w)$ where $c\colon E\to\mathbb{N}$ is a capacity
-  (edge-cut cost) function and $w\colon V\times V\to\mathbb{N}$ is a
-  \emph{demand} function.  For disjoint $A,B\subseteq V$:
+  A graph $G=(V,E,D,c,w)$ where $E$ is the supply-edge set, $D$ is the
+  demand-edge set, $c\colon E\to\mathbb{N}$ is a capacity (edge-cut cost)
+  function, and $w\colon D\to\mathbb{N}$ is a \emph{demand} function. For
+  every non-loop demand edge, $D$ contains both orientations with equal weight.
+  For disjoint $A,B\subseteq V$:
   \[
-    w(A,B)=\sum_{u\in A}\sum_{v\in B}w(u,v),\qquad
+    w(A,B)=\sum_{\substack{u\in A,\ v\in B\\uv\in D}}w(u,v),\qquad
     w(A,V)=w(A)+w(A,\bar A).
   \]
 }
@@ -220,7 +223,7 @@ only regards minimising $\phi_w(S)=c(S,\bar S)/w(S,\bar S)$, \emph{ignores the b
 \begin{tcolorbox}[posterbox,title={Illustration 2: Auxiliary Graph $G'$ (Step~1)}]
 \small
 A root $r$ is added to $G$ with zero-capacity edges, thus forming $G'$.
-Its demand to each $u\in V$ equals $w'(r,u)=w(u,V)$,
+Its demand-edge set is $D'=\brc{ru,ur:u\in V}$, and the demand edges $ru$ and $ur$ have weight $w'(r,u)=w'(u,r)=w(u,V)$,
 encoding the weighted degree of $u$. This then becomes an instance of the generalized sparsest-cut, under an \textbf{additional condition}, that $w'\br{S, \bar{S}}\leq K$, where we set $K=\frac{4}{3}w\br{V}$. 
 
 \vspace{3mm}
@@ -260,7 +263,7 @@ encoding the weighted degree of $u$. This then becomes an instance of the genera
 \end{tikzpicture}}
 
 
-All other demand values (inbetween original vertices) become $0$.
+There are no other demand edges in $D'$.
 \vspace{5mm}
 \end{tcolorbox}
 
@@ -395,46 +398,10 @@ Then, solve the constrained sparsest cut \emph{exactly} on each tree, move each 
 }
 
 
-\begin{tcolorbox}[posterbox,title={Main Algorithm (Minimise $\psi_w$)}]
-\textbf{Input:} Graph $G=(V,E,c,w)$.\\
-\textbf{Output:} Cut $(S,\bar S)$ approximating $\min_S \psi_w(S)$.
+\input{algorithms/poster_main.tex}
 
-\bigskip
-\textbf{Step 1 - Candidate $S_1$}
-\begin{enumerate}
-  \item Build auxiliary graph $G'=(V\cup\{r\},E,c,w')$ by adding a
-        root $r$ with $c(r,u)=0$ and $w'(r,u)=w(u,V)$ for every $u\in V$.
-  \item Set $K=\tfrac{4}{3}w(V)$.
-  \item Run an $\alpha=O\br{\log n}$-approx.\ algorithm for
-        \[
-          \min_{S\subseteq V'}\phi_{w'}(S)=\frac{c(S,\bar S)}{w'(S,\bar S)}
-          \quad\text{s.t.}\quad w'(S,\bar S)\le K.
-        \]
-  \item Return the corresponding cut $S_1\subseteq V$.
-\end{enumerate}
-
-\smallskip\hrule\smallskip
-
-\textbf{Step 2 - Candidate $S_2$:}
-\begin{enumerate}
-  \item Find a $\beta=O\br{\log n}$-approx.\ $k$-multicut $C$ with $k=w(V)/3$.
-  \item Build a complete graph $R$ on components of $G\setminus C$
-        with demands $w_R(H_1,H_2)=w_G(H_1,H_2)$.
-  \item Run \textbf{local-search max-cut} on $(R,w')$ to obtain a cut $\br{A, B}$:
-        start from $(\emptyset,V(R))$, flip a single vertex whenever
-        it improves the cut, stop at a local optimum.
-  \item Map the cut $\br{A, B}$ of $R$ back to a cut $S_2\subseteq V$ of $G$.
-\end{enumerate}
-
-\smallskip\hrule\smallskip
-
-\textbf{Step 3:} Return $\arg\min\bigl\{\psi_w(S_1),\,\psi_w(S_2)\bigr\}$.
-
-\bigskip
-\textbf{Key sub-routine:} The constrained sparsest-cut in Step~1 is
-solved via \emph{Cut-sparsifier tree decompositions}:
-embed $G$ into a convex combination of trees (distortion $O(\log n)$),
-solve the problem exactly on each tree, return the best solution.
+\begin{tcolorbox}[posterbox,title={Key sub-routine}]
+The constrained sparsest-cut in Step~1 is solved via \emph{cut-sparsifier tree decompositions}: embed $G$ into a convex combination of trees with distortion $O(\log n)$, solve the problem exactly on each tree, and return the best solution.
 \end{tcolorbox}
 
 

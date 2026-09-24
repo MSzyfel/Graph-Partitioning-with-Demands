@@ -14,9 +14,9 @@
 
 \section*{A valid rounding proof for the one-sided sparsity objective}
 
-Let $G=(V,E,c,w)$ be an instance, where $c\colon E\to\mathbb{R}_{\ge 0}$ is the edge-capacity function and $w\colon V\times V\to\mathbb{R}_{\ge 0}$ is a symmetric demand function. Define
+Let $G=(V,E,D,c,w)$ be an instance, where $c\colon E\to\mathbb{R}_{\ge 0}$ is the edge-capacity function, $D\subseteq V\times V$ is a symmetric demand-edge set, and $w\colon D\to\mathbb{R}_{\ge 0}$ is its demand function. Define
 \[
-\pi(u)=\sum_{v\in V} w\br{u,v}
+\pi(u)=\sum_{uv\in D} w\br{u,v}
 \qquad\text{for every }u\in V.
 \]
 The objective is
@@ -26,25 +26,23 @@ The objective is
 
 \subsection*{1. Augmented instance}
 
-Introduce a dummy vertex $r\notin V$ and set $V^+=V\cup\{r\}$. Define a symmetric demand function $D\colon V^+\times V^+\to\mathbb{R}_{\ge 0}$ by
+Introduce a dummy vertex $r\notin V$ and set $V^+=V\cup\{r\}$. Let $D^+=\{ur,ru:u\in V\}$ be the auxiliary demand-edge set and define a symmetric demand function $q\colon D^+\to\mathbb{R}_{\ge 0}$ by
 \[
-D\br{u,r}=D\br{r,u}=\pi(u)\qquad\forall u\in V,
-\qquad
-D\br{u,v}=0\qquad\forall u,v\in V.
+q\br{u,r}=q\br{r,u}=\pi(u)\qquad\forall u\in V.
 \]
-Thus every demand pair is of the form $(u,r)$.
+Thus every demand edge in $D^+$ is incident to $r$.
 
 For any cut $X\subseteq V^+$, let $S_X$ denote the side of the cut that does not contain $r$. Then
 \[
-D\br{\cut\br{X}}=\sum_{u\in S_X}\pi(u)=w\br{S_X,V}.
+q\br{\cut\br{X}}=\sum_{u\in S_X}\pi(u)=w\br{S_X,V}.
 \]
-Therefore, minimizing $h(S)$ over $S\subseteq V$ is equivalent to finding a sparsest cut in the augmented instance $(V^+,E,c,D)$, with the convention that the output side is the side not containing $r$.
+Therefore, minimizing $h(S)$ over $S\subseteq V$ is equivalent to finding a sparsest cut in the augmented instance $(V^+,E,D^+,c,q)$, with the convention that the output side is the side not containing $r$.
 
 \subsection*{2. Metric relaxation}
 
 Consider the standard metric relaxation for the augmented sparsest cut instance. Let $d$ be a metric on $V^+$ and normalize so that
 \[
-\sum_{x,y\in V^+} D\br{x,y}\,d\br{x,y}=1.
+\sum_{xy\in D^+} q\br{x,y}\,d\br{x,y}=1.
 \]
 The relaxation objective is
 \[
@@ -57,7 +55,7 @@ For an integral cut $X\subseteq V^+$, the associated cut metric is feasible, and
 We use the standard pairwise-demand line-embedding theorem.
 
 \begin{theorem}[Bourgain-type line embedding]
-For every finite metric space $(X,d)$ with $|X|=N$ and every symmetric demand function $D\colon X\times X\to\mathbb{R}_{\ge 0}$, there exists a polynomial-time computable map $f\colon X\to\mathbb{R}$ such that:
+For every finite metric space $(X,d)$ with $|X|=N$, every symmetric demand-edge set $F\subseteq X\times X$, and every symmetric demand function $q\colon F\to\mathbb{R}_{\ge 0}$, there exists a polynomial-time computable map $f\colon X\to\mathbb{R}$ such that:
 \begin{enumerate}
 \item $f$ is 1-Lipschitz, i.e.
 \[
@@ -65,16 +63,16 @@ For every finite metric space $(X,d)$ with $|X|=N$ and every symmetric demand fu
 \]
 \item the average weighted distortion is $O\br{\log N}$, i.e.
 \[
-\sum_{x,y\in X} D\br{x,y}\,|f\br{x}-f\br{y}|
+\sum_{xy\in F} q\br{x,y}\,|f\br{x}-f\br{y}|
 \ge
 \frac{1}{\alpha}
-\sum_{x,y\in X} D\br{x,y}\,d\br{x,y}
+\sum_{xy\in F} q\br{x,y}\,d\br{x,y}
 \]
 for some universal constant hidden in $\alpha=O\br{\log N}$.
 \end{enumerate}
 \end{theorem}
 
-Apply the theorem to the augmented metric space $(V^+,d)$. By translating the line, assume $f\br{r}=0$.
+Apply the theorem to the augmented metric space $(V^+,d)$ with demand-edge set $D^+$. By translating the line, assume $f\br{r}=0$.
 
 For every threshold $t\in\mathbb{R}$, define the sweep cut
 \[
@@ -95,14 +93,14 @@ An edge $uv$ contributes $c\br{u,v}$ to the cut $\cut\br{X_t}$ precisely for tho
 
 \begin{lemma}[Co-area identity for demand]
 \[
-\int_{-\infty}^{\infty} D\br{\cut\br{X_t}}\,dt
+\int_{-\infty}^{\infty} q\br{\cut\br{X_t}}\,dt
 =
-\sum_{x,y\in V^+} D\br{x,y}\,|f\br{x}-f\br{y}|.
+\sum_{xy\in D^+} q\br{x,y}\,|f\br{x}-f\br{y}|.
 \]
 \end{lemma}
 
 \begin{proof}
-The proof is identical. For each demand pair $xy$, the pair contributes $D\br{x,y}$ to the cut whenever $t$ lies between $f\br{x}$ and $f\br{y}$, and therefore contributes exactly $D\br{x,y}\,|f\br{x}-f\br{y}|$ to the integral.
+The proof is identical. For each demand edge $xy\in D^+$, the edge contributes $q\br{x,y}$ to the cut whenever $t$ lies between $f\br{x}$ and $f\br{y}$, and therefore contributes exactly $q\br{x,y}\,|f\br{x}-f\br{y}|$ to the integral.
 \end{proof}
 
 Since $f$ is 1-Lipschitz,
@@ -116,12 +114,12 @@ Since $f$ is 1-Lipschitz,
 \]
 By the embedding theorem,
 \[
-\int_{-\infty}^{\infty} D\br{\cut\br{X_t}}\,dt
+\int_{-\infty}^{\infty} q\br{\cut\br{X_t}}\,dt
 =
-\sum_{x,y\in V^+} D\br{x,y}\,|f\br{x}-f\br{y}|
+\sum_{xy\in D^+} q\br{x,y}\,|f\br{x}-f\br{y}|
 \ge
 \frac{1}{\alpha}
-\sum_{x,y\in V^+} D\br{x,y}\,d\br{x,y}
+\sum_{xy\in D^+} q\br{x,y}\,d\br{x,y}
 =
 \frac{1}{\alpha},
 \]
@@ -129,14 +127,14 @@ where the last equality is the normalization of the relaxation.
 
 Suppose, for contradiction, that every threshold $t$ satisfies
 \[
-\frac{c\br{\cut\br{X_t}}}{D\br{\cut\br{X_t}}} > \alpha\lambda^*.
+\frac{c\br{\cut\br{X_t}}}{q\br{\cut\br{X_t}}} > \alpha\lambda^*.
 \]
 Then integrating over all thresholds gives
 \[
 \int_{-\infty}^{\infty} c\br{\cut\br{X_t}}\,dt
 >
 \alpha\lambda^*
-\int_{-\infty}^{\infty} D\br{\cut\br{X_t}}\,dt
+\int_{-\infty}^{\infty} q\br{\cut\br{X_t}}\,dt
 \ge
 \alpha\lambda^*\cdot \frac{1}{\alpha}
 =
@@ -144,7 +142,7 @@ Then integrating over all thresholds gives
 \]
 contradicting the upper bound on the capacity integral. Therefore there exists a threshold $t^*$ such that
 \[
-\frac{c\br{\cut\br{X_{t^*}}}}{D\br{\cut\br{X_{t^*}}}}
+\frac{c\br{\cut\br{X_{t^*}}}}{q\br{\cut\br{X_{t^*}}}}
 \le
 \alpha\lambda^*.
 \]
@@ -154,7 +152,7 @@ Since the cut changes only when $t$ crosses one of the finitely many values $f\b
 
 Let $S$ be the side of the chosen cut $X_{t^*}$ that does not contain $r$. By construction,
 \[
-D\br{\cut\br{X_{t^*}}}=w\br{S,V}
+q\br{\cut\br{X_{t^*}}}=w\br{S,V}
 \qquad\text{and}\qquad
 c\br{\cut\br{X_{t^*}}}=c\br{S,\bar S}.
 \]
@@ -163,7 +161,7 @@ Hence
  h\br{S}=
 \frac{c\br{S,\bar S}}{w\br{S,V}}
 =
-\frac{c\br{\cut\br{X_{t^*}}}}{D\br{\cut\br{X_{t^*}}}}
+\frac{c\br{\cut\br{X_{t^*}}}}{q\br{\cut\br{X_{t^*}}}}
 \le
 \alpha\lambda^*.
 \]

@@ -1,93 +1,123 @@
 ﻿\section{Introduction}
 
-\textsc{Sparsest Cut} is a central problem among various graph partitioning tasks. Given a graph $G=(V,E, c)$, where $c\colon E \to \mathbb{N}$ is a capacity function, the goal is to find a subset of vertices $S\subseteq V$ that minimizes
+\textsc{Sparsest Cut} is a central problem among various graph partitioning tasks. Given an instance $G=(V,E,D,c,w)$, where $E$ is the set of supply edges, $D=\binom{V}{2}$ is the complete undirected demand graph, $c\colon E \to \mathbb{N}$ is a capacity function, and $w\colon D\to\mathbb{N}$ assigns unit demand to every demand edge, the goal is to find a subset of vertices $S\subseteq V$ that minimizes
 
 \[
 \phi\br{S} = \frac{c\br{S, \bar{S}}}{\spr{S}\cdot \spr{\bar{S}}}.
 \]
 where $\bar{S}=V\setminus S$ and $c\br{S,\bar{S}}=\sum_{u\in S}\sum_{v \in \bar{S}}c\br{u, v}$.
 
-This problem has been extensively studied in the literature \cite{MulticommodityMaxFlowMinCutTheoremsAndTheirUseInDesigningApproximationAlgorithms} resulting in remarkable connections to topics including metric spaces \cite{TheGeometryOfGraphsAndSomeOfItsAlgorithmicApplications,AnOlogkApproximateMinCutMaxFlowTheoremAndApproximationAlgorithm,OnLipschitzEmbeddingOfFiniteMetricSpacesInHilbertSpace,EuclideanDistortionAndTheSparsestCut} and spectral graph theory \cite{ALowerBoundForTheSmallestEigenvalueOfTheLaplacian,Lambda1IsoperimetricInequalitiesForGraphsAndSuperconcentrators,SpectralPartitioningWorksPlanarGraphsAndFiniteElementMeshes} with the state-of-the-art approximation algorithm due to Arora, Rao, and Vazirani \cite{ExpanderFlowsGeometricEmbeddingsAndGraphPartitioning}, achieving ratio of $\bigo\br{\sqrt{\log n}}$, where $n=\spr{V}$. Moreover, it also has a number of applications as an essential primitive in other graph algorithms, where it serves as a building block for various divide-and-conquer strategies. This includes \textsc{Graph Partitioning} where the goal is to find a subset of edges of minimum capacity such that all of the connected components resulting from deleting these edges are of small size \cite{MulticommodityMaxFlowMinCutTheoremsAndTheirUseInDesigningApproximationAlgorithms}. Another example is the problem of \textsc{Hierarchical Clustering} with similarity measures, where the goal is to hierarchically cluster data points, so that to minimize the Dasgupta's clustering objective \cite{ACostFunctionForSimilarityBasedHierarchicalClustering,ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics,HierarchicalClusteringObjectiveFunctionsAndAlgorithms}. Intuitively, this objective promotes clusters with both children of balanced size as well as a low capacity of edges cut between them. In particular, given an $\alpha$-approximation algorithm for the \textsc{Sparsest Cut}, one can obtain an $\bigo\br{\alpha}$-approximation algorithm for both of the aforementioned problems.
+This problem has been extensively studied in the literature \cite{MulticommodityMaxFlowMinCutTheoremsAndTheirUseInDesigningApproximationAlgorithms} resulting in remarkable connections to topics including metric spaces \cite{TheGeometryOfGraphsAndSomeOfItsAlgorithmicApplications,AnOlogkApproximateMinCutMaxFlowTheoremAndApproximationAlgorithm,OnLipschitzEmbeddingOfFiniteMetricSpacesInHilbertSpace,EuclideanDistortionAndTheSparsestCut} and spectral graph theory \cite{ALowerBoundForTheSmallestEigenvalueOfTheLaplacian,Lambda1IsoperimetricInequalitiesForGraphsAndSuperconcentrators,SpectralPartitioningWorksPlanarGraphsAndFiniteElementMeshes} with the state-of-the-art approximation algorithm due to Arora, Rao, and Vazirani \cite{ExpanderFlowsGeometricEmbeddingsAndGraphPartitioning}, achieving ratio of $\bigo\br{\sqrt{\log n}}$, where $n=\spr{V}$. Moreover, it also has a number of applications as an essential primitive in other graph algorithms, where it serves as a building block for various divide-and-conquer strategies. This includes \textsc{Graph Partitioning} where the goal is to find a subset of edges of minimum capacity such that all of the connected components resulting from deleting these edges are of small size \cite{MulticommodityMaxFlowMinCutTheoremsAndTheirUseInDesigningApproximationAlgorithms}. Another example is the problem of \textsc{Hierarchical Clustering} with similarity measures, where the goal is to hierarchically cluster data points, so that to minimize the Dasgupta's clustering objective \cite{ACostFunctionForSimilarityBasedHierarchicalClustering,ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics,HierarchicalClusteringObjectiveFunctionsAndAlgorithms}. Intuitively, this objective promotes clusters with both children of balanced size as well as low capacity of edges cut between them. In particular, given an $\alpha$-approximation algorithm for the \textsc{Sparsest Cut}, one can obtain an $\bigo\br{\alpha}$-approximation algorithm for both of the aforementioned problems.
 
 This usefulness of \textsc{Sparsest Cut} can be attributed to the following observation, implicitly exploited by many algorithms \cite{MulticommodityMaxFlowMinCutTheoremsAndTheirUseInDesigningApproximationAlgorithms,AnOlogkApproximateMinCutMaxFlowTheoremAndApproximationAlgorithm,ACostFunctionForSimilarityBasedHierarchicalClustering,ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics,HierarchicalClusteringObjectiveFunctionsAndAlgorithms,ImprovedApproximationAlgorithmsForMinimumWeightVertexSeparators}.
-The quantity $\spr{S}\cdot \spr{\bar{S}}$ can be interpreted in two separate ways. First, imagine each pair of vertices to be associated with a unit demand. Then, $\spr{S}\cdot \spr{\bar{S}}$ can be seen as the total demand crossing the cut. This interpretation is useful for the sake of developing approximation algorithms for the \textsc{Sparsest Cut} itself, since a weak duality between \textsc{Sparsest Cut} and multicommodity flow type problems has been established \cite{MulticommodityMaxFlowMinCutTheoremsAndTheirUseInDesigningApproximationAlgorithms,AnOlogkApproximateMinCutMaxFlowTheoremAndApproximationAlgorithm}. Secondly, $\spr{S}\cdot \spr{\bar{S}}$ can be observed to be large when both partitions are of roughly equal size. This comes useful when developing divide-and-conquer algorithms for other graph problems \cite{MulticommodityMaxFlowMinCutTheoremsAndTheirUseInDesigningApproximationAlgorithms,ExpanderFlowsGeometricEmbeddingsAndGraphPartitioning,ImprovedApproximationAlgorithmsForMinimumWeightVertexSeparators}, since the product in the denominator becomes a measure of the balance of a cut.
+The quantity $\spr{S}\cdot \spr{\bar{S}}$ can be interpreted in two separate ways. First, imagine that $D=\binom{V}{2}$ and that every demand edge has unit demand. Then, $\spr{S}\cdot \spr{\bar{S}}$ is the total demand crossing the cut. This interpretation is useful for the sake of developing approximation algorithms for the \textsc{Sparsest Cut} itself, since a weak duality between \textsc{Sparsest Cut} and multicommodity flow type problems has been established \cite{MulticommodityMaxFlowMinCutTheoremsAndTheirUseInDesigningApproximationAlgorithms,AnOlogkApproximateMinCutMaxFlowTheoremAndApproximationAlgorithm}. Secondly, $\spr{S}\cdot \spr{\bar{S}}$ can be observed to be large when both partitions are of roughly equal size. This comes useful when developing divide-and-conquer algorithms for other graph problems \cite{MulticommodityMaxFlowMinCutTheoremsAndTheirUseInDesigningApproximationAlgorithms,ExpanderFlowsGeometricEmbeddingsAndGraphPartitioning,ImprovedApproximationAlgorithmsForMinimumWeightVertexSeparators}, since the product in the denominator becomes a measure of the balance of a cut.
 
-However, if one were to generalize \textsc{Sparsest Cut} to general demand setting, these two interpretations are no longer equivalent. Let $w\colon V\times V\to \mathbb{N}$ be the demand function.
-The \textsc{Generalized Sparsest Cut} is to find a subset of vertices $S\subseteq V$ that minimizes
+However, if one were to generalize \textsc{Sparsest Cut} to arbitrary demand setting, these two interpretations are no longer equivalent. Let $D\subseteq\binom{V}{2}$ be the undirected loopless demand graph and let $w\colon D\to \mathbb{N}$ be the demand function.
+Traditionally, the \textsc{Generalized Sparsest Cut} is to find a subset of vertices $S\subseteq V$ that minimizes
 \[\phi_w\br{S} = \frac{c\br{S, \bar{S}}}{w\br{S, \bar{S}}}.
 \]
-This problem is also well-understood, and the state-of-the-art approximation algorithm is due to Arora, Lee, and Naor \cite{EuclideanDistortionAndTheSparsestCut}, which achieves the ratio of $\bigo\br{\sqrt{\log n}\cdot \log \log n}$. However, as discussed above, in order to use some notion related to sparsity in a wider range of applications, it would be desirable to approximate some quantity measuring the balance of a cut. 
-To the best of our knowledge, no such results have been obtained in the literature yet. Moreover, the above quantity may assign very large value to a cut $(S, \bar{S})$ even if the cut is very balanced. Consider for example the case when both partitions have internal demand $w\br{S}=w\br{\bar{S}}=w\br{V}/2$ but the demand between them is $w\br{S, \bar{S}} = 0$. Then, (by our convention) $\phi_w\br{S}=\infty$, even though the cut is perfectly balanced. This motivates us to focus on a different graph parameter.
+This problem is also well-understood, and the state-of-the-art approximation algorithm is due to Arora, Lee, and Naor \cite{EuclideanDistortionAndTheSparsestCut}, which achieves the ratio of $\bigo\br{\sqrt{\log n}\cdot \log \log n}$. However, as discussed above, in order to use some notion related to sparsity in a wider range of applications, it would be desirable to approximate some quantity measuring the balance of a cut.
+To the best of our knowledge, no such results have been obtained in the literature yet. Moreover, the above quantity may assign very large value to a cut $(S, \bar{S})$ even if the cut is very balanced.
+Consider as a toy example a cut where both partitions have internal demand $w\br{S}=w\br{\bar{S}}=w\br{V}/2$ but the demand between them is $w\br{S, \bar{S}} = 0$. Then, (by our convention) $\phi_w\br{S}=\infty$, even though the cut is perfectly balanced. This motivates us to focus on a different graph parameter.
 The graph \emph{conductance} is a well-known measure of the balance of a cut, defined as
 \[
 \psi\br{S} = \frac{c\br{S, \bar{S}}}{\operatorname{vol}(S)\cdot \operatorname{vol}(\bar{S})}.
 \]
-where $\operatorname{vol}(S)=\spr{\brc{e\in E\colon e\cap S\neq \emptyset}}$\footnote{Note, that there are several similar definitions of the conductance, however they are all equivalent up to constant factors.}. In fact, for the case of unit demands, minimizing the conductance is equivalent to the \textsc{Sparsest Cut}, up to a constant factor. However, for the general demands this is not a case, and this will come useful in our applications. The \emph{generalized conductance} of a cut $\br{S,\bar{S}}$ will be defined as
+where $\operatorname{vol}(S)=\spr{\brc{e\in E\colon e\cap S\neq \emptyset}}$\footnote{Note, that there are several similar definitions of the conductance, however they are all equivalent up to constant factors.}. In fact, for the setup of unit demands, minimizing the conductance is equivalent to the \textsc{Sparsest Cut}, up to a constant factor. However, for the general demands this is not a case, and this will come useful in our applications. The \emph{generalized conductance} of a cut $\br{S,\bar{S}}$ will be defined as
 \[
 \psi_w\br{S} = \frac{c\br{S, \bar{S}}}{w\br{S, V}\cdot w\br{\bar{S}, V}},
 \]
 where $w\br{X,V}=w\br{X}+w\br{X,V\setminus X}$.
 The problem of $\psi_w$ minimization will be called the \textsc{Generalized Conductance}.
 %To the best of our knowledge, this objective has not been studied in the literature yet, and it is not known whether it admits an algorithm with a non-trivial approximation ratio.
-We initiate the study of this problem by providing an $\bigo\br{\log n}$-approximation algorithm for general graphs.
-Interestingly enough, in our algorithm we use a non-trivial reduction to the former \textsc{Generalized Sparsest Cut}.
-However, we additionally require in this reduction that the amount of demand cut is not too large. This is crucial for the analysis of the reduction, and it turns out that this additional constraint can be handled by a combination of known techniques.
-%However, in order for the approximation ratio to be preserved, \DD{powyzsze nie wskazuje, ze ``zachowujemy'' app. ratio, a raczej dostajemy nieco gorsze} additional constraint expressing the maximum amount of demand cut is required. We call this problem a constrained sparsest cut problem and show, how to solve it using
-At the core of our method are algorithmic reductions to few cut-like problem, including the one just mentioned as an example, and the notion of
-cut-sparsifier tree decompositions by R\"{a}cke \cite{OptimalHierarchicalDecompositionsForCongestionMinimizationInNetworks} which allow us to simplify the problem by reducing it to solving tree instances. 
-%Since the embedding \DD{piszac ``the'' embedding odnosimy sie do kontekstu, ale nie jest jasne jaki embedding mamy na mysli.} step incurses an $\bigo\br{\log n}$ distortion and one can the constrained sparsest cut on trees in polynomial time, we get the desired approximation ratio.
-
-%It should be noted, that this is not the only possible balance-oriented generalization of the sparsest cut. For instance, one could also consider the following ratio:
-% \[
-% \psi'_w\br{S} = \frac{c\br{S, \bar{S}}}{w\br{S}\cdot w\br{\bar{S}}}.
-% \]
-%However, the first objective $\psi_w\br{S}$ is more natural due to the fact that it also takes into account the demands crossing the cut, since $w\br{S, V}= w\br{S}+w\br{S, \bar{S}}$. As it turns out, this becomes crucial for the applications we have in mind, and thus we focus on $\psi_w\br{S}$.
-% \DD{mam mieszane odczucia, czy ta koncowka wiecej nie namiesza niz pomoze. Otwiera bowiem watpliwosc czy nie jest sytuacja taka, ze studiuje sie wybrany sobie jeden wariant z wielu i recenzent sie zacznie zastanawiac dlaczego ten jest lepszy niz inny. Trzymalbym sie zatem narracji: po pierwsze uogolnienie, wiec dobrze, po drugie problem nietrywialny, wiec dobrze; po trzecie jest naturalna interpretacja; po czwarte uzyteczny. Tu by byla kropka. Chodzi o to, ze ludzie czesto sa oporni do prac wprowadzajacych nowy problem, gdyz sa cale morza prac, ktore to czynia i wiekszosc tych podproblemow i wariantow zwyczajnie nie jest zbyt ciekawa (lub interasujaca dla waskiego grona). Na razie zakomentowalem.
-% Moze do podsumowania taka dyskusja?}
+We initiate the study of this problem by providing an $\bigo\br{\sqrt{\log n}}$-approximation algorithm for general graphs, an exact polynomial-time algorithm for supply trees, and affirm that the choice of this parameter allows effective use in applications such as \textsc{Graph Partitioning with Demands} and \textsc{Hierarchical Clustering with Demands}. The two latter problems are the analogues of classical graph partitioning and hierarchical clustering tasks under the general demand model.
 
 \subsection{Our results and techniques}
 
-In this work, we show a series of algorithmic reductions between various graph partitioning tasks. The \textsc{Generalized Conductance} turns out to be the central one of them. Due to this we structure our work into two main parts, the first concerned with the latter problem and the second with its applications. Our main result is the following corollary:
+Our work consists of the following contributions. First, we provide approximation algorithms for the \textsc{Generalized Conductance} problem on general graphs and show that it can be solved in polynomial time on trees. Second, we demonstrate how these results can be leveraged for applications such as \textsc{Graph Partitioning with Demands} and \textsc{Hierarchical Clustering with Demands}. Third, we obtain stronger guarantees for both problems when the supply graph is a tree. Fourth, we establish hardness results for \textsc{Graph Partitioning with Demands} and \textsc{Generalized Conductance}.
+
+Due to this we structure our work into four main parts. In the first part, we focus on the \textsc{Generalized Conductance} and we obtain the following result.
 
 \begin{corollary}
-  There is a polynomial-time $\bigo(\log n)$-approximation algorithm for the \textsc{Generalized Conductance} on general graphs as well as an $\bigo(1)$-approximation algorithm for trees. Moreover, if the demand function is multiplicative, then there is a polynomial-time $\bigo(\sqrt{\log n})$-approximation algorithm.
+  There is a polynomial-time $\bigo(\sqrt{\log n})$-approximation algorithm for \textsc{Generalized Conductance} on general graphs and an exact polynomial-time algorithm on supply trees.
 \end{corollary}
 
-To obtain the above result, we combine a variety of techniques in order to simplify the problem to some easy enough primitive task. Intuitively, our algorithm is sensitive to two types of instances which are tackled differently. Although they are never distinguished explicitly, by choosing the best among two obtained solutions we get a non-trivial approximation ratio of $\bigo\br{\log n}$. The two cases are dictated by the size of $w\br{S^*, \bar{S^*}}$ in an optimal solution. If this quantity is large, then the problem (up to a constant factor approximation loss) essentially becomes the well known \textsc{$k$-Multicut} problem, where the task is to find a minimum cost partition of the graph while ensuring that at least $k$ units of demand are cut in total.
-This problem admits an $\beta=\bigo\br{\log n}$-approximation algorithm by combining \cite{AUnifiedApproachToApproximatingPartialCoveringProblems} with \cite{OptimalHierarchicalDecompositionsForCongestionMinimizationInNetworks}.
-Such a solution is not fully suitable for our purposes, because the number of connected components obtained via \textsc{$k$-Multicut} might be arbitrarily large. To remedy this we employ a \textsc{Max-Cut} algorithm which ensures that a significant portion of the demand is still cut while partitioning the components into two groups as required.
+For the general-graph result, we assign every vertex its weighted demand degree $d_w(v)$. The resulting degree-weighted sparsity objective approximates generalized conductance within a factor of four. After subdividing every supply edge, this objective becomes an instance of \textsc{Min-Ratio Vertex Cut}, to which we apply the $\bigo\br{\sqrt{\log n}}$-approximation algorithm of Feige, Hajiaghayi, and Lee \cite{ImprovedApproximationAlgorithmsForMinimumWeightVertexSeparators}. Independently, we show that on supply trees an optimal generalized-conductance cut is always obtained by removing one edge.
 
-If the aforementioned quantity is small, then we show that we can reduce the problem to the  \textsc{Generalized Sparsest Cut} with additional constraint that the demand to be cut cannot be too large. This is done by constructing an auxiliary graph with new demand function such that cutting demand in this new instance roughly corresponds to minimizing the conductance in the original instance. This reduction preserves the approximation ratio, however its analysis is sensitive and crucially relies on the fact that $w\br{S^*, \bar{S}^*}$ is assumed to be of small value.
-
-In order to tackle this constrained version of the \textsc{Sparsest Cut} we use a general technique of R\"acke \cite{OptimalHierarchicalDecompositionsForCongestionMinimizationInNetworks}. The idea is to embed a graph into a polynomial-sized convex combination of trees, which in expectance preserves the value of any cut up to $\bigo\br{\log n}$ distortion. This allows us to obtain the $\bigo\br{\log n}$-approximation by solving the problem to optimality on all trees and outputting the best of the solutions. This indeed becomes an easy task, since the (unconstrained) \textsc{Sparsest Cut} can be found in a tree by only considering single-edge cuts. As it turns out, the same is true for the constrained version of the problem.
-
-In the second part of the paper we move ourselves towards applications of the \textsc{Generalized Conductance}. We argue that, given constants $0< \rho< \eta <1$ and a $\gamma$-approximation algorithm for the \textsc{Generalized Conductance}, its iterative application partitions the graph into components with demand at most $\eta\cdot w\br{V}$ while paying only\footnote{The subscripts indicate which constants are hidden in the $\bigo$-notation.} $\bigo_{\rho, \eta}\br{\gamma}$ times more than it is required to partition the graph into components with demand at most $\rho\cdot w\br{V}$. This gives the following corollary:
+In the second part of the paper we move ourselves towards applications of the \textsc{Generalized Conductance}. We argue that, given constants $0< \rho< \eta <1$ and a $\gamma$-approximation algorithm for the \textsc{Generalized Conductance}, its iterative application partitions the graph into $\eta$-feasible components (with demand at most $\eta\cdot w\br{V}$) while paying only\footnote{The subscripts indicate which constants are hidden in the $\bigo$-notation.} $\bigo_{\rho, \eta}\br{\gamma}$ times more than it is required to partition the graph into components with demand at most $\rho\cdot w\br{V}$. This gives the following corollaries.
 
 \begin{corollary}
-  There is a polynomial-time $\bigo_{\rho, \eta}(\log n)$-approximation algorithm for the \textsc{Graph Partitioning with Demands} on general graphs as well as an $\bigo_{\rho, \eta}(1)$-approximation algorithm for trees. Moreover, if the demand function is multiplicative, then there is a polynomial-time $\bigo_{\rho, \eta}(\sqrt{\log n})$-approximation algorithm.
+  For any $0< \rho< \eta <1$, there is a polynomial-time bicriteria $\bigo_{\rho, \eta}(\sqrt{\log n})$-approximation algorithm for \textsc{Graph Partitioning with Demands} on general graphs as well as a bicriteria $\bigo_{\rho, \eta}(1)$-approximation algorithm for supply trees.
 \end{corollary}
-% It should be noted, that there is an evidence that no true polylogarithmic approximation for this task exists [cite here].
-
-Then, we show that the above bicriteria approximation algorithm can be used to obtain an $\bigo\br{\log \gamma}$-approximation for \textsc{Hierarchical Clustering with Demands}. This is done in a recursive top-down manner.
-A single call to the algorithm partitions the graph into components with `internal' demand at most $\frac{4}{5}\cdot w\br{V}$.
-Then, the rest of hierarchy is built by applying the algorithm recursively in those of the resulting components that need to be further partitioned.
-Using a tight analysis generalizing the framework of \cite{ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics} we show that the approximation ratio is indeed preserved.
 
 \begin{corollary}
-  There is a polynomial-time $\bigo(\log n)$-approximation algorithm for the \textsc{Hierarchical Clustering with Demands} on general graphs as well as an $\bigo(1)$-approximation algorithm for trees. Moreover, if the demand function is multiplicative, then there is a polynomial-time $\bigo(\sqrt{\log n})$-approximation algorithm.
+  There is a polynomial-time $\bigo(\sqrt{\log n})$-approximation algorithm for \textsc{Hierarchical Clustering with Demands} on general graphs. On supply trees with arbitrary demand-edge weights, there is a polynomial-time $\bigo\br{1}$-approximation.
 \end{corollary}
 
-Figure \ref{fig:reductions} outlines the algorithmic reductions that appear in this work.
+The \textsc{Graph Partitioning with Demands} problem on supply trees is particularly interesting: in the third part of the paper we show that, under the Unique Games Conjecture, it is hard to approximate within $2-\epsilon$, even on support-star instances. We give three complementary algorithms for arbitrary demand weights. The anchored-LP algorithm uses a compact relaxation and deterministic threshold rounding, with approximation factor
+\[
+  \Gamma_{\mathrm{LP}}(\rho,\eta)=\frac{2\eta}{\eta-\rho}.
+\]
+The degree-budget algorithm rounds the weighted demand degrees and solves the resulting problem by dynamic programming on the rooted supply tree. It has no cost loss when $\eta>(1+\rho)/2$. Recursively applying this degree-budget procedure gives the factor
+\[
+  \Gamma_{\mathrm{DD}}(\rho,\eta)=\left\lfloor\log_2\br{\frac{1-\rho}{\eta-\rho}}\right\rfloor+1.
+\]
+Finally, a hybrid algorithm first uses the anchored LP to reduce component demand to at most $2\eta w\br{V}$ (when $2\eta<1$), then applies the recursive degree-budget procedure. Its approximation factor is
+\[
+  \Gamma_{\mathrm{H}}(\rho,\eta)=\frac{4\eta}{2\eta-\rho}
+  +\left\lfloor\log_2\br{\frac{2\eta-\rho}{\eta-\rho}}\right\rfloor+1.
+\]
+Taking the best of these three bounds yields the following combined guarantee.
 
-\begin{figure}[H]
-  \centering
-  \resizebox{\textwidth}{!}{\input{figures/reduction_diagram.tex}}
-  \caption{Reduction map of problems and applications considered in this paper.}
-  \label{fig:reductions}
-\end{figure}
+\begin{corollary}
+  Fix rational constants $0<\rho<\eta<1$. On supply trees, there is a polynomial-time algorithm returning an $\eta$-feasible solution of cost at most $\Gamma_{\mathrm{tree}}(\rho,\eta)\cdot\OPT_{\rho}(T)$, where
+  \[
+    \Gamma_{\mathrm{tree}}(\rho,\eta)
+    =
+    \begin{cases}
+      1,
+        &\eta>\dfrac{1+\rho}{2},\\[2mm]
+      \displaystyle\min\left\{
+        \Gamma_{\mathrm{LP}}(\rho,\eta),\ \Gamma_{\mathrm{DD}}(\rho,\eta),\ \Gamma_{\mathrm{H}}(\rho,\eta)
+      \right\},
+        &\rho<\eta\leq\dfrac{1+\rho}{2}.
+    \end{cases}
+  \]
+  Explicitly,
+  \[
+    \Gamma_{\mathrm{LP}}(\rho,\eta)=\frac{2\eta}{\eta-\rho},\qquad
+    \Gamma_{\mathrm{DD}}(\rho,\eta)=\left\lfloor\log_2\br{\frac{1-\rho}{\eta-\rho}}\right\rfloor+1,
+    \qquad
+    \Gamma_{\mathrm{H}}(\rho,\eta)=\frac{4\eta}{2\eta-\rho}
+      +\left\lfloor\log_2\br{\frac{2\eta-\rho}{\eta-\rho}}\right\rfloor+1.
+  \]
+\end{corollary}
+
+This combined guarantee also improves the approximation for \textsc{Hierarchical Clustering with Demands} on supply trees.
+
+\begin{corollary}
+  For any $\epsilon>0$, there exists an $8+\epsilon$ approximation algorithm for \textsc{Hierarchical Clustering with Demands} on supply trees.
+\end{corollary}
+
+We complement these algorithms with the following hardness results.
+\begin{itemize}
+  \item An approximation-preserving reduction from \textsc{Vertex Cover} shows that \textsc{Graph Partitioning with Demands} is NP-hard already on stars. Consequently, for every $\epsilon>0$, it is hard to approximate within $\sqrt{2}-\epsilon$ unless $P=NP$, and within $2-\epsilon$ assuming the Unique Games Conjecture \cite{TowardsAProofOfThe2To1GamesConjecture,VertexCoverMightBeHardToApproximateToWithin2MinusEpsilon}.
+  \item Assuming the Small-Set Expansion Hypothesis, for every fixed $0<\rho<\eta<1$ and every constant $A>0$, there is no polynomial-time $(A,\eta)$-bicriteria approximation for \textsc{Graph Partitioning with Demands}.
+  \item Under the quantitative Small-Set Expansion Hypothesis with parameter $\varepsilon(N)$, \textsc{Graph Partitioning with Demands} is hard to approximate within $\Omega_{\eta}\br{1/\sqrt{\varepsilon(N)}}$. In particular, $\varepsilon(N)=\Theta(1/\log\log N)$ yields an $\Omega_{\eta}\br{\sqrt{\log\log N}}$ lower bound.
+  \item \textsc{Hierarchical Clustering with Demands} is NP-hard even when the supply graph is a tree and all supply edges have uniform cost \cite{OnTheComplexityOfSearchingInTreesAverageCaseMinimization}.
+\end{itemize}
+
+% Figure \ref{fig:reductions} outlines the algorithmic reductions that appear in this work.
+
+% \begin{figure}[H]
+%   \centering
+%   \resizebox{\textwidth}{!}{\input{figures/reduction_diagram.tex}}
+%   \caption{Reduction map of problems and applications considered in this paper.}
+%   \label{fig:reductions}
+% \end{figure}
 \subsection{Related work}
 
-The modern approximation theory of \textsc{Sparsest Cut} starts from approximate max-multicommodity flow/min-sparsest cut duality. By exploiting this duality, Leighton and Rao provide an $\bigo\br{\log n}$-approximation \cite{MulticommodityMaxFlowMinCutTheoremsAndTheirUseInDesigningApproximationAlgorithms} for the \textsc{Sparsest Cut}. Aumann and Rabani refine this to $\bigo\br{\log k}$ when only $k$ demand pairs are relevant \cite{AnOlogkApproximateMinCutMaxFlowTheoremAndApproximationAlgorithm}. Those results were then improved by Arora-Rao-Vazirani by exhibiting an $\bigo\br{\sqrt{\log n}}$ approximation for \textsc{Uniform Sparsest Cut} \cite{ExpanderFlowsGeometricEmbeddingsAndGraphPartitioning}. Obtaining these results required a new approach based on semidefinite programming and high-dimension geometry, which was then further refined by Arora, Lee, and Naor to obtain an $\bigo\br{\sqrt{\log n}\cdot \log\log n}$-approximation for general demands \cite{EuclideanDistortionAndTheSparsestCut}. On hardness, Chawla, Krauthgamer, Kumar, Rabani, and Sivakumar show (under UGC) that \textsc{Multicut} and \textsc{Sparsest Cut} are hard to approximate within any constant factor; moreover, a quantitatively stronger UGC implies an inapproximability factor of $\Omega\br{\sqrt{\log\log n}}$ \cite{OnTheHardnessOfApproximatingMulticutAndSparsestCut}. Khot-Vishnoi further show UGC-based super-constant hardness for \textsc{Non-Uniform Sparsest Cut} and prove a $\br{\log\log n}^{1/6-\delta}$ lower bound/integrality gap for the associated SDP/embedding relaxation, for every fixed $\delta>0$ \cite{TheUniqueGamesConjectureIntegralityGapForCutProblemsAndEmbeddabilityOfNegativeTypeMetricsIntoL1}. Raghavendra-Steurer connect this picture to Small-Set Expansion by relating expansion hardness and UGC \cite{GraphExpansionAndTheUniqueGamesConjecture}.
+The modern approximation theory of \textsc{Sparsest Cut} starts from approximate max-multicommodity flow/min-sparsest cut duality. By exploiting this duality, Leighton and Rao provide an $\bigo\br{\log n}$-approximation \cite{MulticommodityMaxFlowMinCutTheoremsAndTheirUseInDesigningApproximationAlgorithms} for the \textsc{Sparsest Cut}. Aumann and Rabani refine this to $\bigo\br{\log k}$ when only $k$ demand edges have nonzero weight \cite{AnOlogkApproximateMinCutMaxFlowTheoremAndApproximationAlgorithm}. Those results were then improved by Arora-Rao-Vazirani by exhibiting an $\bigo\br{\sqrt{\log n}}$ approximation for \textsc{Uniform Sparsest Cut} \cite{ExpanderFlowsGeometricEmbeddingsAndGraphPartitioning}. Obtaining these results required a new approach based on semidefinite programming and high-dimension geometry, which was then further refined by Arora, Lee, and Naor to obtain an $\bigo\br{\sqrt{\log n}\cdot \log\log n}$-approximation for general demands \cite{EuclideanDistortionAndTheSparsestCut}. On hardness, Chawla, Krauthgamer, Kumar, Rabani, and Sivakumar show (under UGC) that \textsc{Multicut} and \textsc{Sparsest Cut} are hard to approximate within any constant factor; moreover, a quantitatively stronger UGC implies an inapproximability factor of $\Omega\br{\sqrt{\log\log n}}$ \cite{OnTheHardnessOfApproximatingMulticutAndSparsestCut}. Khot-Vishnoi further show UGC-based super-constant hardness for \textsc{Non-Uniform Sparsest Cut} and prove a $\br{\log\log n}^{1/6-\delta}$ lower bound/integrality gap for the associated SDP/embedding relaxation, for every fixed $\delta>0$ \cite{TheUniqueGamesConjectureIntegralityGapForCutProblemsAndEmbeddabilityOfNegativeTypeMetricsIntoL1}. Raghavendra-Steurer connect this picture to Small-Set Expansion by relating expansion hardness and UGC \cite{GraphExpansionAndTheUniqueGamesConjecture}.
 
 \paragraph{Graph partitioning, Separators and Hierarchical clustering.}
 \textsc{Balanced Graph Partitioning} is a problem of partitioning a graph into $k$ clusters, each of size roughly $n/k$ as to minimize the cost of the cut edges. Krauthgamer, Naor, and Schwartz study \textsc{$k$-Balanced Partitioning} and give a bi-criteria approximation ratio of $\bigo\br{\sqrt{\log n\cdot \log k}}$; they also show an $\Omega\br{\log k}$ integrality gap for their SDP relaxation \cite{PartitioningGraphsIntoBalancedComponents}. A related separator `machinery' is developed by Feige, Hajiaghayi, and Lee, who obtain an $\bigo\br{\sqrt{\log n}}$ approximation for \textsc{Min-Ratio Vertex Cut}, a vertex analogue of the \textsc{Sparsest Cut} which gives an $\bigo\br{\sqrt{\log n}}$ pseudo-approximation for \textsc{Vertex Separators} in general graphs \cite{ImprovedApproximationAlgorithmsForMinimumWeightVertexSeparators}. The latter problem is to remove a `cheap' subset of vertices so that the remaining graph consists of two pieces of small size.

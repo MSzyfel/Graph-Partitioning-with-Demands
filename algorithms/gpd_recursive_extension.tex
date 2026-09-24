@@ -1,0 +1,15 @@
+\begin{algorithm}[H]
+    \caption{Recursive extension to the full parameter range}
+    \textbf{Input} A component $H$, global budgets $k=\rho\cdot w\br{V}$ and $k'=\eta\cdot w\br{V}$, and the algorithm of Theorem~\ref{thm:gpd-bicriteria}\;
+    \textbf{Output} A cut $C_H$ whose components have demand at most $k'$\;
+    \If{$w\br{V_H}\leq k'$}{
+        \textbf{return} $\emptyset$\;
+    }
+    $\eta_0\gets\max\brc{4/5,\,k'/w\br{V_H}}$\;
+    Run Theorem~\ref{thm:gpd-bicriteria} on $H$ with parameter $\eta_0$; let $C$ be the returned cut\;
+    $C_H\gets C$\;
+    \ForEach{component $H'$ of $H\setminus C$}{
+        Recursively partition $H'$ and add the returned cut $C_{H'}$ to $C_H$\;
+    }
+    \textbf{return} $C_H$\;
+\end{algorithm}

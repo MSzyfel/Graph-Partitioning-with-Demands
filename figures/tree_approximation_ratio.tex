@@ -1,0 +1,61 @@
+\begin{figure}[!tbp]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=0.92\textwidth,
+      height=0.52\textwidth,
+      xmin=0,
+      xmax=1,
+      ymin=0.8,
+      ymax=12,
+      xlabel={feasibility parameter $\eta$},
+      ylabel={approximation ratio $\Gamma_{\mathrm{tree}}(\rho,\eta)$},
+      xtick={0,0.1,...,1},
+      ytick={1,2,4,6,8,10,12},
+      grid=major,
+      grid style={draw=black!12},
+      axis line style={draw=black!65},
+      tick label style={font=\small},
+      label style={font=\small},
+      legend style={
+        font=\small,
+        at={(0.98,0.98)},
+        anchor=north east,
+        draw=black!35,
+        fill=white,
+        cells={anchor=west}
+      },
+      samples=120,
+      no marks,
+      unbounded coords=jump,
+      restrict y to domain=0.8:12
+    ]
+      \addplot[draw=cutF,very thick,dashed,domain=0.010053:0.505]
+        {min(min(2*x/(x-0.01),floor(ln((1-0.01)/(x-0.01))/ln(2))+1),4*x/(2*x-0.01)+floor(ln((2*x-0.01)/(x-0.01))/ln(2))+1)};
+      \addlegendentry{$\rho=0.01$}
+      \addplot[draw=cutF,very thick,dashed,domain=0.5051:0.999,forget plot] {1};
+
+      \addplot[draw=cutA,very thick,domain=0.1003:0.55]
+        {min(min(2*x/(x-0.1),floor(ln((1-0.1)/(x-0.1))/ln(2))+1),4*x/(2*x-0.1)+floor(ln((2*x-0.1)/(x-0.1))/ln(2))+1)};
+      \addlegendentry{$\rho=0.1$}
+      \addplot[draw=cutA,very thick,domain=0.5501:0.999,forget plot] {1};
+
+      \addplot[draw=cutB,very thick,densely dashed,domain=0.30025:0.65]
+        {min(min(2*x/(x-0.3),floor(ln((1-0.3)/(x-0.3))/ln(2))+1),4*x/(2*x-0.3)+floor(ln((2*x-0.3)/(x-0.3))/ln(2))+1)};
+      \addlegendentry{$\rho=0.3$}
+      \addplot[draw=cutB,very thick,densely dashed,domain=0.6501:0.999,forget plot] {1};
+
+      \addplot[draw=cutC!80!black,very thick,dashdotted,domain=0.50018:0.75]
+        {min(min(2*x/(x-0.5),floor(ln((1-0.5)/(x-0.5))/ln(2))+1),4*x/(2*x-0.5)+floor(ln((2*x-0.5)/(x-0.5))/ln(2))+1)};
+      \addlegendentry{$\rho=0.5$}
+      \addplot[draw=cutC!80!black,very thick,dashdotted,domain=0.7501:0.999,forget plot] {1};
+
+      \addplot[draw=cutE,very thick,dotted,domain=0.7001:0.85]
+        {min(min(2*x/(x-0.7),floor(ln((1-0.7)/(x-0.7))/ln(2))+1),4*x/(2*x-0.7)+floor(ln((2*x-0.7)/(x-0.7))/ln(2))+1)};
+      \addlegendentry{$\rho=0.7$}
+      \addplot[draw=cutE,very thick,dotted,domain=0.8501:0.999,forget plot] {1};
+    \end{axis}
+  \end{tikzpicture}
+  \caption{The combined tree approximation ratio from Corollary~\ref{cor:tree-best-bicriteria} as a function of $\eta$ for representative values of $\rho$. For $\rho<\eta\leq(1+\rho)/2$, the curves show the best of the anchored-LP, optimized recursive degree-budget, and hybrid guarantees. For $\eta>(1+\rho)/2$, the direct degree-budget algorithm gives ratio $1$. Values above $12$ are omitted.}
+  \label{fig:tree-approximation-ratio}
+\end{figure}
