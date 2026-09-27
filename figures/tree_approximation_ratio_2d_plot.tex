@@ -1,0 +1,67 @@
+% !TeX program = lualatex
+% From figures/: run `latexmk -lualatex -interaction=nonstopmode -halt-on-error -output-directory=generated tree_approximation_ratio_2d_plot.tex`.
+% The manuscript includes the resulting cached PDF instead of recalculating
+% this PGFPlots diagram during every compilation.
+\documentclass[11pt,border=2pt]{standalone}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\input{../macros.tex}
+\begin{document}
+\begin{tikzpicture}
+  \begin{axis}[
+    width=15.19cm,
+    height=8.585cm,
+    xmin=0,
+    xmax=1,
+    ymin=0.8,
+    ymax=8,
+    xlabel={feasibility parameter $\eta$},
+    ylabel={approximation ratio $\Gamma_{\mathrm{tree}}(\rho,\eta)$},
+    xtick={0,0.1,...,1},
+    ytick={1,2,4,6,8},
+    grid=major,
+    grid style={draw=black!12},
+    axis line style={draw=black!65},
+    tick label style={font=\small},
+    label style={font=\small},
+    legend style={
+      font=\small,
+      at={(0.98,0.98)},
+      anchor=north east,
+      draw=black!35,
+      fill=white,
+      cells={anchor=west}
+    },
+    samples=2000,
+    no marks,
+    unbounded coords=jump,
+    restrict y to domain=0.8:8
+  ]
+    \addplot[draw=cutF,very thick,dashed,domain=0.010053:0.505]
+      {min(8,min(min(2*x/(x-0.01),ifthenelse(x<0.03,exp(1)+1+ln(0.02/(x-0.01)),8)),ceil(ln((1-0.01)/(x-0.01)))))};
+    \addlegendentry{$\rho=0.01$}
+    \addplot[draw=cutF,very thick,dashed,domain=0.5051:0.999,forget plot] {1};
+
+    \addplot[draw=cutA,very thick,domain=0.1003:0.55]
+      {min(8,min(min(2*x/(x-0.1),ifthenelse(x<0.3,exp(1)+1+ln(0.2/(x-0.1)),8)),ceil(ln((1-0.1)/(x-0.1)))))};
+    \addlegendentry{$\rho=0.1$}
+    \addplot[draw=cutA,very thick,domain=0.5501:0.999,forget plot] {1};
+
+    \addplot[draw=cutB,very thick,densely dashed,domain=0.30025:0.65]
+      {min(8,min(min(2*x/(x-0.3),ifthenelse(x<0.9,exp(1)+1+ln(0.6/(x-0.3)),8)),ceil(ln((1-0.3)/(x-0.3)))))};
+    \addlegendentry{$\rho=0.3$}
+    \addplot[draw=cutB,very thick,densely dashed,domain=0.6501:0.999,forget plot] {1};
+
+    \addplot[draw=cutC!80!black,very thick,dashdotted,domain=0.50018:0.75]
+      {min(8,min(2*x/(x-0.5),ceil(ln((1-0.5)/(x-0.5)))))};
+    \addlegendentry{$\rho=0.5$}
+    \addplot[draw=cutC!80!black,very thick,dashdotted,domain=0.7501:0.999,forget plot] {1};
+
+    \addplot[draw=cutE,very thick,dotted,domain=0.7001:0.85]
+      {min(8,min(2*x/(x-0.7),ceil(ln((1-0.7)/(x-0.7)))))};
+    \addlegendentry{$\rho=0.7$}
+    \addplot[draw=cutE,very thick,dotted,domain=0.8501:0.999,forget plot] {1};
+  \end{axis}
+\end{tikzpicture}
+\end{document}

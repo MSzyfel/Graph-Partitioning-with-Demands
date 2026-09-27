@@ -1,52 +1,61 @@
 \section{Preliminaries}
 
-Most instances of the problems considered in this work consist of a graph $G=\br{V,E,D,c,w}$, where $V$ is the vertex set, $E$ is the set of supply edges, $D\subseteq\binom{V}{2}$ is an undirected loopless demand graph, $c\colon E \to \mathbb{N}$ is the \emph{capacity} function which encodes the cost of cutting a supply edge, and $w\colon D\to \mathbb{N}$ assigns a nonnegative weight to each demand edge. Every demand edge is counted once.
-For adjacent vertices $u,v\in V$, we denote by $uv$ the supply edge between $u$ and $v$.
-For any $C\subseteq E$, $G\setminus C$ is the graph obtained by removing the edges in $C$ from $G$.
+Most instances of the problems considered in this work consist of a graph $G=\br{V,E,D,c,w}$, where $V$ is the vertex set, $E$ is the set of \emph{supply edges}, $D$ is the set of \emph{demand edges}, $c\colon E \to \mathbb{N}$ is the \emph{capacity} function which encodes the cost of cutting a supply edge, and $w\colon D\to \mathbb{N}$ is the \emph{demand} function which assigns a nonnegative weight to each demand edge.
+For adjacent vertices $u,v\in V$, whenever not explicitly stated, we denote by $uv$ the supply edge between $u$ and $v$.
+For any $C\subseteq E$, $G\setminus C$ is the set of connected components obtained by removing the edges in $C$ from $G$.
 We write $\br{V_H,E_H,D_H,c_H,w_H}$ to point out that given parameters represent a particular graph or subgraph $H$, different than $G$.
-For $U\subseteq V$, the induced subgraph $G[U]$ has supply-edge set $E[U]=\brc{uv\in E:u,v\in U}$, demand-edge set $D[U]=D\cap\binom{U}{2}$, and the restrictions of $c$ and $w$ to these sets.
+For $U\subseteq V$, the induced subgraph $G[U]$ has supply-edge set $E[U]=\brc{uv\in E:u,v\in U}$, demand-edge set $D[U]=\brc{uv\in D:u,v\in U}$, and the restrictions of $c$ and $w$ to these sets.
 
-For an edge set $E'\subseteq\binom{V}{2}$ and a vertex set $S\subseteq V$, let
+For an edge set $X\subseteq\binom{V}{2}$ (usually the set of supply or demand edges), a function $f\colon X\to \mathbb{N}$, and a pair of disjoint subsets $A, B\subseteq V$, we define
 \[
-	\delta_{E'}(S)
-	=\brc{uv\in E':\spr{\brc{u,v}\cap S}=1}
+f\br{A}=\sum_{\substack{uv\in X\\u,v\in A}}f\br{u,v},
+\qquad
+f\br{A,B}=\sum_{\substack{uv\in X\\u\in A,\ v\in B}}f\br{u,v}.
 \]
-be the edges of $E'$ with exactly one endpoint in $S$. For a partition $\cP$ of $V$, let
+Whenever $A, B\subseteq V$ are not disjoint, we define $f\br{A,B}=f\br{A}+f\br{A,B\setminus A}$ (see Figure~\ref{fig:demand-decomposition} for an illustration).
+
+Define by
 \[
-	\delta_{E'}(\cP)
-	=\brc{uv\in E':u\text{ and }v\text{ belong to distinct parts of }\cP}.
+	W=w\br{V}=\sum_{uv\in D}w\br{u,v}
+\]
+the total value of the demand on the entire vertex set $V$.
+
+Let $S\subseteq V$ be a vertex set, define
+\[
+	\delta_{X}(S)
+	=\brc{uv\in X\colon\spr{\brc{u,v}\cap S}=1}
+\]
+to be the edges of $X$ with exactly one endpoint in $S$.
+For a vertex $v\in V$, we write $\delta_{X}(v)=\delta_{X}(\{v\})$ for the edges of $X$ incident to $v$. The weighted degree of $u$ and the volume of $S\subseteq U$ are
+\[
+	d_X(u)=c\br{\delta_X(u)},
+	\qquad
+	\operatorname{vol}_X(S)=\sum_{u\in S}d_X(u).
+\]
+
+Since every internal edge of $X$ has both endpoints in $S$ and every crossing edge of $X$ has one endpoint in $S$, we have the following identity:
+\begin{equation}\label{eq:demand-degree-identity}
+	\vol_X(S)
+	=2f\br{S}+f\br{S,V\setminus S}
+\end{equation}
+For a partition $\cP$ of $V$, let
+\[
+	\delta_{X}(\cP)
+	=\brc{uv\in X\colon u\text{ and }v\text{ belong to distinct parts of }\cP}.
 \]
 For $A\subseteq V$, let
 \[
-	D\br{A}
-	=\brc{uv\in D:\brc{u,v}\cap A\neq\emptyset}
-	=D[A]\cup\delta_D(A)
+	X\br{A,V}
+	=\brc{uv\in X:\brc{u,v}\cap A\neq\emptyset}
+	=X[A]\cup\delta_X(A)
 \]
-denote the demand edges incident to $A$. Thus $D[A]$ contains only demand edges internal to $A$, whereas $D\br{A}$ also contains the demand edges crossing the cut $\br{A,\bar A}$.
+denote the edges of $X$ incident to $A$.
+For parameters $\rho,\eta\in(0,1)$, write $B_\rho=\rho W$ and $B_\eta=\eta W$ for the corresponding demand budgets.
 
-For disjoint subsets $A, B\subseteq V$, we define
-\[
-w\br{A}=\sum_{\substack{uv\in D\\u,v\in A}}w\br{u,v},
-\qquad
-w\br{A,B}=\sum_{\substack{uv\in D\\u\in A,\ v\in B}}w\br{u,v}.
-\]
-Whenever $A, B\subseteq V$ are not disjoint, we define $w\br{A,B}=w\br{A}+w\br{A,B\setminus A}$ (see Figure~\ref{fig:demand-decomposition} for an illustration).
-For a vertex $v\in V$, define its weighted demand degree as
-\[
-d_w(v)=w\br{\delta_D\br{\brc{v}}},
-\]
-and, for $S\subseteq V$, put $d_w(S)=\sum_{v\in S}d_w(v)$. Since every internal demand edge has both endpoints in $S$ and every crossing demand edge has one endpoint in $S$, we have
-\begin{equation}\label{eq:demand-degree-identity}
-	d_w(S)
-	=2w\br{S}+w\br{S,V\setminus S}
-	=w\br{V}+w\br{S}-w\br{V\setminus S}.
-\end{equation}
 For a subset $C\subseteq E$ and a capacity function $c$ on the supply edges, $c\br{C}=\sum_{e\in C}c\br{e}$.
 For a subset $S\subseteq V$, we denote by $\bar{S}$ the complement of $S$ in $V$, i.~e. $\bar{S}=V\setminus S$.
 A \emph{cut} is any subset $S\subseteq V$, such that $S\neq \emptyset$, $S\neq V$ and we denote it either by just $S$ or we write $\br{S, \bar{S}}$ to explicitly indicate the two sides of the cut.
-It will be sometimes more convenient to call the edge set $\delta_E(S)$ a cut.
-Which definition is used will be clear from the context.
-For any cut-based objective function $F$ used in this paper, $F\br{S}$ or $F\br{S, \bar{S}}$ denote the value of $F$ on a specific cut $S$, whereas $F\br{G}$ denotes the optimum value of $F$ over all cuts of the graph $G$.
-Moreover, whenever an objective function is given as a ratio and its denominator equals $0$, we set the value of this objective to $\infty$.
+
+Whenever an objective function is given as a ratio and its denominator equals $0$, we set the value of this objective to $\infty$.
 
 \input{figures/demand_decomposition.tex}

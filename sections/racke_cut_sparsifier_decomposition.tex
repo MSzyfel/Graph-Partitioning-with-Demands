@@ -58,8 +58,7 @@ has congestion at most $\rho=\bigo(\log n)$ in $G$.
 
 
 For disjoint sets $A,B\subseteq V$ and any graph $G$, define
-$\minCut{A}{B}{G}$ to be a cut $C$ in $G$ of minimum cost $c_G\br{C}$ that
-separates $A$ from $B$.
+$\minCut{A}{B}{G}$ to be the minimum cost $c_G\br{C}$ over edge sets $C\subseteq E(G)$ whose removal separates $A$ from $B$.
 
 To bound how well cuts are preserved by R\"{a}cke's decomposition, we use an argument analogous to max-flow/min-cut duality: capacities in each tree dominate the original cut capacities pointwise, and by combining tree flows through the convex decomposition we obtain a matching upper bound in expectation.
 This gives the following cut-value preservation statement.
@@ -132,7 +131,7 @@ Therefore,
   \geq
   \min_{e\in E_T, 0<w_e\le K} \brc{\frac{c_T(e)}{w_e}}.
 \]
-so there exists an edge $e\in E_T$, such that the cut $V_T\setminus \brc{e}$ is optimal and the claim follows.
+so there exists an edge $e\in E_T$ whose removal induces an optimal cut, and the claim follows.
 \end{proof}
 Hence it suffices to scan all edges and pick the minimum feasible ratio $c_T(e)/w_e$, which is polynomial-time (in particular linear in the number of edges).
 \end{proof}

@@ -1,0 +1,61 @@
+\subsection{A Hybrid LP-Centroid Recursion Approach}
+
+Assume $0<\rho<\eta<3\rho<1$, and put
+\[
+    \delta=\eta-\rho,
+    \qquad
+    x=\ln\left(\frac{2\rho}{\delta}\right),
+    \qquad
+    k=\left\lfloor x\right\rfloor.
+\]
+The hybrid first applies anchored-LP rounding with target $\tau=\rho+e^k\delta$, then runs centroid recursion on the resulting components. Since $e^k\delta\leq2\rho$, the LP target satisfies $\tau\leq3\rho<1$, and at most $k$ centroid rounds suffice.
+
+\subsubsection{The hybrid procedure}
+\input{algorithms/hybrid_lp_centroid.tex}
+
+Apply Corollary~\ref{cor:tree-general-demand-bicriteria} with feasibility target $\tau=\rho+e^k\delta$, and let $F_0$ be the resulting supply-edge set and $\cH_0$ the components of $T\setminus F_0$. Every $H\in\cH_0$ has demand at most $\tau W$, and the normalization cost satisfies
+\begin{equation}\label{eq:tree-hybrid-normalization-cost}
+    c\br{F_0}
+    \leq
+    \left(2+\frac{2\rho}{e^k\delta}\right)\cdot\OPT_{B_\rho}(T).
+\end{equation}
+
+For each $H\in\cH_0$ with $h_H=w\br{V_H}>B_\eta$, run Algorithm~\ref{alg:centroid-max-coverage} on the instance induced by $V_H$ with local parameters
+\[
+    \rho_H=\frac{B_\rho}{h_H},
+    \qquad
+    \eta_H=\frac{B_\eta}{h_H}.
+\]
+These parameters make the algorithm's local budgets equal to $B_\rho$ and $B_\eta$, respectively. Let $F_H$ be its returned supply-edge set, and set $F=F_0\cup\bigcup_{H\in\cH_0}F_H$.
+
+\begin{theorem}\label{thm:tree-hybrid-recursion}
+    Fix rational parameters $0<\rho<\eta<3\rho<1$. For integral demand weights on a supply tree, the hybrid algorithm returns an $\eta$-feasible supply-edge set $F$ satisfying
+    \[
+        c\br{F}\leq\Gamma_{\mathrm{H}}(\rho,\eta)\cdot\OPTdem{T}{\rho},
+    \]
+    where
+    \begin{equation}\label{eq:tree-hybrid-ratio}
+        \Gamma_{\mathrm{H}}(\rho,\eta)
+        =e+1+\ln\left(\frac{2\rho}{\eta-\rho}\right).
+    \end{equation}
+    For fixed $\rho$ and $\eta$, the algorithm runs in polynomial time.
+\end{theorem}
+\begin{proof}
+    Let $\delta=\eta-\rho$, $x=\ln(2\rho/\delta)$, $k=\lfloor x\rfloor$, and $s=x-k\in[0,1)$. Since $k\leq x$, we have $e^k\delta\leq2\rho$ and hence $\tau=\rho+e^k\delta\leq3\rho<1$. By Corollary~\ref{cor:tree-general-demand-bicriteria}, the normalization cut satisfies~\eqref{eq:tree-hybrid-normalization-cost}.
+
+    Every normalized component $H$ has excess demand above $B_\rho$ at most $\kappa\delta W\leq e^k\delta W$. Each centroid-coverage round reduces the excess of every child by a factor of at least $e$. Hence after at most $k$ rounds all components have excess at most $\delta W=B_\eta-B_\rho$ and are $\eta$-feasible. At each depth, the processed components are pairwise edge-disjoint, and restricting an optimal $B_\rho$-feasible cut of $T$ to them shows that the total cost charged at that depth is at most $\OPT_{B_\rho}(T)$. The centroid recursion therefore adds cost at most $k\OPT_{B_\rho}(T)$.
+
+    Combining this with~\eqref{eq:tree-hybrid-normalization-cost} gives
+    \[
+        c\br{F}\leq
+        \left(k+2+\frac{2\rho}{e^k\delta}\right)\OPT_{B_\rho}(T).
+    \]
+    Since $x=k+s$ and $e^k\delta=2\rho/e^s$, the coefficient is
+    \[
+        k+2+\frac{2\rho}{e^k\delta}
+        =k+2+e^s
+        =x+2+e^s-s
+        \leq x+e+1,
+    \]
+    where $e^s-s\leq e-1$ for $0\leq s<1$. This proves the claimed bound. Since all of the constants in this construction ultimately depend only on the fixed parameters $\rho$ and $\eta$, the algorithm runs in polynomial time.
+\end{proof}

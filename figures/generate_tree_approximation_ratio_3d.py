@@ -12,14 +12,34 @@ from collections.abc import Callable
 from pathlib import Path
 
 
+# Write the numeric PGFPlots input tables beside this script, independent of
+# the working directory used to run it.
 OUTPUT_DIR = Path(__file__).resolve().parent / "generated"
-RHO_MIN = 0.005
-RHO_MAX = 0.995
-RHO_SAMPLES = 101
-MAIN_T_SAMPLES = 512
-DIRECT_T_SAMPLES = 51
-RATIO_CAP = 12.0
 
+# Sample rho over a near-full interval, avoiding the singular endpoints 0 and
+# 1. Both endpoints are included in the mesh.
+RHO_MIN = 0.001
+RHO_MAX = 0.999
+
+# Number of equally spaced rho columns in each mesh. More samples make the
+# surface smoother horizontally, at the cost of larger data files/render time.
+RHO_SAMPLES = 256
+
+# Number of base samples in the main-bound region, logarithmically spaced in t
+# from 1e-5 to 0.5. Here eta = rho + (1-rho)*t; centroid coverage gives ratio
+# 1 at t=0.5, corresponding to eta=(1+rho)/2.
+MAIN_T_SAMPLES = 512
+
+# Include exact e^{-k} values where the standalone centroid depth changes.
+COVERAGE_EXPONENTIAL_LEVELS = range(1, 11)
+
+# Number of samples above the centroid unit-ratio threshold, from eta just
+# above (1+rho)/2 to nearly 1. This separate mesh is flat at ratio 1.
+UNIT_RATIO_T_SAMPLES = 51
+
+# Maximum displayed approximation ratio. Larger bounds are clipped to this
+# height; the narrow strip next to eta=rho is filled at this capped height.
+RATIO_CAP = 8.0
 
 def linspace(start: float, stop: float, count: int) -> list[float]:
     if count < 2:
@@ -27,29 +47,27 @@ def linspace(start: float, stop: float, count: int) -> list[float]:
     return [start + (stop - start) * i / (count - 1) for i in range(count)]
 
 
-def floor_log2(value: float) -> int:
-    """Return the mathematical floor, snapping floating-point exact powers."""
-    exponent = math.log2(value)
+def ceil_ln(value: float) -> int:
+    """Return ceil(ln(value)), snapping floating-point exact exponentials."""
+    exponent = math.log(value)
     nearest_integer = round(exponent)
     if abs(exponent - nearest_integer) <= 4 * math.ulp(exponent):
         exponent = float(nearest_integer)
-    return math.floor(exponent)
+    return math.ceil(exponent)
 
 
 def tree_ratio(rho: float, t: float) -> float:
-    """Evaluate the proved minimum bound at eta=rho+(1-rho)t, capped at 12."""
+    """Evaluate the best proved tree bound, capped at RATIO_CAP."""
     eta_minus_rho = (1.0 - rho) * t
     eta = rho + eta_minus_rho
     eta = min(eta, math.nextafter(1.0, 0.0))
 
     anchored_lp = 2.0 * eta / eta_minus_rho
-    recursive = floor_log2(1.0 / t) + 1
-    hybrid = (
-        4.0 * eta / (rho + 2.0 * eta_minus_rho)
-        + floor_log2((rho + 2.0 * eta_minus_rho) / eta_minus_rho)
-        + 1
-    )
-    return min(RATIO_CAP, anchored_lp, float(recursive), hybrid)
+    hybrid = math.inf
+    if rho < 1.0 / 3.0 and eta < 3.0 * rho:
+        hybrid = math.e + 1.0 + math.log(2.0 * rho / eta_minus_rho)
+    centroid_coverage = ceil_ln(1.0 / t)
+    return min(RATIO_CAP, anchored_lp, hybrid, centroid_coverage)
 
 
 def write_mesh(
@@ -83,11 +101,17 @@ def write_mesh(
 def main() -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     rho_values = linspace(RHO_MIN, RHO_MAX, RHO_SAMPLES)
+    main_t_values = {
+        1e-5 * 50000.0 ** (row / (MAIN_T_SAMPLES - 1))
+        for row in range(MAIN_T_SAMPLES)
+    }
+    main_t_values.update(math.exp(-level) for level in COVERAGE_EXPONENTIAL_LEVELS)
+    main_t_values = sorted(main_t_values)
 
     main_points = write_mesh(
         OUTPUT_DIR / "tree_approximation_ratio_3d_main.dat",
-        lambda row, _rho: 1e-5 * 50000.0 ** (row / (MAIN_T_SAMPLES - 1)),
-        MAIN_T_SAMPLES,
+        lambda row, _rho: main_t_values[row],
+        len(main_t_values),
         rho_values,
         tree_ratio,
     )
@@ -100,24 +124,24 @@ def main() -> None:
         lambda _rho, _t: RATIO_CAP,
     )
 
-    def direct_t(row: int, rho: float) -> float:
+    def unit_ratio_t(row: int, rho: float) -> float:
         # Match the 2D plot's threshold+0.0001 start for each fixed rho.
         first_t = 0.5 + 1e-4 / (1.0 - rho)
         last_t = 0.99999
-        return first_t + (last_t - first_t) * row / (DIRECT_T_SAMPLES - 1)
+        return first_t + (last_t - first_t) * row / (UNIT_RATIO_T_SAMPLES - 1)
 
-    direct_points = write_mesh(
+    unit_ratio_points = write_mesh(
         OUTPUT_DIR / "tree_approximation_ratio_3d_direct.dat",
-        direct_t,
-        DIRECT_T_SAMPLES,
+        unit_ratio_t,
+        UNIT_RATIO_T_SAMPLES,
         rho_values,
         lambda _rho, _t: 1.0,
     )
 
-    total_points = main_points + cap_points + direct_points
-    print(f"Main-bound mesh: {main_points:,} vertices ({RHO_SAMPLES} x {MAIN_T_SAMPLES})")
+    total_points = main_points + cap_points + unit_ratio_points
+    print(f"Main-bound mesh: {main_points:,} vertices ({RHO_SAMPLES} x {len(main_t_values)})")
     print(f"Capped boundary strip: {cap_points:,} vertices ({RHO_SAMPLES} x 2)")
-    print(f"Direct-DP region: {direct_points:,} vertices ({RHO_SAMPLES} x {DIRECT_T_SAMPLES})")
+    print(f"Centroid unit-ratio region: {unit_ratio_points:,} vertices ({RHO_SAMPLES} x {UNIT_RATIO_T_SAMPLES})")
     print(f"Total: {total_points:,} vertices; {total_points / 312:.2f}x the original 312-point mesh")
     print(f"Wrote coordinate tables to {OUTPUT_DIR}")
 

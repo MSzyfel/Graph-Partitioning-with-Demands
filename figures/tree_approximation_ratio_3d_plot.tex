@@ -1,6 +1,7 @@
+% !TeX program = lualatex
 \documentclass[border=2pt]{standalone}
-% From figures/: run `C:/Python313/python.exe generate_tree_approximation_ratio_3d.py`
-% once to calculate tables, then run `latexmk -g -lualatex -interaction=nonstopmode -halt-on-error -output-directory=generated tree_approximation_ratio_3d_plot.tex`.
+% From figures/: run `python generate_tree_approximation_ratio_3d.py` when the
+% surface data changes, then run `latexmk -lualatex -interaction=nonstopmode -halt-on-error -output-directory=generated tree_approximation_ratio_3d_plot.tex`.
 \usepackage{tikz}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
@@ -15,13 +16,13 @@
     ymin=0,
     ymax=1,
     zmin=0.8,
-    zmax=12,
+    zmax=8,
     xlabel={comparison parameter $\rho$},
     ylabel={feasibility parameter $\eta$},
     zlabel={tree approximation ratio $\Gamma_{\mathrm{tree}}(\rho,\eta)$},
     xtick={0,0.2,...,1},
     ytick={0,0.2,...,1},
-    ztick={1,2,...,12},
+    ztick={1,2,...,8},
     grid=major,
     grid style={draw=black!12},
     tick align=outside,
@@ -31,8 +32,8 @@
     zlabel style={font=\small},
     colorbar,
     colorbar style={
-      ylabel={displayed ratio (capped at 12)},
-      ytick={1,2,...,12},
+      ylabel={displayed ratio (capped at 8)},
+      ytick={1,2,...,8},
       tick label style={font=\small},
       label style={font=\small}
     },
@@ -40,18 +41,18 @@
     shader=flat,
     unbounded coords=jump,
     point meta min=1,
-    point meta max=12
+    point meta max=8
   ]
     % Values are calculated by generate_tree_approximation_ratio_3d.py.
-    % PGFPlots reads and renders the full 101-by-512 mesh from the table;
+    % PGFPlots reads and renders the full mesh, including exact e^{-k} rows,
     % this standalone source is compiled once to the cached PDF.
     \addplot3[
       surf,
       mesh/ordering=x varies,
-      mesh/rows=512,
-      mesh/cols=101,
+      mesh/rows=522,
+      mesh/cols=256,
       point meta=z,
-      opacity=0.65
+      opacity=0.35
     ] table[x=rho,y=eta,z=ratio] {generated/tree_approximation_ratio_3d_main.dat};
 
     % The narrow strip next to eta=rho is above the displayed cap.
@@ -59,18 +60,18 @@
       surf,
       mesh/ordering=x varies,
       mesh/rows=2,
-      mesh/cols=101,
+      mesh/cols=256,
       point meta=z,
-      opacity=0.65
+      opacity=0.35
     ] table[x=rho,y=eta,z=ratio] {generated/tree_approximation_ratio_3d_cap.dat};
-    % Strictly above eta=(1+rho)/2, the direct dynamic program gives ratio 1.
+    % Above eta=(1+rho)/2, centroid coverage guarantees ratio 1.
     \addplot3[
       surf,
       mesh/ordering=x varies,
       mesh/rows=51,
-      mesh/cols=101,
+      mesh/cols=256,
       point meta=z,
-      opacity=0.65
+      opacity=0.35
     ] table[x=rho,y=eta,z=ratio] {generated/tree_approximation_ratio_3d_direct.dat};
   \end{axis}
 \end{tikzpicture}

@@ -1,0 +1,19 @@
+\begin{algorithm}[tbp]
+    \DontPrintSemicolon
+    \caption{Hybrid LP--centroid recursion}\label{alg:hybrid-lp-centroid}
+    \textbf{Input} Supply tree $T=(V,E,c)$, demand graph $(V,D,w)$, and fixed rational parameters $0<\rho<\eta<3\rho<1$\;
+    \textbf{Output} An $\eta$-feasible supply-edge set $F\subseteq E$\;
+    \If{$W=0$}{
+        \textbf{return} $F=\emptyset$\;
+    }
+    Set $\delta\gets\eta-\rho$, $x\gets\ln(2\rho/\delta)$, and $k\gets\lfloor x\rfloor$\;
+    Set $\tau\gets\rho+e^k\delta$\;
+    Run the anchored-LP algorithm with feasibility target $\tau$. Let $F_0$ be the returned cut and let $\cH_0$ be the components of $T\setminus F_0$\;
+    Set $B_\rho\gets\rho W$, $B_\eta\gets\eta W$, and $F\gets F_0$\;
+    \ForEach{$H\in\cH_0$ with $w\br{V_H}>B_\eta$}{
+        Set $\rho_H\gets B_\rho/w\br{V_H}$ and $\eta_H\gets B_\eta/w\br{V_H}$\;
+        Run Algorithm~\ref{alg:centroid-max-coverage} on the instance induced by $V_H$ with parameters $\rho_H,\eta_H$, obtaining a supply-edge set $F_H$\;
+        $F\gets F\cup F_H$\;
+    }
+    \textbf{return} $F$\;
+\end{algorithm}

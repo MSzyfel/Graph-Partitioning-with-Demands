@@ -1,18 +1,18 @@
-\begin{algorithm}[H]
-    \caption{Recursive degree-budget partitioning}
+\begin{algorithm}[tbp]
+    \caption{Recursive weighted-budget partitioning}
     \textbf{Input} Supply tree $T=(V,E,c)$, demand graph $(V,D,w)$, and rational parameters $0<\rho<\eta<1$ and $\alpha\in(1/2,1)$\;
-    \textbf{Output} An $\eta$-feasible cut $F$\;
+    \textbf{Output} An $\eta$-feasible supply-edge set $F\subseteq E$\;
     \If{$W=0$}{
         \textbf{return} $F=\emptyset$\;
     }
-    Set $B\gets\rho W$, $F\gets\emptyset$, and initialize a queue $\cQ\gets\{T\}$\;
+    Set $B_\rho\gets\rho W$, $B_\eta\gets\eta W$, $F\gets\emptyset$, and initialize a queue $\cQ\gets\{T\}$\;
     \While{$\cQ\neq\emptyset$}{
         Remove a component $H$ from $\cQ$\;
-        \If{$w\br{V_H}>\eta W$}{
-            Set $\rho_H\gets B/w\br{V_H}$ and $\sigma_H\gets\alpha+(1-\alpha)\rho_H$\;
-            Run the direct degree-budget algorithm on the instance induced by $V_H$ with parameters $\rho_H,\sigma_H$; let $C_H$ be its returned cut\;
+        \If{$w\br{V_H}>B_\eta$}{
+            Set $\rho_H\gets B_\rho/w\br{V_H}$ and $\sigma_H\gets\alpha+(1-\alpha)\rho_H$\;
+            Run the direct weighted-budget procedure using the local weighted demand degrees on the instance induced by $V_H$ with parameters $\rho_H,\sigma_H$. Let $C_H$ be its returned cut\;
             $F\gets F\cup C_H$\;
-            \ForEach{component $H'$ of $H\setminus C_H$ with $w\br{V_{H'}}>\eta W$}{
+            \ForEach{component $H'$ of $H\setminus C_H$ with $w\br{V_{H'}}>B_\eta$}{
                 Add $H'$ to $\cQ$\;
             }
         }

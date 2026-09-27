@@ -1,21 +1,20 @@
-\begin{algorithm}[H]
+\begin{algorithm}[tbp]
     \caption{Top-down hierarchical clustering with demands}
     \textbf{Input} Graph $G$, parameter $\eta\in(1/2,1)$, and the subroutine satisfying~\eqref{eq:hc-gpd-subroutine}\;
     \textbf{Output} A clustering tree $\cT$\;
-    Initialize $\cT$ with root cluster $G$ and initialize a queue $\cQ\gets\{G\}$\;
-    \While{$\cQ\neq\emptyset$}{
-        Remove a cluster $H$ from $\cQ$ and set $r_H\gets w\br{V_H}$\;
-        \If{$H$ is nonsingleton}{
-            \If{$r_H=0$}{
+    Initialize $\cT$ with root cluster $G$\;
+    \textbf{Procedure} $\textsc{BuildHierarchy}(H)$\;
+    \Indp
+            \If{$w\br{V_H}=0$}{
                 Make the vertices of $H$ singleton children\;
             }
             \Else{
-                Apply the subroutine in~\eqref{eq:hc-gpd-subroutine} with $\rho=1/2$ and parameter $\eta$; make the components of $H\setminus C_H$ the children of $H$\;
+                Applyan $\gamma$-approximation algorithm for \textsc{Graph Partitioning with Demands} on $H$ with $\rho=1/2$ and $\eta$. Make the components of $H\setminus C_H$ the children of $H$\;
             }
-            \ForEach{nonsingleton child $K$ of $H$}{
-                Add $K$ to $\cQ$\;
+            \ForEach{child $K$ of $H$}{
+                $\textsc{BuildHierarchy}(K)$\;
             }
-        }
-    }
+    \Indm
+    $\textsc{BuildHierarchy}(G)$\;
     \textbf{return} $\cT$\;
 \end{algorithm}

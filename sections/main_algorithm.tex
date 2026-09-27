@@ -1,6 +1,8 @@
 ﻿\section{Generalized Conductance}
 
-We first solve \textsc{Generalized Conductance} on supply trees. We then reduce the problem on general graphs to \textsc{Min-Ratio Vertex Cut}.
+We start with results regarding the \textsc{Generalized Conductance} which are relatively simple and serve as a warm-up before tackling other partitioning problems. We start with the easiest case, when the supply graph is a tree. We show that in this case, an optimal cut is always obtained by removing a single supply edge. This immediately yields an obvious exact polynomial-time algorithm for supply trees, simply check all supply edges and choose the one whose removal minimizes the generalized conductance.
+
+Secondly, we treat the case of general graphs by reducing the problem to \textsc{Min-Ratio Vertex Cut}, which allows us to leverage existing approximation algorithms for that problem. This yields an $\bigo\br{\sqrt{\log n}}$-approximation algorithm for such instances.
 
 \subsection{Supply trees}
 
@@ -21,9 +23,9 @@ We first solve \textsc{Generalized Conductance} on supply trees. We then reduce 
   \begin{proof}
     We firstly observe that for any $A\subseteq V$, we have
     \[
-      w\br{A,V}=\sum_{f\in D\br{A}}w\br{f}.
+      w\br{A,V}=\sum_{f\in D\br{A,V}}w\br{f}.
     \]
-    For a demand edge $f$, define $I_A(f)=1$ if $f\in D\br{A}$ and $I_A(f)=0$ otherwise. For two demand edges $f,g\in D$, possibly with $f=g$, set
+    For a demand edge $f$, define $I_A(f)=1$ if $f\in D\br{A,V}$ and $I_A(f)=0$ otherwise. For two demand edges $f,g\in D$, possibly with $f=g$, set
     \[
       q_A(f,g)
       =I_A(f)\cdot I_{\bar A}(g)+I_A(g)\cdot I_{\bar A}(f).
@@ -42,7 +44,7 @@ We first solve \textsc{Generalized Conductance} on supply trees. We then reduce 
     Since $q_{S^*}(f,g)\in \brc{0,1,2}$ we distinguish three cases:
     \begin{enumerate}
       \item $q_{S^*}(f,g)=0$. Here the claim is immediate since the right-hand side of the lemma's inequality is nonnegative.
-      \item $q_{S^*}(f,g)=1$. After exchanging $f$ and $g$ if necessary, there is an endpoint $u$ of $f$ in $S^*$ and an endpoint $v$ of $g$ in $\bar{S}^*$. The unique $u$-$v$ path in $T$ contains an edge $e\in E^*$. Removing $e$ places $u$ and $v$ in opposite components. Therefore, either $f\in D\br{X_e}$ and $g\in D\br{\bar X_e}$, or $g\in D\br{X_e}$ and $f\in D\br{\bar X_e}$. In both cases $q_{X_e}(f,g)\geq 1$.
+      \item $q_{S^*}(f,g)=1$. After exchanging $f$ and $g$ if necessary, there is an endpoint $u$ of $f$ in $S^*$ and an endpoint $v$ of $g$ in $\bar{S}^*$. The unique $u$-$v$ path in $T$ contains an edge $e\in E^*$. Removing $e$ places $u$ and $v$ in opposite components. Therefore, either $f\in D\br{X_e,V}$ and $g\in D\br{\bar X_e,V}$, or $g\in D\br{X_e,V}$ and $f\in D\br{\bar X_e,V}$. In both cases $q_{X_e}(f,g)\geq 1$.
       \item $q_{S^*}(f,g)=2$. Then each of $f$ and $g$ has one endpoint in $S^*$ and one in $\bar{S}^*$. Let $P_f$ and $P_g$ be the tree paths joining the endpoints of $f$ and $g$, respectively. Choose $e_f\in P_f\cap E^*$ and $e_g\in P_g\cap E^*$.
     If $e_f\neq e_g$, then $f$ is incident to both components of $T\setminus e_f$, so $q_{X_{e_f}}(f,g)\geq1$ regardless of which component contains an endpoint of $g$. The symmetric argument gives $q_{X_{e_g}}(f,g)\geq1$. If $e_f=e_g$, both $f$ and $g$ are incident to both components of $T\setminus e_f$, and hence $q_{X_{e_f}}(f,g)=2$.
     \end{enumerate}
@@ -51,10 +53,10 @@ We first solve \textsc{Generalized Conductance} on supply trees. We then reduce 
 
     Applying~\eqref{eq:tree-symmetrized-demand-pairs} first to $S^*$ and then to each $X_e$ combined with the Lemma \ref{lemma:tree-demand-pair-cover} gives
     \begin{align*}
-      W^* &= \frac{1}{2}\cdot \sum_{f,g\in D}w\br{f}\cdot w\br{g}\cdot q_{S^*}(f,g) \\&\leq
+      W^* &= \frac{1}{2}\cdot \sum_{f,g\in D}w\br{f}\cdot w\br{g}\cdot q_{S^*}(f,g) \leq
       \frac{1}{2}\cdot \sum_{f,g\in D}w\br{f}\cdot w\br{g}\cdot \sum_{e\in E^*}q_{X_e}(f,g)
        \\&= \sum_{e\in E^*} \frac{1}{2}\cdot \sum_{f,g\in D}w\br{f}\cdot w\br{g}\cdot q_{X_e}(f,g)
-       \\&= \sum_{e\in E^*} W_e,
+       = \sum_{e\in E^*} W_e,
     \end{align*}
     as required.
   \end{proof}
@@ -62,10 +64,10 @@ We first solve \textsc{Generalized Conductance} on supply trees. We then reduce 
   Let $E^*_+=\brc{e\in E^*:W_e>0}$. The lemma and $W^*>0$ imply that $E^*_+$ is nonempty. Since all capacities are nonnegative,
   \begin{align*}
     \psi_{w,T}\br{S^*}
-    &=\frac{\sum_{e\in E^*}c\br{e}}{W^*}
-    \\&\geq\frac{\sum_{e\in E^*}c\br{e}}{\sum_{e\in E^*}W_e}
-    \\&\geq\frac{\sum_{e\in E^*_+}c\br{e}}{\sum_{e\in E^*_+}W_e}
-    \\&\geq\min_{e\in E^*_+}\frac{c\br{e}}{W_e}
+    =\frac{\sum_{e\in E^*}c\br{e}}{W^*}
+    \geq\frac{\sum_{e\in E^*}c\br{e}}{\sum_{e\in E^*}W_e}
+    \geq\frac{\sum_{e\in E^*_+}c\br{e}}{\sum_{e\in E^*_+}W_e}
+    \geq\min_{e\in E^*_+}\frac{c\br{e}}{W_e}
     =\min_{e\in E^*_+}\psi_{w,T}\br{X_e}.
   \end{align*}
   The first inequality uses Lemma~\ref{lemma:tree_edge_weight_sum}. The second discards the nonnegative capacities of edges with $W_e=0$, while the last inequality is due to the fact that a weighted average is at least its smallest term.
@@ -76,14 +78,14 @@ We first solve \textsc{Generalized Conductance} on supply trees. We then reduce 
 In order to tackle general supply graphs, we show that we can transform demands into weighted degrees, allowing us to compare generalized conductance with an objective having an additive denominator. Define the \emph{degree conductance} of a cut $S\subseteq V$ by
 \[
   \chi_{w,G}\br{S}
-  =\frac{c\br{S,\bar{S}}}{d_w\br{S}\cdot d_w\br{\bar{S}}}.
+  =\frac{c\br{S,\bar{S}}}{d_D\br{S}\cdot d_D\br{\bar{S}}}.
 \]
 For every cut of finite value, Equation~\eqref{eq:demand-degree-identity} gives $
-  w\br{S,V}\leq d_w\br{S}\leq 2w\br{S,V}$ and consequently
+  w\br{S,V}\leq d_D\br{S}\leq 2w\br{S,V}$ and consequently
 \begin{align*}
   \frac{1}{4}\cdot \psi_{w,G}\br{S} =
   \frac{c\br{S,\bar{S}}}{4\cdot w\br{S,V}\cdot w\br{\bar{S},V}}\leq
-  \frac{c\br{S,\bar{S}}}{d_w\br{S}\cdot d_w\br{\bar{S}}}=\chi_{w,G}\br{S}\leq
+  \frac{c\br{S,\bar{S}}}{d_D\br{S}\cdot d_D\br{\bar{S}}}=\chi_{w,G}\br{S}\leq
   \frac{c\br{S,\bar{S}}}{w\br{S,V}\cdot w\br{\bar{S},V}}=
   \psi_{w,G}\br{S}.
 \end{align*}
@@ -109,21 +111,17 @@ Feige, Hajiaghayi, and Lee give a polynomial-time $\bigo\br{\sqrt{\log |V_H|}}$-
   Define the vertex functions by
   \[
     \pi_1\br{v}=\infty,
-    \quad \pi_2\br{v}=d_w\br{v}
-    \qquad\text{for }v\in V,
-  \]
-  and
-  \[
+    \quad \pi_2\br{v}=d_D\br{v}
+    \qquad\text{for }v\in V, \qquad
     \pi_1\br{x_e}=c\br{e},
     \quad \pi_2\br{x_e}=0
     \qquad\text{for }e\in E.
   \]
-  Infinite cost declares the original vertices undeletable.
 
   Every cut $S\subsetneq V$ induces a vertex cut in $H$: put the original vertices of $S$ in $A$, those of $\bar{S}$ in $B$, each subdivision vertex of an edge internal to one side in the same part, and the subdivision vertices of $\delta_E(S)$ in $Z$. The resulting value is
   \[
     \alpha_{\pi_1,\pi_2}\br{A,B,Z}
-    =\frac{c\br{S,\bar{S}}}{d_w\br{S}\cdot d_w\br{\bar{S}}}
+    =\frac{c\br{S,\bar{S}}}{d_D\br{S}\cdot d_D\br{\bar{S}}}
     =\chi_{w,G}\br{S}.
   \]
 
@@ -131,9 +129,9 @@ Feige, Hajiaghayi, and Lee give a polynomial-time $\bigo\br{\sqrt{\log |V_H|}}$-
   \[
     \pi_1\br{Z}\geq c\br{S,\bar{S}},
     \qquad
-    \pi_2\br{A\cup Z}=d_w\br{S},
+    \pi_2\br{A\cup Z}=d_D\br{S},
     \qquad
-    \pi_2\br{B\cup Z}=d_w\br{\bar{S}},
+    \pi_2\br{B\cup Z}=d_D\br{\bar{S}},
   \]
   and hence $\alpha_{\pi_1,\pi_2}\br{A,B,Z}\geq\chi_{w,G}\br{S}$.
   The reduction therefore preserves the optimum of $\chi_{w,G}$, and a vertex-cut solution can be converted without increasing its value.

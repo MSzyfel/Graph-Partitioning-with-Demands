@@ -357,7 +357,7 @@ unknown.  We handle this by a standard doubling argument.
   Using the guess $\hat K$, we have
   $\OPT_{\hat K}(G')\le \psi\le \OPT_{\hat K}(G')$,\footnote{More precisely:
   since $K^*\le\hat K$, the optimum $S^*$ is feasible for $\OPT_{\hat K}(G')$,
-  giving $\OPT_{\hat K}(G')\le h(S^*)=\psi$; the other inequality holds because
+  giving $\OPT_{\hat K}(G')\le h(S^*)=\psi$. The other inequality holds because
   every feasible cut for $\hat K$ has $w_G(S,V)\le\hat K$ and has ratio $\ge\psi$.
   Hence $\OPT_{\hat K}(G')=\psi$.} so the algorithm returns a cut $S$ with
   \[
@@ -400,7 +400,7 @@ $O(\log W_{\mathrm{tot}})$ values of $\hat K$ and return the cut with smallest $
   \]
   The first inequality uses Theorem~\ref{thm:racke}(i).
 
-  Polynomial runtime: Räcke decomposition runs in polynomial time; iterating over
+  Polynomial runtime: Räcke decomposition runs in polynomial time. Iterating over
   $O(\log W_{\mathrm{tot}})=O(\log(n\cdot c_{\max}))=\text{poly}(n)$ values of $\hat K$
   and scanning $O(n)$ tree edges each time is polynomial.
 \end{proof}
