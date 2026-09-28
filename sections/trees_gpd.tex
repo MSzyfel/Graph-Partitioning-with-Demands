@@ -132,7 +132,7 @@ The anchored-LP rounding procedure for the bicriteria guarantee is as follows.
 \input{algorithms/anchored_lp_rounding.tex}
 
 \begin{corollary}\label{cor:tree-general-demand-bicriteria}
-    Let $0<\rho<\eta<1$. For arbitrary pair demands on a supply tree, there is a polynomial-time algorithm that returns an $\eta$-feasible supply-edge set $F\subseteq E$ satisfying
+    Let $0<\rho<\eta<1$. For arbitrary pair demands on a supply tree, there is a polynomial-time algorithm that returns an $\eta$-feasible supply edge set $F\subseteq E$ satisfying
     \[
         c(F)\leq\Gamma_{\mathrm{LP}}(\rho,\eta)\cdot \OPTdem{T}{\rho}.
     \]
@@ -489,16 +489,17 @@ We now show yet another approach to handling oversized tree components using sub
             Every budget $b\geq \OPT_{MC,B_K}\br{K}$ is successful and the approximation returns coverage at least $(1-1/e)\cdot q_K$. Thus the search returns $b\leq \OPT_{MC,B_K}\br{K}$. It uses $O(\log(C_K+1))$ calls, which is polynomial in the size of the input.
         \end{proof}
 
+        For each guess $Q$, the algorithm applies this routine to every $K\in\mathcal K_Q$ with $w\br{V_K}>B_\rho$, skips $Q$ if any full quota is infeasible, and minimizes $c(Q)+\sum_Kc_K(A_K)$. Components without vertices in $\mathcal L_H$ are left for recursion. Figure \ref{fig:three-centroid-coverage} illustrates a solution built for one example guess $Q$.
         \input{figures/three_centroid_coverage.tex}
-        For each guess $Q$, the algorithm applies this routine to every $K\in\mathcal K_Q$ with $w\br{V_K}>B_\rho$, skips $Q$ if any full quota is infeasible, and minimizes $c(Q)+\sum_Kc_K(A_K)$. Components without vertices in $\mathcal L_H$ are left for recursion.
 
         \input{algorithms/centroid_max_coverage.tex}
 
         \begin{theorem}\label{thm:tree-centroid-max-coverage}
-            Fix rational constants $0<\rho<\eta<1$. For arbitrary integral demand weights on a supply tree, Algorithm~\ref{alg:centroid-max-coverage} runs in polynomial time and returns an $\eta$-feasible supply-edge set $F\subseteq E$ with
+            Fix rational constants $0<\rho<\eta<1$. For arbitrary integral demand weights on a supply tree, Algorithm~\ref{alg:centroid-max-coverage} runs in polynomial time and returns an $\eta$-feasible supply edge set $F\subseteq E$ with
             \[
                 c(F)\leq\Gamma_{\mathrm{MC}}(\rho,\eta)\cdot\OPTdem{T}{\rho},
             \]
+            where
             \begin{equation}\label{eq:tree-centroid-max-coverage-ratio}
                 \Gamma_{\mathrm{MC}}(\rho,\eta)
                 =\left\lceil\ln\left(\frac{1-\rho}{\eta-\rho}\right)\right\rceil.

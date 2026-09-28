@@ -20,11 +20,11 @@ Apply Corollary~\ref{cor:tree-general-demand-bicriteria} with feasibility target
     \left(2+\frac{2\rho}{e^k\delta}\right)\cdot\OPT_{B_\rho}(T).
 \end{equation}
 
-For each $H\in\cH_0$ with $h_H=w\br{V_H}>B_\eta$, run Algorithm~\ref{alg:centroid-max-coverage} on the instance induced by $V_H$ with local parameters
+For each $H\in\cH_0$ with $w\br{V_H}>B_\eta$, run Algorithm~\ref{alg:centroid-max-coverage} on the instance induced by $V_H$ with local parameters
 \[
-    \rho_H=\frac{B_\rho}{h_H},
+    \rho_H=\frac{B_\rho}{w\br{V_H}},
     \qquad
-    \eta_H=\frac{B_\eta}{h_H}.
+    \eta_H=\frac{B_\eta}{w\br{V_H}}.
 \]
 These parameters make the algorithm's local budgets equal to $B_\rho$ and $B_\eta$, respectively. Let $F_H$ be its returned supply-edge set, and set $F=F_0\cup\bigcup_{H\in\cH_0}F_H$.
 
@@ -43,7 +43,7 @@ These parameters make the algorithm's local budgets equal to $B_\rho$ and $B_\et
 \begin{proof}
     Let $\delta=\eta-\rho$, $x=\ln(2\rho/\delta)$, $k=\lfloor x\rfloor$, and $s=x-k\in[0,1)$. Since $k\leq x$, we have $e^k\delta\leq2\rho$ and hence $\tau=\rho+e^k\delta\leq3\rho<1$. By Corollary~\ref{cor:tree-general-demand-bicriteria}, the normalization cut satisfies~\eqref{eq:tree-hybrid-normalization-cost}.
 
-    Every normalized component $H$ has excess demand above $B_\rho$ at most $\kappa\delta W\leq e^k\delta W$. Each centroid-coverage round reduces the excess of every child by a factor of at least $e$. Hence after at most $k$ rounds all components have excess at most $\delta W=B_\eta-B_\rho$ and are $\eta$-feasible. At each depth, the processed components are pairwise edge-disjoint, and restricting an optimal $B_\rho$-feasible cut of $T$ to them shows that the total cost charged at that depth is at most $\OPT_{B_\rho}(T)$. The centroid recursion therefore adds cost at most $k\OPT_{B_\rho}(T)$.
+    By the LP normalization, $w\br{V_H}\leq\tau W=(\rho+e^k\delta)W$, so every normalized component's excess above $B_\rho$ is at most $e^k\delta W$. Each centroid-coverage round reduces the excess of every child by a factor of at least $e$. Hence after at most $k$ rounds all components have excess at most $\delta W=B_\eta-B_\rho$ and are $\eta$-feasible. At each depth, the processed components are pairwise edge-disjoint, and restricting an optimal $B_\rho$-feasible cut of $T$ to them shows that the total cost charged at that depth is at most $\OPT_{B_\rho}(T)$. The centroid recursion therefore adds cost at most $k\OPT_{B_\rho}(T)$.
 
     Combining this with~\eqref{eq:tree-hybrid-normalization-cost} gives
     \[

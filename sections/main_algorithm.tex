@@ -1,6 +1,6 @@
 ﻿\section{Generalized Conductance}
 
-We start with results regarding the \textsc{Generalized Conductance} which are relatively simple and serve as a warm-up before tackling other partitioning problems. We start with the easiest case, when the supply graph is a tree. We show that in this case, an optimal cut is always obtained by removing a single supply edge. This immediately yields an obvious exact polynomial-time algorithm for supply trees, simply check all supply edges and choose the one whose removal minimizes the generalized conductance.
+We start with results regarding the \textsc{Generalized Conductance} which are relatively simple and serve as a warm-up before tackling other partitioning problems. We begin with the easiest setup, when the supply graph is a tree. We show that in this case, an optimal cut is always obtained by removing a single supply edge. This immediately yields an obvious exact polynomial-time algorithm for supply trees, simply check all supply edges and choose the one whose removal minimizes the generalized conductance.
 
 Secondly, we treat the case of general graphs by reducing the problem to \textsc{Min-Ratio Vertex Cut}, which allows us to leverage existing approximation algorithms for that problem. This yields an $\bigo\br{\sqrt{\log n}}$-approximation algorithm for such instances.
 
@@ -44,11 +44,11 @@ Secondly, we treat the case of general graphs by reducing the problem to \textsc
     Since $q_{S^*}(f,g)\in \brc{0,1,2}$ we distinguish three cases:
     \begin{enumerate}
       \item $q_{S^*}(f,g)=0$. Here the claim is immediate since the right-hand side of the lemma's inequality is nonnegative.
-      \item $q_{S^*}(f,g)=1$. After exchanging $f$ and $g$ if necessary, there is an endpoint $u$ of $f$ in $S^*$ and an endpoint $v$ of $g$ in $\bar{S}^*$. The unique $u$-$v$ path in $T$ contains an edge $e\in E^*$. Removing $e$ places $u$ and $v$ in opposite components. Therefore, either $f\in D\br{X_e,V}$ and $g\in D\br{\bar X_e,V}$, or $g\in D\br{X_e,V}$ and $f\in D\br{\bar X_e,V}$. In both cases $q_{X_e}(f,g)\geq 1$.
-      \item $q_{S^*}(f,g)=2$. Then each of $f$ and $g$ has one endpoint in $S^*$ and one in $\bar{S}^*$. Let $P_f$ and $P_g$ be the tree paths joining the endpoints of $f$ and $g$, respectively. Choose $e_f\in P_f\cap E^*$ and $e_g\in P_g\cap E^*$.
-    If $e_f\neq e_g$, then $f$ is incident to both components of $T\setminus e_f$, so $q_{X_{e_f}}(f,g)\geq1$ regardless of which component contains an endpoint of $g$. The symmetric argument gives $q_{X_{e_g}}(f,g)\geq1$. If $e_f=e_g$, both $f$ and $g$ are incident to both components of $T\setminus e_f$, and hence $q_{X_{e_f}}(f,g)=2$.
+      \item $q_{S^*}(f,g)=1$. After exchanging $f$ and $g$ if necessary, there is an endpoint $u$ of $f$ in $S^*$ and an endpoint $v$ of $g$ in $\bar{S}^*$. The unique $u$-$v$ path in $T$ contains an edge $e\in E^*$. Removing $e$ places $u$ and $v$ in opposite components. Therefore, either $f\in D\br{X_e,V}$ and $g\in D\br{\bar X_e,V}$, or $g\in D\br{X_e,V}$ and $f\in D\br{\bar X_e,V}$. In either case $q_{X_e}(f,g)\geq 1$.
+      \item $q_{S^*}(f,g)=2$. Then each of $f$ and $g$ has one endpoint in $S^*$ and one in $\bar{S}^*$. Let $P_f$ and $P_g$ be the paths in $T$ joining the endpoints of $f$ and $g$, respectively. Choose $e_f\in P_f\cap E^*$ and $e_g\in P_g\cap E^*$.
+    If $e_f\neq e_g$, then $f$ is incident to both components of $T\setminus e_f$, so $q_{X_{e_f}}(f,g)\geq1$ regardless of which component contains an endpoint of $g$. The symmetric argument gives $q_{X_{e_g}}(f,g)\geq1$, and consequently $q_{X_{e_f}}(f,g)+q_{X_{e_g}}(f,g)\geq2$. If $e_f=e_g$, both $f$ and $g$ are incident to both components of $T\setminus e_f$, and hence $q_{X_{e_f}}(f,g)=2$.
     \end{enumerate}
-    And the lemma follows.
+    The lemma follows.
     \end{proof}
 
     Applying~\eqref{eq:tree-symmetrized-demand-pairs} first to $S^*$ and then to each $X_e$ combined with the Lemma \ref{lemma:tree-demand-pair-cover} gives
@@ -61,21 +61,21 @@ Secondly, we treat the case of general graphs by reducing the problem to \textsc
     as required.
   \end{proof}
 
-  Let $E^*_+=\brc{e\in E^*:W_e>0}$. The lemma and $W^*>0$ imply that $E^*_+$ is nonempty. Since all capacities are nonnegative,
+  Let $E^*_+=\brc{e\in E^*:W_e>0}$. The above lemma and $W^*>0$ imply that $E^*_+$ is nonempty. Since all capacities are nonnegative,
   \begin{align*}
     \psi_{w,T}\br{S^*}
     =\frac{\sum_{e\in E^*}c\br{e}}{W^*}
     \geq\frac{\sum_{e\in E^*}c\br{e}}{\sum_{e\in E^*}W_e}
     \geq\frac{\sum_{e\in E^*_+}c\br{e}}{\sum_{e\in E^*_+}W_e}
-    \geq\min_{e\in E^*_+}\frac{c\br{e}}{W_e}
-    =\min_{e\in E^*_+}\psi_{w,T}\br{X_e}.
+    \geq\min_{e\in E^*_+}\brc{\frac{c\br{e}}{W_e}}
+    =\min_{e\in E^*_+}\brc{\psi_{w,T}\br{X_e}}.
   \end{align*}
   The first inequality uses Lemma~\ref{lemma:tree_edge_weight_sum}. The second discards the nonnegative capacities of edges with $W_e=0$, while the last inequality is due to the fact that a weighted average is at least its smallest term.
 \end{proof}
 
 \subsection{General graphs}
 
-In order to tackle general supply graphs, we show that we can transform demands into weighted degrees, allowing us to compare generalized conductance with an objective having an additive denominator. Define the \emph{degree conductance} of a cut $S\subseteq V$ by
+In order to tackle general supply graphs, we show that we can transform demands into weighted degrees, allowing us to approximate generalized conductance using the well-known \textsc{Min-Ratio Vertex Cut} problem. Define the \emph{degree conductance} of a cut $S\subseteq V$ by
 \[
   \chi_{w,G}\br{S}
   =\frac{c\br{S,\bar{S}}}{d_D\br{S}\cdot d_D\br{\bar{S}}}.
@@ -104,9 +104,9 @@ Feige, Hajiaghayi, and Lee give a polynomial-time $\bigo\br{\sqrt{\log |V_H|}}$-
 \begin{proof}
   Given $G=(V,E,D,c,w)$, construct a graph $H$ by subdividing every supply edge $e=uv$ with a new vertex $x_e$. Thus
   \[
-    V_H=V\cup\brc{x_e:e\in E}
+    V_H=V\cup\brc{x_e\colon e\in E}
     \qquad\text{and}\qquad
-    E_H=\brc{ux_e,x_ev:e=uv\in E}.
+    E_H=\brc{ux_e,x_ev\colon e=uv\in E}.
   \]
   Define the vertex functions by
   \[
@@ -139,10 +139,11 @@ Feige, Hajiaghayi, and Lee give a polynomial-time $\bigo\br{\sqrt{\log |V_H|}}$-
   Apply the approximation algorithm of Feige, Hajiaghayi, and Lee and convert its output to a cut $S$ of $G$. Since $|V_H|=n+|E|=\bigo\br{n^2}$, the resulting cut satisfies
   \[
     \chi_{w,G}\br{S}
-    \leq\bigo\br{\sqrt{\log n}}\cdot \min_{U\subsetneq V}\chi_{w,G}\br{U}.
+    \leq\bigo\br{\sqrt{\log n}}\cdot \min_{U\subsetneq V}\brc{\chi_{w,G}\br{U}}.
   \]
   We get that
   \[
-    \psi_{w,G}\br{S}\leq 4\cdot \chi_{w,G}\br{S}\leq \bigo\br{\sqrt{\log n}}\cdot \min_{U\subsetneq V}\chi_{w,G}\br{U}\leq\bigo\br{\sqrt{\log n}}\cdot \OPT
+    \psi_{w,G}\br{S}\leq 4\cdot \chi_{w,G}\br{S}\leq \bigo\br{\sqrt{\log n}}\cdot \min_{U\subsetneq V}\brc{\chi_{w,G}\br{U}}\leq\bigo\br{\sqrt{\log n}}\cdot \OPT
   \]
+  This completes the proof of the theorem.
 \end{proof}
