@@ -190,12 +190,12 @@ As an immediate corollary we get:
     In particular, for any fixed $0<\rho<\eta<1$, the value $\Lambda$ is a constant, and the above bounds are $\bigo\br{\sqrt{\log n}}$ and $\bigo\br{1}$, respectively.
 \end{corollary}
 \subsection{Hierarchical clustering with demands}
-\newcommand{\Dasgupta}{\tilde{c}}
+% \newcommand{\Dasgupta}{\tilde{c}}
 
 In this problem one is given a graph $G=(V,E,D,c,w)$ with a supply-cost function $c\colon E\to\mathbb{N}$ and a demand function $w\colon D\to\mathbb{N}$. A \emph{clustering tree} $\cT$ is a rooted tree whose vertices are subgraphs of $G$ called \emph{clusters}, representing a laminar family of subgraphs of $G$, i.e., for any two clusters $V_H$ and $V_{H'}$, either $V_H\subseteq V_{H'}$, $V_{H'}\subseteq V_H$, or $V_H\cap V_{H'}=\emptyset$. We require the clustering tree to have the entire graph $G$ as its root cluster and each leaf to be of singletons, i.e., a cluster with a single vertex of $G$. Therefore, there is a one-to-one correspondence between the leaves of $\cT$ and the vertices of $G$.
 For $u,v\in V$, let $\operatorname{lca}_{\cT}(u,v)$ denote their lowest common ancestor in $\cT$. For an internal node $H$, let $C_H$ be the supply edges whose endpoints lie in distinct child clusters of $H$. The objective is to minimize the total cost of separating the vertices according to the demand function, which is captured by the following function:
 \begin{equation}\label{eq:Dasgupta}
-    \Dasgupta\br{\cT}
+    c\br{\cT}
     =\sum_{H\in\cT}
         w\br{V_H}\cdot c\br{C_H}
     =\sum_{uv\in E}c\br{uv}\cdot
@@ -229,7 +229,7 @@ and every component $K$ of $H\setminus C_H$ satisfies $
     \]
     By integrating the contribution of every supply edge over the levels below the demand of its least common ancestor, we obtain
     \begin{equation}\label{eq:hc-level-sum}
-        \Dasgupta\br{\cT^*}
+        c\br{\cT^*}
         =\sum_{q=0}^{W}c\br{E_q^*}.
     \end{equation}
 
@@ -252,13 +252,13 @@ and every component $K$ of $H\setminus C_H$ satisfies $
 
     For a fixed $t$, the clusters satisfying $s_H<t\leq r_H$ have pairwise disjoint induced edge sets. Indeed, if one such cluster were a proper descendant of another, it would lie in a nonsingleton child of the ancestor and would have demand at most the ancestor's value $s_H<t$, contradicting $t\leq r_H$ for the descendant. Summing~\eqref{eq:hc-cluster-charge} over all algorithmic clusters and using~\eqref{eq:hc-level-sum}, we conclude that
     \begin{align*}
-        \Dasgupta\br{\cT}
+        c\br{\cT}
         \leq\frac{\gamma(\eta)}{1-\eta}\cdot
             \sum_{t=0}^{W}c\br{E_{\fl{t/2}}^*}
             \leq\frac{2\cdot \gamma(\eta)}{1-\eta}\cdot
             \sum_{t=0}^{W}c\br{E_{t}^*}
         \leq\frac{2\cdot\gamma(\eta)}{1-\eta}\cdot
-            \Dasgupta\br{\cT^*}.
+            c\br{\cT^*}.
     \end{align*}
     where the first inequality uses~\eqref{eq:hc-cluster-charge} and the disjointness argument, the second inequality is a simple reindexing of the sum, and the third inequality uses~\eqref{eq:hc-level-sum}.
 \end{proof}
@@ -271,8 +271,8 @@ and every component $K$ of $H\setminus C_H$ satisfies $
 \end{proof}
 
 We finally establish the inapproximability result for \textsc{Hierarchical Clustering with Demands} on supply stars.
-\begin{theorem}
-    \textsc{Hierarchical Clustering with Demands} cannot be approximated within a factor of $1.0748$,
+\begin{theorem}\label{thm:hc-star-hardness}
+    \textsc{Hierarchical Clustering with Demands} is UGC-hard to approximate within a factor of $1.0748$,
     even when the supply graph is a star and all capacities and demands are uniform.
 \end{theorem}
 \begin{proof}

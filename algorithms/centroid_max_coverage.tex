@@ -1,37 +1,37 @@
 \begin{algorithm}[tbp]
     \DontPrintSemicolon
-    \caption{Centroid recursion with core coverage}\label{alg:centroid-max-coverage}
+    \caption{Two-separator recursion with core coverage}\label{alg:centroid-max-coverage}
     \textbf{Input} Supply tree $T=(V,E,c)$, demand graph $(V,D,w)$, fixed rational parameters $0<\rho<\eta<1$\;
     \textbf{Output} An $\eta$-feasible supply-edge set $F\subseteq E$\;
     Set $B_\rho\gets\rho W$ and $B_\eta\gets\eta W$\;
-    \textbf{Procedure} $\textsc{CentroidMaxCoverage}(H)$\;
+    \textbf{Procedure} $\textsc{SeparatorMaxCoverage}(H)$\;
     \Indp
         \If{$w\br{V_H}\leq B_\eta$}{
             \textbf{return} $\emptyset$\;
         }
-        Choose a weighted centroid $r$ of $H$ for weights $\mu_H$ defined in the text. For every component $X$ of $H-r$ with $w(X)>w\br{V_H}/3$, choose a weighted centroid $x_X$ of $X$ using the restricted weights $\mu_H$, thus obtaining a set $\mathcal{L}_H$\;
-        Choose a path $P_H$, such that $\mathcal{L}_H\subseteq V(P_H)$ and $|V(P_H)|\geq 3$ if $|V_H|\geq 3$. Add arbitrary unused vertices of $P_H$ to $\mathcal{L}_H$ until $|\mathcal{L}_H|=3$\;
-        Let $S_H=V_H[\mathcal{L}_H]$\;
+        Run $\textsc{Separator}(H, w, 3)$, obtaining $\mathcal{L}_H$ with $|\mathcal{L}_H|\leq2$\;
+        Let $P_H=H[\mathcal{L}_H]$\;
         Initialize $\cC_H\gets\emptyset$\;
-        \ForEach{$Q\subseteq E(S_H)$ with $|Q|\leq2$}{
-            Let $\mathcal{K}_Q=\brc{K\in H\setminus Q: V_K\cap \mathcal{L}_H\neq\emptyset}$ and let $\mathcal{K}_Q^+=\{K\in\mathcal{K}_Q:w\br{V_K}>B_\rho\}$\;
+        \ForEach{$Q\in\{\emptyset\}\cup\{\{e\}\colon e\in E(P_H)\}$}{
+            Let $\mathcal{K}_Q=\brc{K\text{ component of }H\setminus Q\colon V_K\cap\mathcal{L}_H\neq\emptyset}$ and let $\mathcal{K}_Q^+=\{K\in\mathcal{K}_Q\colon w\br{V_K}>B_\rho\}$\;
             \ForEach{$K\in\mathcal{K}_Q^+$}{
-                Let $B_K=V_K[S_H]$ and set $q_K\gets w\br{V_K}-B_\rho$\;
+                Let $\mathcal{L}_K=V_K\cap\mathcal{L}_H$, $S_K=K[\mathcal{L}_K]$, and $q_K\gets w\br{V_K}-B_\rho$\;
             }
-            \If{$f_K(E(K)\setminus E(B_K))\geq q_K$ for every $K\in\mathcal{K}_Q^+$}{
-                \ForEach{$K\in\mathcal{K}_Q^+$}{
-                    $A_K\gets\textsc{CoreQuotaCover}(f_K,c_K,q_K)$\;
-                }
-                Let $C_Q\gets Q\cup\bigcup_{K\in\mathcal{K}_Q^+}C_K(A_K)$ and add $C_Q$ to $\cC_H$\;
+            \If{$\exists K\in\mathcal{K}_Q^+\colon w\br{V_{S_K}}>B_\rho$}{
+                \textbf{continue}\;
             }
+            \ForEach{$K\in\mathcal{K}_Q^+$}{
+                $A_K\gets\textsc{CoreQuotaCover}(f_K,c_K,q_K)$\;
+            }
+            Let $C_Q\gets Q\cup\bigcup_{K\in\mathcal{K}_Q^+}C_K(A_K)$ and add $C_Q$ to $\cC_H$\;
         }
-        Let $C_H\in\arg\min_{C\in\cC_H}\brc{c(C)}$\;
+        Let $C_H\in\argmin_{C\in\cC_H}\brc{c(C)}$\;
         Set $F_H\gets C_H$\;
-        \ForEach{component $H'$ of $H\setminus C_H$ with $w(V_{H'})>B_\eta$}{
-            $F_H\gets F_H\cup\textsc{CentroidMaxCoverage}(H')$\;
+        \ForEach{$H'$ of $H\setminus C_H$}{
+            $F_H\gets F_H\cup\textsc{SeparatorMaxCoverage}(H')$\;
         }
         \textbf{return} $F_H$\;
     \Indm
-    $F\gets\textsc{CentroidMaxCoverage}(T)$\;
+    $F\gets\textsc{SeparatorMaxCoverage}(T)$\;
     \textbf{return} $F$\;
 \end{algorithm}

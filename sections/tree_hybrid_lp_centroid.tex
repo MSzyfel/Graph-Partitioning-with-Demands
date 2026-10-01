@@ -1,4 +1,4 @@
-\subsection{A Hybrid LP-Centroid Recursion Approach}
+\subsection{A Hybrid LP-Separator Recursion Approach}
 
 Assume $0<\rho<\eta<3\rho<1$, and put
 \[
@@ -8,7 +8,7 @@ Assume $0<\rho<\eta<3\rho<1$, and put
     \qquad
     k=\left\lfloor x\right\rfloor.
 \]
-The hybrid first applies anchored-LP rounding with target $\tau=\rho+e^k\delta$, then runs centroid recursion on the resulting components. Since $e^k\delta\leq2\rho$, the LP target satisfies $\tau\leq3\rho<1$, and at most $k$ centroid rounds suffice.
+The hybrid first applies anchored-LP rounding with target $\tau=\rho+e^k\delta$, then runs separator recursion on the resulting components. Since $e^k\delta\leq2\rho$, the LP target satisfies $\tau\leq3\rho<1$, and at most $k$ separator rounds suffice.
 
 \subsubsection{The hybrid procedure}
 \input{algorithms/hybrid_lp_centroid.tex}
@@ -43,7 +43,7 @@ These parameters make the algorithm's local budgets equal to $B_\rho$ and $B_\et
 \begin{proof}
     Let $\delta=\eta-\rho$, $x=\ln(2\rho/\delta)$, $k=\lfloor x\rfloor$, and $s=x-k\in[0,1)$. Since $k\leq x$, we have $e^k\delta\leq2\rho$ and hence $\tau=\rho+e^k\delta\leq3\rho<1$. By Corollary~\ref{cor:tree-general-demand-bicriteria}, the normalization cut satisfies~\eqref{eq:tree-hybrid-normalization-cost}.
 
-    By the LP normalization, $w\br{V_H}\leq\tau W=(\rho+e^k\delta)W$, so every normalized component's excess above $B_\rho$ is at most $e^k\delta W$. Each centroid-coverage round reduces the excess of every child by a factor of at least $e$. Hence after at most $k$ rounds all components have excess at most $\delta W=B_\eta-B_\rho$ and are $\eta$-feasible. At each depth, the processed components are pairwise edge-disjoint, and restricting an optimal $B_\rho$-feasible cut of $T$ to them shows that the total cost charged at that depth is at most $\OPT_{B_\rho}(T)$. The centroid recursion therefore adds cost at most $k\OPT_{B_\rho}(T)$.
+    By the LP normalization, $w\br{V_H}\leq\tau W=(\rho+e^k\delta)W$, so every normalized component's excess above $B_\rho$ is at most $e^k\delta W$. Each separator-coverage round reduces the excess of every child by a factor of at least $e$. Hence after at most $k$ rounds all components have excess at most $\delta W=B_\eta-B_\rho$ and are $\eta$-feasible. At each depth, the processed components are pairwise edge-disjoint, and restricting an optimal $B_\rho$-feasible cut of $T$ to them shows that the total cost charged at that depth is at most $\OPT_{B_\rho}(T)$. The separator recursion therefore adds cost at most $k\OPT_{B_\rho}(T)$.
 
     Combining this with~\eqref{eq:tree-hybrid-normalization-cost} gives
     \[

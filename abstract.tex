@@ -1,14 +1,11 @@
 \begin{abstract}
-  We study various graph partitioning problems under a general demand model. In each such task, we are given a graph with two edge sets $G=(V,E,D, c,w)$, where $E$ are the supply and $D$ are the demand edges, with a capacity function $c\colon E\to \mathbb{N}$ and a demand function $w\colon D\to \mathbb{N}$, and the goal is to separate the graph into parts while achieving some kind of balance, according to the cost measure.
-  Our main focus is the problem of finding a cut $(S, \bar{S})$ minimizing the \emph{generalized conductance}
-  \[
-  \psi_w( S ) = \frac{c( \delta_E\br{S})}{w( S, V )\cdot w( \bar{S}, V )}.
-  \]
-  where $w( S, V )=w( S )+w(\delta_D\br{S})$. We call the problem of minimizing $\psi_w( S )$ the \textsc{Generalized Conductance} problem. We give an $\mathcal{O}(\sqrt{\log n})$-approximation algorithm for general graphs by reducing the problem to the \textsc{Min-Ratio Vertex Cut} and we show that for supply trees, an optimum is attained by a cut that separates one edge, yielding a polynomial-time algorithm.
-  
-  Moreover, we leverage this result to obtain an $\mathcal{O}(\sqrt{\log n})$-bicriteria approximation for \textsc{Graph Partitioning with Demands}, where the goal is to find a minimum-cost subset of edges $C$ such that for every component $H$ of $G\setminus C$, $w( H )\leq \rho\cdot w( V )$. This, in turn, yields an $\mathcal{O}(\sqrt{\log n})$-approximation for \textsc{Hierarchical Clustering with Demands}, the problem of finding a hierarchy of cuts that partitions the graph into increasingly refined clusters. For supply trees, these guarantees can be improved to small constant factors, using LP-based techniques or a greedy recurson combined with the $1-1/e$-approximation for \textsc{Budgeted Maximum Coverage}.
+  We study various graph partitioning tasks subject to general partitioning demands. In \textsc{Graph Partitioning with Demands} (GPD), the goal is to delete supply edges of minimum total cost so that each remaining component contains at most a prescribed fraction of the total demand. In \textsc{Hierarchical Clustering with Demands} (HCD), the goal is to build a hierarchy of clusters, charging each supply edge by the demand in the smallest cluster containing its endpoints.
 
-  To complement these results, we prove that \textsc{Generalized Conductance} and \textsc{Graph Partitioning with Demands} are both hard to approximate within any constant factor under the Small-Set Expansion Hypothesis, even for bipartite multiplicative demands. Moreover, even for support star instances, beating a factor of $2$ for the latter task is UGC-hard.
+  Our main general-graph results are approximation algorithms for GPD and HCD. For every fixed $0<\rho<\eta<1$, we give a polynomial-time bicriteria algorithm for GPD whose components have demand at most $\eta \cdot W$ and whose cost is at most $\mathcal{O}_{\rho,\eta}(\sqrt{\log n})$ times the optimum cost for threshold $\rho$. This algorithm can be then recursively used to obtain an $\mathcal{O}(\sqrt{\log n})$-approximation for HCD. The algorithm for GPD itself iteratively uses a crucial subproblem called \textsc{Generalized Conductance} (GC), which is a new generalization of the unit-demand sparsest cut.
+  The latter is then reducible to the well-known \textsc{Min-Ratio Vertex Cut} problem. 
+
+  On supply trees, we show that GC can be solved exactly in polynomial time, which leads to improved algorithms for GPD and HCD on trees. We also give bicriteria algorithms for GPD based on anchored-LP rounding and separator recursion, as well as a single-criterion $(4+\epsilon)$-approximation in $n^{O(1/\rho)}$ time. The GPD algorithms yield a $\frac{4e}{e-1}$-approximation for HCD on trees.
+  We prove SSEH-hardness for GPD with bipartite multiplicative demands and for HCD even with complete demands. On stars, GPD is NP-hard to approximate within $\sqrt{2}-\epsilon$ and UGC-hard within $2-\epsilon$, while HCD is UGC-hard to approximate within $1.0748$.
 \end{abstract}
 
 \noindent\textbf{Keywords:} Graph partitioning with demands, Generalized conductance, Sparsest cut, Hierarchical clustering, Approximation algorithms.

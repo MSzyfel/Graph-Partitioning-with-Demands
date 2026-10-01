@@ -7,8 +7,9 @@
 \]
 where $\bar{S}=V\setminus S$ and $\delta_E\br{S}=\brc{e\in E\colon \spr{e\cap S}=1}$.
 
-This problem has been extensively studied in the literature \cite{MulticommodityMaxFlowMinCutTheoremsAndTheirUseInDesigningApproximationAlgorithms} resulting in remarkable connections to topics including metric spaces \cite{TheGeometryOfGraphsAndSomeOfItsAlgorithmicApplications,AnOlogkApproximateMinCutMaxFlowTheoremAndApproximationAlgorithm,OnLipschitzEmbeddingOfFiniteMetricSpacesInHilbertSpace,EuclideanDistortionAndTheSparsestCut} and spectral graph theory \cite{ALowerBoundForTheSmallestEigenvalueOfTheLaplacian,Lambda1IsoperimetricInequalitiesForGraphsAndSuperconcentrators,SpectralPartitioningWorksPlanarGraphsAndFiniteElementMeshes} with the state-of-the-art approximation algorithm due to Arora, Rao, and Vazirani \cite{ExpanderFlowsGeometricEmbeddingsAndGraphPartitioning}, achieving ratio of $\bigo\br{\sqrt{\log n}}$, where $n=\spr{V}$. Moreover, it also has a number of applications as an essential primitive in other graph algorithms, where it serves as a building block for various divide-and-conquer strategies. This includes \textsc{Graph Partitioning} where the goal is to find a subset of edges of minimum capacity such that all of the connected components resulting from deleting these edges are of small size \cite{MulticommodityMaxFlowMinCutTheoremsAndTheirUseInDesigningApproximationAlgorithms}. Another example is the problem of \textsc{Hierarchical Clustering} with similarity measures, where the goal is to hierarchically cluster data points, so that to minimize the Dasgupta's clustering objective \cite{ACostFunctionForSimilarityBasedHierarchicalClustering,ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics,HierarchicalClusteringObjectiveFunctionsAndAlgorithms}. Intuitively, this objective promotes clusters with both children of balanced size as well as low capacity of edges cut between them. In particular, given an $\alpha$-approximation algorithm for the \textsc{Sparsest Cut}, one can obtain an $\bigo\br{\alpha}$-approximation algorithm for both of the aforementioned problems.
+This problem has been extensively studied in the literature \cite{MulticommodityMaxFlowMinCutTheoremsAndTheirUseInDesigningApproximationAlgorithms} resulting in remarkable connections to topics including metric spaces \cite{TheGeometryOfGraphsAndSomeOfItsAlgorithmicApplications,AnOlogkApproximateMinCutMaxFlowTheoremAndApproximationAlgorithm,OnLipschitzEmbeddingOfFiniteMetricSpacesInHilbertSpace,EuclideanDistortionAndTheSparsestCut} and spectral graph theory \cite{ALowerBoundForTheSmallestEigenvalueOfTheLaplacian,Lambda1IsoperimetricInequalitiesForGraphsAndSuperconcentrators,SpectralPartitioningWorksPlanarGraphsAndFiniteElementMeshes} with the state-of-the-art approximation algorithm due to Arora, Rao, and Vazirani \cite{ExpanderFlowsGeometricEmbeddingsAndGraphPartitioning}, achieving ratio of $\bigo\br{\sqrt{\log n}}$, where $n=\spr{V}$. Moreover, it also has a number of applications as an essential primitive in other graph algorithms, where it serves as a building block for various divide-and-conquer strategies. This includes \textsc{Graph Partitioning} where the goal is to find a subset of edges of minimum capacity such that all of the connected components resulting from deleting these edges are of small size \cite{MulticommodityMaxFlowMinCutTheoremsAndTheirUseInDesigningApproximationAlgorithms}. Another example is the problem of \textsc{Hierarchical Clustering} with similarity measures, where the goal is to hierarchically cluster data points, so that to minimize the Dasgupta's clustering objective \cite{ACostFunctionForSimilarityBasedHierarchicalClustering,ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics,HierarchicalClusteringObjectiveFunctionsAndAlgorithms}. Intuitively, this objective promotes clusters with both children of balanced size as well as low capacity of edges cut between them. In particular, given an $\alpha$-approximation algorithm for the \textsc{Sparsest Cut}, one can obtain an $\bigo\br{\alpha}$-approximation algorithm for both of the aforementioned problems. These two applications of \textsc{Sparsest Cut} are of particular interest to us. Our main topic of interest is whether one could establish similar relationships for the case when both \textsc{Graph Partitioning} and \textsc{Hierarchical Clustering} are subject to demands over pairs of vertices. These demands are a more general measure of size of the components. Our question then naturally extends to asking what particular variant or generalization of a \textsc{Sparsest Cut}-related problem would be appropriate for our needs.
 
+In order to answer these questions we firstly want to undestand why does \textsc{Sparsest Cut} allow approximating various balanced partitioning tasks in the first place.
 This usefulness of \textsc{Sparsest Cut} can be attributed to the following observation, implicitly exploited by many algorithms \cite{MulticommodityMaxFlowMinCutTheoremsAndTheirUseInDesigningApproximationAlgorithms,AnOlogkApproximateMinCutMaxFlowTheoremAndApproximationAlgorithm,ACostFunctionForSimilarityBasedHierarchicalClustering,ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics,HierarchicalClusteringObjectiveFunctionsAndAlgorithms,ImprovedApproximationAlgorithmsForMinimumWeightVertexSeparators}.
 The quantity $\spr{S}\cdot \spr{\bar{S}}$ can be interpreted in two separate ways. First, imagine $D=\binom{V}{2}$ to be a set of demand edges where each edge has a unit demand. Then, $\spr{S}\cdot \spr{\bar{S}}$ is the total demand crossing the cut. This interpretation is useful for the sake of developing approximation algorithms for the \textsc{Sparsest Cut} itself, since a weak duality between \textsc{Sparsest Cut} and multicommodity flow type problems has been established \cite{MulticommodityMaxFlowMinCutTheoremsAndTheirUseInDesigningApproximationAlgorithms,AnOlogkApproximateMinCutMaxFlowTheoremAndApproximationAlgorithm}. Secondly, $\spr{S}\cdot \spr{\bar{S}}$ can be observed to be large when both partitions are of roughly equal size. This comes useful when developing divide-and-conquer algorithms for other graph problems \cite{MulticommodityMaxFlowMinCutTheoremsAndTheirUseInDesigningApproximationAlgorithms,ExpanderFlowsGeometricEmbeddingsAndGraphPartitioning,ImprovedApproximationAlgorithmsForMinimumWeightVertexSeparators}, since the product in the denominator becomes a measure of the balance of the cut.
 
@@ -28,99 +29,52 @@ where $D\br{S, V}=\brc{e\in D\colon e\cap S\neq \emptyset}$\footnote{Note, that 
 \psi_w\br{S} = \frac{c\br{\delta_E\br{S}}}{w\br{S, V}\cdot w\br{\bar{S}, V}},
 \]
 where $w\br{S,V}=w\br{S}+w\br{\delta_D\br{S}}$.
-The problem of $\psi_w$ minimization will be called the \textsc{Generalized Conductance}.
-%To the best of our knowledge, this objective has not been studied in the literature yet, and it is not known whether it admits an algorithm with a non-trivial approximation ratio.
-We initiate the study of this problem by providing an $\bigo\br{\sqrt{\log n}}$-approximation algorithm for general graphs, an exact polynomial-time algorithm for supply trees, and affirm that the choice of this parameter allows effective use in applications such as \textsc{Graph Partitioning with Demands} and \textsc{Hierarchical Clustering with Demands}. The two latter problems are the analogues of classical graph partitioning and hierarchical clustering tasks under the general demand model.
+We call the problem of minimizing $\psi_w$ \textsc{Generalized Conductance} (GC). The goal of this work is to examine, whether this new notion can be used effectively to design approximation algorithms for graph partitioning tasks with general demands.
+
+We now define also the problems we are interested in more formally.
+For $U\subseteq V$, let $w(U)$ denote the total weight of demand pairs with both endpoints in $U$, and set $W=w(V)$. In \textsc{Graph Partitioning with Demands} (GPD), given a target $\rho\in(0,1)$, the goal is to delete a minimum-cost set of supply edges so that every resulting component $H$ satisfies $w(V_H)\leq\rho W$. In \textsc{Hierarchical Clustering with Demands} (HCD), the goal is to find a rooted tree $\mathcal T$ with leaves $V$ minimizing
+\[
+  \sum_{uv\in E} c(uv)\cdot w\br{V_{\operatorname{lca}_{\mathcal T}(u,v)}}.
+\]
+Here $V_x$ denotes the leaves below node $x$, so each supply edge is charged by the demand inside the smallest cluster containing its endpoints.
+
 
 \subsection{Our results and techniques}
 
-Our work consists of numerous contributions. First, we provide an approximation algorithm for the \textsc{Generalized Conductance} problem on general graphs and show that it can be solved in polynomial time on supply trees. Second, we demonstrate how these results can be leveraged for applications such as \textsc{Graph Partitioning with Demands} and \textsc{Hierarchical Clustering with Demands}. Third, we obtain stronger guarantees for both aforementioned problems when the supply graph is a tree. Fourth, we establish hardness results for \textsc{Graph Partitioning with Demands} and \textsc{Generalized Conductance}.
+Let $n=|V|$. We abbreviate the Small-Set Expansion Hypothesis and Unique Games Conjecture by SSEH and UGC. For GPD at target $\rho$, a bicriteria $(A,\eta)$-approximation returns a solution of cost at most $A\cdot\OPT_\rho$ whose components each have demand at most $\eta W$, where $0<\rho<\eta<1$ are fixed. Table~\ref{tab:main-results} collects all our the guarantees and lower bounds.
 
-Due to this we structure our work into four main parts. The first part, focuses on establishing basic intuitions and results on the \textsc{Generalized Conductance}. 
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{p{0.20\linewidth}p{0.13\linewidth}p{0.57\linewidth}}
+\hline
+Problem & Supply graph & Guarantees and lower bounds \\
+\hline
+\textsc{GPD} & General & $O_{\rho,\eta}(\sqrt{\log n})$-approximation (\hyperref[cor:graph-partitioning-approximation]{Corollary~\ref*{cor:graph-partitioning-approximation}}). Under SSEH, no constant-factor bicriteria approximation exists for fixed $\rho<\eta$, even for bipartite multiplicative demands (\hyperref[thm:sse-gpd-bicriteria-hardness]{Theorem~\ref*{thm:sse-gpd-bicriteria-hardness}}). \\
+\textsc{GPD} & Tree & Bicriteria cost factor $\min\left\{\frac{2\eta}{\eta-\rho},\left\lceil\ln\left(\frac{1-\rho}{\eta-\rho}\right)\right\rceil,4+\varepsilon\right\}$ (\hyperref[cor:tree-best-guarantee]{Corollary~\ref*{cor:tree-best-guarantee}}). A single-criterion $(4+\varepsilon)$-approximation runs in $n^{O(1/\rho)}$ time (\hyperref[thm:tree-centroid-full-quota]{Theorem~\ref*{thm:tree-centroid-full-quota}}). On stars, approximation within $\sqrt{2}-\xi$ is NP-hard and within $2-\xi$ is UGC-hard (\hyperref[cor:tree-gpd-hardness]{Corollary~\ref*{cor:tree-gpd-hardness}}). \\
+\textsc{HCD} & General & $O(\sqrt{\log n})$-approximation (\hyperref[cor:hc-general-bounds]{Corollary~\ref*{cor:hc-general-bounds}}). Under SSEH, no constant-factor approximation exists, even with complete demands (\hyperref[thm:sse-hcd-hardness]{Theorem~\ref*{thm:sse-hcd-hardness}}). \\
+\textsc{HCD} & Tree & $\frac{4e}{e-1}$-approximation for arbitrary pair demands (\hyperref[cor:tree-hc-improved]{Corollary~\ref*{cor:tree-hc-improved}}). Under UGC, approximation within $1.0748$ is hard, even on stars with uniform capacities and demands (\hyperref[thm:hc-star-hardness]{Theorem~\ref*{thm:hc-star-hardness}}). \\
+\textsc{GC} & General & $O(\sqrt{\log n})$-approximation via Min-Ratio Vertex Cut (\hyperref[thm:generalized-conductance-approx]{Theorem~\ref*{thm:generalized-conductance-approx}}). Under SSEH, no constant-factor approximation exists, even for bipartite multiplicative demands (\hyperref[cor:sse-generalized-conductance-hardness]{Corollary~\ref*{cor:sse-generalized-conductance-hardness}}). \\
+\textsc{GC} & Tree & Exact polynomial-time algorithm. An optimum is attained by deleting one supply edge (\hyperref[thm:tree-generalized-conductance]{Theorem~\ref*{thm:tree-generalized-conductance}}). \\
+\hline
+\end{tabular}
+\caption{Approximation guarantees and hardness results. Here $\xi,\varepsilon>0$, and $\rho,\eta$ are fixed constants.}
+\label{tab:main-results}
+\end{table}
 
-\begin{corollary}
-  There is a polynomial-time $\bigo(\sqrt{\log n})$-approximation algorithm for \textsc{Generalized Conductance} on general graphs and an exact polynomial-time algorithm on supply trees.
-\end{corollary}
+The first technical section, after preliminaries, studies the \textsc{Generalized Conductance}, which is our main tool for tackling the problem on general graphs. We show through a simple reduction, that with a small, constant-factor approximation loss, we can encode this problems into an instance of \textsc{Min-Ratio Vertex Cut}. This gives an $\mathcal{O}(\sqrt{\log n})$ approximation, using the work of of Feige, Hajiaghayi, and Lee \cite{ImprovedApproximationAlgorithmsForMinimumWeightVertexSeparators} and show that the subproblem, we chose for our applications can itself be approximated efficiently. Moreover, 
+we show that on supply trees, some optimal cut separates exactly one supply edge. Thus, checking every cut corresponding to some removed edge gives an exact polynomial-time algorithm. 
 
-For the general-graph result, we assign every vertex its weighted demand degree $d_D(v)$ and we reformulate the problem in order to achieve balance with respect to this new measure. Then, we show that this objective becomes an instance of \textsc{Min-Ratio Vertex Cut}, to which we apply the $\bigo\br{\sqrt{\log n}}$-approximation algorithm of Feige, Hajiaghayi, and Lee \cite{ImprovedApproximationAlgorithmsForMinimumWeightVertexSeparators}. We also show that on supply trees an optimal generalized-conductance cut is always attained by removing a single edge.
+Then, we move to our main algorithmic results for general graphs. We show how to turn a $\gamma$-approximation for GC into a bicriteria algorithm for every fixed $0<\rho<\eta<1$. In the initial parameter range, the algorithm repeatedly cuts the remaining component while its demand exceeds $\eta W$, removes the side with smaller internal demand, and continues on the other side. Such a procedure is relatively standard in many balanced partitioning applications, however in our case the generalized demand function requires more careful lower bounding in order to establish the result. Importantly, this reduction only works for a limited range of parameters. In order to extend our result to the remaining parameter values, we apply this procedure recursively, until all components have appropriate size. Via a careful analysis we then show that the depth of this recursion only depends on choice of $\rho$ and $\eta$, which gives an $\mathcal{O}_{\rho,\eta}(\gamma)$ cost factor for all fixed $\rho<\eta$. Combining it with the GC approximation yields an $\mathcal{O}_{\rho,\eta}(\sqrt{\log n})$-approximation for GPD.
+After that, we apply the general-graph GPD algorithm to construct an HCD solution. To do so, we recursively apply the approximation algorithm for GPD, to further refine clusters, until all of them become singletons. This can be then shown to lose only a constant factor in the approximation with respect to GPD, yielding an $\mathcal{O}(\sqrt{\log n})$-approximation for HCD. We also prove, that the problem cannot be approximated within a factor of $1.0748$, unless UGC fails.
 
-In the second part of the paper we move ourselves towards applications of the \textsc{Generalized Conductance}. We argue that, given constants $0< \rho< \eta <1$ and a $\gamma$-approximation algorithm for the \textsc{Generalized Conductance}, its iterative application partitions the graph into $\eta$-feasible components (with demand at most $\eta\cdot W$) while paying only\footnote{The subscripts indicate which constants are hidden in the $\bigo$-notation.} $\bigo_{\rho, \eta}\br{\gamma}$ times more than it is required to partition the graph into components with demand at most $\rho\cdot W$. We also show how to apply the latter result to obtain an $O\br{\gamma}$-approximation for \textsc{Hierarchical Clustering with Demands} as well.
-This gives the following corollaries.
+Then, we move towards the case when the supply graph is a tree. Although a constant-factor bicriteria approximation for both GPD and HCD on trees are implied be the previously mentioned reductions, the explicit constants guarantees provided by the algorithms turn out to be quite large. Firstly, we ask whether perhaps a  polynomial time algorithm for GPD on trees exists. We provide evidence that this might not be a case, since we give an inapproximability of $2-\xi$ for any $\xi>0$ on stars (\hyperref[cor:tree-gpd-hardness]{Corollary~\ref*{cor:tree-gpd-hardness}}). Thus our aim becomes to develop approximation algorithms with explicit and reasonably small constant factors.
+In order to adress this issue we turn to techniques independent of the \textsc{Generalized Conductance}. Firstly, we give an
+anchored-LP relaxation with a relatively simple and elegant threshold rounding gives a bicriteria factor $2\eta/(\eta-\rho)$. Then, we give a combinatorial algorithm based on using small vertex separators in order to recursively partition the graph, which gives a bicriteria factor of $\left\lceil\ln\left((1-\rho)/(\eta-\rho)\right)\right\rceil$. En route we use a $(1-1/e)$-approximation for \textsc{Maximum Coverage} to reduce excess demand at each recursion level by a factor of $e$. A slight modification of this procedure which uses the \textsc{Partial Multicut}, instead of the \textsc{Maximum Coverage} gives a true single-criterion $(4+\varepsilon)$-approximation in $n^{O(1/\rho)}$ time. Applying this GPD algorithm in the top-down HCD construction also gives a $4e/(e-1)$-approximation for HCD on trees.
 
-\begin{corollary}
-  For any $0< \rho< \eta <1$, there is a polynomial-time bicriteria $\bigo_{\rho, \eta}(\sqrt{\log n})$-approximation algorithm for \textsc{Graph Partitioning with Demands} on general graphs as well as a bicriteria $\bigo_{\rho, \eta}(1)$-approximation algorithm for supply trees.
-\end{corollary}
-
-\begin{corollary}
-  There is a polynomial-time $\bigo(\sqrt{\log n})$-approximation algorithm for \textsc{Hierarchical Clustering with Demands} on general graphs. On supply trees with arbitrary demand-edge weights, there is a polynomial-time $\bigo\br{1}$-approximation.
-\end{corollary}
-
-  We also give the following inapproximability result for \textsc{Hierarchical Clustering with Demands}.
-\begin{corollary}
-  \textsc{Hierarchical Clustering with Demands} cannot be approximated within a factor of $1.0748$, even when the supply graph is a star and all capacities and demands are uniform.
-\end{corollary}
-
-  The \textsc{Graph Partitioning with Demands} problem on supply trees is particularly interesting, the third part of the paper is dedicated to this special case.
-  We show that, under the Unique Games Conjecture, it is hard to approximate this variant within $2-\epsilon$, even on support-star instances. Then, we give three complementary bicriteria constant-factor algorithms.
- Firstly, we use an LP-based algorithm that uses an anchored-LP relaxation and a rounding procedure which projects the tree onto a line and then applies threshold rounding to obtain an approximation of 
-\[
-  \Gamma_{\mathrm{LP}}(\rho,\eta)=\frac{2\eta}{\eta-\rho}.
-\]
-
-Then, we show an entirely different approach based on a centroid recursion. In this method, we recursively select three centroids, so that after removing them, each component has demand at most $W/3$. We then use a well-known $(1-1/e)$-approximation algorithm for \textsc{Budgeted Maximum Coverage} to remove as much demand from the the centroids as possible. Applying this procedure recursively yields an approximation factor of
-\[
-  \Gamma_{\mathrm{MC}}(\rho,\eta)
-  =\left\lceil\ln\left(\frac{1-\rho}{\eta-\rho}\right)\right\rceil.
-\]
-We also show a hybrid approach for $0<\rho<\eta<3\rho<1$, which firstly applies the anchored-LP rounding to decrease the demand of each component slightly and then uses the centroid recursion to further reduce the demand in the components. Its approximation factor is
-\[
-  \Gamma_{\mathrm{H}}(\rho,\eta)=e+1+\ln\left(\frac{2\rho}{\eta-\rho}\right).
-\]
-Taking the best applicable bound gives the following combined guarantee.
-
-\begin{corollary}
-  Fix rational constants $0<\rho<\eta<1$. On supply trees, there is a polynomial-time algorithm returning an $\eta$-feasible solution of cost at most $\Gamma_{\mathrm{tree}}(\rho,\eta)\cdot\OPT_{\rho}(T)$, where
-  \[
-    \Gamma_{\mathrm{tree}}(\rho,\eta)
-    =
-    \begin{cases}
-        \displaystyle\min\left\{
-          \Gamma_{\mathrm{LP}}(\rho,\eta),\ \Gamma_{\mathrm{H}}(\rho,\eta),\
-          \Gamma_{\mathrm{MC}}(\rho,\eta)
-        \right\},
-        &0<\rho<\eta<3\rho<1,\\[2mm]
-      \displaystyle\min\left\{
-        \Gamma_{\mathrm{LP}}(\rho,\eta),\ \Gamma_{\mathrm{MC}}(\rho,\eta)
-      \right\},
-        &\text{otherwise}.
-    \end{cases}
-  \]
-  where,
-  \[
-    \begin{aligned}
-    \Gamma_{\mathrm{LP}}(\rho,\eta)=\frac{2\eta}{\eta-\rho},
-    \qquad
-    \Gamma_{\mathrm{H}}(\rho,\eta)=e+1+\ln\left(\frac{2\rho}{\eta-\rho}\right),
-    \qquad
-          \Gamma_{\mathrm{MC}}(\rho,\eta)
-            =\left\lceil\ln\left(\frac{1-\rho}{\eta-\rho}\right)\right\rceil.
-    \end{aligned}
-  \]
-\end{corollary}
-
-The combined guarantee also yields a $\frac{4e}{e-1}$-approximation for \textsc{Hierarchical Clustering with Demands} on supply trees.
-
-\begin{corollary}
-  There exists a polynomial-time $\frac{4e}{e-1}$-approximation algorithm for \textsc{Hierarchical Clustering with Demands} on supply trees.
-\end{corollary}
-
-The last part of the paper focuses on the complementary hardness results for our problems on general supply graphs. We give a reduction from the Small-Set Expansion implying the following corollaries.
-\begin{corollary}
-  Assuming the Small-Set Expansion Hypothesis, for every fixed $0<\rho<\eta<1$ and every constant $A>0$, there is no polynomial-time $(A,\eta)$-bicriteria approximation for \textsc{Graph Partitioning with Demands}.
-\end{corollary}
-\begin{corollary}
-  Assuming the Small-Set Expansion Hypothesis, for every constant $A>0$, there is no polynomial-time $A$-approximation for \textsc{Generalized Conductance}.
-\end{corollary}
+Finally, we establish hardness of approximation for all three problems of interest, to match our algorithmic results. We reduce from the SSEH and show that none of the problems can be approximated within any constant factor (even bicriteria, for the case of GPD).
 
 % Figure \ref{fig:reductions} outlines the algorithmic reductions that appear in this work.
 

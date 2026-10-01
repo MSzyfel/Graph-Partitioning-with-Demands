@@ -3,9 +3,9 @@
 For the special case of the \textsc{Graph Partitioning with Demands} problem where the supply graph is a tree, one could ask whether the problem is polynomial-time or pseudo-polynomial-time solvable.
 We answer this question in the negative below by showing inapproximability (and also strong NP-hardness) even on stars.
 We then ask whether one can improve the approximation guarantee given by Theorem \ref{thm:gpd-extension}, since the constant provided by that theorem is relatively large.
-We give three polynomial-time bicriteria approaches for arbitrary demand weights: anchored-LP rounding, centroid recursion based on submodular maximum coverage, and a hybrid combining anchored-LP normalization with centroid recursion. Each approach has an approximation guarantee depending on $\rho$ and $\eta$, so the best method can vary across parameter ranges.
-Taking the best of their guarantees gives approximation ratios depending on $\rho$ and $\eta$ that improve on the constant provided by Theorem~\ref{thm:gpd-extension}. As a corollary, we obtain a polynomial-time $\frac{4e}{e-1}$-approximation for \textsc{Hierarchical Clustering with Demands} on trees.
-
+We give two polynomial-time bicriteria approaches for arbitrary demand weights: anchored-LP rounding and separator recursion based on submodular maximum coverage. We also give a non-bicriteria separator algorithm whose polynomial degree depends on $1/\rho$.
+Taking the best of these guarantees gives approximation ratios depending on $\rho$ and $\eta$ that improve on the constant provided by Theorem~\ref{thm:gpd-extension}. As a corollary, we obtain a polynomial-time $\frac{4e}{e-1}$-approximation for \textsc{Hierarchical Clustering with Demands} on trees.
+We now show a combinatorial algorithm for \textsc{Graph Partitioning with Demands} on trees. The idea is to find a smalls-sized set of vertices whose removal leads to components with relatively low demand. Then, the new goal of the algorithm becomes to remove a large enough amount of demand from each vertex of the separator. To do this end, we use a well-known subproblem called \textsc{Maximum Coverage}.
 We write $\OPT_{B_\rho}(T)=\OPTdem{T}{\rho}$ for the minimum cost of a partition whose components have internal demand at most $B_\rho$.
 
 \subsection{Hardness on stars}
@@ -134,9 +134,8 @@ The anchored-LP rounding procedure for the bicriteria guarantee is as follows.
 \begin{corollary}\label{cor:tree-general-demand-bicriteria}
     Let $0<\rho<\eta<1$. For arbitrary pair demands on a supply tree, there is a polynomial-time algorithm that returns an $\eta$-feasible supply edge set $F\subseteq E$ satisfying
     \[
-        c(F)\leq\Gamma_{\mathrm{LP}}(\rho,\eta)\cdot \OPTdem{T}{\rho}.
+        c(F)\leq\frac{2\eta}{\eta-\rho}\cdot \OPTdem{T}{\rho}.
     \]
-    where $\Gamma_{\mathrm{LP}}(\rho,\eta)=\frac{2\eta}{\eta-\rho}$.
 \end{corollary}
 \begin{proof}
     Solve~\eqref{lp:tree-anchored} and apply Theorem~\ref{thm:tree-anchored-rounding} with $
@@ -147,8 +146,7 @@ The anchored-LP rounding procedure for the bicriteria guarantee is as follows.
     By Lemma~\ref{lem:tree-anchored-relaxation}, the rounded edge set has cost
     \[
         c(F)\leq\frac{1}{R}\cdot \operatorname{LP}_{B_\rho}(T)
-        \leq\frac{2\eta}{\eta-\rho}\cdot \OPTdem{T}{\rho}
-        =\Gamma_{\mathrm{LP}}(\rho,\eta)\cdot \OPTdem{T}{\rho},
+        \leq\frac{2\eta}{\eta-\rho}\cdot \OPTdem{T}{\rho},
     \]
     and every component has internal demand at most $B_\eta$.
 \end{proof}
@@ -432,168 +430,192 @@ For each induced instance, write $\OPT_{B_\rho}(H)$ for its minimum cut cost sub
 
 \fi
 
-\subsection{Centroid Recursion via Submodular Coverage}
+\subsection{Separator Recursion via Maximum Coverage}
 
-We now show yet another approach to handling oversized tree components using submodular coverage. To do so, we first select three centroids in such way so that every component left after removing these centroids has demand at most a third of the total demand of the original component. Each of these vertices belongs to some component in the optimal solution, and therefore we guess which of them are grouped together, and if needed we also guess which edges separate these components from one another. Removal of these edges separates the graph into few pieces and for each of them we wish to find a smallest cost cut that makes the centroid belong to a component of demand at most $B_\rho$. It turns out, that this subproblem is in fact an instance of the \textsc{Set Cover} problem, which we can solve with bicriteria approximation ratio guarantee $\br{1-1/e, 1}$, by a $1-1/e$-approximation algorithm for the \textsc{Maximum Budgeted Coverage}. Then, we recursively partition all of the components which get created in using this algorithm until each component is of size at most $B_{\eta}$
+We now show a combinatorial algorithm for \textsc{Graph Partitioning with Demands} on trees. The idea is to find a smalls-sized set of vertices whose removal leads to components with relatively low demand. Then, the new goal of the algorithm becomes to remove a large enough amount of demand from each vertex of the separator. To this end, we employ a well-known subproblem called \textsc{Maximum Coverage}, which will allow us to find relatively low cost edge set whose removal separates roughly the required amount of demand from each separator vertex.
 
-\subsubsection{The separator}
-        Let $H$ be a component and define $\mu_H(v)=d_{w,H}(v)/2$, where $d_{w,H}(v)$ is the weighted degree of $v$ in $D[V_H]$. Then $\sum_{v\in V_H}\mu_H(v)=w\br{V_H}$, and for every $X\subseteq V_H$,
+For a component $H$ define $\mu_H(v)=d_{w,H}(v)/2$, where $d_{w,H}(v)$ is the weighted degree of $v$ in $D[V_H]$. Then, for every $X\subseteq V_H$,
+\[
+    \mu_H(X)=w(X)+\frac12 w(X,V_H\setminus X),
+\]
+so $w(X)\leq\mu_H(X)$.
+
+\begin{lemma}\label{lem:tree-separator}
+    Fix an integer $t\geq2$. There is a polynomial-time procedure $\textsc{Separator}(H, w, t)$ that returns a separator set $\mathcal L_H\subseteq V_H$ with $|\mathcal L_H|\leq t-1$ such that every component $J$ of $H\setminus\mathcal L_H$ satisfies
+    \[
+        w(V_J)\leq\frac{w(V_H)}{t}.
+    \]
+\end{lemma}
+\begin{proof}
+    Root $H$ arbitrarily and initialize the current root-containing subtree $R$ to $H$. While $\mu_H(V_R)>w\br{H}/t$, choose the deepest vertex $x$ such that the subtree $T_x$ rooted at $x$ in $R$ has $\mu_H(V_{T_x})>w\br{H}/t$. Add $x$ to $\mathcal L_H$ and remove $T_x$ from $R$. The peeled subtrees are pairwise disjoint. For any pairwise disjoint sets $A_1,\ldots,A_k\subseteq V_H$, the definition of $\mu_H$ gives
+    \[
+        \sum_{i=1}^k\mu_H(A_i)\leq w\br{V_H},
+    \]
+    since each demand edge contributes at most its weight to this sum. Every peeled subtree has $\mu_H(V_{T_x})>w\br{V_H}/t$, so there are at most $t-1$ of them. By the choice of a deepest such vertex, every child subtree $T'$ of $x$ in $R$ has $\mu_H(V_{T'})\leq w\br{V_H}/t$, and hence $w\br{V_{T'}}\leq w\br{V_H}/t$. Therefore, after removing all separators, every component $K\in H\setminus\mathcal L_H$ is one of these child subtrees at the iteration when its parent separator was selected, or the final remainder $R$. The final remainder satisfies $\mu_H(V_R)\leq w\br{V_H}/t$ by the stopping condition. In either case, $w\br{V_K}\leq w\br{V_H}/t$ as desired.
+\end{proof}
+
+Note, that this lemma will come useful later as well, since after the following procedure we show how to modify it to obtain a true, single criteria approximation algorithm for \textsc{Graph Partitioning with Demands} on trees.
+
+In the first version of our algorithm, we apply Lemma~\ref{lem:tree-separator} with the smallest integer $t\geq e$, which is $t=3$. Note that the runtime of the procedure depends on $t$, so we choose it as small as possible. Thus, $\mathcal L_H$ contains at most two separators, and every component of $H\setminus\mathcal L_H$ has demand at most $h/3$. Let $P_H=H[\mathcal L_H]$ be the minimal path in $H$ containing $\mathcal L_H$. If $|\mathcal L_H|=1$, then $P_H$ is that single vertex. We enumerate $Q=\emptyset$ and $Q=\{e\}$ for each edge $e\in E(P_H)$. Thus at most $1+|E(P_H)|\leq n$ guesses are considered. For a guess $Q$, let $\mathcal K_Q$ be the components of $H\setminus Q$. For a component $K\in\mathcal K_Q$, write $\mathcal L_K=V_K\cap\mathcal L_H$ and let $S_K=K[L_K]$ be the minimal subtree of $K$ containing $\mathcal L_K$. Note that $S_K$ is either $P_H$ or a single vertex of $\mathcal L_K$.
+
+For each edge $e\in E(K)\setminus E(S_K)$, let $T_e$ be the component of $K-e$ not containing $S_K$. For $A\subseteq E(K)\setminus E(S_K)$, define
+\[
+    \begin{aligned}
+        U_K(A)&=\bigcup_{e\in A}V_{T_e},\\
+        C_K(A)&=\left\{xy\in E(K)\colon \left|\{x,y\}\cap U_K(A)\right|=1\right\},\\
+        f_K(A)&=\sum_{uv\in D[V_K]}w(u,v)\cdot 
+            \mathbf 1\!\left[\{u,v\}\cap U_K(A)\neq\emptyset\right].
+    \end{aligned}
+\]
+Here $C_K(A)\subseteq A$ is the boundary of $U_K(A)$ separating it from $S_K$, and
+\[
+    f_K(A)=w\br{V_K\setminus U_K(A), V_K}.
+\]
+is the total demand separated from $S_K$ by cutting the edges in $C_K(A)$.
+Observe, that $f_K$ is a weighted coverage function on the demand pairs. The idea in our recursion is that the component containing $S_K$ after cutting $C_K(A)$ has demand $w\br{V_K}-f_K(A)$. Moreover, every other component contains no separator, so it is contained in a component of $H\setminus\mathcal L_H$ and has demand at most $w\br{H}/3$. These two facts will allow us to control the demand in all resulting components during the recursion.
+
+For $w\br{V_K}>B_\rho$, set $q_K=w\br{V_K}-B_\rho$ and define
+\[
+    \OPT_{q_K}\br{K}
+    =\min\left\{c_K(A)\colon A\subseteq E(K)\setminus E(S_K),\ f_K(A)\geq q_K\right\}.
+\]
+If this quota is feasible, the $ (1-1/e)$-approximation for \textsc{Budgeted Maximum Coverage}~\cite{KhullerMossNaor1999BudgetedMaximumCoverage} gives a polynomial-time routine $\textsc{CoreQuotaCover}(f_K,c_K,q_K)$ returning $A_K$ such that
+\[
+    f_K(A_K)\geq(1-1/e)\cdot q_K,
+    c_K(A_K)\leq\OPT_{q_K}\br{K}.
+\]
+Indeed, binary-search the budget $b$ on the interval $[0,\sum_{e\in E\br{K}}c(e)]$ and run the budgeted-coverage approximation at each trial. The successful budget $b$, such that $f_K(A_K)\geq(1-1/e)\cdot q_K$, is no larger than $\OPT_{q_K}\br{K}$.
+ Moreover, since we use binary search the required number of trials is $O\br{\log\br{ \sum_{e\in E\br{K}}c(e)}}$, which is polynomial in the input size.
+
+For each guess $Q$, the algorithm applies this routine to every component $K$ containing a separator with $w\br{V_K}>B_\eta$, and chooses the least-cost candidate $Q\cup\bigcup_K C_K(A_K)$. Then, the algorithm recurses on each component. The full procedure is given by Algorithm \ref{alg:centroid-max-coverage}.
+
+\input{algorithms/centroid_max_coverage.tex}
+
+\begin{theorem}\label{thm:tree-centroid-max-coverage}
+    Fix rational constants $0<\rho<\eta<1$. For arbitrary integral demand weights on a supply tree, Algorithm~\ref{alg:centroid-max-coverage} runs in polynomial time and returns an $\eta$-feasible supply-edge set $F\subseteq E$ with
+    \[
+        c(F)\leq\cl{\ln\br{\frac{1-\rho}{\eta-\rho}}}\cdot\OPTdem{T}{\rho}.
+    \]
+\end{theorem}
+\begin{proof}
+    Define the excess of any component $H$ by $\Phi(H)=\max\{0,w\br{V_H}-B_\rho\}$.
+    Now, consider a recursive call for a subgraph $H$ of $T$, write $w\br{V_H}$ and $q_H=w\br{V_H}-B_\rho>0$. 
+
+    Let $Q$ be a feasible guess, i.e., the algorithm does not continue past this guess. Let $C_H$ be the edges chosen by the algorithm for this guess. Consider the each component $H'\in H\setminus C_H$. There are two cases.
+    \begin{enumerate}
+        \item $V_{S_K}\subseteq V_{H'}$ for some $K\in \mathcal{K}_Q$. Then, $H'=K\setminus U_K(A_K)$. Since $q_K=w\br{V_K}-B_\rho\leq q_H$, the coverage guarantee implies
+    \[
+        \Phi(H')=\max\{0,w\br{V_{H'}}-B_\rho\}\leq w\br{V_{H}}-f_K\br{A_K}-B_\rho
+        \leq q_K-(1-1/e)\cdot q_K
+        =q_K/e\leq q_H/e.
+    \]
+    \item $H'$ contains no separator. Then, by the properties of the separator, $w\br{V_{H'}}\leq w\br{V_H}/3$. Its excess is therefore
+    \begin{align*}
+        \Phi(H')&=\max\{0,w\br{V_{H'}}-B_\rho\}
+        \leq\max\{0,w\br{V_H}/3-B_\rho\}\\
+        &\leq\max\{0,(w\br{V_H}-B_\rho)/3\}=q_H/3<q_H/e,
+    \end{align*}
+    since $e<3$.
+    \end{enumerate} 
+    Hence if we consider the recursion tree built on top of the components for which the algorithm was called, every child has excess at most $1/e$ times its parent's. Initially $\Phi(T)=(1-\rho)\cdot W$, so when the recursion reaches the depth at most
+    \[
+        L=\left\lceil\ln\left(\frac{1-\rho}{\eta-\rho}\right)\right\rceil
+    \]
+    every component $H$, for which the recursion ended has excess at most 
+    \[
+        \Phi(H)\leq\frac{(1-\rho)\cdot W}{e^L}\leq\frac{(1-\rho)\cdot W}{e^{\ln\left(\frac{1-\rho}{\eta-\rho}\right)}}=(\eta-\rho)\cdot W=B_\eta-B_\rho.
+    \]
+    and is therefore $\eta$-feasible.
+
+    It remains to bound the cost. Let $F_H^*$ be an optimal $B_\rho$-feasible cut of $H$. Set $Q^*=F_H^*\cap E(P_H)$.
+    It is easy to see that the algorithm considers this guess.
+    % Each resulting component containing a separator has all its separators in one component of $H\setminus F_H^*$, so $S_K$ lies in that component. 
+    The restriction of $F_H^*$ to $K$ therefore satisfies
+    \[
+        \OPT_{B_\rho}\br{K}\leq c(F_H^*\cap E(K)).
+    \]
+    Thus, since any $\rho$-feasible edge set of $K$ covers at least $q_K$ demand, we know that $c\br{A_K}\leq \OPT_{q_K}\br{K}\leq \OPT_{B_\rho}\br{K}$. Now observe that by disjointness we get
+    \[
+        z\br{C_H}=\sum_{K\in \mathcal{K}_{Q^*}} c\br{A_K} + c\br{Q^*} \leq \sum_{K\in \mathcal{K}_{Q^*}} \OPT_{B_\rho}\br{K} + c\br{Q^*} \leq \OPT_{B_\rho}\br{H}.
+    \]
+    which is the contribution of $C_H$ to the cost of $F_H$
+
+    Again, by disjointness, we have that
+    \[
+    \sum_{H'\in H\setminus C_H} \OPT_{B_\rho}\br{H'} \leq \OPT_{B_\rho}\br{H}.
+    \]
+
+    Let $F_H$ denote all cuts produced in the recursion below $H$, and let $d(H)$ be the maximum remaining depth of recursive calls for $H$. We show by induction that
+    \[
+        c(F_H)\leq \br{d(H)+1}\cdot \OPT_{B_\rho}(H).
+    \]
+    For the base case, when $d\br{H}=0$, we have $c(F_H)=c\br{C_H}\leq \OPT_{B_\rho}(H)$, which satisfies the induction hypothesis. Now, assume that the claim holds for all $H$ such that $d\br{H}\leq d$ for some $d\geq 0$, and consider $H$ with $d\br{H}=d+1$. By the induction hypothesis applied to the subcomponents $H'\in H\setminus C_H$, we have
+\[
+    c(F_{H'})\leq \br{d(H')+1}\cdot \OPT_{B_\rho}(H')\leq d\cdot \OPT_{B_\rho}(H'),
+\]
+Summing over all such $H'$ and adding the cost of $C_H$, we get
+\[
+    c(F_H) = c(C_H) + \sum_{H'\in H\setminus C_H} c(F_{H'}) \leq \OPT_{B_\rho}(H) + d\cdot \sum_{H'\in H\setminus C_H} \OPT_{B_\rho}(H') \leq (d+1)\cdot \OPT_{B_\rho}(H),
+\]
+which completes the induction step.
+
+Now, observe that $d\br{T}\leq L-1$, which implies that $
+    c(F_T)\leq L\cdot \OPT_{B_\rho}(T),$
+as desired.
+\end{proof}
+
+\subsection{Single criteria approximation via Multicut}
+
+We now show how to employ a similar separator-based approach to obtain a single-criteria approximation via the Multicut problem. This time, the algorithm is not recursive, and therefore our intention is to pick a separator set large enough so that every component without a separator has demand at most $B_\rho$. Therefore let $t=\cl{1/\rho}$ be the size of the separator which we pick, which is a constant dependent only on $\rho$. In order for all of the components containing separators to be of appropriate size, we will require that the amount of demand separated from such components $K$ is at least $K$. Since we do not want to use an $O\br{\log n}$-approximation algorithm for the $\textsc{Partial Set Cover}$, we will show that we can achieve this goal using the well known \textsc{Partial Multicut} on trees.
+
+The input to the multicut is a graph $G\br{V, E, D, c, w}$ and an additional value $0\leq q\leq 1$. The goal is to find a subset of edges $C$, minimizing $c\br{C}$, such that the overall demand of edges $uv\in D$, such that $u$ and $v$ belong to different components of $G\setminus C$ is at least $q\cdot w\br{V}$. If the supply graph is a tree, Mestre~\cite{DBLP:conf/stacs/Mestre08} gives a $(2+\delta)$-approximation for Partial Multicut on Trees.
+
+The algorithm is very similar to the previous one, so we mainly show how to reduce the task of finding minimum cost $A_K$, such that $f_K\br{A_K}\geq q_K$ to the Partial Multicut problem on trees. We create the auxiliary instance $T_K$ as follows. Firstly, we can assume that the edges in $S_K$ cannot be cut, so for each $e\in E\br{S_K}$, we set $c\br{e}=\infty$. Then, for each $K'\in K\setminus V\br{S_K}$, we create a copy of $K'$. We index the two representatives of each vertex $u\in K'$ by $u^{\mathrm L}$ and $u^{\mathrm R}$ (one of them is the original vertex). Now, for each demand pair $uv\in D[K]$ if $\brc{u, v}\cap {S_K}=\emptyset$, we replace this demand edge by a cross-copy demand edge $u^{\mathrm L}v^{\mathrm R}$ with demand $w\br{u^{\mathrm L}v^{\mathrm R}}=w\br{u,v}$. 
+
+\input{algorithms/centroid_full_quota.tex}
+Figure~\ref{fig:full-quota-centroid} illustrates the full-quota routine for $t=4$.
+\input{figures/three_centroid_coverage.tex}
+
+\begin{theorem}\label{thm:tree-centroid-full-quota}
+    Fix rational $0<\rho<1$ and $\epsilon>0$. For arbitrary integral demand weights on a supply tree, Algorithm~\ref{alg:centroid-full-quota} returns a $\rho$-feasible cut $F$ with
+    \[
+        c(F)\leq(4+\epsilon)\cdot \OPTdem{T}{\rho}.
+    \]
+    For fixed $\rho$ and $\epsilon$, its running time is $n^{O(1/\rho)}$.
+\end{theorem}
+\begin{proof}
+    Let $F^*$ be an optimal $B_\rho$-feasible cut. By Lemma~\ref{lem:tree-separator}, the procedure returns at most $t-1$ separators, and every component of $T\setminus\mathcal L_T$ has demand at most $W/t\leq B_\rho$. By construction, all components $H\in T\setminus F$ have demand bounded by $w\br{V_H}\leq B_\rho$. 
+
+    Therefore, we reason about the cost.
+    As in the preceding proof, let $Q^*\subseteq F^*\cap E(S_T)$. Let $K\in \mathcal{K}_{Q^*}$. We firstly want to show, that $c\br{A_K}\leq (4+\epsilon)\OPT_{q_K}\br{K}$. So fix some optimal $A_K^*$ for $\OPT_{q_K}\br{K}$. In order to get a valid multicut for $T_K$, for each edge of $A_K^*$, we include both representative edges in $T_K$, i.e., if $e=uv\in A_K^*$, we include $u^{\mathrm L}v^{\mathrm L}$ and $u^{\mathrm R}v^{\mathrm R}$ in the multicut. Since this doubles the cost of each edge, we have $c\br{A_K}\leq 2\cdot \OPT_{q_K}\br{K}$. Mestre's $(2+\delta)$-approximation then gives $c\br{A_K}\leq (4+\epsilon)\cdot \OPT_{q_K}\br{K}$ for sufficiently small $\delta=\epsilon/2$.
+
+    Thus, summing the contribution of all edges picked by our algorithm, we ge that
+    \[
+    c\br{F}\leq \sum_{K\in \mathcal{K}_{Q^*}} c\br{A_K}+c(Q^*)\leq \sum_{K\in \mathcal{K}_{Q^*}} (4+\epsilon)\cdot\OPT_{q_K}\br{K}+c(Q^*)\leq (4+\epsilon)\cdot \OPTdem{T}{\rho}
+    \]
+    as claimed.
+
+    Since the number of sets $Q$ we enumerate is bounded by $\sum_{i=0}^{t-1} \binom{|E(S_T)|}{i}=n^{O(1/\rho)}$, the algorithm runs in polynomial time for any fixed choice of $\rho$.
+\end{proof}
+
+        %\input{sections/tree_hybrid_lp_centroid.tex}
+
+    \subsection{Combined guarantee}
+
+        We now combine the guarantees of all three of our algorithms.
+        \begin{corollary}\label{cor:tree-best-guarantee}
+        Fix rational constants $0<\rho<\eta<1$ and $\epsilon>0$. On supply trees, there is a polynomial-time algorithm returning an $\eta$-feasible solution of cost at most
         \[
-            \mu_H(X)=w(X)+\frac12w(X,V_H\setminus X),
+        \min\brc{
+            \frac{2\eta}{\eta-\rho},
+            \cl{\ln\br{\frac{1-\rho}{\eta-\rho}}},
+            4+\epsilon
+        }\cdot\OPT_{\rho}(T).
         \]
-        so $w(X)\leq\mu_H(X)$. Choose a weighted centroid $r$ of $H$ for weights $\mu_H$. Each component $X$ of $H-r$ has $\mu_H(X)\leq w\br{V_H}/2$. For every $X\in H\setminus r$ with $w(X)>w\br{V_H}/3$, choose a weighted centroid $x_X$ of the supply subtree induced by $X$, using the same weights. There are at most two such branches, since each has $\mu_H(X)>w\br{V_H}/3$ and the branch weights sum to at most $w\br{V_H}$. Each component of $X-x_X$ has weight at most $\mu_H(X)/2\leq w\br{V_H}/4$. Consequently every component left after removing $r$ and these at most two additional vertices has demand at most $w\br{V_H}/3$. Since $r$ and the selected $x_X$'s lie on a common path, choose a path $P_H$ containing them and, if $|V_H|\geq3$, at least three distinct vertices, denote this set by $\mathcal L_H$. Then add unused vertices of $P_H$ to $\mathcal L_H$ until it has three entries, if $|V_H|<3$. Let $\mathcal L_H$ be this list and set $S_H=V_H[\mathcal L_H]$. Since this only refines the components, each component of $H\setminus\mathcal L_H$ still has demand at most $w\br{V_H}/3$.
-
-        \subsubsection{Guessing the partition of $S_H$}
-        Let $F_H^*$ be an optimal $B_\rho$-feasible cut of $H$. The vertices of $\cL_H$ are either all in one component of $H\setminus F_H^*$, split as a pair and a singleton, or in three distinct components. In the first case, set $Q^*=\emptyset$. In the pair-and-singleton case, one edge of $F_H^*$ on $S_H$ separates the singleton from the pair. In the all-distinct case, order the vertices of $\mathcal L_H$ along the path $S_H$ as $a,m,b$. Since they lie in three distinct components of $H\setminus F_H^*$, the subpath between $a$ and $m$ and the subpath between $m$ and $b$ each contain an edge of $F_H^*$. Choosing one such edge from each subpath separates all vertices of $\mathcal L_H$. Thus for some guess $Q^*\subseteq F_H^*\cap E(S_H)$ with $|Q^*|\leq2$, the partition of $\mathcal L_H$ is correctly induced. The algorithm enumerates every such $Q\subseteq E(S_H)$ with $|Q|\leq2$.
-
-        \subsubsection{Coverage outside each core.}
-        Fix a guess $Q$, and let $\mathcal K_Q=\brc{K\in H\setminus Q: V_K\cap \mathcal L_H\neq\emptyset}$. For each $K\in\mathcal K_Q$, let $B_K=V_K[S_H]$. For every edge $e\in E(K)\setminus E(B_K)$, let $T_e$ be the component of $K-e$ not containing $B_K$. For $A\subseteq E(K)\setminus E(B_K)$, define the following functions:
-        \[
-            \begin{aligned}
-                U_K(A)&=\bigcup_{e\in A}T_e,\\
-                C_K(A)&=\left\{xy\in E(K):\left|\{x,y\}\cap U_K(A)\right|=1\right\},\\
-                f_K(A)&=\sum_{uv\in D[V_K]}w(u,v)\,
-                    \mathbf 1\!\left[\{u,v\}\cap U_K(A)\neq\emptyset\right].
-            \end{aligned}
-        \]
-        Note, that here $C_K(A)\subseteq A$ is the actual boundary cut induced by $A$ ,i.e., it consists of the edges that separate $U_K(A)$ from $B_K$, and
-        \[
-            f_K(A)=w\br{V_K}-w\bigl(V_K\setminus U_K(A)\bigr).
-        \]
-        Since, each edge $e$ removes all of the demand pairs with an endpoint in $T_e$,  $f_K$ is a weighted coverage function, where the covered elements are the demand pairs. The component containing $B_K$ after cutting $C_K(A)$ is $K\setminus U_K(A)$ and has demand $w\br{V_K}-f_K(A)$. Every other component contains no vertices of $\mathcal L_H$, so it is contained in a component of $H\setminus\mathcal L_H$ and has demand at most $w\br{V_H}/3$.
-        
-        For any subtree $J$ of $H$ let $q_J=w\br{V_J}-B_\rho>0$.
-        For $K\in\mathcal K_Q$ with $w\br{V_K}>B_\rho$, put
-        \[
-            \OPT_{MC,B_K}\br{K}=\min\left\{c_K(A):A\subseteq E(K)\setminus E(B_K),\ f_K(A)\geq q_K\right\}.
-        \]
-        If $f_K(E(K)\setminus E(B_K))<q_K$, the guess is infeasible. Otherwise, $\OPT_{MC,B_K}\br{K}$ is the minimum cost of reducing the core component's demand to at most $B_\rho$.
-
-    Now we use the $ (1-1/e)$-approximation algorithm for  \textsc{Budgeted Maximum Coverage} algorithm of Khuller, Moss, and Naor~\cite{KhullerMossNaor1999BudgetedMaximumCoverage}:
-        \begin{lemma}\label{lem:tree-centroid-core-cover}
-            There is a polynomial-time routine $\textsc{CoreQuotaCover}(f_K,c_K,q_K)$
-            that, whenever feasible, returns $A_K\subseteq E(K)\setminus E(B_K)$ with
-            \[
-                f_K(A_K)\geq(1-1/e)\cdot q_K,
-                \qquad
-                c_K(A_K)\leq \OPT_{MC,B_K}\br{K}.
-            \]
-        \end{lemma}
-        \begin{proof}
-            Let $C_K=\sum_{e\in E(K)\setminus E(B_K)}c(e)$. For each trial budget $b$, run the $\br{1-1/e}$-approximation algorithm on $E(K)\setminus E(B_K)$ with objective $f_K$. It returns a set $S_b$ with $c_K(S_b)\leq b$ and
-            \[
-                f_K(S_b)\geq\br{1-1/e}\cdot \max\{f_K(S):S\subseteq E(K)\setminus E(B_K),\ c_K(S)\leq b\}.
-            \]
-            Use binary search on $[0,C_K]$ to find the lowest successful budget $b$, where success means $f_K(S_b)\geq(1-1/e)\cdot q_K$, and return the corresponding set $S_b$.
-
-            Every budget $b\geq \OPT_{MC,B_K}\br{K}$ is successful and the approximation returns coverage at least $(1-1/e)\cdot q_K$. Thus the search returns $b\leq \OPT_{MC,B_K}\br{K}$. It uses $O(\log(C_K+1))$ calls, which is polynomial in the size of the input.
-        \end{proof}
-
-        For each guess $Q$, the algorithm applies this routine to every $K\in\mathcal K_Q$ with $w\br{V_K}>B_\rho$, skips $Q$ if any full quota is infeasible, and minimizes $c(Q)+\sum_Kc_K(A_K)$. Components without vertices in $\mathcal L_H$ are left for recursion. Figure \ref{fig:three-centroid-coverage} illustrates a solution built for one example guess $Q$.
-        \input{figures/three_centroid_coverage.tex}
-
-        \input{algorithms/centroid_max_coverage.tex}
-
-        \begin{theorem}\label{thm:tree-centroid-max-coverage}
-            Fix rational constants $0<\rho<\eta<1$. For arbitrary integral demand weights on a supply tree, Algorithm~\ref{alg:centroid-max-coverage} runs in polynomial time and returns an $\eta$-feasible supply edge set $F\subseteq E$ with
-            \[
-                c(F)\leq\Gamma_{\mathrm{MC}}(\rho,\eta)\cdot\OPTdem{T}{\rho},
-            \]
-            where
-            \begin{equation}\label{eq:tree-centroid-max-coverage-ratio}
-                \Gamma_{\mathrm{MC}}(\rho,\eta)
-                =\left\lceil\ln\left(\frac{1-\rho}{\eta-\rho}\right)\right\rceil.
-            \end{equation}
-        \end{theorem}
-        \begin{proof}
-            If $W=0$, the empty cut is feasible, so assume $W>0$. For a processed component $H$, write $h=w\br{V_H}$ and $q_H=h-B_\rho=\Phi(H)>0$, where the \emph{excess} of a component $J$ is $\Phi(J)=\max\{0,w\br{V_J}-B_\rho\}$, which is the measure of the progress of our algorithm.
-
-            First consider the progress. Let $K\in K_Q$. If $w\br{V_K}\leq B_\eta$, its excess is zero so the component is already $\eta$-feasible. Otherwise, $q_K=w\br{V_K}-B_\rho\leq q_H$, and the cover guarantee gives
-            \[
-                \Phi(K\setminus U_K(A_K))
-                =\max\{0,w\br{V_K}-f_K(A_K)-B_\rho\}\leq
-                q_K-\br{1-1/e}\cdot q_K = q_K/e
-                \leq q_H/e.
-            \]
-            A component $K$, such that $K\cap \mathcal L_H=\emptyset$, is contained in a component of $H\setminus\mathcal L_H$, so its demand is at most $w\br{V_H}/3$ and its excess is at most
-            \[
-                \Phi(K\setminus U_K(A_K))
-                \leq\max\{0,w\br{V_H}/3-B_\rho\}\leq w\br{V_H}/3-B_\rho\leq w\br{V_H}/3-B_\rho/3 = q_H/3<q_H/e,
-            \]
-            since $e<3$. Thus every child has excess at most $1/e$ times its parent's. Initially $\Phi(T)=(1-\rho)\cdot W$. After
-            \[
-                L=\left\lceil\ln\left(\frac{1-\rho}{\eta-\rho}\right)\right\rceil
-            \]
-            generations, every component $J$ has excess at most 
-            \[
-            \Phi(J)\leq \frac{\Phi(T)}{e^L}=\frac{(1-\rho)\cdot W}{e^L}\leq (\eta-\rho)\cdot W=B_\eta-B_\rho.
-            \]
-            Therefore, $w\br{J}\leq B_\eta$. Thus the output is $\eta$-feasible and the recursion has at most $L$ levels.
-
-            Next bound the cost of one processed component. Let $F_H^*$ be an optimal $B_\rho$-feasible edge set and take the matching guess $Q^*\subseteq F_H^*\cap E(S_H)$ described above. For each $K\in\mathcal K_{Q^*}$, all vertices in $\mathcal L_H$ lie in one component of $H\setminus F_H^*$. Therefore $F_H^*\cap E(K)$ has no edge on $B_K$, and the component containing $B_K$ after this restriction is contained in an optimal component. Thus $\OPT_{MC,B_K}\br{K}\leq c(F_H^*\cap E(K))$. The score of this feasible guess is at most
-            \[
-                c(Q^*)+\sum_K\OPT_{MC,B_K}\br{K}
-                \leq c(F_H^*)
-                =\OPT_{B_\rho}(H).
-            \]
-            Since the algorithm chooses a least-cost guess and each actual core-boundary edge set has cost at most that of its corresponding proposed set, its local edge set $C_H$ satisfies $c(C_H)\leq\OPT_{B_\rho}(H)$.
-
-            Let $F_H$ be all edges returned below $H$, and let $d(H)$ be the maximum number of nonterminal calls on a path in this recursion subtree. Using induction in a manner similar to previous proofs, we obtain
-            \begin{equation}\label{eq:tree-centroid-recursive-cost}
-                c(F_H)\leq d(H)\cdot \OPT_{B_\rho}(H).
-            \end{equation}
-            It is immediate for terminal components. For a nonterminal component of depth $d$, let $H_1,\ldots,H_m$ be its children. By induction and the one-call bound,
-            \[
-                c(F_H)\leq\OPT_{B_\rho}(H)
-                +(d-1)\cdot \sum_{i=1}^m\OPT_{B_\rho}(H_i).
-            \]
-            Restricting an optimal $B_\rho$-feasible cut of $H$ to the pairwise edge-disjoint children gives \[
-            \sum_i\OPT_{B_\rho}(H_i)\leq\OPT_{B_\rho}(H),
-            \] 
-            proving~\eqref{eq:tree-centroid-recursive-cost}. Since $d(T)\leq L$ and $\OPT_{B_\rho}(T)=\OPTdem{T}{\rho}$, this completes the proof.
-        \end{proof}
-
-        \input{sections/tree_hybrid_lp_centroid.tex}
-
-        \subsubsection{Combined guarantee}
-
-
-        The anchored LP and centroid maximum-coverage algorithms apply for all $0<\rho<\eta<1$, while the hybrid algorithm also applies when $0<\rho<\eta<3\rho<1$. Taking the best applicable guarantee gives the following result.
-
-        \begin{corollary}\label{cor:tree-best-bicriteria}
-            For every fixed rational $0<\rho<\eta<1$, \textsc{Graph Partitioning with Demands} on supply trees admits a polynomial-time algorithm which returns an $\eta$-feasible solution of cost at most $
-                \Gamma_{\mathrm{tree}}(\rho,\eta)\cdot \OPTdem{T}{\rho}$,
-            where
-            \[
-                \Gamma_{\mathrm{tree}}(\rho,\eta)
-                =
-                \begin{cases}
-                    \displaystyle
-                    \min\left\{
-                        \Gamma_{\mathrm{LP}}(\rho,\eta),
-                        \Gamma_{\mathrm{H}}(\rho,\eta),
-                        \Gamma_{\mathrm{MC}}(\rho,\eta)
-                    \right\},
-                        &0<\rho<\eta<3\rho<1,\\[2mm]
-                    \displaystyle
-                    \min\left\{
-                        \Gamma_{\mathrm{LP}}(\rho,\eta),
-                        \Gamma_{\mathrm{MC}}(\rho,\eta)
-                    \right\},
-                        &\text{otherwise},
-                \end{cases}
-            \]
-            where:
-                \begin{itemize}
-                \item $\Gamma_{\mathrm{LP}}(\rho,\eta)=\frac{2\eta}{\eta-\rho}$,
-                \item $\Gamma_{\mathrm{H}}(\rho,\eta)=e+1+\ln\left(\frac{2\rho}{\eta-\rho}\right)$ for $0<\rho<\eta<3\rho<1$,
-                \item $\Gamma_{\mathrm{MC}}(\rho,\eta)
-                =\left\lceil\ln\left(\frac{1-\rho}{\eta-\rho}\right)\right\rceil$.
-                \end{itemize}
         \end{corollary}
 
         
-        Figures~\ref{fig:tree-approximation-ratio} and~\ref{fig:tree-approximation-ratio-3d} illustrate the combined tree approximation guarantee $\Gamma_{\mathrm{tree}}(\rho,\eta)$ over the relevant ranges of $\rho$ and $\eta$. We observe, that for almost all choices of parameters our approximation ratios are relatively close to $1$ and usually are below $4$. Only for choices of $\eta$ very close to $\rho$ the approximation ratios start to increase significantly.
+        Figures~\ref{fig:tree-approximation-ratio} and~\ref{fig:tree-approximation-ratio-3d} illustrate the combined tree approximation guarantee for $\epsilon=0.01$ over the relevant ranges of $\rho$ and $\eta$. For almost all choices of parameters, the approximation ratios are relatively close to $1$ and usually below $4$.
         \input{figures/tree_approximation_ratio.tex}
         \input{figures/tree_approximation_ratio_3d.tex}
 
@@ -609,7 +631,8 @@ We now show yet another approach to handling oversized tree components using sub
             \[
                 \frac{1-\rho}{\eta-\rho}=e,
                 \qquad
-                \Gamma_{\mathrm{MC}}(\rho,\eta)=\left\lceil\ln e\right\rceil=1.
+                \cl{\ln\br{\frac{1-\rho}{\eta-\rho}}}
+                =\left\lceil\ln e\right\rceil=1.
             \]
             Theorem~\ref{thm:tree-centroid-max-coverage} therefore gives a polynomial-time subroutine with $\gamma(\eta)=1$. By Theorem~\ref{thm:hc-gpd-transfer}, the resulting approximation ratio is
             \[

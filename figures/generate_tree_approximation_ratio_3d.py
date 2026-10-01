@@ -37,9 +37,10 @@ COVERAGE_EXPONENTIAL_LEVELS = range(1, 11)
 # above (1+rho)/2 to nearly 1. This separate mesh is flat at ratio 1.
 UNIT_RATIO_T_SAMPLES = 51
 
-# Maximum displayed approximation ratio. Larger bounds are clipped to this
-# height; the narrow strip next to eta=rho is filled at this capped height.
-RATIO_CAP = 8.0
+# Maximum displayed approximation ratio. The full-quota bound keeps the
+# combined guarantee below this height, including near eta=rho.
+RATIO_CAP = 5.0
+FULL_QUOTA_RATIO = 4.0 + 0.01
 
 def linspace(start: float, stop: float, count: int) -> list[float]:
     if count < 2:
@@ -63,11 +64,8 @@ def tree_ratio(rho: float, t: float) -> float:
     eta = min(eta, math.nextafter(1.0, 0.0))
 
     anchored_lp = 2.0 * eta / eta_minus_rho
-    hybrid = math.inf
-    if rho < 1.0 / 3.0 and eta < 3.0 * rho:
-        hybrid = math.e + 1.0 + math.log(2.0 * rho / eta_minus_rho)
     centroid_coverage = ceil_ln(1.0 / t)
-    return min(RATIO_CAP, anchored_lp, hybrid, centroid_coverage)
+    return min(RATIO_CAP, FULL_QUOTA_RATIO, anchored_lp, centroid_coverage)
 
 
 def write_mesh(
@@ -121,7 +119,7 @@ def main() -> None:
         lambda row, _rho: 1e-5 * row,
         2,
         rho_values,
-        lambda _rho, _t: RATIO_CAP,
+        lambda _rho, _t: min(RATIO_CAP, FULL_QUOTA_RATIO),
     )
 
     def unit_ratio_t(row: int, rho: float) -> float:

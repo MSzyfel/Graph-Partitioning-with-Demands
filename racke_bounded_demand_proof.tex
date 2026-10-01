@@ -178,7 +178,7 @@ of the tree cut $\cut_T(U)$. Therefore
   F^*=c_H(\cut(U))\le c_T(\cut(U)).
 \]
 
-For (ii), for each tree $T_i$ choose a maximum $U$--$\bar U$ flow $f_i$ in $T_i$.
+For (ii), for each tree $T_i$ choose a maximum flow $f_i$ from $U$ to $\bar U$ in $T_i$.
 Since $T_i$ is a tree and capacities are $c_{T_i}$, max-flow/min-cut gives
 \[
   \mathrm{val}(f_i)=c_{T_i}(\cut(U)),
@@ -194,7 +194,7 @@ has congestion at most $\beta$ in $H$. Its value is
    =\sum_i\lambda_i c_{T_i}(\cut(U))
    =\Etree[c_T(\cut(U))].
 \]
-Any $U$--$\bar U$ flow of value $F$ in $H$ must have congestion at least
+Any flow of value $F$ from $U$ to $\bar U$ in $H$ must have congestion at least
 $F/c_H(\cut(U))$ (again by max-flow/min-cut), so
 \[
   \frac{F}{c_H(\cut(U))}\le \beta.

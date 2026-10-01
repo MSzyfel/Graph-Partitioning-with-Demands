@@ -3,7 +3,7 @@
     \textbf{Input} Supply tree $T=(V,E,c)$, nonnegative integer vertex weights $a(v)\leq L$, and integer budget $L$\;
     \textbf{Output} A minimum-cost edge set $F\subseteq E$ such that every component $H$ satisfies $\sum_{v\in V_H}a(v)\leq L$\;
     Root $T$ at an arbitrary vertex $r$\;
-    \ForEach{vertex $v$ in a postorder traversal of $T$}{
+    \ForEach{vertex $v$ in a bottom-up traversal of $T$}{
         Let $u_1,\ldots,u_k$ be the children of $v$\;
         Initialize $F_v^{(0)}(\ell)\gets0$ if $\ell=a(v)$ and $F_v^{(0)}(\ell)\gets+\infty$ otherwise, for $0\leq\ell\leq L$\;
         \For{$j=1,\ldots,k$}{
