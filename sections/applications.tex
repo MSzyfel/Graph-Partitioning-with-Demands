@@ -192,6 +192,7 @@ As an immediate corollary we get:
     \]
     In particular, for any fixed $0<\rho<\eta<1$, $\Lambda_{\rho,\eta}$ is a constant, and the above bounds are $\bigo\br{\sqrt{\log n}}$ and $\bigo\br{1}$, respectively.
 \end{corollary}
+
 \subsection{Hierarchical clustering with demands}
 % \newcommand{\Dasgupta}{\tilde{c}}
 
@@ -204,17 +205,18 @@ For $u,v\in V$, let $\operatorname{lca}_{\cT}(u,v)$ denote their lowest common a
     =\sum_{uv\in E}c\br{uv}\cdot
         w\br{V_{\operatorname{lca}_{\cT}(u,v)}}.
 \end{equation}
-We refer to this problem as \textsc{Hierarchical Clustering with Demands}. Note, that a nonbinary clustering tree can be refined into a binary one without increasing the cost in~\eqref{eq:Dasgupta}~\cite{ACostFunctionForSimilarityBasedHierarchicalClustering}.
+We refer to this problem as \textsc{Hierarchical Clustering with Demands}. Note, that a non-binary clustering tree can be refined into a binary one without increasing the cost in~\eqref{eq:Dasgupta}~\cite{ACostFunctionForSimilarityBasedHierarchicalClustering}.
 
-We parameterize our top-down algorithm by a value $\eta\in(1/2,1)$. Assume that we have a subroutine for \textsc{Graph Partitioning with Demands} with $\rho=1/2$ that returns an $\eta$-feasible supply-edge set $C_H$ satisfying
+We parameterize our top-down algorithm by a value $\eta\in(1/2,1)$. Assume that we have a polynomial-time subroutine for \textsc{Graph Partitioning with Demands} with $\rho=1/2$ that returns an $\eta$-feasible supply-edge set $C_H$ satisfying
 \begin{equation}\label{eq:hc-gpd-subroutine}
     c\br{C_H}
     \leq\gamma\br{\eta,\spr{V_H}}\cdot \OPTdem{H}{1/2}\leq\gamma\br{\eta,n}\cdot \OPTdem{H}{1/2}.
 \end{equation}
-\DD{do przemyslenia: czy jakos nazwac lub inaczej zboxowac taka procedure, aby miec latwy ``ref'' do tego (np w tresci tw ponizej, w pseudokodzie).}
+\DDfix{We point out that this subroutine can be the one from the previous section or any other algorithm that meets the above criteria.
+In the following we will use the symbol $\DPartition$ with a slight abuse of notation regarding skipping the parameters $\eta$ and the size of the graph.}
 
 \begin{theorem}\label{thm:hc-gpd-transfer}
-    Fix $\eta\in(1/2,1)$ and suppose that the subroutine above runs in polynomial time with $\gamma(\eta)\geq1$. Then there exists a $\frac{2\gamma(\eta)}{1-\eta}$-approximation polynomial-time algorithm for \textsc{Hierarchical Clustering with Demands}.
+    Fix $\eta\in(1/2,1)$ and suppose that a subroutine $\DPartition$ is given, where $\gamma(\eta,n)\geq1$. Then there exists a $\frac{2\gamma(\eta,n)}{1-\eta}$-approximation polynomial-time algorithm for \textsc{Hierarchical Clustering with Demands}.
 \end{theorem}
 \begin{proof}
     The following algorithm recursively partitions each non-singleton cluster using the subroutine for \textsc{Graph Partitioning with Demands} and constructs the clustering tree in a top-down manner.
@@ -223,7 +225,7 @@ We parameterize our top-down algorithm by a value $\eta\in(1/2,1)$. Assume that 
 \input{algorithms/hierarchical_clustering.tex}
 \medskip
 
-    Let $\cT^*$ be an optimal clustering tree. For $q\geq0$, define
+    Let $\cT^*$ be an optimal clustering tree, i.e., one that minimizes~\eqref{eq:Dasgupta}. For $q\geq0$, define
     \[
         E_q^*
         =\left\{
@@ -237,32 +239,34 @@ We parameterize our top-down algorithm by a value $\eta\in(1/2,1)$. Assume that 
         =\sum_{q=0}^{W}c\br{E_q^*}.
     \end{equation}
 
-    Fix a positive-demand non-singleton cluster $H$ produced by the algorithm, and let $E_H$ be its supply edges. The maximal clusters of $\cT^*$ having demand at most $\fl{r_H/2}$ partition $V$ and by extension $V_H$ into clusters of demand at most $\fl{r_H/2}$. Every supply edge of $E_H$ joining two distinct parts of this partition has its endpoints in distinct maximal clusters of $\cT^*$, so their least common ancestor in $\cT^*$ has demand greater than $\fl{r_H/2}$. Consequently, the set $E_{\fl{r_H/2}}^*\cap E_H$ is a feasible solution to \textsc{Graph Partitioning with Demands} on the graph $H$ with $\rho=1/2$, and~\eqref{eq:hc-gpd-subroutine} gives \DD{$C_H$ z algorytmu; poprawic $\gamma$}
+    Fix a positive-demand non-singleton cluster $H$ produced by the algorithm, and let $E_H$ be its supply edges. The maximal clusters of $\cT^*$ having demand at most $\fl{r_H/2}$ partition $V$ and by extension $V_H$ into clusters of demand at most $\fl{r_H/2}$.
+    \DD{$r_H$ niezdef. Czytam z przypuszczeniem, ze $r_H=w(V_H)$.}
+    Every supply edge of $E_H$ joining two distinct parts of this partition has its endpoints in distinct maximal clusters of $\cT^*$, so their least common ancestor in $\cT^*$ has demand greater than $\fl{r_H/2}$. Consequently, the set $E_{\fl{r_H/2}}^*\cap E_H$ is a feasible solution to \textsc{Graph Partitioning with Demands} on the graph $H$ with $\rho=1/2$, and~\eqref{eq:hc-gpd-subroutine} gives
     \begin{equation}\label{eq:hc-local-cut-bound}
-        c\br{C_H}\leq \gamma \cdot \OPT_{1/2}\br{H}
-        \leq\gamma(\eta)\cdot c\br{E_{\fl{r_H/2}}^*\cap E_H}.
+        c\br{C_H}\leq \gamma\br{\eta,\spr{V_H}} \cdot \OPT_{1/2}\br{H}
+        \leq \gamma\br{\eta,\spr{V_H}} \cdot c\br{E_{\fl{r_H/2}}^*\cap E_H}.
     \end{equation}
 
-    Let $s_H$ be the largest demand of a non-singleton child of $H$, and set $s_H=0$ if every child is a singleton. A subroutine call gives $s_H\leq\eta \cdot r_H$.
-    Since $E_{\fl{r_H/2}}^*\subseteq E_{\fl{t/2}}^*$ whenever $t\leq r_H$, we have
+    Let $s_H$ be the largest demand of a non-singleton child of $H$, and set $s_H=0$ if every child is a singleton. A subroutine call gives $s_H\leq\eta \cdot r_H$ \DDfix{(due to assumed $\eta$-feasibility).}
+    Since $E_{\fl{r_H/2}}^*\subseteq E_{\fl{t/2}}^*$ whenever $t\leq r_H$, we have \DD{tutaj nie zalapalem skad pierwsza nier. ponizej (todo)}
     \begin{align}
         r_H\cdot c\br{C_H}
-        \leq\frac{\gamma\cdot (\eta)}{1-\eta}
-            \cdot\br{r_H-s_H}\cdot c\br{E_{\fl{r_H/2}}^*\cap E_H}
-        \leq\frac{\gamma\cdot (\eta)}{1-\eta}\cdot
+        &\leq\frac{\gamma\br{\eta,\spr{V_H}}}{1-\eta}
+            \cdot\br{r_H-s_H}\cdot c\br{E_{\fl{r_H/2}}^*\cap E_H} \nonumber\\
+        &\leq\frac{\gamma\br{\eta,\spr{V_H}}}{1-\eta}\cdot
             \sum_{t=s_H+1}^{r_H}c\br{E_{\fl{t/2}}^*\cap E_H}.
         \label{eq:hc-cluster-charge}
     \end{align}
 
-    For a fixed $t$, the clusters satisfying $s_H<t\leq r_H$ have pairwise disjoint induced edge sets. Indeed, if one such cluster were a proper descendant of another, it would lie in a non-singleton child of the ancestor and would have demand at most the ancestor's value $s_H<t$, contradicting $t\leq r_H$ for the descendant. Summing~\eqref{eq:hc-cluster-charge} over all algorithmic clusters and using~\eqref{eq:hc-level-sum}, we conclude that
+    For a fixed $t$, the clusters satisfying $s_H<t\leq r_H$ have pairwise disjoint induced edge sets. Indeed, if one such cluster were a descendant of another, it would lie in a non-singleton child of the ancestor and would have demand at most the ancestor's value $s_H<t$, contradicting $t\leq r_H$ for the descendant. Summing~\eqref{eq:hc-cluster-charge} over all clusters and using~\eqref{eq:hc-level-sum}, we conclude that, for a tree $\cT$ produced by Algorithm~\ref{algo:hclustering},
     \begin{align*}
         c\br{\cT}
-        \leq\frac{\gamma(\eta)}{1-\eta}\cdot
+        \leq\frac{\gamma(\eta,n)}{1-\eta}\cdot
             \sum_{t=0}^{W}c\br{E_{\fl{t/2}}^*}
-            \leq\frac{2\cdot \gamma(\eta)}{1-\eta}\cdot
+            \leq\frac{2\cdot \gamma(\eta,n)}{1-\eta}\cdot
             \sum_{t=0}^{W}c\br{E_{t}^*}
-        \leq\frac{2\cdot\gamma(\eta)}{1-\eta}\cdot
-            c\br{\cT^*}.
+        \leq\frac{2\cdot\gamma(\eta,n)}{1-\eta}\cdot
+            c\br{\cT^*},
     \end{align*}
     where the first inequality uses~\eqref{eq:hc-cluster-charge} and the disjointness argument, the second inequality is a simple reindexing of the sum, and the third inequality uses~\eqref{eq:hc-level-sum}.
 \end{proof}
@@ -271,7 +275,7 @@ We parameterize our top-down algorithm by a value $\eta\in(1/2,1)$. Assume that 
     There is an $\bigo\br{\sqrt{\log n}}$-approximation algorithm for \textsc{Hierarchical Clustering with Demands} on general graphs and an $\bigo\br{1}$-approximation algorithm on trees.
 \end{corollary}
 \begin{proof}
-    Fix any constant $\eta\in(1/2,1)$ and substitute the corresponding \textsc{Graph Partitioning with Demands} guarantees into Theorem~\ref{thm:hc-gpd-transfer}.
+    Apply Corollary~\ref{cor:graph-partitioning-approximation}, fix any constant $\eta\in(1/2,1)$ and substitute the corresponding \textsc{Graph Partitioning with Demands} guarantees into Theorem~\ref{thm:hc-gpd-transfer}.
 \end{proof}
 
 We finally establish the inapproximability result for \textsc{Hierarchical Clustering with Demands} on supply stars.
@@ -280,21 +284,23 @@ We finally establish the inapproximability result for \textsc{Hierarchical Clust
     even when the supply graph is a star and all capacities and demands are uniform.
 \end{theorem}
 \begin{proof}
-    We reduce from the NP-hard problem \textsc{Min-Sum Vertex Cover} on general graphs. In this problem we are given an undirected graph $G=(U,F)$ and the goal is to find a permutation $\pi:U\to\{1,\dots,|U|\}$ that minimizes the sum of cover times of the edges $\ct\br{\pi}=\sum_{e\in F}\ct_\pi(e)$, i.e., where the covering time is defined as $\ct_\pi(uv)=\min\{\pi(u),\pi(v)\}$. This problem cannot be approximated within a factor of $1.0748$ under the Unique Games Conjecture \cite{SomeResultsOnApproximabilityOfMinimumSumVertexCover}. The reduction is very simple. The vertex set is $V=U\cup {r}$, $D=U$ and $E$ is a star with center $r$ and leaves $U$. The capacities and demands are all set to $1$. 
+    We reduce from the NP-hard problem \textsc{Min-Sum Vertex Cover} on general graphs. In this problem we are given an undirected graph $G=(U,F)$ and the goal is to find a permutation $\pi:U\to\{1,\dots,|U|\}$ that minimizes the sum of cover times of the edges $\ct\br{\pi}=\sum_{e\in F}\ct_\pi(e)$, where the cover time of an edge $uv$ is defined as $\ct_\pi(uv)=\min\{\pi(u),\pi(v)\}$. This problem cannot be approximated within a factor of $1.0748$ under the Unique Games Conjecture \cite{SomeResultsOnApproximabilityOfMinimumSumVertexCover}.
+
+    The reduction is very simple. The vertex set is $V=U\cup \brc{r}$, \DDfix{$D=F$} and $E$ is a star with center $r$ and leaves $U$, $E=\brc{ru\colon u\in U}$. The capacities and demands are all set to $1$.
     
-    Consider any clustering tree $\cT$. Since any nonbinary tree can be transformed into a binary one without loss of the quality, we assume that $\cT$ is binary. Now, we observe that on stars any binary cut, i.e., cut where both sides of the cut are connected, consists of some leaf $l\in U$ and nothing more. Consequently, any such clustering tree directly corresponds to a sequemce of leaves, in the order they are separated from the root. Conversily, every sequence $\pi:U\to\{1,\dots,|U|\}$ of the leaves corresponds to a unique binary clustering tree. 
+    Consider any clustering tree $\cT$. Since any non-binary tree can be transformed into a binary one without loss of the quality, we assume that $\cT$ is binary. Now, we observe that on stars any binary cut, i.e., cut where both sides of the cut are connected, consists of some leaf $l\in U$ and nothing more. Consequently, any such clustering tree directly corresponds to a sequemce of leaves, in the order they are separated from the root. Conversily, every sequence $\pi\colon U\to\{1,\dots,|U|\}$ of the leaves corresponds to a unique binary clustering tree.
     
-    Now, for any sequence $\pi:U\to\{1,\dots,|U|\}$ and a vertex $u\in U$, let \[
-    E_\pi(u)=\{vw\in F\colon \pi(u)\leq \pi(v), \pi(w)\}
+    Now, for any sequence $\pi\colon U\to\{1,\dots,|U|\}$ and a vertex $u\in U$, let \[
+    E_\pi(u)=\{vv'\in F\colon \pi(u)\leq \pi(v), \pi(u)\leq\pi(v')\}
     \]
-    be the set of all edges covered no sooner then $\pi(u)$.
+    be the set of all edges covered no sooner than $\pi(u)$.
     Then, for the clustering tree $\cT$ corresponding to $\pi$ we can rewrite its cost as 
     \[
     c\br{\cT}=
     \sum_{e\in E} \spr{V_{\lca_\cT(e)}}=
     \sum_{u\in U} \spr{V_{\lca_\cT(u,r)}}=
     \sum_{u\in U}\spr{E_\pi(u)} =
-    \ct\br{\pi}.
+    \ct\br{\pi},
     \]
     where the third equality is due to the fact that for any vertex $u\in U$, the set $E_\pi(u)$ consists of all edges whose both endpoint appear no sooner then $\pi\br{u}$ in the sequence $\pi$, which are all of the demand edges still present in the cluster containing $u$, before cutting $u$ from the root. The fourth equality follows from basic rewriting of $\ct\br{\pi}$, since each $u\in U$ contributes one per each edge which was not covered by the first $\pi(u)-1$ vertices in the sequence.
 
