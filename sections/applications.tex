@@ -60,7 +60,6 @@ The analysis uses a generalization of the standard technique of dealing with \te
             \[
                         w\br{A, V}\geq w\br{A, B} \geq w\br{A', V_H}\geq \delta_{\rho}\cdot W
             \]
-            \DD{chyba nie widze skad ostatnia nierownosc}
                         and similarly, using $w\br{A,B}=w\br{B,A}$ for disjoint $A$ and $B$, $w\br{B, V}\geq \delta_{\rho}\cdot W$.
             \item Otherwise, $A$ stays unchanged and we set $B=V\setminus A$. We have $w\br{A, V}\geq \delta_{\rho}\cdot W$ by the halting condition of the above greedy rule, and
               \begin{align*}
@@ -128,7 +127,6 @@ Recall that $B_\rho=\rho\cdot W$ and $B_\eta=\eta\cdot W$, and note that $B_\rho
     \[
         c\br{C_G}\leq d\cdot \kappa\br{\rho,\eta}\cdot \gamma\cdot \OPTdem{G}{\rho},
     \]
-    \DD{do sprawdzenia czy zdefiniowana $\kappa$?}
     where $d=\cl{\log_{5/4}\br{1/\eta}}$, $C^*$ is an optimal solution and $\gamma$ is the approximation factor of a polynomial-time algorithm for  \textsc{Generalized Conductance}.
 \end{theorem}
 \begin{proof}
@@ -140,7 +138,7 @@ Recall that $B_\rho=\rho\cdot W$ and $B_\eta=\eta\cdot W$, and note that $B_\rho
     It is easy to see that the algorithm runs in polynomial time. Hence, we focus on the approximation ratio.
 
 For a subgraph $H$ of $G$ for which the procedure has been called, let $d\br{H}$ denote the number of recursion levels the algorithm performs on $H$. Since every recursive call is invoked with $\eta_0\geq 4/5$ and, by Theorem~\ref{thm:gpd-bicriteria}, produces connected components of demand at most $\eta_0 \cdot w\br{V_H}\leq \frac{4}{5} w\br{V_H}$, this also means that for every `child component' $H'$ of $H\setminus C$ in the recursion tree, we get $\eta_{H'}\geq 5/4\cdot \eta_H$.
-\DD{do dyskusji: czy nie potrzebujemy nierownosci w druga strone, tzn. jesli kolejne $\eta_0$ sa powyzej $3/4$ to skad ta podstawa log?}
+\DD{kazda rekursja jest z param 4/5, a dla wiekszego koniec.}
 Because the last partitioning step happens when $\eta_0=\eta_H\geq 4/5$, the recursion depth is bounded by
 \[
     d\br{H}\leq \cl{\log_{5/4}\br{w\br{V_H}/B_\eta}}.
@@ -183,16 +181,16 @@ Now, we prove by induction on $d\br{H}$ that the recursive algorithm returns a s
 
 As an immediate corollary we get:
 \begin{corollary}\label{cor:graph-partitioning-approximation}
-    Fix $0<\rho<\eta<1$, and let $\Lambda=d\cdot \kappa\br{\rho,\eta}$ with $d=\cl{\log_{5/4}\br{1/\eta}}$ and $\kappa\br{\rho,\eta}=\max\brc{400,1/\br{\br{1-\rho/\eta}\cdot4/5}^2}$. There is a polynomial-time approximation algorithm for \textsc{Graph Partitioning with Demands} that returns an $\eta$-feasible subset of edges $C_G$ and, such that :
+    Fix $0<\rho<\eta<1$, and let $\Lambda_{\rho,\eta}=d\cdot \kappa\br{\rho,\eta}$ with $d=\cl{\log_{5/4}\br{1/\eta}}$ and $\kappa\br{\rho,\eta}=\max\brc{400,1/\br{\br{1-\rho/\eta}\cdot4/5}^2}$. There is a polynomial-time approximation algorithm for \textsc{Graph Partitioning with Demands} that returns an $\eta$-feasible subset of edges $C_G$ and, such that :
     \[
-    c\br{C_G}\leq \bigo\br{\Lambda\cdot \sqrt{\log n}}\cdot \OPTdem{G}{\rho}
+    c\br{C_G}\leq \bigo\br{\Lambda_{\rho,\eta}\cdot \sqrt{\log n}}\cdot \OPTdem{G}{\rho}
     \quad\text{on general graphs,}
     \]
     \[
-    c\br{C_G}\leq \Lambda\cdot \OPTdem{G}{\rho}
+    c\br{C_G}\leq \Lambda_{\rho,\eta}\cdot \OPTdem{G}{\rho}
     \quad\text{on trees.}
     \]
-    In particular, for any fixed $0<\rho<\eta<1$, $\Lambda$ is a constant, and the above bounds are $\bigo\br{\sqrt{\log n}}$ and $\bigo\br{1}$, respectively.
+    In particular, for any fixed $0<\rho<\eta<1$, $\Lambda_{\rho,\eta}$ is a constant, and the above bounds are $\bigo\br{\sqrt{\log n}}$ and $\bigo\br{1}$, respectively.
 \end{corollary}
 \subsection{Hierarchical clustering with demands}
 % \newcommand{\Dasgupta}{\tilde{c}}
@@ -208,13 +206,11 @@ For $u,v\in V$, let $\operatorname{lca}_{\cT}(u,v)$ denote their lowest common a
 \end{equation}
 We refer to this problem as \textsc{Hierarchical Clustering with Demands}. Note, that a nonbinary clustering tree can be refined into a binary one without increasing the cost in~\eqref{eq:Dasgupta}~\cite{ACostFunctionForSimilarityBasedHierarchicalClustering}.
 
-We parameterize our top-down algorithm by a value $\eta\in(1/2,1)$. Assume that we have a subroutine for \textsc{Graph Partitioning with Demands} with $\rho=1/2$ that returns an $\eta$-feasible supply-edge set $C_H$ satisfying \DD{gdzies tu powinno byc $\rho$?}
+We parameterize our top-down algorithm by a value $\eta\in(1/2,1)$. Assume that we have a subroutine for \textsc{Graph Partitioning with Demands} with $\rho=1/2$ that returns an $\eta$-feasible supply-edge set $C_H$ satisfying
 \begin{equation}\label{eq:hc-gpd-subroutine}
     c\br{C_H}
-    \leq\gamma(\eta)\cdot \OPTdem{H}{1/2}
+    \leq\gamma\br{\eta,\spr{V_H}}\cdot \OPTdem{H}{1/2}\leq\gamma\br{\eta,n}\cdot \OPTdem{H}{1/2}.
 \end{equation}
-and every component $K$ of $H\setminus C_H$ satisfies $
-    w\br{V_K}\leq\eta w\br{V_H}.$
 \DD{do przemyslenia: czy jakos nazwac lub inaczej zboxowac taka procedure, aby miec latwy ``ref'' do tego (np w tresci tw ponizej, w pseudokodzie).}
 
 \begin{theorem}\label{thm:hc-gpd-transfer}
@@ -241,7 +237,7 @@ and every component $K$ of $H\setminus C_H$ satisfies $
         =\sum_{q=0}^{W}c\br{E_q^*}.
     \end{equation}
 
-    Fix a positive-demand non-singleton cluster $H$ produced by the algorithm, and let $E_H$ be its supply edges. The maximal clusters of $\cT^*$ having demand at most $\fl{r_H/2}$ partition $V$ and by extension $V_H$ into clusters of demand at most $\fl{r_H/2}$. Every supply edge of $E_H$ joining two distinct parts of this partition has its endpoints in distinct maximal clusters of $\cT^*$, so their least common ancestor in $\cT^*$ has demand greater than $\fl{r_H/2}$. Consequently, the set $E_{\fl{r_H/2}}^*\cap E_H$ is a feasible solution to \textsc{Graph Partitioning with Demands} on the graph $H$ with $\rho=1/2$, and~\eqref{eq:hc-gpd-subroutine} gives \DD{$C_H$ to z OPTa?}
+    Fix a positive-demand non-singleton cluster $H$ produced by the algorithm, and let $E_H$ be its supply edges. The maximal clusters of $\cT^*$ having demand at most $\fl{r_H/2}$ partition $V$ and by extension $V_H$ into clusters of demand at most $\fl{r_H/2}$. Every supply edge of $E_H$ joining two distinct parts of this partition has its endpoints in distinct maximal clusters of $\cT^*$, so their least common ancestor in $\cT^*$ has demand greater than $\fl{r_H/2}$. Consequently, the set $E_{\fl{r_H/2}}^*\cap E_H$ is a feasible solution to \textsc{Graph Partitioning with Demands} on the graph $H$ with $\rho=1/2$, and~\eqref{eq:hc-gpd-subroutine} gives \DD{$C_H$ z algorytmu; poprawic $\gamma$}
     \begin{equation}\label{eq:hc-local-cut-bound}
         c\br{C_H}\leq \gamma \cdot \OPT_{1/2}\br{H}
         \leq\gamma(\eta)\cdot c\br{E_{\fl{r_H/2}}^*\cap E_H}.

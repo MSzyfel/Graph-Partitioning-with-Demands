@@ -29,11 +29,11 @@ Let $S\subseteq V$ be a vertex set, define
 to be the edges of $X$ with exactly one endpoint in $S$.
 For a vertex $v\in V$, we write $\delta_{X}(v)=\delta_{X}(\{v\})$ for the edges of $X$ incident to $v$. The \emph{weighted degree} of $u$ and the \emph{volume} of the vertices in $S$ are
 \[
-	d_X(u)=c\br{\delta_X(u)},
+	d_X(u)=f\br{\delta_X(u)},
 	\qquad
 	\operatorname{vol}_X(S)=\sum_{u\in S}d_X(u).
 \]
-
+\DD{todo:}
 \DD{cos nie tak jest z nastepnym rownaniem: czy chciales to napisac dla $X=V$ czy dowolnego $X$. W obu przypadkach trzeba poprawic rownosc i argument przed. W szczegolnosci $c$ zamiast $f$ tak czy inaczej.}
 Since every internal edge of $X$ has both endpoints in $S$ and every crossing edge of $X$ has one endpoint in $S$, we have the following identity:
 \begin{equation}\label{eq:demand-degree-identity}
@@ -45,7 +45,7 @@ For a partition $\cP$ of $V$, let
 	\delta_{X}(\cP)
 	=\brc{uv\in X\colon u\text{ and }v\text{ belong to distinct parts of }\cP}.
 \]
-For $A\subseteq V$ and a set of edges $X$, let \DD{dlaczego nie $X\br{A}$? Poza tym $X[A]$ niezdef.}
+For $A\subseteq V$ and a set of edges $X$, let \DD{dlaczego nie $X\br{A}$?}
 \[
 	X\br{A,V}
 	=\brc{uv\in X:\brc{u,v}\cap A\neq\emptyset}
