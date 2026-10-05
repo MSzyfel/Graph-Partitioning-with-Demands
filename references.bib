@@ -8,8 +8,7 @@ doi = {10.1145/1502793.1502794},
 abstract = {We give a O(√log n)-approximation algorithm for the sparsest cut, edge expansion, balanced separator, and graph conductance problems. This improves the O(log n)-approximation of Leighton and Rao (1988). We use a well-known semidefinite relaxation with triangle inequality constraints. Central to our analysis is a geometric theorem about projections of point sets in Rd, whose proof makes essential use of a phenomenon called measure concentration.We also describe an interesting and natural “approximate certificate” for a graph's expansion, which involves embedding an n-node expander in it with appropriate dilation and congestion. We call this an expander flow.},
 journal = {Journal of the {ACM}},
 articleno = {5},
-numpages = {37},
-keywords = {Graph partitioning, expanders, expansion, graph separators, multicommodity flows, semidefinite programs}
+numpages = {37}
 }
 
 @article{HierarchicalClusteringObjectiveFunctionsAndAlgorithms,
@@ -74,8 +73,7 @@ issn = {0178-4617},
 abstract = {An instance of the generalized partial cover problem consists of a ground set U and a family of subsets ${mathcal{S}}subseteq 2^{U}$ . Each element e\'{z}U is associated with a profit p(e), whereas each subset $Sin mathcal{S}$ has a cost c(S). The objective is to find a minimum cost subcollection $mathcal{S}'subseteq mathcal{S}$ such that the combined profit of the elements covered by $mathcal{S}'$ is at least P, a specified profit bound. In the prize-collecting version of this problem, there is no strict requirement to cover any element; however, if the subsets we pick leave an element e\'{z}U uncovered, we incur a penalty of \'{z}(e). The goal is to identify a subcollection $mathcal{S}'subseteq mathcal{S}$ that minimizes the cost of $mathcal{S}'$ plus the penalties of uncovered elements.Although problem-specific connections between the partial cover and the prize-collecting variants of a given covering problem have been explored and exploited, a more general connection remained open. The main contribution of this paper is to establish a formal relationship between these two variants. As a result, we present a unified framework for approximating problems that can be formulated or interpreted as special cases of generalized partial cover. We demonstrate the applicability of our method on a diverse collection of covering problems, for some of which we obtain the first non-trivial approximability results.},
 journal = {Algorithmica},
 pages = {489–509},
-numpages = {21},
-keywords = {Approximation algorithms, Lagrangian relaxation, Partial cover}
+numpages = {21}
 }
 
 @article{SviridenkoSubmodularKnapsack2004,
@@ -214,8 +212,7 @@ doi = {10.1145/2897518.2897527},
 abstract = {The development of algorithms for hierarchical clustering has been hampered by a shortage of precise objective functions. To help address this situation, we introduce a simple cost function on hierarchies over a set of points, given pairwise similarities between those points. We show that this criterion behaves sensibly in canonical instances and that it admits a top-down construction procedure with a provably good approximation ratio.},
 booktitle = {{STOC} 2016},
 pages = {118–127},
-numpages = {10},
-keywords = {Hierarchical clustering, approximation algorithm}
+numpages = {10}
 }
 
 @article{SipserSpielmanExpanderCodes,
@@ -278,13 +275,19 @@ keywords = {Hierarchical clustering, approximation algorithm}
   doi = {10.1109/CCC.2012.43}
 }
 
-@inproceedings{OnTheHardnessOfApproximatingMulticutAndSparsestCut,
-  author = {Chawla, Shuchi and Krauthgamer, Robert and Kumar, Ravi and Rabani, Yuval and Sivakumar, D.},
-  title = {On the Hardness of Approximating Multicut and Sparsest-Cut},
-  booktitle = {{CCC} 2005},
-  year = {2005},
-  pages = {144--153},
-  doi = {10.1109/CCC.2005.20}
+@article{OnTheHardnessOfApproximatingMulticutAndSparsestCut,
+  author       = {Shuchi Chawla and
+                  Robert Krauthgamer and
+                  Ravi Kumar and
+                  Yuval Rabani and
+                  D. Sivakumar},
+  title        = {On the Hardness of Approximating Multicut and Sparsest-Cut},
+  journal      = {Comput. Complex.},
+  volume       = {15},
+  number       = {2},
+  pages        = {94--114},
+  year         = {2006},
+  doi          = {10.1007/S00037-006-0210-9}
 }
 
 @inproceedings{PartitioningGraphsIntoBalancedComponents,
@@ -310,14 +313,15 @@ numpages = {14},
 keywords = {Graph Searching, Binary Search, Decision Trees, Vertex Separators, Graph Theory, Approximation Algorithm}
 }
 
-@misc{DiversityEmbeddingsAndTheHypergraphSparsestCut,
-      title={Diversity Embeddings and the Hypergraph Sparsest Cut}, 
-      author={Adam D. Jozefiak and F. Bruce Shepherd},
-      year={2023},
-      eprint={2303.04199},
-      archivePrefix={arXiv},
-      primaryClass={cs.DS},
-      url={https://arxiv.org/abs/2303.04199}, 
+
+@article{DiversityEmbeddingsAndTheHypergraphSparsestCut,
+  author       = {Adam D. Jozefiak and
+                  F. Bruce Shepherd},
+  title        = {Diversity Embeddings and the Hypergraph Sparsest Cut},
+  journal      = {CoRR},
+  volume       = {abs/2303.04199},
+  year         = {2023},
+  doi          = {10.48550/ARXIV.2303.04199}
 }
 
 @techreport{BoundsOnTheMaxFlowMinCutRatioForDirectedMulticommodityFlows,
@@ -334,25 +338,13 @@ keywords = {Graph Searching, Binary Search, Decision Trees, Vertex Separators, G
                   Ferdinando Cicalese and
                   Eduardo Sany Laber and
                   Marco Molinaro},
-  editor       = {Samson Abramsky and
-                  Cyril Gavoille and
-                  Claude Kirchner and
-                  Friedhelm Meyer auf der Heide and
-                  Paul G. Spirakis},
   title        = {On the Complexity of Searching in Trees: Average-Case Minimization},
-  booktitle    = {Automata, Languages and Programming, 37th International Colloquium,
-                  {ICALP} 2010, Bordeaux, France, July 6-10, 2010, Proceedings, Part
-                  {I}},
+  booktitle    = {{ICALP} 2010},
   series       = {Lecture Notes in Computer Science},
   volume       = {6198},
   pages        = {527--539},
-  publisher    = {Springer},
   year         = {2010},
-  url          = {https://doi.org/10.1007/978-3-642-14165-2\_45},
-  doi          = {10.1007/978-3-642-14165-2\_45},
-  timestamp    = {Sat, 05 Mar 2022 15:53:33 +0100},
-  biburl       = {https://dblp.org/rec/conf/icalp/JacobsCLM10.bib},
-  bibsource    = {dblp computer science bibliography, https://dblp.org}
+  doi          = {10.1007/978-3-642-14165-2\_45}
 }
 
 @inproceedings{TowardsAProofOfThe2To1GamesConjecture,
@@ -361,36 +353,24 @@ keywords = {Graph Searching, Binary Search, Decision Trees, Vertex Separators, G
                   Guy Kindler and
                   Dor Minzer and
                   Muli Safra},
-  editor       = {Ilias Diakonikolas and
-                  David Kempe and
-                  Monika Henzinger},
   title        = {Towards a proof of the 2-to-1 games conjecture?},
-  booktitle    = {Proceedings of the 50th Annual {ACM} {SIGACT} Symposium on Theory
-                  of Computing, {STOC} 2018, Los Angeles, CA, USA, June 25-29, 2018},
+  booktitle    = {{STOC} 2018},
   pages        = {376--389},
-  publisher    = {{ACM}},
   year         = {2018},
-  url          = {https://doi.org/10.1145/3188745.3188804},
-  doi          = {10.1145/3188745.3188804},
-  timestamp    = {Mon, 30 Mar 2026 15:37:35 +0200},
-  biburl       = {https://dblp.org/rec/conf/stoc/DinurKKMS18.bib},
-  bibsource    = {dblp computer science bibliography, https://dblp.org}
+  doi          = {10.1145/3188745.3188804}
 }
 
-@inproceedings{VertexCoverMightBeHardToApproximateToWithin2MinusEpsilon,
+
+@article{VertexCoverMightBeHardToApproximateToWithin2MinusEpsilon,
   author       = {Subhash Khot and
                   Oded Regev},
-  title        = {Vertex Cover Might be Hard to Approximate to within 2-{\textbackslash}varepsilon},
-  booktitle    = {18th Annual {IEEE} Conference on Computational Complexity (Complexity
-                  2003), 7-10 July 2003, Aarhus, Denmark},
-  pages        = {379},
-  publisher    = {{IEEE} Computer Society},
-  year         = {2003},
-  url          = {https://doi.org/10.1109/CCC.2003.1214437},
-  doi          = {10.1109/CCC.2003.1214437},
-  timestamp    = {Fri, 24 Mar 2023 00:04:21 +0100},
-  biburl       = {https://dblp.org/rec/conf/coco/KhotR03.bib},
-  bibsource    = {dblp computer science bibliography, https://dblp.org}
+  title        = {Vertex cover might be hard to approximate to within 2-epsilon},
+  journal      = {J. Comput. Syst. Sci.},
+  volume       = {74},
+  number       = {3},
+  pages        = {335--349},
+  year         = {2008},
+  doi          = {10.1016/J.JCSS.2007.06.019}
 }
 
 @article{SomeResultsOnApproximabilityOfMinimumSumVertexCover,
@@ -401,26 +381,14 @@ keywords = {Graph Searching, Binary Search, Decision Trees, Vertex Separators, G
   number       = {2},
   pages        = {11:1--11:28},
   year         = {2025},
-  url          = {https://doi.org/10.1145/3716551},
-  doi          = {10.1145/3716551},
-  timestamp    = {Sat, 06 Sep 2025 20:29:38 +0200},
-  biburl       = {https://dblp.org/rec/journals/toct/Stankovic25.bib},
-  bibsource    = {dblp computer science bibliography, https://dblp.org}
+  doi          = {10.1145/3716551}
 }
 
 @inproceedings{DBLP:conf/stacs/Mestre08,
   author       = {Juli{\'{a}}n Mestre},
-  editor       = {Susanne Albers and Pascal Weil},
   title        = {Lagrangian Relaxation and Partial Cover (Extended Abstract)},
-  booktitle    = {Proceedings of the 25th Annual Symposium on Theoretical Aspects of Computer Science, {STACS} 2008, Bordeaux, France, February 21--23},
-  series       = {LIPIcs},
-  volume       = {1},
+  booktitle    = {{STACS} 2008},
   pages        = {539--550},
-  publisher    = {Schloss Dagstuhl - Leibniz-Zentrum f{\"{u}}r Informatik, Germany},
   year         = {2008},
-  url          = {https://doi.org/10.4230/LIPIcs.STACS.2008.1315},
-  doi          = {10.4230/LIPICS.STACS.2008.1315},
-  timestamp    = {Fri, 21 Nov 2025 14:06:54 +0100},
-  biburl       = {https://dblp.org/rec/conf/stacs/Mestre08.bib},
-  bibsource    = {dblp computer science bibliography, https://dblp.org}
+  doi          = {10.4230/LIPICS.STACS.2008.1315}
 }

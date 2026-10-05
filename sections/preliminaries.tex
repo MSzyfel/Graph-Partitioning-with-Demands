@@ -4,17 +4,18 @@ Most instances of the problems considered in this work consist of a graph $G=\br
 For adjacent vertices $u,v\in V$, whenever not explicitly stated, we denote by $uv$ the supply edge between $u$ and $v$.
 For any $C\subseteq E$, $G\setminus C$ is the set of connected components obtained by removing the edges in $C$ from $G$.
 We write $\br{V_H,E_H,D_H,c_H,w_H}$ to point out that given parameters represent a particular graph or subgraph $H$, different than $G$.
-For $U\subseteq V$, the induced subgraph $G[U]$ has supply-edge set $E[U]=\brc{uv\in E:u,v\in U}$, demand-edge set $D[U]=\brc{uv\in D:u,v\in U}$, and the restrictions of $c$ and $w$ to these sets.
+For $U\subseteq V$, the induced subgraph $G[U]$ has the vertex set $U$, the supply-edge set $E[U]=\brc{uv\in E:u,v\in U}$, the demand-edge set $D[U]=\brc{uv\in D:u,v\in U}$, and the restrictions of $c$ and $w$ to these sets.
 
-For an edge set $X\subseteq\binom{V}{2}$ (usually the set of supply or demand edges), a function $f\colon X\to \mathbb{N}$, and a pair of disjoint subsets $A, B\subseteq V$, we define
+For an edge set $X\subseteq\binom{V}{2}$ (usually the set of supply or demand edges), a function $f\colon X\to \mathbb{N}$, and a pair of disjoint subsets $A, B\subseteq V$, we define \DD{purysta by powiedzial, ze powinnismy pisac $f(uv)$ --- do decyzji na pozniej.}
 \[
 f\br{A}=\sum_{\substack{uv\in X\\u,v\in A}}f\br{u,v},
 \qquad
 f\br{A,B}=\sum_{\substack{uv\in X\\u\in A,\ v\in B}}f\br{u,v}.
 \]
 Whenever $A, B\subseteq V$ are not disjoint, we define $f\br{A,B}=f\br{A}+f\br{A,B\setminus A}$ (see Figure~\ref{fig:demand-decomposition} for an illustration).
+\input{figures/demand_decomposition.tex}
 
-Define by
+Define by \DD{tutaj podobnie, inputem dla $w$ sa krawedzie, wiec raczej $w(uv)$.}
 \[
 	W=w\br{V}=\sum_{uv\in D}w\br{u,v}
 \]
@@ -26,24 +27,25 @@ Let $S\subseteq V$ be a vertex set, define
 	=\brc{uv\in X\colon\spr{\brc{u,v}\cap S}=1}
 \]
 to be the edges of $X$ with exactly one endpoint in $S$.
-For a vertex $v\in V$, we write $\delta_{X}(v)=\delta_{X}(\{v\})$ for the edges of $X$ incident to $v$. The weighted degree of $u$ and the volume of $S\subseteq U$ are
+For a vertex $v\in V$, we write $\delta_{X}(v)=\delta_{X}(\{v\})$ for the edges of $X$ incident to $v$. The \emph{weighted degree} of $u$ and the \emph{volume} of the vertices in $S$ are
 \[
 	d_X(u)=c\br{\delta_X(u)},
 	\qquad
 	\operatorname{vol}_X(S)=\sum_{u\in S}d_X(u).
 \]
 
+\DD{cos nie tak jest z nastepnym rownaniem: czy chciales to napisac dla $X=V$ czy dowolnego $X$. W obu przypadkach trzeba poprawic rownosc i argument przed. W szczegolnosci $c$ zamiast $f$ tak czy inaczej.}
 Since every internal edge of $X$ has both endpoints in $S$ and every crossing edge of $X$ has one endpoint in $S$, we have the following identity:
 \begin{equation}\label{eq:demand-degree-identity}
 	\vol_X(S)
-	=2f\br{S}+f\br{S,V\setminus S}
+	=2f\br{S}+f\br{S,V\setminus S}.
 \end{equation}
 For a partition $\cP$ of $V$, let
 \[
 	\delta_{X}(\cP)
 	=\brc{uv\in X\colon u\text{ and }v\text{ belong to distinct parts of }\cP}.
 \]
-For $A\subseteq V$, let
+For $A\subseteq V$ and a set of edges $X$, let \DD{dlaczego nie $X\br{A}$? Poza tym $X[A]$ niezdef.}
 \[
 	X\br{A,V}
 	=\brc{uv\in X:\brc{u,v}\cap A\neq\emptyset}
@@ -52,10 +54,9 @@ For $A\subseteq V$, let
 denote the edges of $X$ incident to $A$.
 For parameters $\rho,\eta\in(0,1)$, write $B_\rho=\rho W$ and $B_\eta=\eta W$ for the corresponding demand budgets.
 
-For a subset $C\subseteq E$ and a capacity function $c$ on the supply edges, $c\br{C}=\sum_{e\in C}c\br{e}$.
+For a subset $C\subseteq E$ and a capacity function $c$ on the supply edges, $c\br{C}=\sum_{e\in C}c\br{e}$. \DD{$\leftarrow$ to chyba bym wyrzucil, gdyz definiowalismy ogolnie $f(A)$.}
 For a subset $S\subseteq V$, we denote by $\bar{S}$ the complement of $S$ in $V$, i.~e. $\bar{S}=V\setminus S$.
 A \emph{cut} is any subset $S\subseteq V$, such that $S\neq \emptyset$, $S\neq V$ and we denote it either by just $S$ or we write $\br{S, \bar{S}}$ to explicitly indicate the two sides of the cut.
 
 Whenever an objective function is given as a ratio and its denominator equals $0$, we set the value of this objective to $\infty$.
 
-\input{figures/demand_decomposition.tex}

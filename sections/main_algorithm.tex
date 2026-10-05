@@ -2,7 +2,7 @@
 
 We start with results regarding the \textsc{Generalized Conductance} which are relatively simple and serve as a warm-up before tackling other partitioning problems. We begin with the easiest setup, when the supply graph is a tree. We show that in this case, an optimal cut is always obtained by removing a single supply edge. This immediately yields an obvious exact polynomial-time algorithm for supply trees, simply check all supply edges and choose the one whose removal minimizes the generalized conductance.
 
-Secondly, we treat the case of general graphs by reducing the problem to \textsc{Min-Ratio Vertex Cut}, which allows us to leverage existing approximation algorithms for that problem. This yields an $\bigo\br{\sqrt{\log n}}$-approximation algorithm for such instances.
+Then, we treat the case of general graphs by reducing the problem to \textsc{Min-Ratio Vertex Cut}, which allows us to leverage existing approximation algorithms for that problem. This yields an $\bigo\br{\sqrt{\log n}}$-approximation algorithm for general instances.
 
 \subsection{Supply trees}
 
@@ -12,10 +12,11 @@ Secondly, we treat the case of general graphs by reducing the problem to \textsc
 \begin{proof}
   If every cut has infinite value, the claim follows immediately. Otherwise, let $\br{S^*,\bar{S}^*}$ be an optimal cut and for brevity denote $
     W^*=w\br{S^*,V}\cdot w\br{\bar{S}^*,V}$ and $ E^*=\delta_E\br{S^*}.$
-  For every $e\in E^*$, let $X_e$ and $\bar{X}_e$ be the vertex sets of the two components of $T\setminus e$, and denote $
-    W_e=w\br{X_e,V}\cdot w\br{\bar{X}_e,V}$. We want to show that the there exists an edge $e\in E^*$ with $\psi_{w,T}\br{X_e}\leq \psi_{w,T}\br{S^*}$. To this end we employ the following lemma.
+  For every $e\in E^*$, let $S_e$ and $\bar{S}_e$ be the vertex sets of the two components of $T\setminus e$, and denote $
+    W_e=w\br{S_e,V}\cdot w\br{\bar{S}_e,V}$. We want to show that the there exists an edge $e\in E^*$ with $\psi_{w,T}\br{S_e}\leq \psi_{w,T}\br{S^*}$. \DD{nie zdefiniowalismy $\psi_{w,T}$ a jedynie $\psi_w$. Jesli to bedzie tylko na potrzeby tego podrozdzialu, to bym nie mnozyl notacji i pisal ``tree $G$''.}
+    To this end we employ the following lemma.
   \begin{lemma}\label{lemma:tree_edge_weight_sum}
-    We have
+    It holds
     \[
       \sum_{e\in E^*}W_e\geq W^*.
     \]
@@ -25,7 +26,7 @@ Secondly, we treat the case of general graphs by reducing the problem to \textsc
     \[
       w\br{A,V}=\sum_{f\in D\br{A,V}}w\br{f}.
     \]
-    For a demand edge $f$, define $I_A(f)=1$ if $f\in D\br{A,V}$ and $I_A(f)=0$ otherwise. For two demand edges $f,g\in D$, possibly with $f=g$, set
+    For a demand edge $f$, define $I_A(f)=1$ if $f\in D\br{A,V}$ and $I_A(f)=0$ otherwise. For two demand edges $f,g\in D$, possibly with $f=g$, set \DD{komentarz: podoba mi sie ten konstrukt...}
     \[
       q_A(f,g)
       =I_A(f)\cdot I_{\bar A}(g)+I_A(g)\cdot I_{\bar A}(f).
@@ -35,27 +36,26 @@ Secondly, we treat the case of general graphs by reducing the problem to \textsc
       w\br{A,V}\cdot w\br{\bar A,V}
       =\frac{1}{2}\sum_{f,g\in D}w\br{f}\cdot w\br{g}\cdot q_A(f,g).
     \end{equation}
-    We claim the following lemma.
-    \begin{lemma}\label{lemma:tree-demand-pair-cover}
-      Each pair $f,g\in D$ satisfies $q_{S^*}(f,g)
-        \leq\sum_{e\in E^*}q_{X_e}(f,g)$.
-    \end{lemma}
-    \begin{proof}
+    \DD{cos tutaj za bardzo zagniezdzone chyba te dowody (ponizszy lemma jest wewnatrz dowodu powyzszego lemma, ktory jest w dowodzie tw. Zmienilem wiec lemma ponizej na fragment dowodu, ale tak napisany, ze jest niejako ``wrapped''}
+    We claim that each pair $f,g\in D$ satisfies
+    \begin{equation}\label{eq:tree-demand-pair-cover}
+      q_{S^*}(f,g)
+        \leq\sum_{e\in E^*}q_{S_e}(f,g).
+    \end{equation}
     Since $q_{S^*}(f,g)\in \brc{0,1,2}$ we distinguish three cases:
     \begin{enumerate}
       \item $q_{S^*}(f,g)=0$. Here the claim is immediate since the right-hand side of the lemma's inequality is nonnegative.
-      \item $q_{S^*}(f,g)=1$. After exchanging $f$ and $g$ if necessary, there is an endpoint $u$ of $f$ in $S^*$ and an endpoint $v$ of $g$ in $\bar{S}^*$. The unique $u$-$v$ path in $T$ contains an edge $e\in E^*$. Removing $e$ places $u$ and $v$ in opposite components. Therefore, either $f\in D\br{X_e,V}$ and $g\in D\br{\bar X_e,V}$, or $g\in D\br{X_e,V}$ and $f\in D\br{\bar X_e,V}$. In either case $q_{X_e}(f,g)\geq 1$.
+      \item $q_{S^*}(f,g)=1$. After exchanging $f$ and $g$ if necessary, there is an endpoint $u$ of $f$ in $S^*$ and an endpoint $v$ of $g$ in $\bar{S}^*$. The unique $u$-$v$ path in $T$ contains an edge $e\in E^*$. Removing $e$ places $u$ and $v$ in opposite components. Therefore, either $f\in D\br{S_e,V}$ and $g\in D\br{\bar S_e,V}$, or $g\in D\br{S_e,V}$ and $f\in D\br{\bar S_e,V}$. In either case $q_{S_e}(f,g)\geq 1$.
       \item $q_{S^*}(f,g)=2$. Then each of $f$ and $g$ has one endpoint in $S^*$ and one in $\bar{S}^*$. Let $P_f$ and $P_g$ be the paths in $T$ joining the endpoints of $f$ and $g$, respectively. Choose $e_f\in P_f\cap E^*$ and $e_g\in P_g\cap E^*$.
     If $e_f\neq e_g$, then $f$ is incident to both components of $T\setminus e_f$, so $q_{X_{e_f}}(f,g)\geq1$ regardless of which component contains an endpoint of $g$. The symmetric argument gives $q_{X_{e_g}}(f,g)\geq1$, and consequently $q_{X_{e_f}}(f,g)+q_{X_{e_g}}(f,g)\geq2$. If $e_f=e_g$, both $f$ and $g$ are incident to both components of $T\setminus e_f$, and hence $q_{X_{e_f}}(f,g)=2$.
     \end{enumerate}
-    The lemma follows.
-    \end{proof}
+    This proves Equation~\ref{eq:tree-demand-pair-cover}.
 
-    Applying~\eqref{eq:tree-symmetrized-demand-pairs} first to $S^*$ and then to each $X_e$ combined with the Lemma \ref{lemma:tree-demand-pair-cover} gives
+    Applying~\eqref{eq:tree-symmetrized-demand-pairs} first to $S^*$ and then to each $S_e$ combined with~\eqref{eq:tree-demand-pair-cover} gives
     \begin{align*}
       W^* &= \frac{1}{2}\cdot \sum_{f,g\in D}w\br{f}\cdot w\br{g}\cdot q_{S^*}(f,g) \leq
-      \frac{1}{2}\cdot \sum_{f,g\in D}w\br{f}\cdot w\br{g}\cdot \sum_{e\in E^*}q_{X_e}(f,g)
-       \\&= \sum_{e\in E^*} \frac{1}{2}\cdot \sum_{f,g\in D}w\br{f}\cdot w\br{g}\cdot q_{X_e}(f,g)
+      \frac{1}{2}\cdot \sum_{f,g\in D}w\br{f}\cdot w\br{g}\cdot \sum_{e\in E^*}q_{S_e}(f,g)
+       \\&= \sum_{e\in E^*} \frac{1}{2}\cdot \sum_{f,g\in D}w\br{f}\cdot w\br{g}\cdot q_{S_e}(f,g)
        = \sum_{e\in E^*} W_e,
     \end{align*}
     as required.
@@ -68,7 +68,7 @@ Secondly, we treat the case of general graphs by reducing the problem to \textsc
     \geq\frac{\sum_{e\in E^*}c\br{e}}{\sum_{e\in E^*}W_e}
     \geq\frac{\sum_{e\in E^*_+}c\br{e}}{\sum_{e\in E^*_+}W_e}
     \geq\min_{e\in E^*_+}\brc{\frac{c\br{e}}{W_e}}
-    =\min_{e\in E^*_+}\brc{\psi_{w,T}\br{X_e}}.
+    =\min_{e\in E^*_+}\brc{\psi_{w,T}\br{S_e}}.
   \end{align*}
   The first inequality uses Lemma~\ref{lemma:tree_edge_weight_sum}. The second discards the nonnegative capacities of edges with $W_e=0$, while the last inequality is due to the fact that a weighted average is at least its smallest term.
 \end{proof}
@@ -80,6 +80,8 @@ In order to tackle general supply graphs, we show that we can transform demands 
   \chi_{w,G}\br{S}
   =\frac{c\br{S,\bar{S}}}{d_D\br{S}\cdot d_D\br{\bar{S}}}.
 \]
+\DD{tutaj cos mi nie pasuje. mianowicie $d_D$ bierze krawedzie demand-owe (czyli pomija potencjalnie supply edges) a nastepnie na tych krawedziach bierze koszty $c$, nie wage $w$. Czyli mamy koszty w mianowniku pomijajace niektore krawedzie z cuta $(S,\bar S)$.}
+\DD{przerwa tutaj... skip na nastepny roadzial}
 For every cut of finite value, Equation~\eqref{eq:demand-degree-identity} gives $
   w\br{S,V}\leq d_D\br{S}\leq 2w\br{S,V}$ and consequently
 \begin{align*}
@@ -147,3 +149,4 @@ Feige, Hajiaghayi, and Lee give a polynomial-time $\bigo\br{\sqrt{\log |V_H|}}$-
   \]
   This completes the proof of the theorem.
 \end{proof}
+\DD{uwaga notacyjna: powyzej mamy ``prosto pisane'' opt poprzez komende, a zwykle tekstowo pisane, co skutkuje kursywa w lematach i formulach. Dobrze byloby ujednolicic.}
