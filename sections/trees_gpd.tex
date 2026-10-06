@@ -1,42 +1,47 @@
 \section{Graph Partitioning with Demands on Trees}\label{sec:tree-configuration-lp}
 
-For the special case of the \textsc{Graph Partitioning with Demands} problem where the supply graph is a tree, one could ask whether the problem is polynomial-time or pseudo-polynomial-time solvable.
-We answer this question in the negative below by showing inapproximability (and also strong NP-hardness) even on stars.
+For the special case of \textsc{Graph Partitioning with Demands} where the supply graph is a tree, one could ask whether the problem is polynomial-time or pseudo-polynomial-time solvable.
+We answer this question in the negative by showing inapproximability (and also strong NP-hardness) even on stars.
 We then ask whether one can improve the approximation guarantee given by Theorem \ref{thm:gpd-extension}, since the constant provided by that theorem is relatively large.
-We give two polynomial-time bicriteria approaches for arbitrary demand weights: anchored-LP rounding and separator recursion based on submodular maximum coverage. We also give a non-bicriteria separator algorithm whose polynomial degree depends on $1/\rho$.
-Taking the best of these guarantees gives approximation ratios depending on $\rho$ and $\eta$ that improve on the constant provided by Theorem~\ref{thm:gpd-extension}. As a corollary, we obtain a polynomial-time $\frac{4e}{e-1}$-approximation for \textsc{Hierarchical Clustering with Demands} on trees.
-We now show a combinatorial algorithm for \textsc{Graph Partitioning with Demands} on trees. The idea is to find a smalls-sized set of vertices whose removal leads to components with relatively low demand. Then, the new goal of the algorithm becomes to remove a large enough amount of demand from each vertex of the separator. To do this end, we use a well-known subproblem called \textsc{Maximum Coverage}.
-We write $\OPT_{B_\rho}(T)=\OPTdem{T}{\rho}$ for the minimum cost of a partition whose components have internal demand at most $B_\rho$.
+We give two polynomial-time bicriteria approaches for arbitrary demand weights: anchored-LP rounding (cf. Section~\ref{sec:Anchor-LP-based-algorithm}) and separator recursion based on submodular maximum coverage (cf. Section~\ref{sec:Separator-Recursion-via-Maximum-Coverage}). We also give a non-bicriteria separator algorithm whose polynomial degree depends on $1/\rho$ (cf. Section~\ref{sec:Single-Criteria-Approximation-via-Multicut}).
+Taking the best of these guarantees gives approximation ratios depending on $\rho$ and $\eta$ that improve on the constant provided by Theorem~\ref{thm:gpd-extension}.
+\DDfix{As a corollary, we obtain a polynomial-time $\frac{4e}{e-1}$-approximation for \textsc{Hierarchical Clustering with Demands} on trees.
+The idea behind the algorithm is} to find a small-size set of vertices whose removal leads to components with relatively low demand. Then, the new goal of the algorithm becomes to remove a large enough amount of demand from each vertex of the separator. To do this we use a well-known subproblem called \textsc{Maximum Coverage}.
+For a tree $T$, we denote by $\OPT_{B_\rho}(T)=\OPTdem{T}{\rho}$ the minimum cost of a partition whose components have internal demand at most $B_\rho$.
+\DD{scislej co znaczy min. const of a partition?}
 
+\DD{do ujednolicenia: czasem w tytulach rozdzialow wszystko duza litera, czaem mala}
 \subsection{Hardness on stars}
 
-The following statement shows an approximation-preserving reduction from the \textsc{Vertex Cover} problem. The reduction is very simple.
+The following statement shows an approximation-preserving reduction from the \textsc{Vertex Cover} problem.
 
 \begin{theorem}\label{thm:tree-gpd-vertex-cover-hardness}
     For every fixed rational $\rho\in(0,1)$, \textsc{Graph Partitioning with Demands} is as hard to approximate as \textsc{Vertex Cover}, even when the supply graph is a star.
 \end{theorem}
 \begin{proof}
-    Let $G=(U,F)$ be a \textsc{Vertex Cover} instance. Let $V=U\cup\{r,d\}$. Construct a supply star $E$ with center $r$, leaves $U$, and one additional leaf $d$. Set $c(rd)=\infty$ and $c(ru)=1$ for every $u\in U$. The edges of the demand graph are $F\cup\{rd\}$ where $w\br{rd}=\frac{\rho \cdot \spr{F}}{1-\rho}$ and, for every $uv\in F$, $w\br{uv}=1$. If necessary, multiply all demand weights by a common denominator to make them integral.
+    Let $G=(U,F)$ be a \textsc{Vertex Cover} instance. Let $V=U\cup\{r,d\}$. Construct a supply star $E$ with center $r$, leaves $U$, and one additional leaf $d$. Set $c(rd)=\infty$ and $c(ru)=1$ for every $u\in U$. The edges of the demand graph are $F\cup\{rd\}$ \DD{ale $F$ zawiera podzbiory $U$? todo: dokonczyc ten dowod} where $w\br{rd}=\frac{\rho \cdot \spr{F}}{1-\rho}$ and, for every $uv\in F$, $w\br{uv}=1$. If necessary, multiply all demand weights by a common denominator to make them integral.
 
     The total demand is $W=w\br{rd}+\spr{F}$, and hence $\rho \cdot W=w\br{rd}$. Any solution of cost at most $\spr{U}$ leaves $rd$ uncut, otherwise its cost becomes $\infty$. For any solution $C$, let $H\in T\setminus C$ be the component containing $r$. If $H$ contained both endpoints of some edge $uv\in F$, its internal demand would exceed $w\br{rd}$. Therefore, the set $C_H=V\setminus V\br{H}$ forms a vertex cover. Moreover, we have that $c\br{C}=\spr{C_H}$ which means that the cost of any solution for the \textsc{Graph Partitioning with Demands} instance equals the size of some vertex cover. Conversely, any cover $C_H\subseteq U$ gives rise to a solution $C$ by cutting all edges incident to $C_H$, which has cost $\spr{C_H}$. Thus the reduction preserves approximation ratios.
 \end{proof}
 
 Combining Theorem~\ref{thm:tree-gpd-vertex-cover-hardness} with the known hardness of \textsc{Vertex Cover} gives the following consequence.
 \begin{corollary}\label{cor:tree-gpd-hardness}
-    For every $\varepsilon>0$, \textsc{Graph Partitioning with Demands} on stars is hard to approximate within $\sqrt{2}-\varepsilon$ unless $P=NP$, and within $2-\varepsilon$ assuming the Unique Games Conjecture~\cite{TowardsAProofOfThe2To1GamesConjecture,VertexCoverMightBeHardToApproximateToWithin2MinusEpsilon}.
+    For every $\varepsilon>0$, \textsc{Graph Partitioning with Demands} on stars is hard to approximate within a factor $\sqrt{2}-\varepsilon$ unless $P=NP$, and within $2-\varepsilon$ assuming the Unique Games Conjecture~\cite{TowardsAProofOfThe2To1GamesConjecture,VertexCoverMightBeHardToApproximateToWithin2MinusEpsilon}.
 \end{corollary}
 
 
 \subsection{Anchor-LP-based algorithm}
+\label{sec:Anchor-LP-based-algorithm}
 
 Our first algorithm is based on an anchored linear programming relaxation of the problem. The idea is that for each vertex $a\in V$, which we call an \emph{anchor}, we would like to have a constraint upper bounding the internal demand of the component containing $a$. To do this, our LP consists of two kinds of variables, the ones corresponding to the edges that are cut (the $x_e$ variables) and the ones denoting whether a given demand edge is internal to the component anchored at $a$ (the $z^a_{uv}$ variables).
-After solving the LP, we pick an arbitrary global root $r\in V$ and we calculate the distance $\dist(u)=\dist_x(r,u)$ of every vertex $u\in V$ from the root. This step can be seen as projecting the vertices of the tree onto the real line where $r$ lays at the origin and the position of each vertex $u$ is given by $\dist_x(r,u)$. Then, we pick an apropriate number $R$ and subdivide the line into intervals of length $R$. Whenever a given edge crosses an interval boundary, we cut it in the solution. However, in order for this approach to work, we draw a random phase $\theta\in[0,R)$ and shift all intervals by this value $\theta$. This randomized rounding gives a solution with low cost in expectation and can be derandomized by trying all possible relevant phases. Figure~\ref{fig:anchored-lp-threshold-line} illustrates the embedding and threshold locations.
+After solving the LP, we pick an arbitrary global root $r\in V$ and we calculate the distance $\dist(u)=\dist_x(r,u)$ \DD{czym jest x?} of every vertex $u\in V$ from the root. This step can be seen as projecting the vertices of the tree onto the real line where $r$ lays at the origin and the position of each vertex $u$ is given by $\dist_x(r,u)$. Then, we pick an apropriate number $R$ and subdivide the line into intervals of length $R$. Whenever a given edge crosses an interval boundary, we cut it in the solution. However, in order for this approach to work, we draw a random phase $\theta\in[0,R)$ and shift all intervals by this value $\theta$. This randomized rounding gives a solution with low cost in expectation and can be derandomized by trying all possible relevant phases. Figure~\ref{fig:anchored-lp-threshold-line} illustrates the embedding and threshold locations.
+\DD{czym jest $D()$ na rysunku?}
 
 \input{figures/anchored_lp_threshold_line.tex}
 
 \subsubsection{An anchored LP}
 
-For $a,u\in V$, let $P_T(a,u)$ be the unique path from $a$ to $u$ in $T$. Introduce variables $x_e\in[0,1]$ for each edge $e\in E$ and define
+For $a,u\in V$, let $P_T(a,u)$ be the unique path from $a$ to $u$ in the input tree $T=(V,E,D,c,w)$. Introduce variables $x_e\in[0,1]$ for each edge $e\in E$ and define
 \[
     \dist_x(a,u)=\sum_{e\in P_T(a,u)}x_e.
 \]
@@ -59,13 +64,13 @@ For every vertex $a\in V$, called an \emph{anchor}, and every demand edge $uv\in
 Since $|D|\leq\binom{n}{2}$, the LP has $O(|E|+n|D|)=O(n^3)$ variables and constraints.
 
 \begin{lemma}\label{lem:tree-anchored-relaxation}
-    Every partition with internal demand at most $B_\rho$ in each component induces a feasible solution of~\eqref{lp:tree-anchored} of the same cost. In particular, its optimum $\operatorname{LP}_{B_\rho}(T)$ satisfies
+    Every partition with internal demand at most $B_\rho$ in each component induces a feasible solution to~\eqref{lp:tree-anchored} of the same cost. In particular, its optimum $\operatorname{LP}_{B_\rho}(T)$ satisfies
     \[
         \operatorname{LP}_{B_\rho}(T)\leq\OPT_{B_\rho}(T).
     \]
 \end{lemma}
 \begin{proof}
-    Let $\cP$ be a partition whose every part has internal demand at most $B_\rho$, and let $F$ be the supply edges whose endpoints lie in distinct parts of $\cP$. Set $x_e=1$ for $e\in F$ and $x_e=0$ otherwise. For every anchor $a\in V$, let $H_a$ be the component of $T\setminus F$ containing $a$ and define
+    Let $\cP$ be a partition whose every part has internal demand at most $B_\rho$, and let $F$ be the supply edges whose endpoints lie in distinct parts of $\cP$. Set $x_e=1$ for $e\in F$ and $x_e=0$ otherwise. For every anchor $a\in V$, let $H_a$ be the connected component of $T\setminus F$ containing $a$ and define
     \[
         z^a_{uv}=\begin{cases}
             1,&u,v\in V_{H_a},\\
@@ -73,7 +78,7 @@ Since $|D|\leq\binom{n}{2}$, the LP has $O(|E|+n|D|)=O(n^3)$ variables and const
         \end{cases}
         \qquad uv\in D.
     \]
-    If both endpoints of $uv$ belong to $H_a$, then the paths from $a$ to $u$ and $v$ use no edge of $F$, and consequently $\dist_x(a,u)=\dist_x(a,v)=0$. Thus the corresponding connectivity constraint is satisfied with equality. If at least one endpoint lies outside $H_a$, the path from $a$ to that endpoint crosses an edge of $F$, so one of the two path distances is at least $1$. Hence the right-hand side of the connectivity constraint is nonpositive and is satisfied by $z^a_{uv}=0$. Since $H_a$ is contained in the part of $\cP$ containing $a$, its internal demand is at most $B_\rho$. Therefore,
+    If both endpoints of $uv$ belong to $H_a$, then the paths from $a$ to $u$ and $v$ use no edge of $F$, and consequently $\dist_x(a,u)=\dist_x(a,v)=0$. Thus the corresponding connectivity constraint is satisfied with equality. If at least one endpoint lies outside $H_a$, the path from $a$ to that endpoint crosses an edge of $F$, so one of the two path distances is at least $1$. Hence the right-hand side of the connectivity constraint is non-positive and is satisfied by $z^a_{uv}=0$. Since $H_a$ is contained in the part of $\cP$ containing $a$, its internal demand is at most $B_\rho$. Therefore,
     \[
         \sum_{uv\in D}w(u,v)z^a_{uv}=w\br{V_{H_a}}\leq B_\rho,
     \]
@@ -81,7 +86,7 @@ Since $|D|\leq\binom{n}{2}$, the LP has $O(|E|+n|D|)=O(n^3)$ variables and const
 \end{proof}
 \subsubsection{Rounding the LP solution}
 \begin{theorem}\label{thm:tree-anchored-rounding}
-    For every feasible rational solution $(x,z)$ of~\eqref{lp:tree-anchored} and every $R\in(0,1/2)$, a polynomial-time rounding algorithm finds a set $F\subseteq E$ such that
+    For every feasible rational solution $(x,z)$ of~\eqref{lp:tree-anchored} and every $R\in(0,1/2)$, there exists a polynomial-time rounding algorithm that finds a set $F\subseteq E$ such that
     \[
         c(F)\leq\frac{1}{R}\cdot \sum_{e\in E}c(e)\cdot x_e
         \qquad\text{and}\qquad
@@ -94,7 +99,7 @@ Since $|D|\leq\binom{n}{2}$, the LP has $O(|E|+n|D|)=O(n^3)$ variables and const
     \[
         \dist(v)=\dist_x(r,v),\qquad v\in V.
     \]
-    The values $\dist(v)$ embed the tree vertices into the nonnegative real line. Figure~\ref{fig:anchored-lp-threshold-line} illustrates these coordinates and the shifted thresholds. We now wish to choose thresholds along this line to determine which edges to cut.
+    The values $\dist(v)$ embed the tree vertices into the non-negative real line. Figure~\ref{fig:anchored-lp-threshold-line} illustrates these coordinates and the shifted thresholds. We now wish to choose thresholds along this line to determine which edges to cut.
     Choose an \emph{phase} $\theta$ uniformly from $[0,R)$. Delete a parent-child edge $e=pv$ whenever
     \[
         \dist(p)<\theta+k\cdot R\leq \dist(v)
@@ -112,11 +117,11 @@ Since $|D|\leq\binom{n}{2}$, the LP has $O(|E|+n|D|)=O(n^3)$ variables and const
     \[
         \dist_x(a,v)=\dist(v)-\dist(a)<R.
     \]
-    For each demand edge $uv\in D[V_H]$, the LP connectivity constraint for anchor $a$ gives
+    For each demand edge $uv\in D[V_H]$, \DD{moze pisac $D_H$?} the LP connectivity constraint for anchor $a$ gives
     \[
         z^a_{uv}\geq1-\dist_x(a,u)-\dist_x(a,v)>1-2R.
     \]
-    The anchor-demand constraint and nonnegativity of $z$ imply
+    The anchor-demand constraint and non-negativity of $z$ imply
     \[
         B_\rho\geq\sum_{uv\in D}w(u,v)\cdot z^a_{uv}
           \geq\sum_{uv\in D[V_H]}w(u,v)\cdot z^a_{uv}
@@ -124,10 +129,11 @@ Since $|D|\leq\binom{n}{2}$, the LP has $O(|E|+n|D|)=O(n^3)$ variables and const
     \]
     Rearranging gives the desired bound on $w(V_H)$.
 
-    It remains to derandomize the choice of $\theta$. The edge set $F$ changes only when $\theta$ crosses one of the at most $|V|$ residues $D(v)\bmod R$. Sort the distinct residues on the circle $[0,R)$ and choose one phase in every nonempty interval between consecutive residues, including the interval that wraps around from the last residue to the first. There are $O(|V|)$ candidate phases. By the properties of the expected value, at least one of these candidate phases yields an edge set with cost at most $\mathbb{E}[c(F)]$ as required.
+    It remains to derandomize the choice of $\theta$. The edge set $F$ changes only when $\theta$ crosses one of the at most $|V|$ residues $D(v)\bmod R$. \DD{$D(v)$ chyba niezdefiniowane} Sort the distinct residues on the circle $[0,R)$ and choose one phase in every nonempty interval between consecutive residues, including the interval that wraps around from the last residue to the first. There are $O(|V|)$ candidate phases. By the properties of the expected value, at least one of these candidate phases yields an edge set with cost at most $\mathbb{E}[c(F)]$ as required.
 \end{proof}
 
-The anchored-LP rounding procedure for the bicriteria guarantee is as follows.
+The anchored-LP rounding procedure for the bicriteria guarantee and applied in the proof of Theorem~\ref{thm:tree-anchored-rounding} is as follows.
+\DD{zmienilem w algorytmie na $T=(...)$.}
 
 \input{algorithms/anchored_lp_rounding.tex}
 
@@ -158,7 +164,7 @@ Therefore, our second approach is to convert the nonadditive pair demand into an
 To do so, we use weighted demand degrees, round them to a polynomial-size integer scale, and run a tree dynamic program over connected parts. For $\eta>(1+\rho)/2$, this procedure returns an $\eta$-feasible partition while paying only a cost of $\OPTdem{T}{\rho}$.
 \subsubsection{Weighted Budget Partitioning on a tree}
 
-Given a supply tree $T=(V,E,c)$, nonnegative integer vertex weights $q\colon V\to\mathbb{Z}_{\geq0}$, and a budget $C\geq\max_{v\in V}q(v)$, the \textsc{Weighted Budget Partitioning} problem asks for a minimum-cost edge set $F\subseteq E$ such that every component $H$ of $T\setminus F$ satisfies
+Given a supply tree $T=(V,E,c)$, non-negative integer vertex weights $q\colon V\to\mathbb{Z}_{\geq0}$, and a budget $C\geq\max_{v\in V}q(v)$, the \textsc{Weighted Budget Partitioning} problem asks for a minimum-cost edge set $F\subseteq E$ such that every component $H$ of $T\setminus F$ satisfies
 \[
     q\br{V_H}=\sum_{v\in V_H}q(v)\leq C.
 \]
@@ -431,14 +437,15 @@ For each induced instance, write $\OPT_{B_\rho}(H)$ for its minimum cut cost sub
 \fi
 
 \subsection{Separator Recursion via Maximum Coverage}
+\label{sec:Separator-Recursion-via-Maximum-Coverage}
 
-We now show a combinatorial algorithm for \textsc{Graph Partitioning with Demands} on trees. The idea is to find a smalls-sized set of vertices whose removal leads to components with relatively low demand. Then, the new goal of the algorithm becomes to remove a large enough amount of demand from each vertex of the separator. To this end, we employ a well-known subproblem called \textsc{Maximum Coverage}, which will allow us to find relatively low cost edge set whose removal separates roughly the required amount of demand from each separator vertex.
+We now show a combinatorial algorithm for \textsc{Graph Partitioning with Demands} on trees. The idea is to find a small-size set of vertices whose removal leads to components with relatively low demand. Then, the new goal of the algorithm becomes to remove a large enough amount of demand from each vertex of the separator. To this end, we employ a well-known subproblem called \textsc{Maximum Coverage}, which will allow us to find relatively low cost edge set whose removal separates roughly the required amount of demand from each separator vertex.
 
-For a component $H$ define $\mu_H(v)=d_{w,H}(v)/2$, where $d_{w,H}(v)$ is the weighted degree of $v$ in $D[V_H]$. Then, for every $X\subseteq V_H$,
+For a connected component $H$ and $v\in V_H$ define $\mu_H(v)=d_{w,H}(v)/2$, \DDfix{where $d_{w,H}(v)=\sum_{vu\in E_H}w(e)$ is} \DD{uwaga: napisałem $E_H$ zamiast $D[V_H]$.} the weighted degree of $v$ in $D[V_H]$. Then, for every $X\subseteq V_H$, \DD{do tej pory $X$ gralo role pozbiorow krawedzi, wiec moze $Y$ lub cos innego?}
 \[
     \mu_H(X)=w(X)+\frac12 w(X,V_H\setminus X),
 \]
-so $w(X)\leq\mu_H(X)$.
+so in particular $w(X)\leq\mu_H(X)$.
 
 \begin{lemma}\label{lem:tree-separator}
     Fix an integer $t\geq2$. There is a polynomial-time procedure $\textsc{Separator}(H, w, t)$ that returns a separator set $\mathcal L_H\subseteq V_H$ with $|\mathcal L_H|\leq t-1$ such that every component $J$ of $H\setminus\mathcal L_H$ satisfies
@@ -447,11 +454,17 @@ so $w(X)\leq\mu_H(X)$.
     \]
 \end{lemma}
 \begin{proof}
-    Root $H$ arbitrarily and initialize the current root-containing subtree $R$ to $H$. While $\mu_H(V_R)>w\br{H}/t$, choose the deepest vertex $x$ such that the subtree $T_x$ rooted at $x$ in $R$ has $\mu_H(V_{T_x})>w\br{H}/t$. Add $x$ to $\mathcal L_H$ and remove $T_x$ from $R$. The peeled subtrees are pairwise disjoint. For any pairwise disjoint sets $A_1,\ldots,A_k\subseteq V_H$, the definition of $\mu_H$ gives
+    \DDfix{The algorithm is as follows.}
+    Root $H$ arbitrarily and initialize the current root-containing subtree $R$ to $H$. While $\mu_H(V_R)>w\br{H}/t$, choose the deepest vertex $x$ such that the subtree $T_x$ rooted at $x$ in $R$ has $\mu_H(V_{T_x})>w\br{H}/t$.
+    \DD{czy tutaj na pewno $V_{T_x}$, czy tylko czesc w $R$, tzn. $V_{R_x}$?}
+    Add $x$ to $\mathcal L_H$ and remove $T_x$ from $R$. The peeled subtrees are pairwise disjoint. For any pairwise disjoint sets $A_1,\ldots,A_k\subseteq V_H$, the definition of $\mu_H$ gives
     \[
         \sum_{i=1}^k\mu_H(A_i)\leq w\br{V_H},
     \]
-    since each demand edge contributes at most its weight to this sum. Every peeled subtree has $\mu_H(V_{T_x})>w\br{V_H}/t$, so there are at most $t-1$ of them. By the choice of a deepest such vertex, every child subtree $T'$ of $x$ in $R$ has $\mu_H(V_{T'})\leq w\br{V_H}/t$, and hence $w\br{V_{T'}}\leq w\br{V_H}/t$. Therefore, after removing all separators, every component $K\in H\setminus\mathcal L_H$ is one of these child subtrees at the iteration when its parent separator was selected, or the final remainder $R$. The final remainder satisfies $\mu_H(V_R)\leq w\br{V_H}/t$ by the stopping condition. In either case, $w\br{V_K}\leq w\br{V_H}/t$ as desired.
+    since each demand edge contributes at most its weight to this sum.
+    \DD{hmmm, no nie wiem, gdyz jesli na przyklad $k=1$, $A_1=V_H$ to przez to, ze $\mu_H$ ma $+1/2$ w definicji to by sie nie zgadzalo.}
+    \DD{marker: tutaj na razie przerywam czytanie do konca rozdzialu 5.}
+    Every peeled subtree has $\mu_H(V_{T_x})>w\br{V_H}/t$, so there are at most $t-1$ of them. By the choice of a deepest such vertex, every child subtree $T'$ of $x$ in $R$ has $\mu_H(V_{T'})\leq w\br{V_H}/t$, and hence $w\br{V_{T'}}\leq w\br{V_H}/t$. Therefore, after removing all separators, every component $K\in H\setminus\mathcal L_H$ is one of these child subtrees at the iteration when its parent separator was selected, or the final remainder $R$. The final remainder satisfies $\mu_H(V_R)\leq w\br{V_H}/t$ by the stopping condition. In either case, $w\br{V_K}\leq w\br{V_H}/t$ as desired.
 \end{proof}
 
 Note, that this lemma will come useful later as well, since after the following procedure we show how to modify it to obtain a true, single criteria approximation algorithm for \textsc{Graph Partitioning with Demands} on trees.
@@ -565,6 +578,7 @@ as desired.
 \end{proof}
 
 \subsection{Single criteria approximation via Multicut}
+\label{sec:Single-Criteria-Approximation-via-Multicut}
 
 We now show how to employ a similar separator-based approach to obtain a single-criteria approximation via the Multicut problem. This time, the algorithm is not recursive, and therefore our intention is to pick a separator set large enough so that every component without a separator has demand at most $B_\rho$. Therefore let $t=\cl{1/\rho}$ be the size of the separator which we pick, which is a constant dependent only on $\rho$. In order for all of the components containing separators to be of appropriate size, we will require that the amount of demand separated from such components $K$ is at least $K$. Since we do not want to use an $O\br{\log n}$-approximation algorithm for the $\textsc{Partial Set Cover}$, we will show that we can achieve this goal using the well known \textsc{Partial Multicut} on trees.
 

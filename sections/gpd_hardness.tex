@@ -1,6 +1,6 @@
 \section{Hardness of Graph Partitioning with Demands}\label{sec:gpd-hardness}
 
-In this section we provide an approximation-hardness result for \textsc{Graph Partitioning with Demands} and \textsc{Hierarchical Clustering with Demands} based on the Small-Set Expansion Hypothesis. The \emph{Small-Set Expansion Hypothesis} states that, for every constant $\zeta>0$, there is a constant $\delta>0$ for which it is NP-hard, given a regular graph, to distinguish between the existence of a vertex set of normalized size $\delta$ and expansion at most $\zeta$, and the condition that every vertex set of normalized size $\delta$ has expansion at least $1-\zeta$. Both reductions in this chapter use rational numbers instead of natural ones, however this can be fixed by appropriate scaling.
+In this section we provide approximation-hardness results for \textsc{Graph Partitioning with Demands} and \textsc{Hierarchical Clustering with Demands} based on the Small-Set Expansion Hypothesis. The \emph{Small-Set Expansion Hypothesis} states that, for every constant $\zeta>0$, there is a constant $\delta>0$ for which it is NP-hard, given a regular graph, to distinguish between the existence of a vertex set of normalized size $\delta$ and expansion at most $\zeta$, and the condition that every vertex set of normalized size $\delta$ has expansion at least $1-\zeta$. Both reductions in this section use rational numbers instead of natural ones, however this can be fixed by appropriate scaling.
 
 For every unweighted undirected graph $G=(V,E)$ used as a source graph below, write
 \[
@@ -12,15 +12,18 @@ For every unweighted undirected graph $G=(V,E)$ used as a source graph below, wr
     \mu_G(u)=\frac{\deg_G(u)}{M_G},
     \qquad
     \mu_G(S)=\sum_{u\in S}\mu_G(u)=\frac{\operatorname{vol}_G(S)}{M_G},\qquad
-    \Phi_G(S)=\frac{|\delta_G(S)|}{\operatorname{vol}_G(S)}.
+    \Phi_G(S)=\frac{|\delta_G(S)|}{\operatorname{vol}_G(S)},
 \]
-For an oriented edge $u\to v$, let $P_G(u,v)=1/\deg_G(u)$ if $uv\in E$ and $P_G(u,v)=0$ otherwise. This is the probability that a random walk at vertex $u$ moves to vertex $v$. Moreover, $\mu\br{u}$ can be interpreted as the stationary probability that a random walk in $G$ visits vertex $u$. Now, set
+\DDfix{where $\deg_G(u)$ is the \emph{degree} of a vertex $u$ in $G$.}
+\DD{do przemyslenia: mamy tutaj konflikty notacyjne: $\mu$, $P$ z wczesniejszymi oznaczeniami.}
+For an oriented edge $u\to v$, let $P_G(u,v)=1/\deg_G(u)$ if $uv\in E$ and $P_G(u,v)=0$ otherwise. This is the probability that a random walk at vertex $u$ moves to vertex $v$. Moreover, $\mu\br{u}$ \DD{$\mu_G$?} can be interpreted as the stationary probability that a random walk in $G$ visits vertex $u$. \DD{to dosc nietrywialne (?)}
+Now, set
 \[
     p_G(u,v)=\mu_G(u)\cdot P_G(u,v).
 \]
 Thus $p_G(u,v)=p_G(v,u)=1/M_G$ on every edge. Then, for any $S\subseteq V$ we have
 \[
-    \sum_{(u,v)\in\delta_G(S)}p_G(u,v)
+    \sum_{uv\in\delta_G(S)}p_G(u,v)
     =\frac{|\delta_G(S)|}{M_G}
     =\mu_G(S)\cdot \Phi_G(S),
     \qquad
@@ -50,6 +53,7 @@ For any graph $H=(V_H,E_H)$ with stationary vertex measure $\mu$, write $\mu(u)=
 We use the standard product-space construction in the source theorem with tensor power $R\geq2$, which gives $\alpha\leq q^{-R}\leq1/4$. This additional atom bound is needed only for the HCD result below, not for the GPD reduction. The explicit parameter choices give a universal constant $K>0$ such that the YES expansion bound $K\varepsilon$ holds uniformly in $q$ for sufficiently small $\varepsilon$.
 
 We first invoke the following result of Raghavendra, Steurer, and Tulsiani~\cite[Theorem~3.5]{ReductionsBetweenExpansionProblems}.
+\DD{trzebaby naprawic ``ref'', gdyz rzeczony papier nie ma Thm. 3.5 (jedynie jego arxiv).; trzebaby dodac czym jest $K_\varepsilon$.}
 
 \begin{theorem}[Raghavendra-Steurer-Tulsiani]\label{thm:rst-global-expansion}
     For every integer $q\geq2$ and every $\gamma>0$, assuming the Small-Set Expansion Hypothesis, it is hard to distinguish between the following cases for a graph $H=(V_H,E_H)$ with stationary vertex measure $\mu$, for sufficiently small $\varepsilon>0$:
