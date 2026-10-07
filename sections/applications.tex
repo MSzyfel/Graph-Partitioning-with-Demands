@@ -138,7 +138,6 @@ Recall that $B_\rho=\rho\cdot W$ and $B_\eta=\eta\cdot W$, and note that $B_\rho
     It is easy to see that the algorithm runs in polynomial time. Hence, we focus on the approximation ratio.
 
 For a subgraph $H$ of $G$ for which the procedure has been called, let $d\br{H}$ denote the number of recursion levels the algorithm performs on $H$. Since every recursive call is invoked with $\eta_0\geq 4/5$ and, by Theorem~\ref{thm:gpd-bicriteria}, produces connected components of demand at most $\eta_0 \cdot w\br{V_H}\leq \frac{4}{5} w\br{V_H}$, this also means that for every `child component' $H'$ of $H\setminus C$ in the recursion tree, we get $\eta_{H'}\geq 5/4\cdot \eta_H$.
-\DD{kazda rekursja jest z param 4/5, a dla wiekszego koniec.}
 Because the last partitioning step happens when $\eta_0=\eta_H\geq 4/5$, the recursion depth is bounded by
 \[
     d\br{H}\leq \cl{\log_{5/4}\br{w\br{V_H}/B_\eta}}.
@@ -148,7 +147,7 @@ due to the fact that after reaching $\eta_{H}\geq 4/5$ the algorithm performs on
 Now, we prove by induction on $d\br{H}$ that the recursive algorithm returns a subset of edges of cost at most $d\br{H}\cdot \kappa\br{\rho,\eta}\cdot \gamma\cdot \OPTdem{H}{\rho_H}$.
 \DD{do przemyslenia ujednolicenie notacji $\eta_0$ vs $\eta_H$.}
 
-    \emph{Base cases, $d\br{H}=0$ and $d\br{H}=1$.} If $d\br{H}=0$, then $w\br{V_H}\leq B_\eta$, since the algorithm terminates without any partitioning, and the cost is $0$. If $d\br{H}=1$, then $B_\eta/w\br{V_H}\geq 4/5$, so $\eta_0=\eta_H=B_\eta/w\br{V_H}$, and after a single partitioning step for each connected component $H'$ of $H\setminus C$, $w\br{V_{H'}}\leq \eta_0 \cdot w\br{V_H}=B_\eta$. Hence the algorithm terminates in the next recursive step. \DD{$\leftarrow$ to zdanie to chyba pomylka, gdyz to wlasnie zakladamy (nie usuwam, bo moze mialo tu byc cos innego, wiec do spawdzenia)} By the explicit bound established in the proof of Theorem~\ref{thm:gpd-bicriteria}, the cost of the solution is bounded by $\frac{\gamma}{\br{\eta_H+\delta_{\rho_H}-1}^2}\cdot \OPTdem{H}{\rho_H}$. We establish the bound $\frac{1}{\br{\eta_H+\delta_{\rho_H}-1}^2}\leq \kappa\br{\rho,\eta}$ in two cases:
+    \emph{Base cases, $d\br{H}=0$ and $d\br{H}=1$.} If $d\br{H}=0$, then $w\br{V_H}\leq B_\eta$, since the algorithm terminates without any partitioning, and the cost is $0$. If $d\br{H}=1$, then $B_\eta/w\br{V_H}\geq 4/5$, so $\eta_0=\eta_H=B_\eta/w\br{V_H}$, and after a single partitioning step for each connected component $H'$ of $H\setminus C$, $w\br{V_{H'}}\leq \eta_0 \cdot w\br{V_H}=B_\eta$. Hence the algorithm \DDfix{terminates at the beginning of the next} recursive step. By the explicit bound established in the proof of Theorem~\ref{thm:gpd-bicriteria}, the cost of the solution is bounded by $\frac{\gamma}{\br{\eta_H+\delta_{\rho_H}-1}^2}\cdot \OPTdem{H}{\rho_H}$. We establish the bound $\frac{1}{\br{\eta_H+\delta_{\rho_H}-1}^2}\leq \kappa\br{\rho,\eta}$ in two cases:
     \begin{enumerate}
         \item If $\rho_H\leq 3/4$, then $\delta_{\rho_H}=1/4$ and $\eta_H+\delta_{\rho_H}-1\geq 4/5+1/4-1=1/20$, using $\eta_H\geq 4/5$. Hence $\frac{1}{\br{\eta_H+\delta_{\rho_H}-1}^2}\leq 400\leq \kappa\br{\rho,\eta}$.
         \item If $\rho_H> 3/4$, then $\delta_{\rho_H}=1-\rho_H$ and, using $\rho_H=\br{\rho/\eta}\cdot\eta_H$ and $\eta_H\geq 4/5$,
