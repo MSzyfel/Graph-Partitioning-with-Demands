@@ -14,9 +14,14 @@ For every unweighted undirected graph $G=(V,E)$ used as a source graph below, wr
     \mu_G(S)=\sum_{u\in S}\mu_G(u)=\frac{\operatorname{vol}_G(S)}{M_G},\qquad
     \Phi_G(S)=\frac{|\delta_G(S)|}{\operatorname{vol}_G(S)},
 \]
-\DDfix{where $\deg_G(u)$ is the \emph{degree} of a vertex $u$ in $G$.}
-\DD{do przemyslenia: mamy tutaj konflikty notacyjne: $\mu$, $P$ z wczesniejszymi oznaczeniami.}
-For an oriented edge $u\to v$, let $P_G(u,v)=1/\deg_G(u)$ if $uv\in E$ and $P_G(u,v)=0$ otherwise. This is the probability that a random walk at vertex $u$ moves to vertex $v$. Moreover, $\mu\br{u}$ \DD{$\mu_G$?} can be interpreted as the stationary probability that a random walk in $G$ visits vertex $u$. \DD{to dosc nietrywialne (?)}
+where $\deg_G(u)$ is the degree of $u$ in $G$. For the simple random walk on $G$, let $P_G(u,v)=1/\deg_G(u)$ if $uv\in E$ and $P_G(u,v)=0$ otherwise. Its stationary distribution is $\mu_G(u)=\deg_G(u)/M_G$: for every $v\in V$,
+\[
+    \sum_{u\in V}\mu_G(u)P_G(u,v)
+    =\sum_{u:uv\in E}\frac{1}{M_G}
+    =\frac{\deg_G(v)}{M_G}
+    =\mu_G(v).
+\]
+Thus $\mu_G(u)$ is the probability that the walk is at $u$ at any given step when it is in stationarity. To avoid overloading notation, we use the subscripts $G$ and write $\mu(u)$ only when the source graph is clear.
 Now, set
 \[
     p_G(u,v)=\mu_G(u)\cdot P_G(u,v).
@@ -52,8 +57,7 @@ For any graph $H=(V_H,E_H)$ with stationary vertex measure $\mu$, write $\mu(u)=
 \]
 We use the standard product-space construction in the source theorem with tensor power $R\geq2$, which gives $\alpha\leq q^{-R}\leq1/4$. This additional atom bound is needed only for the HCD result below, not for the GPD reduction. The explicit parameter choices give a universal constant $K>0$ such that the YES expansion bound $K\varepsilon$ holds uniformly in $q$ for sufficiently small $\varepsilon$.
 
-We first invoke the following result of Raghavendra, Steurer, and Tulsiani~\cite[Theorem~3.5]{ReductionsBetweenExpansionProblems}.
-\DD{trzebaby naprawic ``ref'', gdyz rzeczony papier nie ma Thm. 3.5 (jedynie jego arxiv).; trzebaby dodac czym jest $K_\varepsilon$.}
+We use the result of Raghavendra, Steurer, and Tulsiani~\cite{ReductionsBetweenExpansionProblems}.
 
 \begin{theorem}[Raghavendra-Steurer-Tulsiani]\label{thm:rst-global-expansion}
     For every integer $q\geq2$ and every $\gamma>0$, assuming the Small-Set Expansion Hypothesis, it is hard to distinguish between the following cases for a graph $H=(V_H,E_H)$ with stationary vertex measure $\mu$, for sufficiently small $\varepsilon>0$:
@@ -99,14 +103,14 @@ We derive from Theorem~\ref{thm:rst-global-expansion} the form of the gap used i
 
 \subsection{Hardness of Graph Partitioning with Demands}
 
-For simplicity, we carry out the reduction with rational costs and demands. \DDfix{Scaling by a least common denominator does not} affect feasibility or any approximation ratio.
+For simplicity, we carry out the reduction with rational costs and demands. Scaling by a least common denominator does not affect feasibility or any approximation ratio.
 
 A demand graph is \emph{bipartite multiplicative} if its vertex set has a bipartition $L\mathbin{\dot\cup}R$, its demand edges are all pairs with one endpoint in $L$ and the other in $R$, and there is a potential $\pi$ such that $w(uv)=\pi(u)\cdot \pi(v)$ for every demand edge $uv$. Our intention is to show a reduction which establishes the hardness of graph partitioning with bipartite multiplicative demands.
 This class is closed under taking induced subgraphs.
 
 
     For every $u\in U$, introduce two vertices $u^{\mathrm L}$ and $u^{\mathrm R}$, assign $
-        \pi\br{u^{\mathrm L}}=\pi\br{u^{\mathrm R}}=\mu(u),$ \DD{czym jest $\mu(u)$ tutaj?}
+        \pi\br{u^{\mathrm L}}=\pi\br{u^{\mathrm R}}=\mu_X(u),$
     and let $
         \widetilde U
         =\brc{u^{\mathrm L},u^{\mathrm R}\colon u\in U}.$
@@ -133,13 +137,13 @@ This class is closed under taking induced subgraphs.
     The same calculation for $S=U$ gives $w\br{\widetilde U}=1$.
 \end{proof}
 
-We now turn $X$ \DD{czym jest $X$?} into a supply graph $\widetilde X$ on $\widetilde U$. For every $uv\in F$, add the supply edge $u^{\mathrm L}v^{\mathrm L}$ \DDfix{of cost} $c(u^{\mathrm L}v^{\mathrm L})=p_X(u,v)$. For every $u\in U$, also add the \emph{consistency edge} $u^{\mathrm L}u^{\mathrm R}$ \DDfix{of cost} $c(u^{\mathrm L}u^{\mathrm R})=1$. Thus, unless a consistency edge is cut, the two copies of every vertex belong to the same component. Together with the previously defined bipartite multiplicative demand graph on $\widetilde U$, this completes the construction of \DDfix{the graph instance $(\widetilde U,\widetilde X,D_\times,c,w)$.}
+We now turn the source graph $X=(U,F)$ from Lemma~\ref{lem:globalized-long-code-gap} into a supply graph $\widetilde X$ on $\widetilde U$. For every $uv\in F$, add the supply edge $u^{\mathrm L}v^{\mathrm L}$ of cost $c(u^{\mathrm L}v^{\mathrm L})=p_X(u,v)$. For every $u\in U$, also add the \emph{consistency edge} $u^{\mathrm L}u^{\mathrm R}$ of cost $c(u^{\mathrm L}u^{\mathrm R})=1$. Thus, unless a consistency edge is cut, the two copies of every vertex belong to the same component. Together with the previously defined bipartite multiplicative demand graph on $\widetilde U$, this completes the construction of the graph instance $(\widetilde U,\widetilde X,D_\times,c,w)$.
 
 \subsubsection{Completenes}
 \begin{lemma}\label{lem:sse-gpd-completeness}
     Fix $\rho\in(0,1)$ and set $
         q=\max\left\{2,\left\lceil\rho^{-1/2}\right\rceil\right\}. $
-    In the YES \DD{yes w ktorym problemie?; czym jest $K$?} case,
+    In the YES case of Lemma~\ref{lem:globalized-long-code-gap},
     \[
         \OPTdem{\widetilde X}{\rho}\leq \frac{K}{2}\cdot\varepsilon.
     \]

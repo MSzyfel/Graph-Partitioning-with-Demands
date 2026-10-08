@@ -12,7 +12,7 @@ Secondly, we reduce the general graphs instances to \textsc{Min-Ratio Vertex Cut
   If every cut has infinite value, the claim follows immediately. Otherwise, let $\br{S^*,\bar{S}^*}$ be an optimal cut and for brevity denote $
     W^*=w\br{S^*,V}\cdot w\br{\bar{S}^*,V}$ and $ E^*=\delta_E\br{S^*}.$
   For every $e\in E^*$, let $S_e$ and $\bar{S}_e$ be the vertex sets of the two components of $T\setminus e$, and denote $
-    W_e=w\br{S_e,V}\cdot w\br{\bar{S}_e,V}$. We want to show that the there exists an edge $e\in E^*$ with $\psi_{w,T}\br{S_e}\leq \psi_{w,T}\br{S^*}$. \DD{nie zdefiniowalismy $\psi_{w,T}$ a jedynie $\psi_w$. Jesli to bedzie tylko na potrzeby tego podrozdzialu, to bym nie mnozyl notacji i pisal ``tree $G$''.}
+    W_e=w\br{S_e,V}\cdot w\br{\bar{S}_e,V}$. We want to show that the there exists an edge $e\in E^*$ with $\psi_{w}\br{S_e}\leq \psi_{w}\br{S^*}$.
     To this end we employ the following lemma.
   \begin{lemma}\label{lemma:tree_edge_weight_sum}
     It holds $\sum_{e\in E^*}W_e\geq W^*$.
@@ -25,7 +25,6 @@ Secondly, we reduce the general graphs instances to \textsc{Min-Ratio Vertex Cut
       w\br{A,V}\cdot w\br{\bar A,V}
       =\frac{1}{2}\sum_{f,g\in D}w\br{f}\cdot w\br{g}\cdot q_A(f,g).
     \end{equation}
-    \DD{cos tutaj za bardzo zagniezdzone chyba te dowody (ponizszy lemma jest wewnatrz dowodu powyzszego lemma, ktory jest w dowodzie tw. Zmienilem wiec lemma ponizej na fragment dowodu, ale tak napisany, ze jest niejako ``wrapped''}
     We claim that each pair $f,g\in D$ satisfies
     \begin{equation}\label{eq:tree-demand-pair-cover}
       q_{S^*}(f,g)

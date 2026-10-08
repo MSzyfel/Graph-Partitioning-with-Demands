@@ -1,14 +1,13 @@
 \section{Applications of the Generalized Conductance}
+This section provides our main algorithmic result for GPD and HCD on general graphs.
+% Below we give two main applications of \textsc{Generalized Conductance}. We show that given any approximation algorithm for \textsc{Generalized Conductance}, one can use it to obtain approximation algorithm for \textsc{Graph Partitioning with Demands} which further carries on to \textsc{Hierarchical Clustering with Demands} with only constant increase in the guarantee at each step.
 
-Below we give two main applications of \textsc{Generalized Conductance}. We show that given any approximation algorithm for \textsc{Generalized Conductance}, one can use it to obtain approximation algorithm for \textsc{Graph Partitioning with Demands} which further carries on to \textsc{Hierarchical Clustering with Demands} with only constant increase in the guarantee at each step.
-
-To do so, we show that a repeated use of the approximation algorithm for the \textsc{Generalized Conductance} allows us to give a bi-criteria approximation algorithm for \textsc{Graph Partitioning with Demands} for a certain range of input parameters. This range can be then extended by a careful recursive application of the algorithm. Furthermore, a similar approach can be applied to the \textsc{Hierarchical Clustering with Demands} problem, however, here we repeatedly apply the algorithm for the \textsc{Graph Partitioning with Demands} instead of the \textsc{Generalized Conductance}. All approximation-hardness results are collected in Section~\ref{sec:gpd-hardness}.
+% To do so, we show that a repeated use of the approximation algorithm for the \textsc{Generalized Conductance} allows us to give a bi-criteria approximation algorithm for \textsc{Graph Partitioning with Demands} for a certain range of input parameters. This range can be then extended by a careful recursive application of the algorithm. Furthermore, a similar approach can be applied to the \textsc{Hierarchical Clustering with Demands} problem, however, here we repeatedly apply the algorithm for the \textsc{Graph Partitioning with Demands} instead of the \textsc{Generalized Conductance}. All approximation-hardness results are collected in Section~\ref{sec:gpd-hardness}.
 
 \subsection{Graph Partitioning with Demands}
 
 We now apply the approximation algorithm for \textsc{Generalized Conductance} to obtain an approximation algorithm for \textsc{Graph Partitioning with Demands}. In the latter problem, we are given an instance $G=(V,E,D,c,w)$, together with a fixed constant $\rho\in(0,1)$. The goal is to find a subset of supply edges $C\subseteq E$ that minimizes $c\br{C}$ such that for every connected component $H$ of $G\setminus C$, we have $w\br{V_H}\leq \rho\cdot W$.
 Let $\OPTdem{G}{\rho}=c\br{C^*}$, where $C^*\subseteq E$ is an optimal solution.
-
 Let $\rho<\eta<1$ be a constant. We say that $C\subseteq E$ is $\eta$-feasible if for every connected component $H$ of $G\setminus C$, it holds $w\br{V_H}\leq \eta \cdot W$, instead of $w\br{V_H}\leq \rho \cdot W$.
 We will obtain a bi-criteria approximation algorithm for \textsc{Graph Partitioning with Demands} that returns a subset of edges $C$ such that $c\br{C}=\bigo_{\rho, \eta}\br{\gamma}\cdot \OPTdem{G}{\rho}$ and $C$ is $\eta$-feasible, where $\gamma$ is the approximation ratio for the \textsc{Generalized Conductance}. This is done in two parts. Firstly, we show an algorithm for a limited range of $\eta$ and then extend it to the entirety of $\eta\in(\rho,1)$.
 
@@ -126,7 +125,7 @@ Recall that $B_\rho=\rho\cdot W$ and $B_\eta=\eta\cdot W$, and note that $B_\rho
     where $d=\cl{\log_{5/4}\br{1/\eta}}$, $C^*$ is an optimal solution and $\gamma$ is the approximation factor of a polynomial-time algorithm for  \textsc{Generalized Conductance}.
 \end{theorem}
 \begin{proof}
-    For a subgraph $H$ of $G$ with $w\br{V_H}\geq B_\eta$ (recall $B_\eta=\eta\cdot W$) we set $\eta_H=B_\eta/w\br{V_H}$ and $\rho_H=B_\rho/w\br{V_H}$ (recall $B_\rho=\rho\cdot W$). We observe that $\rho_H/\eta_H=B_\rho/B_\eta=\rho/\eta$.
+    For a subgraph $H$ of $G$ with $w\br{V_H}\geq B_\eta$ (recall $B_\eta=\eta\cdot W$), we set $\eta_H=B_\eta/w\br{V_H}$ and $\rho_H=B_\rho/w\br{V_H}$ (recall $B_\rho=\rho\cdot W$). The algorithm uses $\eta_0=\max\brc{4/5,\eta_H}$ and we observe that $\rho_H/\eta_H=B_\rho/B_\eta=\rho/\eta$.
     Recall that $\OPTdem{H}{\rho_H}$ is the cost of the optimal \textsc{Graph Partitioning with Demands} solution on $H$ with threshold $\rho_H$.
     The recursive procedure for a component $H$ is as follows.
 
@@ -141,9 +140,8 @@ Because the last partitioning step happens when $\eta_0=\eta_H\geq 4/5$, the rec
 due to the fact that after reaching $\eta_{H}\geq 4/5$ the algorithm performs one last partitioning step, i.e., the last recursive call. Since $\cl{\log_{5/4}\br{w\br{V_H}/B_\eta}}$ is the number of iterations required to reach $\eta_H\geq 1$, which is one more than we need to reach $\eta_H\geq 4/5$, we get that the above quantity is correct.
 
 Now, we prove by induction on $d\br{H}$ that the recursive algorithm returns a subset of edges of cost at most $d\br{H}\cdot \kappa\br{\rho,\eta}\cdot \gamma\cdot \OPTdem{H}{\rho_H}$.
-\DD{do przemyslenia ujednolicenie notacji $\eta_0$ vs $\eta_H$.}
 
-    \emph{Base cases, $d\br{H}=0$ and $d\br{H}=1$.} If $d\br{H}=0$, then $w\br{V_H}\leq B_\eta$, since the algorithm terminates without any partitioning, and the cost is $0$. If $d\br{H}=1$, then $B_\eta/w\br{V_H}\geq 4/5$, so $\eta_0=\eta_H=B_\eta/w\br{V_H}$, and after a single partitioning step for each connected component $H'$ of $H\setminus C$, $w\br{V_{H'}}\leq \eta_0 \cdot w\br{V_H}=B_\eta$. Hence the algorithm \DDfix{terminates at the beginning of the next} recursive step. By the explicit bound established in the proof of Theorem~\ref{thm:gpd-bicriteria}, the cost of the solution is bounded by $\frac{\gamma}{\br{\eta_H+\delta_{\rho_H}-1}^2}\cdot \OPTdem{H}{\rho_H}$. We establish the bound $\frac{1}{\br{\eta_H+\delta_{\rho_H}-1}^2}\leq \kappa\br{\rho,\eta}$ in two cases:
+    \emph{Base cases, $d\br{H}=0$ and $d\br{H}=1$.} If $d\br{H}=0$, then $w\br{V_H}\leq B_\eta$, since the algorithm terminates without any partitioning, and the cost is $0$. If $d\br{H}=1$, then $B_\eta/w\br{V_H}\geq 4/5$, so $\eta_0=\eta_H=B_\eta/w\br{V_H}$, and after a single partitioning step for each connected component $H'$ of $H\setminus C$, $w\br{V_{H'}}\leq \eta_0 \cdot w\br{V_H}=B_\eta$. Hence the algorithm terminates at the beginning of the next recursive step. By the explicit bound established in the proof of Theorem~\ref{thm:gpd-bicriteria}, the cost of the solution is bounded by $\frac{\gamma}{\br{\eta_H+\delta_{\rho_H}-1}^2}\cdot \OPTdem{H}{\rho_H}$. We establish the bound $\frac{1}{\br{\eta_H+\delta_{\rho_H}-1}^2}\leq \kappa\br{\rho,\eta}$ in two cases:
     \begin{enumerate}
         \item If $\rho_H\leq 3/4$, then $\delta_{\rho_H}=1/4$ and $\eta_H+\delta_{\rho_H}-1\geq 4/5+1/4-1=1/20$, using $\eta_H\geq 4/5$. Hence $\frac{1}{\br{\eta_H+\delta_{\rho_H}-1}^2}\leq 400\leq \kappa\br{\rho,\eta}$.
         \item If $\rho_H> 3/4$, then $\delta_{\rho_H}=1-\rho_H$ and, using $\rho_H=\br{\rho/\eta}\cdot\eta_H$ and $\eta_H\geq 4/5$,
@@ -206,8 +204,7 @@ We parameterize our top-down algorithm by a value $\eta\in(1/2,1)$. Assume that 
     c\br{C_H}
     \leq\gamma\br{\eta,\spr{V_H}}\cdot \OPTdem{H}{1/2}\leq\gamma\br{\eta,n}\cdot \OPTdem{H}{1/2}.
 \end{equation}
-\DDfix{We point out that this subroutine can be the one from the previous section or any other algorithm that meets the above criteria.
-In the following we will use the symbol $\DPartition$ with a slight abuse of notation regarding skipping the parameters $\eta$ and the size of the graph.}
+This subroutine may be the one from the previous section or any other algorithm meeting these criteria. We denote it by $\DPartition$, suppressing its parameters $\eta$ and the graph size.
 
 \begin{theorem}\label{thm:hc-gpd-transfer}
     Fix $\eta\in(1/2,1)$ and suppose that a subroutine $\DPartition$ is given, where $\gamma(\eta,n)\geq1$. Then there exists a $\frac{2\gamma(\eta,n)}{1-\eta}$-approximation polynomial-time algorithm for \textsc{Hierarchical Clustering with Demands}.
@@ -234,12 +231,12 @@ In the following we will use the symbol $\DPartition$ with a slight abuse of not
     \end{equation}
 
     Fix a positive-demand non-singleton cluster $H$ produced by the algorithm, and let $E_H$ be its supply edges. The maximal clusters of $\cT^*$ having demand at most $\fl{r_H/2}$ partition $V$ and by extension $V_H$ into clusters of demand at most $\fl{r_H/2}$.
-    \DD{$r_H$ niezdef. Czytam z przypuszczeniem, ze $r_H=w(V_H)$.}
+    We write $r_H=w\br{V_H}$ for the demand of $H$.
     Every supply edge of $E_H$ joining two distinct parts of this partition has its endpoints in distinct maximal clusters of $\cT^*$, so their least common ancestor in $\cT^*$ has demand greater than $\fl{r_H/2}$. Consequently, the set $E_{\fl{r_H/2}}^*\cap E_H$ is a feasible solution to \textsc{Graph Partitioning with Demands} on the graph $H$ with $\rho=1/2$, and~\eqref{eq:hc-gpd-subroutine} gives $
         c\br{C_H}\leq \gamma\br{\eta,\spr{V_H}} \cdot \OPT_{1/2}\br{H}
         \leq \gamma\br{\eta,\spr{V_H}} \cdot c\br{E_{\fl{r_H/2}}^*\cap E_H}.$
-    Let $s_H$ be the largest demand of a non-singleton child of $H$, and set $s_H=0$ if every child is a singleton. A subroutine call gives $s_H\leq\eta \cdot r_H$ \DDfix{(due to assumed $\eta$-feasibility).}
-    Since $E_{\fl{r_H/2}}^*\subseteq E_{\fl{t/2}}^*$ whenever $t\leq r_H$, we have \DD{tutaj nie zalapalem skad pierwsza nier. ponizej (todo)}
+    Let $s_H$ be the largest demand of a non-singleton child of $H$, and set $s_H=0$ if every child is a singleton. Since the subroutine is $\eta$-feasible, $s_H\leq\eta \cdot r_H$.
+    Since $r_H-s_H\geq(1-\eta)r_H$, the previous bound on $c\br{C_H}$ implies the first inequality below. For every integer $t\leq r_H$, $E_{\fl{r_H/2}}^*\subseteq E_{\fl{t/2}}^*$; summing this inclusion over $t=s_H+1,\ldots,r_H$ gives the second inequality.
     \begin{equation}\label{eq:hc-cluster-charge}
     \begin{aligned}
         r_H\cdot c\br{C_H}
