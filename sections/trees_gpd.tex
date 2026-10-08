@@ -1,7 +1,7 @@
 \section{Graph Partitioning with Demands on Trees}\label{sec:tree-configuration-lp}
 
 For the special case of the \textsc{Graph Partitioning with Demands} problem where the supply graph is a tree, one could ask whether the problem is polynomial-time or pseudo-polynomial-time solvable.
-The hardness results for \textsc{Graph Partitioning with Demands} on trees are collected in Section~\ref{sec:hardness}.
+The hardness results for \textsc{Graph Partitioning with Demands} on trees are collected in Section~\ref{sec:gpd-hardness}.
 We then ask whether one can improve the approximation guarantee given by Theorem \ref{thm:gpd-extension}, since the constant provided by that theorem is relatively large.
 We give two polynomial-time bicriteria approaches for arbitrary demand weights: anchored-LP rounding (cf. Section~\ref{sec:Anchor-LP-based-algorithm}) and separator recursion based on submodular maximum coverage (cf. Section~\ref{sec:Separator-Recursion-via-Maximum-Coverage}). We also give a non-bicriteria separator algorithm whose polynomial degree depends on $1/\rho$ (cf. Section~\ref{sec:Single-Criteria-Approximation-via-Multicut}).
 Taking the best of these guarantees gives approximation ratios depending on $\rho$ and $\eta$ that improve on the constant provided by Theorem~\ref{thm:gpd-extension}.

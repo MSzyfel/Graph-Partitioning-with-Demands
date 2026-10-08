@@ -2,10 +2,9 @@
 
 Below we give two main applications of \textsc{Generalized Conductance}. We show that given any approximation algorithm for \textsc{Generalized Conductance}, one can use it to obtain approximation algorithm for \textsc{Graph Partitioning with Demands} which further carries on to \textsc{Hierarchical Clustering with Demands} with only constant increase in the guarantee at each step.
 
-To do so, we show that a repeated use of the approximation algorithm for the \textsc{Generalized Conductance} allows us to give a bi-criteria approximation algorithm for \textsc{Graph Partitioning with Demands} for a certain range of input parameters. This range can be then extended by a careful recursive application of the algorithm. Furthermore, a similar approach can be applied to the \textsc{Hierarchical Clustering with Demands} problem, however, here we repeatedly apply the algorithm for the \textsc{Graph Partitioning with Demands} instead of the \textsc{Generalized Conductance}. All approximation-hardness results are collected in Section~\ref{sec:hardness}.
+To do so, we show that a repeated use of the approximation algorithm for the \textsc{Generalized Conductance} allows us to give a bi-criteria approximation algorithm for \textsc{Graph Partitioning with Demands} for a certain range of input parameters. This range can be then extended by a careful recursive application of the algorithm. Furthermore, a similar approach can be applied to the \textsc{Hierarchical Clustering with Demands} problem, however, here we repeatedly apply the algorithm for the \textsc{Graph Partitioning with Demands} instead of the \textsc{Generalized Conductance}. All approximation-hardness results are collected in Section~\ref{sec:gpd-hardness}.
 
 \subsection{Graph Partitioning with Demands}
-\newcommand{\OPTdem}[2]{\OPT_{#2}\br{#1}}
 
 We now apply the approximation algorithm for \textsc{Generalized Conductance} to obtain an approximation algorithm for \textsc{Graph Partitioning with Demands}. In the latter problem, we are given an instance $G=(V,E,D,c,w)$, together with a fixed constant $\rho\in(0,1)$. The goal is to find a subset of supply edges $C\subseteq E$ that minimizes $c\br{C}$ such that for every connected component $H$ of $G\setminus C$, we have $w\br{V_H}\leq \rho\cdot W$.
 Let $\OPTdem{G}{\rho}=c\br{C^*}$, where $C^*\subseteq E$ is an optimal solution.
@@ -215,7 +214,7 @@ In the following we will use the symbol $\DPartition$ with a slight abuse of not
 \end{theorem}
 \begin{proof}
     The following algorithm recursively partitions each non-singleton cluster using the subroutine for \textsc{Graph Partitioning with Demands} and constructs the clustering tree in a top-down manner.
-
+    
 \medskip
 \input{algorithms/hierarchical_clustering.tex}
 \medskip
@@ -241,13 +240,15 @@ In the following we will use the symbol $\DPartition$ with a slight abuse of not
         \leq \gamma\br{\eta,\spr{V_H}} \cdot c\br{E_{\fl{r_H/2}}^*\cap E_H}.$
     Let $s_H$ be the largest demand of a non-singleton child of $H$, and set $s_H=0$ if every child is a singleton. A subroutine call gives $s_H\leq\eta \cdot r_H$ \DDfix{(due to assumed $\eta$-feasibility).}
     Since $E_{\fl{r_H/2}}^*\subseteq E_{\fl{t/2}}^*$ whenever $t\leq r_H$, we have \DD{tutaj nie zalapalem skad pierwsza nier. ponizej (todo)}
-    \[
+    \begin{equation}\label{eq:hc-cluster-charge}
+    \begin{aligned}
         r_H\cdot c\br{C_H}
         &\leq\frac{\gamma\br{\eta,\spr{V_H}}}{1-\eta}
-            \cdot\br{r_H-s_H}\cdot c\br{E_{\fl{r_H/2}}^*\cap E_H} \nonumber\\
+            \cdot\br{r_H-s_H}\cdot c\br{E_{\fl{r_H/2}}^*\cap E_H} \\
         &\leq\frac{\gamma\br{\eta,\spr{V_H}}}{1-\eta}\cdot
             \sum_{t=s_H+1}^{r_H}c\br{E_{\fl{t/2}}^*\cap E_H}.
-    \]
+    \end{aligned}
+    \end{equation}
 
     For a fixed $t$, the clusters satisfying $s_H<t\leq r_H$ have pairwise disjoint induced edge sets. Indeed, if one such cluster were a descendant of another, it would lie in a non-singleton child of the ancestor and would have demand at most the ancestor's value $s_H<t$, contradicting $t\leq r_H$ for the descendant. Summing over all clusters and using~\eqref{eq:hc-level-sum}, we conclude that, for a tree $\cT$ produced by Algorithm~\ref{algo:hclustering},
     \begin{align*}

@@ -1,6 +1,4 @@
-﻿\newcommand{\paths}{P^*}
-
-\section{Algorithm for the sparsest $K$-bounded cut}
+﻿\section{Algorithm for the sparsest $K$-bounded cut}
 \label{sec:alpha}
 
 Since solving tasks related to sparsest cut is easier on trees, an efficient approach to solving such problems is to first embed the graph into a tree while partially preserving the value of all cuts. To do so, one can use the cut-sparsifier tree decomposition of R\"{a}cke \cite{OptimalHierarchicalDecompositionsForCongestionMinimizationInNetworks}. This decomposition allows for an embedding of any graph into a probability distribution over a polynomial number of trees such that for every cut, the expected value of the cut in the tree is at most $\bigo\br{\log n}$ times the value of the cut in the original graph, and for every cut, its value in the original graph is at most its value in every tree in the support of the distribution. Therefore, if we can solve our problem on trees, then we can solve it on general graphs with an $\bigo\br{\log n}$-approximation ratio by first embedding it into a distribution over trees and then solving it on each tree in the support of the distribution. Then, the approximation ratio is achieved by choosing the best cut among all cuts produced for these trees. In what follows we formalize these ideas.
