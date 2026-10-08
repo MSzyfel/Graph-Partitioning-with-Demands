@@ -1,8 +1,7 @@
-﻿\section{Generalized Conductance}
+﻿\section{Warm Up: Generalized Conductance}
 
-We start with results regarding the \textsc{Generalized Conductance} which are relatively simple and serve as a warm-up before tackling other partitioning problems. We begin with the easiest setup, when the supply graph is a tree. We show that in this case, an optimal cut is always obtained by removing a single supply edge. This immediately yields an obvious exact polynomial-time algorithm for supply trees, simply check all supply edges and choose the one whose removal minimizes the generalized conductance.
-
-Secondly, we treat the case of general graphs by reducing the problem to \textsc{Min-Ratio Vertex Cut}, which allows us to leverage existing approximation algorithms for that problem. This yields an $\bigo\br{\sqrt{\log n}}$-approximation algorithm for such instances.
+We start with relatively simple results regarding the \textsc{Generalized Conductance} as a warm-up before tackling other partitioning problems. We begin with the easiest setup, when the supply graph is a tree and show that in this case, an optimal cut is always obtained by removing a single supply edge. This immediately yields an obvious exact polynomial-time algorithm for supply trees, just check all supply edges and pick the best cut.
+Secondly, we reduce the general graphs instances to \textsc{Min-Ratio Vertex Cut} problem, which yields a general $\bigo\br{\sqrt{\log n}}$-approximation algorithm using known results.
 
 \subsection{Supply trees}
 
@@ -15,22 +14,12 @@ Secondly, we treat the case of general graphs by reducing the problem to \textsc
   For every $e\in E^*$, let $X_e$ and $\bar{X}_e$ be the vertex sets of the two components of $T\setminus e$, and denote $
     W_e=w\br{X_e,V}\cdot w\br{\bar{X}_e,V}$. We want to show that the there exists an edge $e\in E^*$ with $\psi_{w,T}\br{X_e}\leq \psi_{w,T}\br{S^*}$. To this end we employ the following lemma.
   \begin{lemma}\label{lemma:tree_edge_weight_sum}
-    We have
-    \[
-      \sum_{e\in E^*}W_e\geq W^*.
-    \]
+    We have $\sum_{e\in E^*}W_e\geq W^*$.
   \end{lemma}
   \begin{proof}
-    We firstly observe that for any $A\subseteq V$, we have
-    \[
-      w\br{A,V}=\sum_{f\in D\br{A,V}}w\br{f}.
-    \]
-    For a demand edge $f$, define $I_A(f)=1$ if $f\in D\br{A,V}$ and $I_A(f)=0$ otherwise. For two demand edges $f,g\in D$, possibly with $f=g$, set
-    \[
-      q_A(f,g)
-      =I_A(f)\cdot I_{\bar A}(g)+I_A(g)\cdot I_{\bar A}(f).
-    \]
-    Symmetrizing the two factors in the product gives, for every $A\subseteq V$,
+    First, for any $A\subseteq V$, we have $w\br{A,V}=\sum_{f\in D\br{A,V}}w\br{f}$.
+    For a demand edge $f$, define $I_A(f)=1$ if $f\in D\br{A,V}$ and $I_A(f)=0$ otherwise. For two demand edges $f,g\in D$, possibly with $f=g$, set $q_A(f,g)=I_A(f)\cdot I_{\bar A}(g)+I_A(g)\cdot I_{\bar A}(f)$.
+    This gives
     \begin{equation}\label{eq:tree-symmetrized-demand-pairs}
       w\br{A,V}\cdot w\br{\bar A,V}
       =\frac{1}{2}\sum_{f,g\in D}w\br{f}\cdot w\br{g}\cdot q_A(f,g).
@@ -43,7 +32,7 @@ Secondly, we treat the case of general graphs by reducing the problem to \textsc
     \begin{proof}
     Since $q_{S^*}(f,g)\in \brc{0,1,2}$ we distinguish three cases:
     \begin{enumerate}
-      \item $q_{S^*}(f,g)=0$. Here the claim is immediate since the right-hand side of the lemma's inequality is nonnegative.
+      \item $q_{S^*}(f,g)=0$. Here the claim is immediate.
       \item $q_{S^*}(f,g)=1$. After exchanging $f$ and $g$ if necessary, there is an endpoint $u$ of $f$ in $S^*$ and an endpoint $v$ of $g$ in $\bar{S}^*$. The unique $u$-$v$ path in $T$ contains an edge $e\in E^*$. Removing $e$ places $u$ and $v$ in opposite components. Therefore, either $f\in D\br{X_e,V}$ and $g\in D\br{\bar X_e,V}$, or $g\in D\br{X_e,V}$ and $f\in D\br{\bar X_e,V}$. In either case $q_{X_e}(f,g)\geq 1$.
       \item $q_{S^*}(f,g)=2$. Then each of $f$ and $g$ has one endpoint in $S^*$ and one in $\bar{S}^*$. Let $P_f$ and $P_g$ be the paths in $T$ joining the endpoints of $f$ and $g$, respectively. Choose $e_f\in P_f\cap E^*$ and $e_g\in P_g\cap E^*$.
     If $e_f\neq e_g$, then $f$ is incident to both components of $T\setminus e_f$, so $q_{X_{e_f}}(f,g)\geq1$ regardless of which component contains an endpoint of $g$. The symmetric argument gives $q_{X_{e_g}}(f,g)\geq1$, and consequently $q_{X_{e_f}}(f,g)+q_{X_{e_g}}(f,g)\geq2$. If $e_f=e_g$, both $f$ and $g$ are incident to both components of $T\setminus e_f$, and hence $q_{X_{e_f}}(f,g)=2$.
@@ -70,80 +59,46 @@ Secondly, we treat the case of general graphs by reducing the problem to \textsc
     \geq\min_{e\in E^*_+}\brc{\frac{c\br{e}}{W_e}}
     =\min_{e\in E^*_+}\brc{\psi_{w,T}\br{X_e}}.
   \end{align*}
-  The first inequality uses Lemma~\ref{lemma:tree_edge_weight_sum}. The second discards the nonnegative capacities of edges with $W_e=0$, while the last inequality is due to the fact that a weighted average is at least its smallest term.
+  The first inequality uses Lemma~\ref{lemma:tree_edge_weight_sum}. The second discards the edges with $W_e=0$, while the last inequality is due to averaging.
 \end{proof}
 
 \subsection{General graphs}
 
-In order to tackle general supply graphs, we show that we can transform demands into weighted degrees, allowing us to approximate generalized conductance using the well-known \textsc{Min-Ratio Vertex Cut} problem. Define the \emph{degree conductance} of a cut $S\subseteq V$ by
-\[
-  \chi_{w,G}\br{S}
-  =\frac{c\br{S,\bar{S}}}{d_D\br{S}\cdot d_D\br{\bar{S}}}.
-\]
-For every cut of finite value, Equation~\eqref{eq:demand-degree-identity} gives $
-  w\br{S,V}\leq d_D\br{S}\leq 2w\br{S,V}$ and consequently
-\begin{align*}
-  \frac{1}{4}\cdot \psi_{w,G}\br{S} =
-  \frac{c\br{S,\bar{S}}}{4\cdot w\br{S,V}\cdot w\br{\bar{S},V}}\leq
-  \frac{c\br{S,\bar{S}}}{d_D\br{S}\cdot d_D\br{\bar{S}}}=\chi_{w,G}\br{S}\leq
-  \frac{c\br{S,\bar{S}}}{w\br{S,V}\cdot w\br{\bar{S},V}}=
-  \psi_{w,G}\br{S}.
-\end{align*}
-
-We use the following formulation of \textsc{Min-Ratio Vertex Cut} problem. Its input is a graph $H$ with two nonnegative vertex functions $\pi_1$ and $\pi_2$. A feasible solution is a partition $(A,B,Z)$ of $V_H$ with no edge between $A$ and $B$, and its value is
+To tackle general supply graphs, we transform demands into weighted degrees, allowing us to approximate generalized conductance using the well-known \textsc{Min-Ratio Vertex Cut} problem. Its input is a graph $H$ with two nonnegative vertex functions $\pi_1$ and $\pi_2$. A feasible solution is a partition $(A,B,Z)$ of $V_H$ with no edge between $A$ and $B$, and its value is
 \[
   \alpha_{\pi_1,\pi_2}\br{A,B,Z}
   =\frac{\pi_1\br{Z}}
   {\pi_2\br{A\cup Z}\cdot\pi_2\br{B\cup Z}}.
 \]
-Feige, Hajiaghayi, and Lee give a polynomial-time $\bigo\br{\sqrt{\log |V_H|}}$-approximation algorithm for this problem \cite{ImprovedApproximationAlgorithmsForMinimumWeightVertexSeparators}.
+
+Now, define the \emph{degree conductance} of a cut $S\subseteq V$ by
+\[
+  \chi_{w,G}\br{S}
+  =\frac{c\br{S,\bar{S}}}{d_D\br{S}\cdot d_D\br{\bar{S}}}.
+\]
+For every cut of finite value, Equation~\eqref{eq:demand-degree-identity} gives $
+  w\br{S,V}\leq d_D\br{S}\leq 2w\br{S,V}$, so
+\begin{align*}
+  \frac{\psi_{w,G}\br{S}}{4}\leq
+  \frac{c\br{S,\bar{S}}}{d_D\br{S}\cdot d_D\br{\bar{S}}}=\chi_{w,G}\br{S}\leq
+  \psi_{w,G}\br{S}.
+\end{align*}
 
 \begin{theorem}\label{thm:generalized-conductance-approx}
   There is a polynomial-time $\bigo\br{\sqrt{\log n}}$-approximation algorithm for \textsc{Generalized Conductance} on general graphs.
 \end{theorem}
 \begin{proof}
-  Given $G=(V,E,D,c,w)$, construct a graph $H$ by subdividing every supply edge $e=uv$ with a new vertex $x_e$. Thus
+  Given $G=(V,E,D,c,w)$, subdivide every supply edge $e=uv\in E$ with a new vertex $x_e$, forming
   \[
-    V_H=V\cup\brc{x_e\colon e\in E}
-    \qquad\text{and}\qquad
-    E_H=\brc{ux_e,x_ev\colon e=uv\in E}.
-  \]
-  Define the vertex functions by
-  \[
-    \pi_1\br{v}=\infty,
-    \quad \pi_2\br{v}=d_D\br{v}
-    \qquad\text{for }v\in V, \qquad
-    \pi_1\br{x_e}=c\br{e},
-    \quad \pi_2\br{x_e}=0
-    \qquad\text{for }e\in E.
+    \begin{gathered}
+      V_H=V\cup\brc{x_e\colon e\in E}
+      \qquad\text{and}\qquad
+      E_H=\brc{ux_e,x_ev\colon e=uv\in E},\\
+      \pi_1\br{v}=\infty,\quad \pi_2\br{v}=d_D\br{v}\quad(v\in V),\quad
+      \pi_1\br{x_e}=c\br{e},\quad \pi_2\br{x_e}=0\quad(e\in E).
+    \end{gathered}
   \]
 
-  Every cut $S\subsetneq V$ induces a vertex cut in $H$: put the original vertices of $S$ in $A$, those of $\bar{S}$ in $B$, each subdivision vertex of an edge internal to one side in the same part, and the subdivision vertices of $\delta_E(S)$ in $Z$. The resulting value is
-  \[
-    \alpha_{\pi_1,\pi_2}\br{A,B,Z}
-    =\frac{c\br{S,\bar{S}}}{d_D\br{S}\cdot d_D\br{\bar{S}}}
-    =\chi_{w,G}\br{S}.
-  \]
-
-  Conversely, consider any finite-value vertex cut $(A,B,Z)$ of $H$. No original vertex belongs to $Z$. Let $S=A\cap V$, so $B\cap V=\bar{S}$. For every supply edge crossing $\br{S,\bar{S}}$, its subdivision vertex must belong to $Z$, since there is no edge between $A$ and $B$. Therefore,
-  \[
-    \pi_1\br{Z}\geq c\br{S,\bar{S}},
-    \qquad
-    \pi_2\br{A\cup Z}=d_D\br{S},
-    \qquad
-    \pi_2\br{B\cup Z}=d_D\br{\bar{S}},
-  \]
-  and hence $\alpha_{\pi_1,\pi_2}\br{A,B,Z}\geq\chi_{w,G}\br{S}$.
-  The reduction therefore preserves the optimum of $\chi_{w,G}$, and a vertex-cut solution can be converted without increasing its value.
-
-  Apply the approximation algorithm of Feige, Hajiaghayi, and Lee and convert its output to a cut $S$ of $G$. Since $|V_H|=n+|E|=\bigo\br{n^2}$, the resulting cut satisfies
-  \[
-    \chi_{w,G}\br{S}
-    \leq\bigo\br{\sqrt{\log n}}\cdot \min_{U\subsetneq V}\brc{\chi_{w,G}\br{U}}.
-  \]
-  We get that
-  \[
-    \psi_{w,G}\br{S}\leq 4\cdot \chi_{w,G}\br{S}\leq \bigo\br{\sqrt{\log n}}\cdot \min_{U\subsetneq V}\brc{\chi_{w,G}\br{U}}\leq\bigo\br{\sqrt{\log n}}\cdot \OPT
-  \]
-  This completes the proof of the theorem.
+  It is easy to see that this construction encodes degree conductance exactly: every cut $S\subsetneq V$ extends to a vertex cut of value $\chi_{w,G}\br{S}$, and every finite-value vertex cut $(A,B,Z)$ projects to $S=A\cap V$ with $\chi_{w,G}\br{S}\leq\alpha_{\pi_1,\pi_2}\br{A,B,Z}$.
+  Applying the $\bigo\br{\sqrt{\log |V_H|}}$-approximation algorithm for \textsc{Min-Ratio Vertex Cut} of \cite{ImprovedApproximationAlgorithmsForMinimumWeightVertexSeparators}, and projecting its output to a cut $S$ of $G$, and noting that $|V_H|=n+|E|=\bigo\br{n^2}$, we get an $\bigo\br{\sqrt{\log n}}$-approximation algorithm for \textsc{Generalized Conductance}.
 \end{proof}

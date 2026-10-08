@@ -1,6 +1,6 @@
-\section{Hardness of Graph Partitioning with Demands}\label{sec:gpd-hardness}
+\section{Hardness of Approximation}\label{sec:hardness}
 
-In this section we provide an approximation-hardness result for \textsc{Graph Partitioning with Demands} and \textsc{Hierarchical Clustering with Demands} based on the Small-Set Expansion Hypothesis. The \emph{Small-Set Expansion Hypothesis} states that, for every constant $\zeta>0$, there is a constant $\delta>0$ for which it is NP-hard, given a regular graph, to distinguish between the existence of a vertex set of normalized size $\delta$ and expansion at most $\zeta$, and the condition that every vertex set of normalized size $\delta$ has expansion at least $1-\zeta$. Both reductions in this chapter use rational numbers instead of natural ones, however this can be fixed by appropriate scaling.
+This section collects the approximation-hardness results for \textsc{Generalized Conductance}, \textsc{Graph Partitioning with Demands}, and \textsc{Hierarchical Clustering with Demands}. The \emph{Small-Set Expansion Hypothesis} states that, for every constant $\zeta>0$, there is a constant $\delta>0$ for which it is NP-hard, given a regular graph, to distinguish between the existence of a vertex set of normalized size $\delta$ and expansion at most $\zeta$, and the condition that every vertex set of normalized size $\delta$ has expansion at least $1-\zeta$. The reductions below use rational numbers instead of natural ones, which can be fixed by appropriate scaling.
 
 For every unweighted undirected graph $G=(V,E)$ used as a source graph below, write
 \[
@@ -236,15 +236,6 @@ We start by proving a numerical lemma that will be useful in the soundness analy
     Thus the algorithm distinguishes the YES and NO instances of Lemma~\ref{lem:globalized-long-code-gap}, contradicting the Small-Set Expansion Hypothesis.
 \end{proof}
 
-The hardness also transfers to the \textsc{Generalized Conductance} problem, as formalized in the following corollary.
-
-\begin{corollary}\label{cor:sse-generalized-conductance-hardness}
-    It is SSEH-hard to approximate \textsc{Generalized Conductance} within any constant factor, even for bipartite multiplicative demands.
-\end{corollary}
-\begin{proof}
-    Theorem~\ref{thm:gpd-extension} certifies that a constant-factor approximation for \textsc{Generalized Conductance} would yield a constant-factor bicriteria approximation for \textsc{Graph Partitioning with Demands}, contradicting Theorem~\ref{thm:sse-gpd-bicriteria-hardness}.
-\end{proof}
-
 \subsection{Hardness of hierarchical clustering with demands}
 
 The preceding reduction concerns flat partitioning. We now use the same expansion-hardness theorem to obtain a gap for the hierarchical objective.
@@ -308,4 +299,80 @@ The preceding reduction concerns flat partitioning. We now use the same expansio
         <\frac{a_{1/4}}{64}\cdot\sqrt{\varepsilon},
     \]
     so the YES and NO cases are separated by a factor greater than $A$. Therefore, any $A$-approximation algorithm for \textsc{Hierarchical Clustering with Demands} would distinguish the YES and NO cases, which is SSEH-hard.
+\end{proof}
+
+\subsection{Hardness of Generalized Conductance}
+
+\begin{corollary}\label{cor:generalized-conductance-hardness}
+  For every fixed constant $A>1$, it is NP-hard to approximate \textsc{Generalized Conductance} within a factor of $A$, even when $D=\binom{V}{2}$ and $w(e)=1$ for every $e\in D$.
+\end{corollary}
+\begin{proof}
+  Let $G=(V,E,c)$ be a supply graph, let $n=|V|$, and let
+  \[
+\phi_{\mathrm{USC}}\br{S}
+=\frac{c\br{S,\bar{S}}}{\spr{S}\cdot\spr{\bar{S}}}
+  \]
+  be its uniform-demand \textsc{Sparsest Cut} objective. Consider the same supply graph as an instance of \textsc{Generalized Conductance} with $D=\binom{V}{2}$ and $w(e)=1$ for every $e\in D$. For a nontrivial cut $S$, writing $s=\spr{S}$ gives
+  \[
+w\br{S,V}=\binom{n}{2}-\binom{n-s}{2}
+  =\frac{s(2n-s-1)}{2}.
+  \]
+  Since $1\leq s\leq n-1$, we have
+  \[
+\frac{n\spr{S}}{2}\leq w\br{S,V}\leq n\spr{S},
+  \]
+  and the same bounds hold for $\bar{S}$. Therefore,
+  \[
+\frac{1}{n^2}\phi_{\mathrm{USC}}\br{S}
+\leq \psi_w\br{S}
+\leq \frac{4}{n^2}\phi_{\mathrm{USC}}\br{S}.
+  \]
+  Thus, a $\gamma$-approximation for \textsc{Generalized Conductance} on these instances gives a $4\gamma$-approximation for uniform-demand \textsc{Sparsest Cut}. The latter is UGC-hard to approximate within any constant factor~\cite{OnTheHardnessOfApproximatingMulticutAndSparsestCut}; the Unique Games Theorem~\cite{OAI:The-Unique-Games-Theorem-September-23-2026} makes this hardness unconditional, proving the corollary.
+\end{proof}
+
+\subsection{Hardness of Graph Partitioning with Demands on Trees}
+
+The following statement gives an approximation-preserving reduction from \textsc{Vertex Cover}.
+
+\begin{theorem}\label{thm:tree-gpd-vertex-cover-hardness}
+For every fixed rational $\rho\in(0,1)$, \textsc{Graph Partitioning with Demands} is as hard to approximate as \textsc{Vertex Cover}, even when the supply graph is a star.
+\end{theorem}
+\begin{proof}
+Let $G=(U,F)$ be a \textsc{Vertex Cover} instance. Let $V=U\cup\{r,d\}$. Construct a supply star $E$ with center $r$, leaves $U$, and one additional leaf $d$. Set $c(rd)=\infty$ and $c(ru)=1$ for every $u\in U$. The edges of the demand graph are $F\cup\{rd\}$ where $w\br{rd}=\frac{\rho \cdot \spr{F}}{1-\rho}$ and, for every $uv\in F$, $w\br{uv}=1$. If necessary, multiply all demand weights by a common denominator to make them integral.
+
+The total demand is $W=w\br{rd}+\spr{F}$, and hence $\rho \cdot W=w\br{rd}$. Any solution of cost at most $\spr{U}$ leaves $rd$ uncut, otherwise its cost becomes $\infty$. For any solution $C$, let $H\in T\setminus C$ be the component containing $r$. If $H$ contained both endpoints of some edge $uv\in F$, its internal demand would exceed $w\br{rd}$. Therefore, the set $C_H=V\setminus V\br{H}$ forms a vertex cover. Moreover, we have that $c\br{C}=\spr{C_H}$ which means that the cost of any solution for the \textsc{Graph Partitioning with Demands} instance equals the size of some vertex cover. Conversely, any cover $C_H\subseteq U$ gives rise to a solution $C$ by cutting all edges incident to $C_H$, which has cost $\spr{C_H}$. Thus the reduction preserves approximation ratios.
+\end{proof}
+
+Combining Theorem~\ref{thm:tree-gpd-vertex-cover-hardness} with the known hardness of \textsc{Vertex Cover} gives the following consequence.
+\begin{corollary}\label{cor:tree-gpd-hardness}
+For every $\varepsilon>0$, \textsc{Graph Partitioning with Demands} on trees is NP-hard to approximate within $2-\varepsilon$~\cite{VertexCoverMightBeHardToApproximateToWithin2MinusEpsilon,OAI:The-Unique-Games-Theorem-September-23-2026}.
+\end{corollary}
+
+\subsection{Hardness of Hierarchical Clustering with Demands on Trees}
+
+\begin{theorem}\label{thm:hc-star-hardness}
+\textsc{Hierarchical Clustering with Demands} is NP-hard to approximate within a factor of $1.0748$,
+even when the supply graph is a star and all capacities and demands are uniform.
+\end{theorem}
+\begin{proof}
+We reduce from the NP-hard problem \textsc{Min-Sum Vertex Cover} on general graphs. In this problem we are given an undirected graph $G=(U,F)$ and the goal is to find a permutation $\pi:U\to\{1,\dots,|U|\}$ that minimizes the sum of cover times of the edges $\ct\br{\pi}=\sum_{e\in F}\ct_\pi(e)$, i.e., where the covering time is defined as $\ct_\pi(uv)=\min\{\pi(u),\pi(v)\}$.     Stankovic proves that this problem cannot be approximated within a factor of $1.0748$ assuming the Unique Games Conjecture~\cite{SomeResultsOnApproximabilityOfMinimumSumVertexCover}; the Unique Games Theorem~\cite{OAI:The-Unique-Games-Theorem-September-23-2026} therefore makes this lower bound unconditional. The reduction is very simple. The vertex set is $V=U\cup {r}$, $D=U$ and $E$ is a star with center $r$ and leaves $U$. The capacities and demands are all set to $1$. 
+
+Consider any clustering tree $\cT$. Since any nonbinary tree can be transformed into a binary one without loss of the quality, we assume that $\cT$ is binary. Now, we observe that on stars any binary cut, i.e., cut where both sides of the cut are connected, consists of some leaf $l\in U$ and nothing more. Consequently, any such clustering tree directly corresponds to a sequemce of leaves, in the order they are separated from the root. Conversily, every sequence $\pi:U\to\{1,\dots,|U|\}$ of the leaves corresponds to a unique binary clustering tree. 
+
+Now, for any sequence $\pi:U\to\{1,\dots,|U|\}$ and a vertex $u\in U$, let
+\[
+E_\pi(u)=\{vw\in F\colon \pi(u)\leq \pi(v), \pi(w)\}
+\]
+be the set of all edges covered no sooner then $\pi(u)$.
+Then, for the clustering tree $\cT$ corresponding to $\pi$ we can rewrite its cost as 
+\[
+c\br{\cT}=
+\sum_{e\in E} \spr{V_{\lca_\cT(e)}}=
+\sum_{u\in U} \spr{V_{\lca_\cT(u,r)}}=
+\sum_{u\in U}\spr{E_\pi(u)} =
+\ct\br{\pi}.
+\]
+where the third equality is due to the fact that for any vertex $u\in U$, the set $E_\pi(u)$ consists of all edges whose both endpoint appear no sooner then $\pi\br{u}$ in the sequence $\pi$, which are all of the demand edges still present in the cluster containing $u$, before cutting $u$ from the root. The fourth equality follows from basic rewriting of $\ct\br{\pi}$, since each $u\in U$ contributes one per each edge which was not covered by the first $\pi(u)-1$ vertices in the sequence.
+
+Therefore, the costs of corresponding solutions coincide, and the inapproximability of \textsc{Min-Sum Vertex Cover} transfers to \textsc{Hierarchical Clustering with Demands} on supply stars.
 \end{proof}

@@ -1,31 +1,12 @@
 \section{Graph Partitioning with Demands on Trees}\label{sec:tree-configuration-lp}
 
 For the special case of the \textsc{Graph Partitioning with Demands} problem where the supply graph is a tree, one could ask whether the problem is polynomial-time or pseudo-polynomial-time solvable.
-We answer this question in the negative below by showing inapproximability (and also strong NP-hardness) even on stars.
+The hardness results for \textsc{Graph Partitioning with Demands} on trees are collected in Section~\ref{sec:hardness}.
 We then ask whether one can improve the approximation guarantee given by Theorem \ref{thm:gpd-extension}, since the constant provided by that theorem is relatively large.
 We give two polynomial-time bicriteria approaches for arbitrary demand weights: anchored-LP rounding and separator recursion based on submodular maximum coverage. We also give a non-bicriteria separator algorithm whose polynomial degree depends on $1/\rho$.
 Taking the best of these guarantees gives approximation ratios depending on $\rho$ and $\eta$ that improve on the constant provided by Theorem~\ref{thm:gpd-extension}. As a corollary, we obtain a polynomial-time $\frac{4e}{e-1}$-approximation for \textsc{Hierarchical Clustering with Demands} on trees.
 We now show a combinatorial algorithm for \textsc{Graph Partitioning with Demands} on trees. The idea is to find a smalls-sized set of vertices whose removal leads to components with relatively low demand. Then, the new goal of the algorithm becomes to remove a large enough amount of demand from each vertex of the separator. To do this end, we use a well-known subproblem called \textsc{Maximum Coverage}.
 We write $\OPT_{B_\rho}(T)=\OPTdem{T}{\rho}$ for the minimum cost of a partition whose components have internal demand at most $B_\rho$.
-
-\subsection{Hardness on stars}
-
-The following statement shows an approximation-preserving reduction from the \textsc{Vertex Cover} problem. The reduction is very simple.
-
-\begin{theorem}\label{thm:tree-gpd-vertex-cover-hardness}
-    For every fixed rational $\rho\in(0,1)$, \textsc{Graph Partitioning with Demands} is as hard to approximate as \textsc{Vertex Cover}, even when the supply graph is a star.
-\end{theorem}
-\begin{proof}
-    Let $G=(U,F)$ be a \textsc{Vertex Cover} instance. Let $V=U\cup\{r,d\}$. Construct a supply star $E$ with center $r$, leaves $U$, and one additional leaf $d$. Set $c(rd)=\infty$ and $c(ru)=1$ for every $u\in U$. The edges of the demand graph are $F\cup\{rd\}$ where $w\br{rd}=\frac{\rho \cdot \spr{F}}{1-\rho}$ and, for every $uv\in F$, $w\br{uv}=1$. If necessary, multiply all demand weights by a common denominator to make them integral.
-
-    The total demand is $W=w\br{rd}+\spr{F}$, and hence $\rho \cdot W=w\br{rd}$. Any solution of cost at most $\spr{U}$ leaves $rd$ uncut, otherwise its cost becomes $\infty$. For any solution $C$, let $H\in T\setminus C$ be the component containing $r$. If $H$ contained both endpoints of some edge $uv\in F$, its internal demand would exceed $w\br{rd}$. Therefore, the set $C_H=V\setminus V\br{H}$ forms a vertex cover. Moreover, we have that $c\br{C}=\spr{C_H}$ which means that the cost of any solution for the \textsc{Graph Partitioning with Demands} instance equals the size of some vertex cover. Conversely, any cover $C_H\subseteq U$ gives rise to a solution $C$ by cutting all edges incident to $C_H$, which has cost $\spr{C_H}$. Thus the reduction preserves approximation ratios.
-\end{proof}
-
-Combining Theorem~\ref{thm:tree-gpd-vertex-cover-hardness} with the known hardness of \textsc{Vertex Cover} gives the following consequence.
-\begin{corollary}\label{cor:tree-gpd-hardness}
-    For every $\varepsilon>0$, \textsc{Graph Partitioning with Demands} on stars is hard to approximate within $\sqrt{2}-\varepsilon$ unless $P=NP$, and within $2-\varepsilon$ assuming the Unique Games Conjecture~\cite{TowardsAProofOfThe2To1GamesConjecture,VertexCoverMightBeHardToApproximateToWithin2MinusEpsilon}.
-\end{corollary}
-
 
 \subsection{Anchor-LP-based algorithm}
 
@@ -639,4 +620,3 @@ Figure~\ref{fig:full-quota-centroid} illustrates the full-quota routine for $t=4
                 \frac{2}{1-\eta}=\frac{4e}{e-1}.
             \]
         \end{proof}
-

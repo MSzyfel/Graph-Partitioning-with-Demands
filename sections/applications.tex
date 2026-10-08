@@ -2,14 +2,13 @@
 
 Below we give two main applications of the \textsc{Generalized Conductance}. We show that given any approximation algorithm for the \textsc{Generalized Conductance}, one can use it to obtain approximation algorithm for \textsc{Graph Partitioning with Demands} which further carries on to \textsc{Hierarchical Clustering with Demands} with only constant increase in the guarantee at each step.
 
-To do so, we show that a repeated use of the approximation algorithm for the \textsc{Generalized Conductance} allows us to give a bi-criteria approximation algorithm for \textsc{Graph Partitioning with Demands} for a certain range of input parameters. This range can be then extended by a careful recursive application of the algorithm. Furthermore, a similar approach can be applied to the \textsc{Hierarchical Clustering with Demands} problem, however, here we repeatedly apply the algorithm for the \textsc{Graph Partitioning with Demands} instead of the \textsc{Generalized Conductance}. We also show that \textsc{Hierarchical Clustering with Demands} cannot be approximated within a factor of $1.0748$, even when the supply graph is a star and all capacities and demands are uniform.
+To do so, we show that a repeated use of the approximation algorithm for the \textsc{Generalized Conductance} allows us to give a bi-criteria approximation algorithm for \textsc{Graph Partitioning with Demands} for a certain range of input parameters. This range can be then extended by a careful recursive application of the algorithm. Furthermore, a similar approach can be applied to the \textsc{Hierarchical Clustering with Demands} problem, however, here we repeatedly apply the algorithm for the \textsc{Graph Partitioning with Demands} instead of the \textsc{Generalized Conductance}. All approximation-hardness results are collected in Section~\ref{sec:hardness}.
 
 \subsection{Graph Partitioning with Demands}
 \newcommand{\OPTdem}[2]{\OPT_{#2}\br{#1}}
 
 Below, we show how to use the approximation algorithm for the \textsc{Generalized Conductance} to obtain an approximation algorithm for \textsc{Graph Partitioning with Demands}. In the latter problem, we are given an instance $G=(V,E,D,c,w)$, together with a fixed constant $\rho\in(0,1)$. The goal is to find a subset of supply edges $C\subseteq E$ that minimizes $c\br{C}$ such that for every $H\in G\setminus C$, we have $w\br{V_H}\leq \rho\cdot W$.
 Let $\OPTdem{G}{\rho}=c\br{C^*}$, where $C^*\subseteq E$ is an optimal solution.
-
 Let $\rho<\eta<1$ be a constant. We say that $C\subseteq E$ is $\eta$-feasible if for every $H\in G\setminus C$, have $w\br{V_H}\leq \eta \cdot W$, instead of $w\br{V_H}\leq \rho \cdot W$.
 We will obtain a bi-criteria approximation algorithm for \textsc{Graph Partitioning with Demands} that returns a subset of edges $C$ such that $c\br{C}=\bigo_{\rho, \eta}\br{\gamma}\cdot \OPTdem{G}{\rho}$ and $C$ is $\eta$-feasible, where $\gamma$ is the approximation ratio for the \textsc{Generalized Conductance}. This is done in two parts. Firstly, we show an algorithm for a limited range of $\eta$ and then extend it to the entirety of $\eta\in(\rho,1)$.
 
@@ -49,9 +48,9 @@ The analysis uses a generalization of the standard technique of dealing with \te
     \begin{enumerate}
                 \item There exists $H\in G\setminus C^*$ such that $w\br{V_H}\geq \delta_{\rho}\cdot W$.
         In this case, we set $A=V_H$ and $B=V\setminus V_H$. We have
-                \[w\br{A, V}\geq w\br{A} \geq \delta_{\rho}\cdot W\]
+                $w\br{A, V}\geq w\br{A} \geq \delta_{\rho}\cdot W$
          and 
-                \[w\br{B, V}=W-w\br{A}\geq \br{1-\rho}\cdot W\geq \delta_{\rho}\cdot W\]
+                $w\br{B, V}=W-w\br{A}\geq \br{1-\rho}\cdot W\geq \delta_{\rho}\cdot W$,
                 since $w\br{A}=w\br{V_H}\leq \rho \cdot W$. The last inequality uses the definition $\delta_{\rho}=\min\brc{1/4,1-\rho}$.
         \item For every $H\in G\setminus C^*$, we have $w\br{V_H}\leq \delta_{\rho}\cdot W$. We proceed in iterations. Start with $A=\emptyset$ and keep adding vertices of components of $G\setminus C^*$ to $A$ until $w\br{A}\geq \delta_{\rho}\cdot W$. Let $H$ be the last component added to $A$ and let $A'$ be $A$ one iteration before that, i.e., $A'=A\setminus V_H$.
         Consider the two cases:
@@ -64,9 +63,9 @@ The analysis uses a generalization of the standard technique of dealing with \te
             \item Otherwise, $A$ stays unchanged and we set $B=V\setminus A$. We have $w\br{A, V}\geq \delta_{\rho}\cdot W$ by to the halting condition of the above greedy rule, and
               \begin{align*}
               w\br{B, V}
-              &= 
+              = 
               W-w\br{A}= W-\br{w\br{A'}+w\br{A', V_H}+w\br{V_H}}
-              \\&\geq 
+              \geq 
                             W-3\delta_{\rho}\cdot W\geq \delta_{\rho}\cdot W.
             \end{align*}
                         where the last inequality follows from $\delta_{\rho}\leq 1/4$, again by $\delta_{\rho}=\min\brc{1/4,1-\rho}$.
@@ -95,10 +94,9 @@ since trivially we have $c\br{A, B}\leq \OPTdem{G}{\rho}$ and $w\br{\bar{S}, V_{
 
 Let $\ell$ be the index of some iteration, let $G_{\ell}'$ be $G'$ at this iteration and let $\br{S_{\ell}, \bar{S_{\ell}}}$ be the cut at this iteration. By summing the above inequality over all iterations we get:
 \begin{align*}
-    c\br{C} &\leq \sum_{\ell} c\br{S_{\ell}, \bar{S_{\ell}}} \leq \frac{\gamma\cdot \OPTdem{G}{\rho}}{\br{\eta+\delta_{\rho}-1}^2\cdot W}\cdot \sum_{\ell} w\br{S_{\ell}, V_{G'_{\ell}}} \\
-    &\leq \frac{\gamma\cdot \OPTdem{G}{\rho}}{\br{\eta+\delta_{\rho}-1}^2\cdot W}\cdot W = \frac{\gamma}{\br{\eta+\delta_{\rho}-1}^2}\cdot \OPTdem{G}{\rho}
+    c\br{C} &\leq \sum_{\ell} c\br{S_{\ell}, \bar{S_{\ell}}} \leq \frac{\gamma\cdot \OPTdem{G}{\rho}}{\br{\eta+\delta_{\rho}-1}^2\cdot W}\cdot \sum_{\ell} w\br{S_{\ell}, V_{G'_{\ell}}} \leq \frac{\gamma}{\br{\eta+\delta_{\rho}-1}^2}\cdot \OPTdem{G}{\rho}
 \end{align*}
-where the last inequality follows since the sets $S_{\ell}$ are disjoint and thus $\sum_{\ell} w\br{S_{\ell}, V_{G'_{\ell}}}\leq W$.
+where the last inequality follows since the sets $S_{\ell}$ are disjoint, so $\sum_{\ell} w\br{S_{\ell}, V_{G'_{\ell}}}\leq W$.
 \end{proof}
 
 As an immediate corollary we get:
@@ -117,16 +115,14 @@ As an immediate corollary we get:
 \subsubsection{Extending the range of the parameters}
 Next, we show how to extend the above procedure into a recursive algorithm that works for any choice of $0<\rho < \eta<1$. 
 Since for $\rho\geq 3/4$ the previous procedure works for any $\eta\in(\rho,1)$, we focus on the case $\rho<3/4$. In such case, observe that $\delta_{\rho}=1/4$, and therefore we know, that the previous procedure works for any $\eta\in[3/4,1)$.
-
 Recall that $B_\rho=\rho\cdot W$ and $B_\eta=\eta\cdot W$, and note that $B_\rho/B_\eta=\rho/\eta$. The next result shows that one can give an $\bigo_{\rho,\eta}\br{\gamma}$-approximation for any choice of $0<\rho<\eta<1$. Note that the constants hidden in the $\bigo_{\rho,\eta}\br{\cdot}$ are quite large and we did not attempt to optimize them.
 
 \begin{theorem}\label{thm:gpd-extension}
     Fix $0<\rho<3/4\leq \eta< 1$, and let $
         \kappa\br{\rho,\eta}=\max\brc{400,\ \frac{1}{\br{\br{1-\rho/\eta}\cdot 4/5}^2}}.$
-    The recursive algorithm runs in polynomial time and returns an $\eta$-feasible subset of edges $C_G$ such that 
-    \[
+    The recursive algorithm runs in polynomial time and returns an $\eta$-feasible subset of edges $C_G$ such that $
         c\br{C_G}\leq d\cdot \kappa\br{\rho,\eta}\cdot \gamma\cdot \OPTdem{G}{\rho},
-    \]
+    $
     where $d=\cl{\log_{5/4}\br{1/\eta}}$, $C^*$ is an optimal solution and $\gamma$ is the approximation ratio for the \textsc{Generalized Conductance}.
 \end{theorem}
 \begin{proof}
@@ -178,12 +174,11 @@ Now, we prove by induction on $d\br{H}$ that the recursive algorithm returns a s
 
 As an immediate corollary we get:
 \begin{corollary}\label{cor:graph-partitioning-approximation}
-    Fix $0<\rho<\eta<1$, and let $\Lambda=d\cdot \kappa\br{\rho,\eta}$ with $d=\cl{\log_{5/4}\br{1/\eta}}$ and $\kappa\br{\rho,\eta}=\max\brc{400,1/\br{\br{1-\rho/\eta}\cdot4/5}^2}$. There is an approximation algorithm for \textsc{Graph Partitioning with Demands} that returns an $\eta$-feasible subset of edges $C_G$ and, such that :
+    Fix $0<\rho<\eta<1$, and let $\Lambda=d\cdot \kappa\br{\rho,\eta}$ with $d=\cl{\log_{5/4}\br{1/\eta}}$ and $\kappa\br{\rho,\eta}=\max\brc{400,1/\br{\br{1-\rho/\eta}\cdot4/5}^2}$. There is an approximation algorithm for \textsc{Graph Partitioning with Demands} that returns an $\eta$-feasible subset of edges $C_G$ and, such that:
     \[
     c\br{C_G}\leq \bigo\br{\Lambda\cdot \sqrt{\log n}}\cdot \OPTdem{G}{\rho}
     \quad\text{on general graphs,}
-    \]
-    \[
+    \\
     c\br{C_G}\leq \Lambda\cdot \OPTdem{G}{\rho}
     \quad\text{on trees,}
     \]
@@ -233,24 +228,20 @@ and every component $K$ of $H\setminus C_H$ satisfies $
         =\sum_{q=0}^{W}c\br{E_q^*}.
     \end{equation}
 
-    Fix a positive-demand nonsingleton cluster $H$ produced by the algorithm, and let $E_H$ be its induced supply edges. The maximal clusters of $\cT^*$ having demand at most $\fl{r_H/2}$ partition $V$ and by extension $V_H$ into clusters of demand at most $\fl{r_H/2}$. Every supply edge of $E_H$ joining two distinct parts has its endpoints in distinct maximal clusters of $\cT^*$, so their least common ancestor in $\cT^*$ has demand greater than $\fl{r_H/2}$. Consequently, the set $E_{\fl{r_H/2}}^*\cap E_H$ is a feasible solution to \textsc{Graph Partitioning with Demands} on graph $H$ with $\rho=1/2$, and~\eqref{eq:hc-gpd-subroutine} gives
-    \begin{equation}\label{eq:hc-local-cut-bound}
+    Fix a positive-demand nonsingleton cluster $H$ produced by the algorithm, and let $E_H$ be its induced supply edges. The maximal clusters of $\cT^*$ having demand at most $\fl{r_H/2}$ partition $V$ and by extension $V_H$ into clusters of demand at most $\fl{r_H/2}$. Every supply edge of $E_H$ joining two distinct parts has its endpoints in distinct maximal clusters of $\cT^*$, so their least common ancestor in $\cT^*$ has demand greater than $\fl{r_H/2}$. Consequently, the set $E_{\fl{r_H/2}}^*\cap E_H$ is a feasible solution to \textsc{Graph Partitioning with Demands} on graph $H$ with $\rho=1/2$, and~\eqref{eq:hc-gpd-subroutine} gives $
         c\br{C_H}\leq \gamma \cdot \OPT_{1/2}\br{H}
-        \leq\gamma(\eta)\cdot c\br{E_{\fl{r_H/2}}^*\cap E_H}.
-    \end{equation}
-
+        \leq\gamma(\eta)\cdot c\br{E_{\fl{r_H/2}}^*\cap E_H}.$
     Let $s_H$ be the largest demand of a nonsingleton child of $H$, and set $s_H=0$ if every child is a singleton. A subroutine call gives $s_H\leq\eta \cdot r_H$.
     Since $E_{\fl{r_H/2}}^*\subseteq E_{\fl{t/2}}^*$ whenever $t\leq r_H$, we have
-    \begin{align}
+    \[
         r_H\cdot c\br{C_H}
         \leq\frac{\gamma\cdot (\eta)}{1-\eta}
             \cdot\br{r_H-s_H}\cdot c\br{E_{\fl{r_H/2}}^*\cap E_H}
         \leq\frac{\gamma\cdot (\eta)}{1-\eta}\cdot
             \sum_{t=s_H+1}^{r_H}c\br{E_{\fl{t/2}}^*\cap E_H}.
-        \label{eq:hc-cluster-charge}
-    \end{align}
+    \]
 
-    For a fixed $t$, the clusters satisfying $s_H<t\leq r_H$ have pairwise disjoint induced edge sets. Indeed, if one such cluster were a proper descendant of another, it would lie in a nonsingleton child of the ancestor and would have demand at most the ancestor's value $s_H<t$, contradicting $t\leq r_H$ for the descendant. Summing~\eqref{eq:hc-cluster-charge} over all algorithmic clusters and using~\eqref{eq:hc-level-sum}, we conclude that
+    For a fixed $t$, the clusters satisfying $s_H<t\leq r_H$ have pairwise disjoint induced edge sets. Indeed, if one such cluster were a proper descendant of another, it would lie in a nonsingleton child of the ancestor and would have demand at most the ancestor's value $s_H<t$, contradicting $t\leq r_H$ for the descendant. Summing over all algorithmic clusters and using~\eqref{eq:hc-level-sum}, we conclude that
     \begin{align*}
         c\br{\cT}
         \leq\frac{\gamma(\eta)}{1-\eta}\cdot
@@ -266,33 +257,3 @@ and every component $K$ of $H\setminus C_H$ satisfies $
 \begin{corollary}\label{cor:hc-general-bounds}
     There is an $\bigo\br{\sqrt{\log n}}$-approximation algorithm for \textsc{Hierarchical Clustering with Demands} on general graphs and an $\bigo\br{1}$-approximation algorithm on trees.
 \end{corollary}
-\begin{proof}
-    Fix any constant $\eta\in(1/2,1)$ and substitute the corresponding \textsc{Graph Partitioning with Demands} guarantees into Theorem~\ref{thm:hc-gpd-transfer}.
-\end{proof}
-
-We finally establish the inapproximability result for \textsc{Hierarchical Clustering with Demands} on supply stars.
-\begin{theorem}\label{thm:hc-star-hardness}
-    \textsc{Hierarchical Clustering with Demands} is UGC-hard to approximate within a factor of $1.0748$,
-    even when the supply graph is a star and all capacities and demands are uniform.
-\end{theorem}
-\begin{proof}
-    We reduce from the NP-hard problem \textsc{Min-Sum Vertex Cover} on general graphs. In this problem we are given an undirected graph $G=(U,F)$ and the goal is to find a permutation $\pi:U\to\{1,\dots,|U|\}$ that minimizes the sum of cover times of the edges $\ct\br{\pi}=\sum_{e\in F}\ct_\pi(e)$, i.e., where the covering time is defined as $\ct_\pi(uv)=\min\{\pi(u),\pi(v)\}$. This problem cannot be approximated within a factor of $1.0748$ under the Unique Games Conjecture \cite{SomeResultsOnApproximabilityOfMinimumSumVertexCover}. The reduction is very simple. The vertex set is $V=U\cup {r}$, $D=U$ and $E$ is a star with center $r$ and leaves $U$. The capacities and demands are all set to $1$. 
-    
-    Consider any clustering tree $\cT$. Since any nonbinary tree can be transformed into a binary one without loss of the quality, we assume that $\cT$ is binary. Now, we observe that on stars any binary cut, i.e., cut where both sides of the cut are connected, consists of some leaf $l\in U$ and nothing more. Consequently, any such clustering tree directly corresponds to a sequemce of leaves, in the order they are separated from the root. Conversily, every sequence $\pi:U\to\{1,\dots,|U|\}$ of the leaves corresponds to a unique binary clustering tree. 
-    
-    Now, for any sequence $\pi:U\to\{1,\dots,|U|\}$ and a vertex $u\in U$, let \[
-    E_\pi(u)=\{vw\in F\colon \pi(u)\leq \pi(v), \pi(w)\}
-    \]
-    be the set of all edges covered no sooner then $\pi(u)$.
-    Then, for the clustering tree $\cT$ corresponding to $\pi$ we can rewrite its cost as 
-    \[
-    c\br{\cT}=
-    \sum_{e\in E} \spr{V_{\lca_\cT(e)}}=
-    \sum_{u\in U} \spr{V_{\lca_\cT(u,r)}}=
-    \sum_{u\in U}\spr{E_\pi(u)} =
-    \ct\br{\pi}.
-    \]
-    where the third equality is due to the fact that for any vertex $u\in U$, the set $E_\pi(u)$ consists of all edges whose both endpoint appear no sooner then $\pi\br{u}$ in the sequence $\pi$, which are all of the demand edges still present in the cluster containing $u$, before cutting $u$ from the root. The fourth equality follows from basic rewriting of $\ct\br{\pi}$, since each $u\in U$ contributes one per each edge which was not covered by the first $\pi(u)-1$ vertices in the sequence.
-
-    Therefore, the costs of corresponding solutions coincide, and the inapproximability of \textsc{Min-Sum Vertex Cover} transfers to \textsc{Hierarchical Clustering with Demands} on supply stars.
-\end{proof}
