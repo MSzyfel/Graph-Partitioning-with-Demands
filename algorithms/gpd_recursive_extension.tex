@@ -1,14 +1,14 @@
 \begin{algorithm}[H]
     \caption{Recursive extension to the full parameter range}
-    \textbf{Input} A component $H$, global budgets $B_\rho=\rho\cdot W$ and $B_\eta=\eta\cdot W$, and the algorithm of Theorem~\ref{thm:gpd-bicriteria}\;
-    \textbf{Output} A supply-edge set $C_H$ whose components have demand at most $B_\eta$\;
+    \textbf{Input} A component $H$, global budgets $B_\rho=\rho\cdot W$ and $B_\eta=\eta\cdot W$, and the algorithm from Theorem~\ref{thm:gpd-bicriteria} (Algorithm~\ref{algo:partitioning-limited-range})\;
+    \textbf{Output} A supply-edge set $C_H$ such that the components of $H\setminus C_H$ have demand at most $B_\eta$\;
     \If{$w\br{V_H}\leq B_\eta$}{
         \textbf{return} $\emptyset$\;
     }
     $\eta_0\gets\max\brc{4/5,\,B_\eta/w\br{V_H}}$\;
-    Run Theorem~\ref{thm:gpd-bicriteria} on $H$ with parameter $\eta_0$. Let $C$ be the returned supply-edge set\;
+    Run Algorithm~\ref{algo:partitioning-limited-range} on $H$ with parameter $\eta_0$. Let $C$ be the returned supply-edge set\;
     $C_H\gets C$\;
-    \ForEach{component $H'$ of $H\setminus C$}{
+    \ForEach{connected component $H'$ of $H\setminus C$}{
         Recursively partition $H'$ and add the returned supply-edge set $C_{H'}$ to $C_H$\;
     }
     \textbf{return} $C_H$\;

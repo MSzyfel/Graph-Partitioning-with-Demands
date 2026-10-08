@@ -1,6 +1,6 @@
 \begin{algorithm}[tbp]
     \caption{Anchored-LP rounding on a supply tree}
-    \textbf{Input} Supply tree $T=(V,E,c)$, demand graph $(V,D,w)$, and parameters $0<\rho<\eta<1$\;
+    \textbf{Input} A tree $T=(V,E,D,c,w)$, and parameters $0<\rho<\eta<1$\;
     \textbf{Output} An $\eta$-feasible supply-edge set $F\subseteq E$\;
     \If{$W=0$}{
         \textbf{return} $F=\emptyset$\;
@@ -8,7 +8,7 @@
     Set $B_\rho\gets\rho W$ and solve the anchored LP~\eqref{lp:tree-anchored}. Let $(x,z)$ be an optimal rational solution\;
     Set $R\gets(\eta-\rho)/(2\eta)$ and root $T$ at an arbitrary vertex $r$\;
     Compute $\dist(v)\gets \dist_x(r,v)$ for every $v\in V$\;
-    Sort the distinct residues $\dist(v)\bmod R$ and choose one phase $\theta$ in each nonempty cyclic interval between consecutive residues\;
+    Sort the distinct residues $\dist(v)\bmod R$ and choose one phase $\theta$ in each non-empty cyclic interval between consecutive residues\;
     \ForEach{chosen phase $\theta$}{
         Form $F_\theta\gets\left\{pv\in E:\dist(p)<\theta+kR\leq \dist(v)\text{ for some }k\in\mathbb{Z},\ p\text{ is the parent of }v\right\}$\;
     }

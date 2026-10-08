@@ -1,6 +1,6 @@
-\section{Hardness of Approximation}\label{sec:hardness}
+\section{Hardness Results}\label{sec:gpd-hardness}
 
-This section collects the approximation-hardness results for \textsc{Generalized Conductance}, \textsc{Graph Partitioning with Demands}, and \textsc{Hierarchical Clustering with Demands}. The \emph{Small-Set Expansion Hypothesis} states that, for every constant $\zeta>0$, there is a constant $\delta>0$ for which it is NP-hard, given a regular graph, to distinguish between the existence of a vertex set of normalized size $\delta$ and expansion at most $\zeta$, and the condition that every vertex set of normalized size $\delta$ has expansion at least $1-\zeta$. The reductions below use rational numbers instead of natural ones, which can be fixed by appropriate scaling.
+In this section we provide approximation-hardness results for \textsc{Generalized Conductance}, \textsc{Graph Partitioning with Demands} and \textsc{Hierarchical Clustering with Demands} based on the Small-Set Expansion Hypothesis. The \emph{Small-Set Expansion Hypothesis} states that, for every constant $\zeta>0$, there is a constant $\delta>0$ for which it is NP-hard, given a regular graph, to distinguish between the existence of a vertex set of normalized size $\delta$ and expansion at most $\zeta$, and the condition that every vertex set of normalized size $\delta$ has expansion at least $1-\zeta$. Both reductions in this section use rational numbers instead of natural ones, however this can be fixed by appropriate scaling.
 
 For every unweighted undirected graph $G=(V,E)$ used as a source graph below, write
 \[
@@ -12,15 +12,18 @@ For every unweighted undirected graph $G=(V,E)$ used as a source graph below, wr
     \mu_G(u)=\frac{\deg_G(u)}{M_G},
     \qquad
     \mu_G(S)=\sum_{u\in S}\mu_G(u)=\frac{\operatorname{vol}_G(S)}{M_G},\qquad
-    \Phi_G(S)=\frac{|\delta_G(S)|}{\operatorname{vol}_G(S)}.
+    \Phi_G(S)=\frac{|\delta_G(S)|}{\operatorname{vol}_G(S)},
 \]
-For an oriented edge $u\to v$, let $P_G(u,v)=1/\deg_G(u)$ if $uv\in E$ and $P_G(u,v)=0$ otherwise. This is the probability that a random walk at vertex $u$ moves to vertex $v$. Moreover, $\mu\br{u}$ can be interpreted as the stationary probability that a random walk in $G$ visits vertex $u$. Now, set
+\DDfix{where $\deg_G(u)$ is the \emph{degree} of a vertex $u$ in $G$.}
+\DD{do przemyslenia: mamy tutaj konflikty notacyjne: $\mu$, $P$ z wczesniejszymi oznaczeniami.}
+For an oriented edge $u\to v$, let $P_G(u,v)=1/\deg_G(u)$ if $uv\in E$ and $P_G(u,v)=0$ otherwise. This is the probability that a random walk at vertex $u$ moves to vertex $v$. Moreover, $\mu\br{u}$ \DD{$\mu_G$?} can be interpreted as the stationary probability that a random walk in $G$ visits vertex $u$. \DD{to dosc nietrywialne (?)}
+Now, set
 \[
     p_G(u,v)=\mu_G(u)\cdot P_G(u,v).
 \]
 Thus $p_G(u,v)=p_G(v,u)=1/M_G$ on every edge. Then, for any $S\subseteq V$ we have
 \[
-    \sum_{(u,v)\in\delta_G(S)}p_G(u,v)
+    \sum_{uv\in\delta_G(S)}p_G(u,v)
     =\frac{|\delta_G(S)|}{M_G}
     =\mu_G(S)\cdot \Phi_G(S),
     \qquad
@@ -50,6 +53,7 @@ For any graph $H=(V_H,E_H)$ with stationary vertex measure $\mu$, write $\mu(u)=
 We use the standard product-space construction in the source theorem with tensor power $R\geq2$, which gives $\alpha\leq q^{-R}\leq1/4$. This additional atom bound is needed only for the HCD result below, not for the GPD reduction. The explicit parameter choices give a universal constant $K>0$ such that the YES expansion bound $K\varepsilon$ holds uniformly in $q$ for sufficiently small $\varepsilon$.
 
 We first invoke the following result of Raghavendra, Steurer, and Tulsiani~\cite[Theorem~3.5]{ReductionsBetweenExpansionProblems}.
+\DD{trzebaby naprawic ``ref'', gdyz rzeczony papier nie ma Thm. 3.5 (jedynie jego arxiv).; trzebaby dodac czym jest $K_\varepsilon$.}
 
 \begin{theorem}[Raghavendra-Steurer-Tulsiani]\label{thm:rst-global-expansion}
     For every integer $q\geq2$ and every $\gamma>0$, assuming the Small-Set Expansion Hypothesis, it is hard to distinguish between the following cases for a graph $H=(V_H,E_H)$ with stationary vertex measure $\mu$, for sufficiently small $\varepsilon>0$:
@@ -95,21 +99,21 @@ We derive from Theorem~\ref{thm:rst-global-expansion} the form of the gap used i
 
 \subsection{Hardness of Graph Partitioning with Demands}
 
-For simplicity, we carry out the reduction with rational capacities and demands. In order for them to be natural numbers, we may multiply all of them by a common denominator. This does not affect feasibility or any approximation ratio, and hence does not affect the analysis.
+For simplicity, we carry out the reduction with rational costs and demands. \DDfix{Scaling by a least common denominator does not} affect feasibility or any approximation ratio.
 
-A demand graph is \emph{bipartite multiplicative} if its vertex set has a bipartition $L\mathbin{\dot\cup}R$, its demand edges are all pairs with one endpoint in each side, and there is a potential $\pi$ such that $w(uv)=\pi(u)\cdot \pi(v)$ for every demand edge $uv$. Our intention is to show a reduction which establishes the hardness of graph partitioning with bipartite multiplicative demands.
+A demand graph is \emph{bipartite multiplicative} if its vertex set has a bipartition $L\mathbin{\dot\cup}R$, its demand edges are all pairs with one endpoint in $L$ and the other in $R$, and there is a potential $\pi$ such that $w(uv)=\pi(u)\cdot \pi(v)$ for every demand edge $uv$. Our intention is to show a reduction which establishes the hardness of graph partitioning with bipartite multiplicative demands.
 This class is closed under taking induced subgraphs.
 
 
     For every $u\in U$, introduce two vertices $u^{\mathrm L}$ and $u^{\mathrm R}$, assign $
-        \pi\br{u^{\mathrm L}}=\pi\br{u^{\mathrm R}}=\mu(u),$
+        \pi\br{u^{\mathrm L}}=\pi\br{u^{\mathrm R}}=\mu(u),$ \DD{czym jest $\mu(u)$ tutaj?}
     and let $
         \widetilde U
         =\brc{u^{\mathrm L},u^{\mathrm R}\colon u\in U}.$
     On $\widetilde U$, define the bipartite multiplicative demand graph to have edge set $
         D_\times
         =\brc{u^{\mathrm L}v^{\mathrm R}\colon u,v\in U\times U}$ and demands $
-        w\br{u^{\mathrm L},v^{\mathrm R}}
+        w\br{u^{\mathrm L}v^{\mathrm R}}
         =\pi\br{u^{\mathrm L}}\cdot \pi\br{v^{\mathrm R}}.$
     For $S\subseteq U$, write $
         \widetilde S=\brc{u^{\mathrm L},u^{\mathrm R}\colon u\in S}.$
@@ -129,13 +133,13 @@ This class is closed under taking induced subgraphs.
     The same calculation for $S=U$ gives $w\br{\widetilde U}=1$.
 \end{proof}
 
-We now turn $X$ into a supply graph $\widetilde X$ on $\widetilde U$. For every $uv\in F$, add the supply edge $u^{\mathrm L}v^{\mathrm L}$ with GPD capacity $c(u^{\mathrm L}v^{\mathrm L})=p_X(u,v)$. For every $u\in U$, also add the \emph{consistency edge} $u^{\mathrm L}u^{\mathrm R}$ with GPD capacity $c(u^{\mathrm L}u^{\mathrm R})=1$. Thus, unless a consistency edge is cut, the two copies of every vertex belong to the same component. Together with the previously defined bipartite multiplicative demand graph on $\widetilde U$, this completes the construction of the instance $(\widetilde X,D_\times)$.
+We now turn $X$ \DD{czym jest $X$?} into a supply graph $\widetilde X$ on $\widetilde U$. For every $uv\in F$, add the supply edge $u^{\mathrm L}v^{\mathrm L}$ \DDfix{of cost} $c(u^{\mathrm L}v^{\mathrm L})=p_X(u,v)$. For every $u\in U$, also add the \emph{consistency edge} $u^{\mathrm L}u^{\mathrm R}$ \DDfix{of cost} $c(u^{\mathrm L}u^{\mathrm R})=1$. Thus, unless a consistency edge is cut, the two copies of every vertex belong to the same component. Together with the previously defined bipartite multiplicative demand graph on $\widetilde U$, this completes the construction of \DDfix{the graph instance $(\widetilde U,\widetilde X,D_\times,c,w)$.}
 
 \subsubsection{Completenes}
 \begin{lemma}\label{lem:sse-gpd-completeness}
     Fix $\rho\in(0,1)$ and set $
         q=\max\left\{2,\left\lceil\rho^{-1/2}\right\rceil\right\}. $
-    In the YES case,
+    In the YES \DD{yes w ktorym problemie?; czym jest $K$?} case,
     \[
         \OPTdem{\widetilde X}{\rho}\leq \frac{K}{2}\cdot\varepsilon.
     \]
@@ -168,11 +172,11 @@ We now turn $X$ into a supply graph $\widetilde X$ on $\widetilde U$. For every 
 \end{proof}
 
 \subsubsection{Soundness}
-We start by proving a numerical lemma that will be useful in the soundness analysis.
+We start by proving a numerical lemma that will be useful in the soundness \DD{co znaczy soundness?} analysis.
 \begin{lemma}\label{lem:group-small-components}
     Let $p_1,\ldots,p_m\geq0$ satisfy $
         \sum_{i=1}^{m}p_i=1$ and $
-        p_i\leq\sqrt{\eta}<1.$
+        p_i\leq\sqrt{\eta}<1$ for each $i\in[m]$.
     Define $b_\eta=\min\left\{\frac{1}{4},1-\sqrt{\eta}\right\}$.
     Then, there is a set $I\subseteq[m]$ such that
     \[
@@ -180,8 +184,8 @@ We start by proving a numerical lemma that will be useful in the soundness analy
     \]
 \end{lemma}
 \begin{proof}
-    If some $p_i>1/2$, take all indices except $i$. Their total is at least $1-\sqrt{\eta}\geq b_\eta$ and is less than $1/2$.
-    Otherwise, we have $p_i\leq1/2$. If some $p_i\geq b_\eta$, take that index. If all $p_i<b_\eta$, add indices until their sum first reaches $b_\eta$. The resulting sum is less than $2b_\eta\leq1/2$.
+    If some $p_i>1/2$, take all indices except $i$. Their sum is at least $1-\sqrt{\eta}\geq b_\eta$ and is less than $1/2$.
+    Otherwise, we have $p_i\leq1/2$. If some $p_i\geq b_\eta$, then take $I=\brc{i}$. If all $p_i<b_\eta$, add indices until their sum first reaches $b_\eta$. The resulting sum is less than $2b_\eta\leq1/2$.
 \end{proof}
 
 \begin{lemma}\label{lem:sse-gpd-soundness}
