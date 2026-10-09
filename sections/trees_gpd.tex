@@ -1,9 +1,9 @@
 \section{Graph Partitioning with Demands on Trees}\label{sec:tree-configuration-lp}
 
-For the special case of the \textsc{Graph Partitioning with Demands} problem where the supply graph is a tree, one could ask whether the problem is polynomial-time or pseudo-polynomial-time solvable.
+For the special case of \textsc{Graph Partitioning with Demands} where the supply graph is a tree, one could ask whether the problem is polynomial-time or pseudo-polynomial-time solvable.
 The hardness results for \textsc{Graph Partitioning with Demands} on trees are collected in Section~\ref{sec:gpd-hardness}.
 We then ask whether one can improve the approximation guarantee given by Theorem \ref{thm:gpd-extension}, since the constant provided by that theorem is relatively large.
-We give two polynomial-time bicriteria approaches for arbitrary demand weights: anchored-LP rounding (cf. Section~\ref{sec:Anchor-LP-based-algorithm}) and separator recursion based on submodular maximum coverage (cf. Section~\ref{sec:Separator-Recursion-via-Maximum-Coverage}). We also give a non-bicriteria separator algorithm whose polynomial degree depends on $1/\rho$ (cf. Section~\ref{sec:Single-Criteria-Approximation-via-Multicut}).
+We give two polynomial-time bicriteria approaches for arbitrary demand weights: anchored-LP rounding (cf. Section~\ref{sec:Anchor-LP-based-algorithm} with the algorithm summarized in Corollary~\ref{cor:tree-general-demand-bicriteria}) and separator recursion based on submodular maximum coverage (cf. Section~\ref{sec:Separator-Recursion-via-Maximum-Coverage} with the algorithm summarized by Theorem~\ref{thm:tree-centroid-max-coverage}). We also give a single-criteria separator algorithm whose polynomial degree depends on $1/\rho$ (cf. Section~\ref{sec:Single-Criteria-Approximation-via-Multicut} with respective Theorem~\ref{thm:tree-centroid-full-quota}).
 Taking the best of these guarantees gives approximation ratios depending on $\rho$ and $\eta$ that improve on the constant provided by Theorem~\ref{thm:gpd-extension}.
 As a corollary, we obtain a polynomial-time $\frac{4e}{e-1}$-approximation for \textsc{Hierarchical Clustering with Demands} on trees. The idea behind the algorithm is to find a small-size set of vertices whose removal leads to components with relatively low demand. Then, the new goal of the algorithm becomes to remove a large enough amount of demand from each vertex of the separator. To do this we use a well-known subproblem called \textsc{Maximum Coverage}.
 For a tree $T$, let $\OPT_{B_\rho}(T)=\OPTdem{T}{\rho}$ denote the minimum cost of a set of supply edges whose deletion partitions $T$ into components, each with internal demand at most $B_\rho$.
@@ -101,7 +101,7 @@ Since $|D|\leq\binom{n}{2}$, the LP has $O(|E|+n|D|)=O(n^3)$ variables and const
     The anchor-demand constraint and non-negativity of $z$ imply
     \[
         B_\rho\geq\sum_{uv\in D}w(u,v)\cdot z^a_{uv}
-          \geq\sum_{uv\in D[V_H]}w(u,v)\cdot z^a_{uv}
+          \geq\sum_{uv\in D_H}w(u,v)\cdot z^a_{uv}
           \geq(1-2R)\cdot w(V_H).
     \]
     Rearranging gives the desired bound on $w(V_H)$.
@@ -109,6 +109,7 @@ Since $|D|\leq\binom{n}{2}$, the LP has $O(|E|+n|D|)=O(n^3)$ variables and const
     It remains to derandomize the choice of $\theta$. The edge set $F$ changes only when $\theta$ crosses one of the at most $|V|$ residues $\dist(v)\bmod R$. Sort the distinct residues on the circle $[0,R)$ and choose one phase in every nonempty interval between consecutive residues, including the interval that wraps around from the last residue to the first. There are $O(|V|)$ candidate phases. By the properties of the expected value, at least one of these candidate phases yields an edge set with cost at most $\mathbb{E}[c(F)]$ as required.
 \end{proof}
 
+\DD{zgodnie z nasza rozmowa: prawdopodobnie do usuniecia lub do appendix'a}
 The anchored-LP rounding procedure used in the proof of Theorem~\ref{thm:tree-anchored-rounding} is as follows.
 
 \input{algorithms/anchored_lp_rounding.tex}
@@ -415,42 +416,41 @@ For each induced instance, write $\OPT_{B_\rho}(H)$ for its minimum cut cost sub
 \subsection{Separator Recursion via Maximum Coverage}
 \label{sec:Separator-Recursion-via-Maximum-Coverage}
 
-We now show a combinatorial algorithm for \textsc{Graph Partitioning with Demands} on trees. The idea is to find a small-size set of vertices whose removal leads to components with relatively low demand. Then, the new goal of the algorithm becomes to remove a large enough amount of demand from each vertex of the separator. To this end, we employ a well-known subproblem called \textsc{Maximum Coverage}, which will allow us to find relatively low cost edge set whose removal separates roughly the required amount of demand from each separator vertex.
+We now show a combinatorial algorithm for \textsc{Graph Partitioning with Demands} on trees. The idea is to find a small-size set of vertices whose removal leads to components with sufficiently low demand. Then, the new goal of the algorithm becomes to remove a large enough amount of demand from each vertex of the separator. To this end, we employ a well-known subproblem called \textsc{Maximum Coverage}, which will allow us to find relatively low cost edge set whose removal separates roughly the required amount of demand from each separator vertex.
 
-For a connected component $H$ and $v\in V_H$, define $\mu_H(v)=d_{w,H}(v)/2$, where $d_{w,H}(v)=\sum_{u:uv\in D[V_H]}w(uv)$ is the weighted degree of $v$ in the demand graph induced by $V_H$. Then, for every $Y\subseteq V_H$,
+For a connected component $H$ and $v\in V_H$, define $\mu_H(v)=d_{w,H}(v)/2$, where $d_{w,H}(v)=\sum_{u:uv\in D_H}w(uv)$ is the weighted degree of $v$ \DDfix{redefined for particular subgraphs}. Then, for every $Y\subseteq V_H$,
 \[
     \mu_H(Y)=w(Y)+\frac12 w(Y,V_H\setminus Y),
 \]
 so in particular $w(X)\leq\mu_H(X)$.
 
 \begin{lemma}\label{lem:tree-separator}
-    Fix an integer $t\geq2$. There is a polynomial-time procedure $\textsc{Separator}(H, w, t)$ that returns a separator set $\mathcal L_H\subseteq V_H$ with $|\mathcal L_H|\leq t-1$ such that every component $J$ of $H\setminus\mathcal L_H$ satisfies
+    Fix an integer $t\geq2$ and take any subtree $H$. There is a $\bigo(n)$-time procedure $\textsc{Separator}(H, w, t)$ that returns a vertex separator $\mathcal L_H\subseteq V_H$ with $|\mathcal L_H|\leq t-1$ such that every component $J$ of $H\setminus\mathcal L_H$ satisfies
     \[
         w(V_J)\leq\frac{w(V_H)}{t}.
     \]
 \end{lemma}
 \begin{proof}
+    \DD{uwaga: uproszczony lemma, bo $\mu_{\cdot}$ były niepotrzebne}
+    \DD{uwaga: skoro ponizej sie odwolujemy do czasu, to dodalem running time}
+    \DD{sprawdzic czy $\mu_H$ w ogole jeszcze jest potrzebne (chat mowi, ze nie...)}
     The algorithm is as follows.
-    Root $H$ arbitrarily and initialize the current root-containing subtree $R$ to $H$. While $\mu_H(V_R)>w\br{H}/t$, choose the deepest vertex $x$ such that the subtree $R_x$ rooted at $x$ in the current $R$ has $\mu_H(V_{R_x})>w\br{H}/t$.
-    Add $x$ to $\mathcal L_H$ and remove $R_x$ from $R$. The peeled subtrees are pairwise disjoint. For any pairwise disjoint sets $A_1,\ldots,A_k\subseteq V_H$, the definition of $\mu_H$ gives
-    \[
-        \sum_{i=1}^k\mu_H(A_i)\leq w\br{V_H},
-    \]
-    since each demand edge contributes at most its weight to this sum.
-    \DD{BREAK: tutaj na razie przerywam czytanie do konca rozdzialu 5.3.}
-    Every peeled subtree has $\mu_H(V_{R_x})>w\br{V_H}/t$, so there are at most $t-1$ of them. By the choice of a deepest such vertex, every child subtree $T'$ of $x$ in $R$ has $\mu_H(V_{T'})\leq w\br{V_H}/t$, and hence $w\br{V_{T'}}\leq w\br{V_H}/t$. Therefore, after removing all separators, every component $K\in H\setminus\mathcal L_H$ is one of these child subtrees at the iteration when its parent separator was selected, or the final remainder $R$. The final remainder satisfies $\mu_H(V_R)\leq w\br{V_H}/t$ by the stopping condition. In either case, $w\br{V_K}\leq w\br{V_H}/t$ as desired.
+    Root $H$ arbitrarily and initialize the current root-containing subtree $R$ to $H$. While $w\br{V_R}>w\br{V_H}/t$, choose the deepest vertex $x$ such that the subtree $R_x$ rooted at $x$ in the current $R$ satisfies $w\br{V_{R_x}}>w\br{V_H}/t$.
+    Add $x$ to $\mathcal L_H$ and remove $R_x$ from $R$. The peeled subtrees are pairwise disjoint, so the sum of their internal demand weights is at most $w\br{V_H}$. Since every peeled subtree has demand greater than $w\br{V_H}/t$, there are at most $t-1$ of them. By the choice of a deepest such vertex, every child subtree $T'$ of $x$ in $R_x$ satisfies $w\br{V_{T'}}\leq w\br{V_H}/t$. Therefore, after removing all separators, every connected component $K$ in $H\setminus\mathcal L_H$ is one of these child subtrees at the iteration when its parent separator was selected, or the final remainder $R$. The final remainder satisfies $w\br{V_R}\leq w\br{V_H}/t$ by the stopping condition. In either case, $w\br{V_K}\leq w\br{V_H}/t$ as desired.
 \end{proof}
 
-Note, that this lemma will come useful later as well, since after the following procedure we show how to modify it to obtain a true, single criteria approximation algorithm for \textsc{Graph Partitioning with Demands} on trees.
+Note, that this lemma will come useful later as well, since after the following procedure we show how to modify it to obtain a true, single-criteria approximation algorithm for \textsc{Graph Partitioning with Demands} on trees.
 
-In the first version of our algorithm, we apply Lemma~\ref{lem:tree-separator} with the smallest integer $t\geq e$, which is $t=3$. Note that the runtime of the procedure depends on $t$, so we choose it as small as possible. Thus, $\mathcal L_H$ contains at most two separators, and every component of $H\setminus\mathcal L_H$ has demand at most $h/3$. Let $P_H=H[\mathcal L_H]$ be the minimal path in $H$ containing $\mathcal L_H$. If $|\mathcal L_H|=1$, then $P_H$ is that single vertex. We enumerate $Q=\emptyset$ and $Q=\{e\}$ for each edge $e\in E(P_H)$. Thus at most $1+|E(P_H)|\leq n$ guesses are considered. For a guess $Q$, let $\mathcal K_Q$ be the components of $H\setminus Q$. For a component $K\in\mathcal K_Q$, write $\mathcal L_K=V_K\cap\mathcal L_H$ and let $S_K$ be the minimal subtree of $K$ containing $\mathcal L_K$. Note that $S_K$ is either $P_H$ or a single vertex of $\mathcal L_K$.
+In the first version of our algorithm, we apply Lemma~\ref{lem:tree-separator} with the smallest integer $t\geq e$, which is $t=3$. Note that the runtime of the procedure depends on $t$, so we choose it as small as possible. \DD{wydaje mi sie, ze nie zalezy od $t$ - algorytm to jeden run bottom-up po wszystkich wierzcholkach}
+Thus, $\mathcal L_H$ contains at most two separators, $\spr{\mathcal{L_H}}\leq 2$, and every component of $H\setminus\mathcal L_H$ \DDfix{has demand at most $w(V_H)/3$.} Let $P_H$ be the minimal path in $H$ containing the vertices of $\mathcal L_H$. If $|\mathcal L_H|=1$, then $P_H$ is that single vertex. We enumerate $Q=\emptyset$ and $Q=\{e\}$ for each edge $e\in E(P_H)$. Thus at most $1+|E(P_H)|\leq n$ guesses are considered. For a guess $Q$, let $\mathcal K_Q$ be the components of $H\setminus Q$. For a component $K\in\mathcal K_Q$, write $\mathcal L_K=V_K\cap\mathcal L_H$ and let $S_K$ be the minimal subtree of $K$ containing $\mathcal L_K$. Note that $S_K$ is \DDfix{either $P_H$ (when $Q=\emptyset$) or a single vertex of $\mathcal L_K$ (for $\spr{Q}=1$).}
 
-For each edge $e\in E(K)\setminus E(S_K)$, let $T_e$ be the component of $K-e$ not containing $S_K$. For $A\subseteq E(K)\setminus E(S_K)$, define
+\DD{marker: tutaj skonczylem}
+For each edge $e\in E(K)\setminus E(S_K)$, let $T_e$ be the component of $K\setminus\brc{e}$ not containing $S_K$. For $A\subseteq E(K)\setminus E(S_K)$, define
 \[
     \begin{aligned}
         U_K(A)&=\bigcup_{e\in A}V_{T_e},\\
         C_K(A)&=\left\{xy\in E(K)\colon \left|\{x,y\}\cap U_K(A)\right|=1\right\},\\
-        f_K(A)&=\sum_{uv\in D[V_K]}w(u,v)\cdot 
+        f_K(A)&=\sum_{uv\in D_K}w(u,v)\cdot 
             \mathbf 1\!\left[\{u,v\}\cap U_K(A)\neq\emptyset\right].
     \end{aligned}
 \]
