@@ -16,7 +16,7 @@ For every unweighted undirected graph $G=(V,E)$ used as a source graph below, wr
 \]
 \DDfix{where $\deg_G(u)$ is the \emph{degree} of a vertex $u$ in $G$.}
 \DD{do przemyslenia: mamy tutaj konflikty notacyjne: $\mu$, $P$ z wczesniejszymi oznaczeniami.}
-For an oriented edge $u\to v$, let $P_G(u,v)=1/\deg_G(u)$ if $uv\in E$ and $P_G(u,v)=0$ otherwise. This is the probability that a random walk at vertex $u$ moves to vertex $v$. Moreover, $\mu\br{u}$ \DD{$\mu_G$?} can be interpreted as the stationary probability that a random walk in $G$ visits vertex $u$. \DD{to dosc nietrywialne (?)}
+For an oriented edge $u\to v$, let $P_G(u,v)=1/\deg_G(u)$ if $uv\in E$ and $P_G(u,v)=0$ otherwise. This is the probability that a random walk at vertex $u$ moves to vertex $v$. Moreover, $\mu_G\br{u}$ can be interpreted as the stationary probability that a random walk in $G$ visits vertex $u$. \DD{to dosc nietrywialne (?)}
 Now, set
 \[
     p_G(u,v)=\mu_G(u)\cdot P_G(u,v).
@@ -52,11 +52,10 @@ For any graph $H=(V_H,E_H)$ with stationary vertex measure $\mu$, write $\mu(u)=
 \]
 We use the standard product-space construction in the source theorem with tensor power $R\geq2$, which gives $\alpha\leq q^{-R}\leq1/4$. This additional atom bound is needed only for the HCD result below, not for the GPD reduction. The explicit parameter choices give a universal constant $K>0$ such that the YES expansion bound $K\varepsilon$ holds uniformly in $q$ for sufficiently small $\varepsilon$.
 
-We first invoke the following result of Raghavendra, Steurer, and Tulsiani~\cite[Theorem~3.5]{ReductionsBetweenExpansionProblems}.
-\DD{trzebaby naprawic ``ref'', gdyz rzeczony papier nie ma Thm. 3.5 (jedynie jego arxiv).; trzebaby dodac czym jest $K_\varepsilon$.}
+We first invoke the following result of Raghavendra, Steurer, and Tulsiani~\cite{ReductionsBetweenExpansionProblems}.
 
 \begin{theorem}[Raghavendra-Steurer-Tulsiani]\label{thm:rst-global-expansion}
-    For every integer $q\geq2$ and every $\gamma>0$, assuming the Small-Set Expansion Hypothesis, it is hard to distinguish between the following cases for a graph $H=(V_H,E_H)$ with stationary vertex measure $\mu$, for sufficiently small $\varepsilon>0$:
+    For every integer $q\geq2$ and every $\gamma>0$, assuming the Small-Set Expansion Hypothesis, it is hard to distinguish between the following cases for a graph $H=(V_H,E_H)$ with stationary vertex measure $\mu$, for sufficiently small $\varepsilon>0$ there exists a constant $K$ such that:
     \begin{description}
         \item[YES:] There is a partition $\cP=\{S_1,\ldots,S_q\}$ of $V_H$ such that, for every $i\in[q]$, 
             $\mu(S_i)=\frac{1}{q}$ and $\Phi_H(S_i)\leq K\varepsilon$.
@@ -139,7 +138,7 @@ We now turn $X$ \DD{czym jest $X$?} into a supply graph $\widetilde X$ on $\wide
 \begin{lemma}\label{lem:sse-gpd-completeness}
     Fix $\rho\in(0,1)$ and set $
         q=\max\left\{2,\left\lceil\rho^{-1/2}\right\rceil\right\}. $
-    In the YES \DD{yes w ktorym problemie?; czym jest $K$?} case,
+    In the YES \DD{yes w ktorym problemie?; czym jest $K$? (6.2)} case,
     \[
         \OPTdem{\widetilde X}{\rho}\leq \frac{K}{2}\cdot\varepsilon.
     \]
@@ -172,7 +171,7 @@ We now turn $X$ \DD{czym jest $X$?} into a supply graph $\widetilde X$ on $\wide
 \end{proof}
 
 \subsubsection{Soundness}
-We start by proving a numerical lemma that will be useful in the soundness \DD{co znaczy soundness?} analysis.
+We start by proving a numerical lemma that will be useful in the soundness analysis.
 \begin{lemma}\label{lem:group-small-components}
     Let $p_1,\ldots,p_m\geq0$ satisfy $
         \sum_{i=1}^{m}p_i=1$ and $

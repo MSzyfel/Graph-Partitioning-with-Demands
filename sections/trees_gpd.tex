@@ -10,7 +10,6 @@ The idea behind the algorithm is} to find a small-size set of vertices whose rem
 For a tree $T$, we denote by $\OPT_{B_\rho}(T)=\OPTdem{T}{\rho}$ the minimum cost of a partition whose components have internal demand at most $B_\rho$.
 \DD{scislej co znaczy min. const of a partition?}
 
-\DD{do ujednolicenia: czasem w tytulach rozdzialow wszystko duza litera, czaem mala}
 \subsection{Hardness on stars}
 
 The following statement shows an approximation-preserving reduction from the \textsc{Vertex Cover} problem.
@@ -19,7 +18,7 @@ The following statement shows an approximation-preserving reduction from the \te
     For every fixed rational $\rho\in(0,1)$, \textsc{Graph Partitioning with Demands} is as hard to approximate as \textsc{Vertex Cover}, even when the supply graph is a star.
 \end{theorem}
 \begin{proof}
-    Let $G=(U,F)$ be a \textsc{Vertex Cover} instance. Let $V=U\cup\{r,d\}$. Construct a supply star $E$ with center $r$, leaves $U$, and one additional leaf $d$. Set $c(rd)=\infty$ and $c(ru)=1$ for every $u\in U$. The edges of the demand graph are $F\cup\{rd\}$ \DD{ale $F$ zawiera podzbiory $U$? BREAK: pomijam na razie reszte dowodu} where $w\br{rd}=\frac{\rho \cdot \spr{F}}{1-\rho}$ and, for every $uv\in F$, $w\br{uv}=1$. If necessary, multiply all demand weights by a common denominator to make them integral.
+    Let $G=(U,F)$ be a \textsc{Vertex Cover} instance. Let $V=U\cup\{r,d\}$. Construct a supply star $E$ with center $r$, leaves $U$, and one additional leaf $d$. Set $c(rd)=\infty$ and $c(ru)=1$ for every $u\in U$. The edges of the demand graph are $F\cup\{rd\}$ \DD{BREAK: pomijam na razie reszte dowodu} where $w\br{rd}=\frac{\rho \cdot \spr{F}}{1-\rho}$ and, for every $uv\in F$, $w\br{uv}=1$. If necessary, multiply all demand weights by a common denominator to make them integral.
 
     The total demand is $W=w\br{rd}+\spr{F}$, and hence $\rho \cdot W=w\br{rd}$. Any solution of cost at most $\spr{U}$ leaves $rd$ uncut, otherwise its cost becomes $\infty$. For any solution $C$, let $H\in T\setminus C$ be the component containing $r$. If $H$ contained both endpoints of some edge $uv\in F$, its internal demand would exceed $w\br{rd}$. Therefore, the set $C_H=V\setminus V\br{H}$ forms a vertex cover. Moreover, we have that $c\br{C}=\spr{C_H}$ which means that the cost of any solution for the \textsc{Graph Partitioning with Demands} instance equals the size of some vertex cover. Conversely, any cover $C_H\subseteq U$ gives rise to a solution $C$ by cutting all edges incident to $C_H$, which has cost $\spr{C_H}$. Thus the reduction preserves approximation ratios.
 \end{proof}
@@ -441,7 +440,7 @@ For each induced instance, write $\OPT_{B_\rho}(H)$ for its minimum cut cost sub
 
 We now show a combinatorial algorithm for \textsc{Graph Partitioning with Demands} on trees. The idea is to find a small-size set of vertices whose removal leads to components with relatively low demand. Then, the new goal of the algorithm becomes to remove a large enough amount of demand from each vertex of the separator. To this end, we employ a well-known subproblem called \textsc{Maximum Coverage}, which will allow us to find relatively low cost edge set whose removal separates roughly the required amount of demand from each separator vertex.
 
-For a connected component $H$ and $v\in V_H$ define $\mu_H(v)=d_{w,H}(v)/2$, \DDfix{where $d_{w,H}(v)=\sum_{vu\in E_H}w(e)$ is} \DD{uwaga: napisałem $E_H$ zamiast $D[V_H]$.} the weighted degree of $v$ in $D[V_H]$. Then, for every $X\subseteq V_H$, \DD{do tej pory $X$ gralo role pozbiorow krawedzi, wiec moze $Y$ lub cos innego?}
+For a connected component $H$ and $v\in V_H$ define $\mu_H(v)=d_{w,H}(v)/2$, \DDfix{where $d_{w,H}(v)=\sum_{vu\in E_H}w(e)$ is} the weighted degree of $v$ in $D[V_H]$. Then, for every $X\subseteq V_H$, \DD{do tej pory $X$ gralo role pozbiorow krawedzi, wiec moze $Y$ lub cos innego?}
 \[
     \mu_H(X)=w(X)+\frac12 w(X,V_H\setminus X),
 \]
@@ -456,13 +455,12 @@ so in particular $w(X)\leq\mu_H(X)$.
 \begin{proof}
     \DDfix{The algorithm is as follows.}
     Root $H$ arbitrarily and initialize the current root-containing subtree $R$ to $H$. While $\mu_H(V_R)>w\br{H}/t$, choose the deepest vertex $x$ such that the subtree $T_x$ rooted at $x$ in $R$ has $\mu_H(V_{T_x})>w\br{H}/t$.
-    \DD{czy tutaj na pewno $V_{T_x}$, czy tylko czesc w $R$, tzn. $V_{R_x}$?}
+    \DD{czy tutaj na pewno $V_{T_x}$, czy tylko czesc w $R$, tzn. $V_{H_x}$, where...?}
     Add $x$ to $\mathcal L_H$ and remove $T_x$ from $R$. The peeled subtrees are pairwise disjoint. For any pairwise disjoint sets $A_1,\ldots,A_k\subseteq V_H$, the definition of $\mu_H$ gives
     \[
         \sum_{i=1}^k\mu_H(A_i)\leq w\br{V_H},
     \]
     since each demand edge contributes at most its weight to this sum.
-    \DD{hmmm, no nie wiem, gdyz jesli na przyklad $k=1$, $A_1=V_H$ to przez to, ze $\mu_H$ ma $+1/2$ w definicji to by sie nie zgadzalo.}
     \DD{BREAK: tutaj na razie przerywam czytanie do konca rozdzialu 5.3.}
     Every peeled subtree has $\mu_H(V_{T_x})>w\br{V_H}/t$, so there are at most $t-1$ of them. By the choice of a deepest such vertex, every child subtree $T'$ of $x$ in $R$ has $\mu_H(V_{T'})\leq w\br{V_H}/t$, and hence $w\br{V_{T'}}\leq w\br{V_H}/t$. Therefore, after removing all separators, every component $K\in H\setminus\mathcal L_H$ is one of these child subtrees at the iteration when its parent separator was selected, or the final remainder $R$. The final remainder satisfies $\mu_H(V_R)\leq w\br{V_H}/t$ by the stopping condition. In either case, $w\br{V_K}\leq w\br{V_H}/t$ as desired.
 \end{proof}
@@ -585,7 +583,7 @@ We now show how to employ a similar separator-based approach to obtain a single-
 \DDfix{The definion of \textsc{Partial Multicut} is as follows.}
 The input is a graph $G=\br{V, E, D, c, w}$ and an additional value $0\leq q\leq 1$. The goal is to find a subset of edges $C$, minimizing $c\br{C}$, such that the overall demand of edges $uv\in D$, such that $u$ and $v$ belong to different connected components of $G\setminus C$ is at least $q\cdot w\br{V}$. If the supply graph is a tree, Mestre~\cite{DBLP:conf/stacs/Mestre08} gives a $(2+\delta)$-approximation polynomial-time algorithm.
 
-Our algorithm is very similar to the previous one, so we mainly show how to reduce the task of finding the minimum cost $A_K$, such that $f_K\br{A_K}\geq q_K$ to \textsc{Partial Multicut} on trees. We create an auxiliary instance $T_K$ as follows. Firstly, we can assume that the edges in $S_K$ \DD{czym jest $S_K$? BREAK: do konca rozdzialu 5} cannot be cut, so for each $e\in E\br{S_K}$, we set $c\br{e}=\infty$. Then, for each $K'\in K\setminus V\br{S_K}$, we create a copy of $K'$. We index the two representatives of each vertex $u\in K'$ by $u^{\mathrm L}$ and $u^{\mathrm R}$ (one of them is the original vertex). Now, for each demand pair $uv\in D[K]$ if $\brc{u, v}\cap {S_K}=\emptyset$, we replace this demand edge by a cross-copy demand edge $u^{\mathrm L}v^{\mathrm R}$ with demand $w\br{u^{\mathrm L}v^{\mathrm R}}=w\br{u,v}$.
+Our algorithm is very similar to the previous one, so we mainly show how to reduce the task of finding the minimum cost $A_K$, such that $f_K\br{A_K}\geq q_K$ to \textsc{Partial Multicut} on trees. We create an auxiliary instance $T_K$ as follows. Firstly, we can assume that the edges in $S_K$ \DD{BREAK: do konca rozdzialu 5} cannot be cut, so for each $e\in E\br{S_K}$, we set $c\br{e}=\infty$. Then, for each $K'\in K\setminus V\br{S_K}$, we create a copy of $K'$. We index the two representatives of each vertex $u\in K'$ by $u^{\mathrm L}$ and $u^{\mathrm R}$ (one of them is the original vertex). Now, for each demand pair $uv\in D[K]$ if $\brc{u, v}\cap {S_K}=\emptyset$, we replace this demand edge by a cross-copy demand edge $u^{\mathrm L}v^{\mathrm R}$ with demand $w\br{u^{\mathrm L}v^{\mathrm R}}=w\br{u,v}$.
 
 \input{algorithms/centroid_full_quota.tex}
 Figure~\ref{fig:full-quota-centroid} illustrates the full-quota routine for $t=4$.
