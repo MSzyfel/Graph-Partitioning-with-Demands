@@ -1,0 +1,51 @@
+\documentclass[a4paper,UKenglish,cleveref,autoref,anonymous,numberwithinsect]{lipics-v2021}
+
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+\AtBeginDocument{\DontPrintSemicolon}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{capt-of}
+\usepackage{float}
+\SetArgSty{textnormal}
+
+\input{macros.tex}
+
+\title{Graph Partitioning with Demands: Generalized Conductance and its Applications}
+\titlerunning{Graph Partitioning with Demands}
+
+\author{Anonymous Author(s)}{Anonymous Institution, Anonymous City, Anonymous Country}{}{}{}
+\authorrunning{Anonymous Authors}
+\Copyright{Anonymous Authors}
+
+\ccsdesc[500]{Theory of computation~Design and analysis of algorithms}
+\keywords{Graph partitioning with demands, Generalized conductance, Sparsest cut, Hierarchical clustering, Approximation algorithms}
+
+\bibliographystyle{plainurl}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We study various graph partitioning tasks subject to general partitioning demands. In \textsc{Graph Partitioning with Demands} (GPD), the goal is to delete supply edges of minimum total cost so that each remaining component contains at most a prescribed fraction of the total demand. In \textsc{Hierarchical Clustering with Demands} (HCD), the goal is to build a hierarchy of clusters, charging each supply edge by the demand in the smallest cluster containing its endpoints.
+
+Our main general-graph results are approximation algorithms for GPD and HCD. For every fixed $0<\rho<\eta<1$, we give a polynomial-time bicriteria algorithm for GPD whose components have demand at most $\eta \cdot W$ and whose cost is at most $\mathcal{O}_{\rho,\eta}(\sqrt{\log n})$ times the optimum cost for threshold $\rho$. This algorithm can be then recursively used to obtain an $\mathcal{O}(\sqrt{\log n})$-approximation for HCD. The algorithm for GPD itself iteratively uses a crucial subproblem called \textsc{Generalized Conductance} (GC), which is a new generalization of the unit-demand sparsest cut. The latter is then reducible to the well-known \textsc{Min-Ratio Vertex Cut} problem.
+
+On supply trees, we show that GC can be solved exactly in polynomial time, which leads to improved algorithms for GPD and HCD on trees. We also give bicriteria algorithms for GPD based on anchored-LP rounding and separator recursion, as well as a single-criterion $(4+\epsilon)$-approximation in $n^{O(1/\rho)}$ time. The GPD algorithms yield a $\frac{4e}{e-1}$-approximation for HCD on trees. \textsc{Generalized Conductance} is NP-hard to approximate within any constant factor, even with unit demand on every pair of vertices~\cite{OnTheHardnessOfApproximatingMulticutAndSparsestCut,OAI:The-Unique-Games-Theorem-September-23-2026}. We prove SSEH-hardness for GPD with bipartite multiplicative demands and for HCD even with complete demands. On trees, GPD is NP-hard to approximate within $2-\epsilon$, while HCD is NP-hard to approximate within $1.0748$. These hardness bounds follow from the Unique Games Theorem~\cite{OAI:The-Unique-Games-Theorem-September-23-2026}.
+\end{abstract}
+
+\newpage
+
+\input{sections/introduction.tex}
+\input{sections/preliminaries.tex}
+\input{sections/main_algorithm.tex}
+\input{sections/applications.tex}
+\input{sections/trees_gpd.tex}
+\input{sections/gpd_hardness.tex}
+\input{sections/conclusions.tex}
+
+\bibliography{references}
+
+\end{document}

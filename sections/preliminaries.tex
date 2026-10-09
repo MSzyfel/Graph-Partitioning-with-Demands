@@ -6,50 +6,21 @@ For any $C\subseteq E$, $G\setminus C$ is the set of connected components obtain
 We write $\br{V_H,E_H,D_H,c_H,w_H}$ to point out that given parameters represent a particular graph or subgraph $H$, different than $G$.
 For $U\subseteq V$, the induced subgraph $G[U]$ has the vertex set $U$, the supply-edge set $E[U]=\brc{uv\in E:u,v\in U}$, the demand-edge set $D[U]=\brc{uv\in D:u,v\in U}$, and the restrictions of $c$ and $w$ to these sets.
 
-For an edge set $X\subseteq\binom{V}{2}$ (usually the set of supply or demand edges), a function $f\colon X\to \mathbb{N}$, and a pair of disjoint subsets $A, B\subseteq V$, we define
-\[
-f\br{A}=\sum_{\substack{uv\in X\\u,v\in A}}f\br{uv},
-\qquad
-f\br{A,B}=\sum_{\substack{uv\in X\\u\in A,\ v\in B}}f\br{uv}.
-\]
-Whenever $A, B\subseteq V$ are not disjoint, we define $f\br{A,B}=f\br{A}+f\br{A,B\setminus A}$ (see Figure~\ref{fig:demand-decomposition} for an illustration).
-\input{figures/demand_decomposition.tex}
+For an edge set $X\subseteq\binom{V}{2}$ (usually the set of supply or demand edges), a function $f\colon X\to \mathbb{N}$, and a pair of disjoint subsets $A, B\subseteq V$, we define $f\br{A}=\sum_{\substack{uv\in X\\u,v\in A}}f\br{u,v}$ and $f\br{A,B}=\sum_{\substack{uv\in X\\u\in A,\ v\in B}}f\br{u,v}$.
+Whenever $A, B\subseteq V$ are not disjoint, we define $f\br{A,B}=f\br{A}+f\br{A,B\setminus A}$.
+Denote by $W=w\br{V}=\sum_{uv\in D}w\br{u,v}$ the total value of the demand on the entire vertex set $V$.
+Let $S\subseteq V$ be a vertex set, define $\delta_{X}(S)=\brc{uv\in X\colon\spr{\brc{u,v}\cap S}=1}$ to be the edges of $X$ with exactly one endpoint in $S$.
+For a vertex $v\in V$, we write $\delta_{X}(v)=\delta_{X}(\{v\})$ for the edges of $X$ incident to $v$. The \emph{weighted degree} of $u$ and the \emph{volume} of the vertices in $S$ are $
+	d_X(u)=f\br{\delta_X(u)}$ and $
+	\operatorname{vol}_X(S)=\sum_{u\in S}d_X(u).$
 
-Define by
-\[
-	W=w\br{V}=\sum_{e\in D}w\br{e}
-\]
-the total value of the demand on the entire vertex set $V$.
-
-Let $S\subseteq V$ be a vertex set, define
-\[
-	\delta_{X}(S)
-	=\brc{uv\in X\colon\spr{\brc{u,v}\cap S}=1}
-\]
-to be the edges of $X$ with exactly one endpoint in $S$.
-For a vertex $v\in V$, we write $\delta_{X}(v)=\delta_{X}(\{v\})$ for the edges of $X$ incident to $v$. The \emph{weighted degree} of $u$ and the \emph{volume} of the vertices in $S$ are
-\[
-	d_X(u)=f\br{\delta_X(u)},
-	\qquad
-	\operatorname{vol}_X(S)=\sum_{u\in S}d_X(u).
-\]
 Since every internal edge of $X$ has both endpoints in $S$ and every crossing edge of $X$ has one endpoint in $S$, we have the following identity:
 \begin{equation}\label{eq:demand-degree-identity}
 	\vol_X(S)
 	=2f\br{S}+f\br{S,V\setminus S}.
 \end{equation}
-For a partition $\cP$ of $V$, let
-\[
-	\delta_{X}(\cP)
-	=\brc{uv\in X\colon u\text{ and }v\text{ belong to distinct parts of }\cP}.
-\]
-For $A\subseteq V$ and a set of edges $X$, let
-\[
-	X\br{A,V}
-	=\brc{uv\in X:\brc{u,v}\cap A\neq\emptyset}
-	=X[A]\cup\delta_X(A)
-\]
-denote the edges of $X$ incident to $A$.
+For a partition $\cP$ of $V$, let $\delta_{X}(\cP)=\brc{uv\in X\colon u\text{ and }v\text{ belong to distinct parts of }\cP}$.
+For $A\subseteq V$ and a set of edges $X$, let $X\br{A,V}=\brc{uv\in X:\brc{u,v}\cap A\neq\emptyset}=X[A]\cup\delta_X(A)$ denote the edges of $X$ incident to $A$.
 For parameters $\rho,\eta\in(0,1)$, write $B_\rho=\rho W$ and $B_\eta=\eta W$ for the corresponding demand budgets.
 
 For a subset $C\subseteq E$ and a capacity function $c$ on the supply edges, $c\br{C}=\sum_{e\in C}c\br{e}$.
@@ -58,3 +29,4 @@ A \emph{cut} is any subset $S\subseteq V$, such that $S\neq \emptyset$, $S\neq V
 
 Whenever an objective function is given as a ratio and its denominator equals $0$, we set the value of this objective to $\infty$.
 
+%\input{figures/demand_decomposition.tex}
