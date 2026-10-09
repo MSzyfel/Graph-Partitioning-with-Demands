@@ -1,6 +1,6 @@
 \begin{algorithm}[tbp]
     \caption{Weighted-budget dynamic program on a tree}
-    \textbf{Input} Supply tree $T=(V,E,c)$, nonnegative integer vertex weights $a(v)\leq L$, and integer budget $L$\;
+    \textbf{Input} Supply tree $T=(V,E,c)$, non-negative integer vertex weights $a(v)\leq L$, and integer budget $L$\;
     \textbf{Output} A minimum-cost edge set $F\subseteq E$ such that every component $H$ satisfies $\sum_{v\in V_H}a(v)\leq L$\;
     Root $T$ at an arbitrary vertex $r$\;
     \ForEach{vertex $v$ in a bottom-up traversal of $T$}{
