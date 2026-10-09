@@ -1,11 +1,11 @@
 \begin{algorithm}[H]
     \caption{Main algorithm for minimising $\psi_w$}
     \textbf{Input} Graph $G=(V,E,D,c,w)$\;
-    \textbf{Output} A cut $(S,\bar S)$ approximating $\min_S\psi_w(S)$\;
+    \textbf{Output} A cut $(S,\bar S)$ approximating $\min_S\brc{\psi_w(S)}$\;
     \textbf{Step 1, Candidate $S_1$}\;
     Build auxiliary graph $G'=(V\cup\{r\},E\cup\brc{ru:u\in V},D',c,w')$, where $D'=\brc{ru,ur:u\in V}$, $c(r,u)=0$, and $w'(r,u)=w'(u,r)=w(u,V)$\;
     Set $K\gets\tfrac{4}{3}w(V)$\;
-    Run an $\alpha=O\br{\log n}$-approximation for $\min_{S\subseteq V'}\phi_{w'}(S)$ subject to $w'(S,\bar S)\leq K$ and map the output to $S_1\subseteq V$\;
+    Run an $\alpha=O\br{\log n}$-approximation for $\min_{S\subseteq V'}\brc{\phi_{w'}(S)}$ subject to $w'(S,\bar S)\leq K$ and map the output to $S_1\subseteq V$\;
     \textbf{Step 2, Candidate $S_2$}\;
     Find a $\beta=O\br{\log n}$-approximation to $k$-multicut with $k=w(V)/3$, obtaining $C$\;
     Build a complete demand graph $R$ on the components of $G\setminus C$, with $w_R(H_1,H_2)=w_G(H_1,H_2)$\;

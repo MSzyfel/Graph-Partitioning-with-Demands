@@ -8,12 +8,12 @@
         Initialize $F_v^{(0)}(\ell)\gets0$ if $\ell=a(v)$ and $F_v^{(0)}(\ell)\gets+\infty$ otherwise, for $0\leq\ell\leq L$\;
         \For{$j=1,\ldots,k$}{
             \For{$\ell=0,\ldots,L$}{
-                Set $\displaystyle F_v^{(j)}(\ell)\gets\min\left\{F_v^{(j-1)}(\ell)+c(vu_j)+F_{u_j},\min_{\substack{0\leq\ell_1,\ell_2\leq L,\ \ell_1+\ell_2=\ell}}\left[F_v^{(j-1)}(\ell_1)+F_{u_j}(\ell_2)\right]\right\}$\;
+                Set $\displaystyle F_v^{(j)}(\ell)\gets\min\brc{F_v^{(j-1)}(\ell)+c(vu_j)+F_{u_j},\min_{\substack{0\leq\ell_1,\ell_2\leq L,\ \ell_1+\ell_2=\ell}}\brc{F_v^{(j-1)}(\ell_1)+F_{u_j}(\ell_2)}}$\;
                 Store a minimizing choice for state $\ell$\;
             }
         }
-        Set $F_v(\ell)\gets F_v^{(k)}(\ell)$ for all $0\leq\ell\leq L$ and $F_v\gets\min_{0\leq b\leq L}F_v(b)$\;
+        Set $F_v(\ell)\gets F_v^{(k)}(\ell)$ for all $0\leq\ell\leq L$ and $F_v\gets\min_{0\leq b\leq L}\brc{F_v(b)}$\;
     }
-    Choose $\ell^*\in\arg\min_{0\leq\ell\leq L}F_r(\ell)$ and backtrack from $(r,\ell^*)$ through the stored choices to recover the set of edges to remove\;
+    Choose $\ell^*\in\arg\min_{0\leq\ell\leq L}\brc{F_r(\ell)}$ and backtrack from $(r,\ell^*)$ through the stored choices to recover the set of edges to remove\;
     \textbf{return} the recovered edge set $F$\;
 \end{algorithm}

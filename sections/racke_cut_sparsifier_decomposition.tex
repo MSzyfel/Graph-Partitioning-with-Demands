@@ -28,7 +28,7 @@ A \emph{multicommodity flow} in a graph $G$ is a collection of flows $f^{(i)}:E\
 The \emph{congestion} of a multicommodity flow is a way to measure how much these capacities are violated.
 Formally, we define it as the maximum ratio of total flow to capacity over all edges:
 \[
-  \xi_G = \max_{e\in E} \frac{\sum_{i=1}^{k} f^{(i)}(e)}{c(e)}.
+  \xi_G = \max_{e\in E} \brc{\frac{\sum_{i=1}^{k} f^{(i)}(e)}{c(e)}}.
 \]
 A multicommodity flow is \emph{feasible} if its congestion is at most $1$. Given a flow $f$ in $G$, we can map it to a flow in a decomposition tree $T$ using the edge map $m_E$. The mapped flow $m'(f)$ is defined as follows: for each tree edge $e_t\in E_T$, we sum the flow of all edges in $G$ that are mapped to paths in $T$ that include $e_t$. Formally:
 \[
@@ -176,4 +176,3 @@ Hence it suffices to scan all edges and pick the minimum feasible ratio $c_T(e)/
 % Since by Bourgains theorem $f$ with $a_c(f)=\bigo(\log n)$ can be found in polynomial time we have that the objective function of the SDP embeds into $\mathbb{R}$ with $\bigo(\log n)$ distortion.
 
 % The remaining objective is to use the fact in design of a rounding procedure for the above SDP.
-

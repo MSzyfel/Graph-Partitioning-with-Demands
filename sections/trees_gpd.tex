@@ -38,7 +38,7 @@ For every vertex $a\in V$, called an \emph{anchor}, and every demand edge $uv\in
             &&\forall a\in V,\ uv\in D.
 \end{aligned}
 \end{equation}
-Since $|D|\leq\binom{n}{2}$, the LP has $O(|E|+n|D|)=O(n^3)$ variables and constraints.
+% Since $|D|\leq\binom{n}{2}$, the LP has $O(|E|+n|D|)=O(n^3)$ variables and constraints.
 
 \begin{lemma}\label{lem:tree-anchored-relaxation}
     Every partition with internal demand at most $B_\rho$ in each component induces a feasible solution to~\eqref{lp:tree-anchored} of the same cost. In particular, its optimum $\operatorname{LP}_{B_\rho}(T)$ satisfies
@@ -83,7 +83,7 @@ Since $|D|\leq\binom{n}{2}$, the LP has $O(|E|+n|D|)=O(n^3)$ variables and const
     \]
     for some integer $k$. If $x_e<R$, the set of phases $\theta\in[0,R)$ that place a threshold in $(\dist(p),\dist(v)]$ has measure $x_e$, so $e$ is deleted with probability $x_e/R$. If $x_e\geq R$, every phase places at least one threshold in this interval and the deletion probability is $1$. Thus in all cases
     \[
-        \Pr[e\in F]=\min\left\{1,\frac{x_e}{R}\right\}\leq\frac{x_e}{R},
+        \Pr[e\in F]=\min\brc{1,\frac{x_e}{R}}\leq\frac{x_e}{R},
     \]
     and therefore
     \[
@@ -140,7 +140,7 @@ Therefore, our second approach is to convert the nonadditive pair demand into an
 To do so, we use weighted demand degrees, round them to a polynomial-size integer scale, and run a tree dynamic program over connected parts. For $\eta>(1+\rho)/2$, this procedure returns an $\eta$-feasible partition while paying only a cost of $\OPTdem{T}{\rho}$.
 \subsubsection{Weighted Budget Partitioning on a tree}
 
-Given a supply tree $T=(V,E,c)$, non-negative integer vertex weights $q\colon V\to\mathbb{Z}_{\geq0}$, and a budget $C\geq\max_{v\in V}q(v)$, the \textsc{Weighted Budget Partitioning} problem asks for a minimum-cost edge set $F\subseteq E$ such that every component $H$ of $T\setminus F$ satisfies
+Given a supply tree $T=(V,E,c)$, non-negative integer vertex weights $q\colon V\to\mathbb{Z}_{\geq0}$, and a budget $C\geq\max_{v\in V}\brc{q(v)}$, the \textsc{Weighted Budget Partitioning} problem asks for a minimum-cost edge set $F\subseteq E$ such that every component $H$ of $T\setminus F$ satisfies
 \[
     q\br{V_H}=\sum_{v\in V_H}q(v)\leq C.
 \]
@@ -204,7 +204,7 @@ The minimum-cost partition into sets from $\widehat\cC$ is computed by the follo
 \input{algorithms/weighted_budget_dp.tex}
 Root $T$ arbitrarily at a vertex $r$. For a vertex $v$, let $T_v$ be its descendant subtree. For $0\leq\ell\leq L$, let $F_v(\ell)$ be the minimum cost of cutting edges in $T_v$ such that every resulting component belongs to $\widehat\cC$ and the component $H_v$ containing $v$ has weight $\ell$. An impossible state has value $\infty$. Let
 \[
-    F_v=\min_{0\leq b\leq L}F_v(b).
+    F_v=\min_{0\leq b\leq L}\brc{F_v(b)}.
 \]
 Suppose the children of $v$ are $u_1,\ldots,u_k$. For each $1\leq j\leq k$, let $T_{v}^{(j)}$ be the union of the descendant subtrees of the first $j$ children. Let $F_v^{(j)}(\ell)$ be the minimum cost of cutting edges in $T_{v}^{(j)}$ such that every resulting component belongs to $\widehat\cC$ and the component $H_v$ containing $v$ has weight $\ell$. For convenience, initialize
 \[
@@ -217,13 +217,11 @@ Suppose the children of $v$ are $u_1,\ldots,u_k$. For each $1\leq j\leq k$, let 
 After processing the first $j-1$ children, merge the table of $u_j$ using
 \begin{align*}
     F_v^{(j)}(\ell)
-    =\min\left\{
+    =\min\brc{
         F_v^{(j-1)}(\ell)+c(vu_j)+F_{u_j},
         \min_{0\leq\ell_1,\ell_2\leq L\colon \ell_1+\ell_2=\ell}
-        \left[
-            F_v^{(j-1)}(\ell_1)+F_{u_j}(\ell_2)
-        \right]
-    \right\}.
+        \brc{F_v^{(j-1)}(\ell_1)+F_{u_j}(\ell_2)}
+    }.
 \end{align*}
 The first term corresponds to choosing $vu_j$ to be cut. This means, that the component $H_v$ containing $v$ does not include $u_j$ or its descendants. Thus, the cost of the subproblem rooted at $u_j$ can be chosen to be $F_{u_j}$. The second term corresponds to keeping $vu_j$. For this case we consider all possible splits of weight $\ell_1$ and $\ell_2$ such that $\ell_1+\ell_2=\ell$, where $\ell_1$ is the weight of the component containing $v$ before merging and $\ell_2$ is the weight of the component containing $u_j$. Thus every feasible partition of $T_v$ is considered, and after all children are processed $F_r$ is the minimum cost among partitions into sets from $\widehat\cC$. Solving the recurrence for each merge takes $O\br{L}$ time and since for each vertex $v$, there are $O\br{L}$ subproblems indexed by $\ell$, the running time is $O\br{nL^2}$. Simple bookkeeping allows storing the actual partition achieving the minimum cost.
 \end{proof}
@@ -367,7 +365,7 @@ For each induced instance, write $\OPT_{B_\rho}(H)$ for its minimum cut cost sub
 
     It remains to bound the total cost accumulated over the recursion tree. For every component $H$, let $F_H$ be all edges selected by the recursive procedure in the subtree rooted at $H$, including the edges selected while processing $H$. Let $d(H)$ be the maximum number of nonterminal calls on a path in this recursion subtree. Thus $d(H)=0$ if $H$ is terminal, and otherwise
     \[
-        d(H)=1+\max_i d(H_i),
+        d(H)=1+\max_i\brc{d(H_i)},
     \]
     where $H_1,\ldots,H_m$ are the components produced by the call on $H$. We prove by induction on $d(H)$ that
     \begin{equation}\label{eq:tree-recursion-inductive-cost}
@@ -465,7 +463,7 @@ Observe, that $f_K$ is a weighted coverage function on the demand pairs. The ide
 For $w\br{V_K}>B_\rho$, set $q_K=w\br{V_K}-B_\rho$ and define
 \[
     \OPT_{q_K}\br{K}
-    =\min\left\{c_K(A)\colon A\subseteq E(K)\setminus E(S_K),\ f_K(A)\geq q_K\right\}.
+    =\min\brc{c_K(A)\colon A\subseteq E(K)\setminus E(S_K),\ f_K(A)\geq q_K}.
 \]
 If this quota is feasible, the $ (1-1/e)$-approximation for \textsc{Budgeted Maximum Coverage}~\cite{KhullerMossNaor1999BudgetedMaximumCoverage} gives a polynomial-time routine $\textsc{CoreQuotaCover}(f_K,c_K,q_K)$ returning $A_K$ such that
 \[
@@ -486,22 +484,22 @@ For each guess $Q$, the algorithm applies this routine to every component $K$ co
     \]
 \end{theorem}
 \begin{proof}
-    Define the excess of any component $H$ by $\Phi(H)=\max\{0,w\br{V_H}-B_\rho\}$.
+    Define the excess of any component $H$ by $\Phi(H)=\max\brc{0,w\br{V_H}-B_\rho}$.
     Now, consider a recursive call for a subgraph $H$ of $T$, write $w\br{V_H}$ and $q_H=w\br{V_H}-B_\rho>0$. 
 
     Let $Q$ be a feasible guess, i.e., the algorithm does not continue past this guess. Let $C_H$ be the edges chosen by the algorithm for this guess. Consider the each component $H'\in H\setminus C_H$. There are two cases.
     \begin{enumerate}
         \item $V_{S_K}\subseteq V_{H'}$ for some $K\in \mathcal{K}_Q$. Then, $H'=K\setminus U_K(A_K)$. Since $q_K=w\br{V_K}-B_\rho\leq q_H$, the coverage guarantee implies
     \[
-        \Phi(H')=\max\{0,w\br{V_{H'}}-B_\rho\}\leq w\br{V_{H}}-f_K\br{A_K}-B_\rho
+        \Phi(H')=\max\brc{0,w\br{V_{H'}}-B_\rho}\leq w\br{V_{H}}-f_K\br{A_K}-B_\rho
         \leq q_K-(1-1/e)\cdot q_K
         =q_K/e\leq q_H/e.
     \]
     \item $H'$ contains no separator. Then, by the properties of the separator, $w\br{V_{H'}}\leq w\br{V_H}/3$. Its excess is therefore
     \begin{align*}
-        \Phi(H')&=\max\{0,w\br{V_{H'}}-B_\rho\}
-        \leq\max\{0,w\br{V_H}/3-B_\rho\}\\
-        &\leq\max\{0,(w\br{V_H}-B_\rho)/3\}=q_H/3<q_H/e,
+        \Phi(H')&=\max\brc{0,w\br{V_{H'}}-B_\rho}
+        \leq\max\brc{0,w\br{V_H}/3-B_\rho}\\
+        &\leq\max\brc{0,(w\br{V_H}-B_\rho)/3}=q_H/3<q_H/e,
     \end{align*}
     since $e<3$.
     \end{enumerate} 

@@ -14,6 +14,7 @@
 \newcommand{\cut}{\delta}
 \newcommand{\OPT}{\mathrm{OPT}}
 \newcommand{\Etree}{\mathbb{E}_{T\sim\mu}}
+\newcommand{\brc}[1]{\mathopen{}\left\{ #1 \right\}}
 
 \begin{document}
 
@@ -39,7 +40,7 @@ For a nonempty proper subset $S\subsetneq V$ define
 where $c_G(\cut(S))=\sum_{e\in\cut(S)}c(e)$ is the capacity of the cut.
 We wish to compute (or approximate) the \emph{one-sided quasi-expansion}
 \[
-  \psi \;=\; \min_{\emptyset\neq S\subsetneq V} h(S).
+  \psi \;=\; \min_{\emptyset\neq S\subsetneq V} \brc{h(S)}.
 \]
 
 \section{Reduction to an anchor graph}
@@ -97,7 +98,7 @@ Fix a parameter $K\in(0,W_{\mathrm{tot}})$ and define
   \OPT_K(G')
   \;=\;
   \min_{\substack{X\subseteq V'\\ 0<q(\cut(X))\le K}}
-  \frac{c_{G'}(\cut(X))}{q(\cut(X))}.
+  \brc{\frac{c_{G'}(\cut(X))}{q(\cut(X))}}.
 \]
 By Lemma~\ref{lem:anchor}, if $K<W_{\mathrm{tot}}$ then the trivial cut $\{r\}$
 is infeasible (it has $q(\cut(\{r\}))=W_{\mathrm{tot}}>K$), and every other cut
@@ -111,7 +112,7 @@ $X$ with $r\notin X$ corresponds bijectively to a nonempty $S\subsetneq V$ with
 Hence
 \[
   \OPT_K(G') = \min_{\substack{S\subsetneq V,\, S\neq\emptyset\\ w_G(S,V)\le K}}
-               h(S).
+               \brc{h(S)}.
 \]
 In particular, $\OPT_{K^*}(G')=\psi$ where $K^*=w_G(S^*,V)$ and $S^*$ is any
 minimizer of $h$.
@@ -307,7 +308,7 @@ per-edge ratios}.
   \[
     \OPT_K(T)
     \;=\;
-    \min_{\substack{e\in T \\ 0<q_e\le K}} \frac{C_e}{q_e}.
+    \min_{\substack{e\in T \\ 0<q_e\le K}} \brc{\frac{C_e}{q_e}}.
   \]
 \end{corollary}
 
@@ -325,9 +326,9 @@ per-edge ratios}.
   \[
     \frac{c_T(\cut(S))}{q(\cut(S))}
     \;\ge\;
-    \min_{e\in F(S)} \frac{C_e}{q_e}
+    \min_{e\in F(S)} \brc{\frac{C_e}{q_e}}
     \;\ge\;
-    \min_{\substack{e\in T\\0<q_e\le K}} \frac{C_e}{q_e}.
+    \min_{\substack{e\in T\\0<q_e\le K}} \brc{\frac{C_e}{q_e}}.
     \qedhere
   \]
 \end{proof}
@@ -342,7 +343,7 @@ The preceding analysis works for a fixed $K$.  In practice $K^*=w_G(S^*,V)$ is
 unknown.  We handle this by a standard doubling argument.
 
 \begin{theorem}[Guessing step]\label{thm:guessing}
-  Let $\psi=\min_{S}h(S)$ be the true optimum and let $S^*$ be a minimiser with
+  Let $\psi=\min_{S}\brc{h(S)}$ be the true optimum and let $S^*$ be a minimiser with
   $K^*=w_G(S^*,V)$.  Then $K^*\in\{1,2,4,\dots,2^{\lfloor\log_2 W_{\mathrm{tot}}\rfloor}\}$
   if all $\pi(u)$ are integers (or otherwise $K^*\in(W_{\mathrm{tot}}/n,\,W_{\mathrm{tot}}]$
   and a geometric grid suffices).  In either case there is a guess $\hat K$ with
@@ -378,7 +379,7 @@ $O(\log W_{\mathrm{tot}})$ values of $\hat K$ and return the cut with smallest $
 \begin{theorem}[Main result]\label{thm:main}
   The algorithm above runs in polynomial time and returns a cut $S^{\dagger}$ with
   \[
-    h(S^{\dagger})\;\le\;O(\log n)\cdot\min_{\emptyset\neq S\subsetneq V}h(S).
+    h(S^{\dagger})\;\le\;O(\log n)\cdot\min_{\emptyset\neq S\subsetneq V}\brc{h(S)}.
   \]
 \end{theorem}
 

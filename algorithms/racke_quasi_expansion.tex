@@ -9,7 +9,7 @@ $\mathrm{best}\gets+\infty$. $S^{\dagger}\gets\emptyset$\;
 \ForEach{$\hat K\in\{1,2,4,8,\dots\}\cap(0,W_{\mathrm{tot}})$}{
     \ForEach{tree $T$ in the support of $\mu$ (or the single ``winner'' tree in expectation)}{
         Root $T$ at $r$ and compute $\{C_e,q_e\}$ for all edges by a DFS\;
-        Find $e^*\in\arg\min\{C_e/q_e:0<q_e\leq\hat K\}$\;
+        Find $e^*\in\arg\min\brc{C_e/q_e:0<q_e\leq\hat K}$\;
         Set $S\gets A_{e^*}\cap V$, the subtree at $e^*$ restricted to $V$\;
         \If{$h(S)<\mathrm{best}$}{
             $\mathrm{best}\gets h(S)$. $S^{\dagger}\gets S$\;

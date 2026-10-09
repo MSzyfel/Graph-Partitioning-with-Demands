@@ -42,7 +42,7 @@ For a dual vector $\alpha$, let $
     \alpha(S)=\sum_{v\in S}\alpha_v.$
 We define the \textsc{Pricing Problem} as
 \begin{equation}\label{eq:tree-pricing}
-    \max_{S\in\widehat\cC}\left\{\alpha(S)-q_S\right\}
+    \max_{S\in\widehat\cC}\brc{\alpha(S)-q_S}
 \end{equation}
 In order to solve the dual, using the ellipsoid method, we need to provide a separation oracle for the constraints of type~\eqref{lp:tree-config-dual}. It is easy to see, that this is equivalent to solving the pricing problem~\eqref{eq:tree-pricing}. It what follows we show an exact dynamic program for the pricing problem with runtime polynomial in $L$ and $n$.
 
@@ -68,13 +68,11 @@ Initialize
 After processing the first $j-1$ children, merge the table of $u_j$ by
 \begin{align*}
     P_v^{(j)}(\ell)
-    =\max\left\{
+    =\max\brc{
         P_v^{(j-1)}(\ell),
         \max_{0\leq a,b\leq L\colon a+b=\ell}
-        \left[
-            P_v^{(j-1)}(a)+P_{u_j}(b)+c(vu_j)
-        \right]
-    \right\}.
+        \brc{P_v^{(j-1)}(a)+P_{u_j}(b)+c(vu_j)}
+    }.
 \end{align*}
 Here, the first term corresponds to not including the $j$-th child in $S$, and the second term corresponds to including it.
 

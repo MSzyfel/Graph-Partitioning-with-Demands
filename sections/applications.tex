@@ -100,13 +100,10 @@ where the last inequality follows since the sets $S_{\ell}$ are disjoint, so $\s
 
 As an immediate corollary (by Thoerems~\ref{thm:tree-generalized-conductance} and~\ref{thm:generalized-conductance-approx}) we get:
 \begin{corollary}
-    For fixed $\rho\in(0,1)$ and $\eta\in\br{\max\brc{1/2,1-\delta_{\rho}},1}$ (where $\delta_{\rho}=\min\brc{1/4,1-\rho}$), there is a pseudo-approximation algorithm for \textsc{Graph Partitioning with Demands} which returns an $\eta$-feasible cut $C$ with the following guarantees:
+    For fixed $\rho\in(0,1)$ and $\eta\in\br{\max\brc{1/2,1-\delta_{\rho}},1}$ (where $\delta_{\rho}=\min\brc{1/4,1-\rho}$), there is a pseudo-approximation algorithm for \textsc{Graph Partitioning with Demands} which returns an $\eta$-feasible cut $C$ with the following approximation ratios:
     \[
-    c\br{C}\leq \bigo\br{\frac{\sqrt{\log n}}{\br{\eta+\delta_{\rho}-1}^2}}\cdot \OPTdem{G}{\rho}
-    \quad\text{on general graphs,}
-    \]
-    \[
-    c\br{C}\leq \frac{1}{\br{\eta+\delta_{\rho}-1}^2}\cdot \OPTdem{G}{\rho}
+    \bigo\br{\frac{\sqrt{\log n}}{\br{\eta+\delta_{\rho}-1}^2}}\cdot \OPTdem{G}{\rho}
+    \quad\text{on general graphs,}\quad \frac{1}{\br{\eta+\delta_{\rho}-1}^2}\cdot \OPTdem{G}{\rho}
     \quad\text{on trees.}
     \]
 \end{corollary}
@@ -174,15 +171,14 @@ Now, we prove by induction on $d\br{H}$ that the recursive algorithm returns a s
 
 As an immediate corollary we get:
 \begin{corollary}\label{cor:graph-partitioning-approximation}
-    Fix $0<\rho<\eta<1$, and let $\Lambda_{\rho,\eta}=d\cdot \kappa\br{\rho,\eta}$ with $d=\cl{\log_{5/4}\br{1/\eta}}$ and $\kappa\br{\rho,\eta}=\max\brc{400,1/\br{\br{1-\rho/\eta}\cdot4/5}^2}$. There is a polynomial-time approximation algorithm for \textsc{Graph Partitioning with Demands} that returns an $\eta$-feasible subset of edges $C_G$ and, such that:
+    Fix $0<\rho<\eta<1$. There is a polynomial-time approximation algorithm for \textsc{Graph Partitioning with Demands} that returns an $\eta$-feasible subset of edges $C_G$ and, with approximation guarantees:
     \[
-    c\br{C_G}\leq \bigo\br{\Lambda_{\rho,\eta}\cdot \sqrt{\log n}}\cdot \OPTdem{G}{\rho}
-    \quad\text{on general graphs,}
-    \\
-    c\br{C_G}\leq \Lambda_{\rho,\eta}\cdot \OPTdem{G}{\rho}
+    \bigo_{\rho,\eta}\br{\sqrt{\log n}}\cdot \OPTdem{G}{\rho}
+    \quad\text{on general graphs,}\quad
+    \bigo_{\rho,\eta}\br{1}\cdot \OPTdem{G}{\rho}
     \quad\text{on trees.}
     \]
-    In particular, for any fixed $0<\rho<\eta<1$, $\Lambda_{\rho,\eta}$ is a constant, and the above bounds are $\bigo\br{\sqrt{\log n}}$ and $\bigo\br{1}$, respectively.
+    % In particular, for any fixed $0<\rho<\eta<1$, $\Lambda_{\rho,\eta}$ is a constant, and the above bounds are $\bigo\br{\sqrt{\log n}}$ and $\bigo\br{1}$, respectively.
 \end{corollary}
 
 \subsection{Hierarchical clustering with demands}
@@ -197,20 +193,20 @@ For $u,v\in V$, let $\operatorname{lca}_{\cT}(u,v)$ denote their lowest common a
     =\sum_{uv\in E}c\br{uv}\cdot
         w\br{V_{\operatorname{lca}_{\cT}(u,v)}}.
 \end{equation}
-We refer to this problem as \textsc{Hierarchical Clustering with Demands}. Note, that a non-binary clustering tree can be refined into a binary one without increasing the cost in~\eqref{eq:Dasgupta}~\cite{ACostFunctionForSimilarityBasedHierarchicalClustering}.
+We refer to this problem as \textsc{Hierarchical Clustering with Demands}. Note, that a non-binary clustering tree can be refined into a binary one without increasing the cost~\cite{ACostFunctionForSimilarityBasedHierarchicalClustering}.
 
-We parameterize our top-down algorithm by a value $\eta\in(1/2,1)$. Assume that we have a polynomial-time subroutine for \textsc{Graph Partitioning with Demands} with $\rho=1/2$ that returns an $\eta$-feasible supply-edge set $C_H$ satisfying
+We parameterize our top-down algorithm by constants $0<\rho<\eta<1$. Assume that we have a polynomial-time subroutine for \textsc{Graph Partitioning with Demands} with target $\rho$ that returns an $\eta$-feasible supply-edge set $C_H$ satisfying
 \begin{equation}\label{eq:hc-gpd-subroutine}
     c\br{C_H}
-    \leq\gamma\br{\eta,\spr{V_H}}\cdot \OPTdem{H}{1/2}\leq\gamma\br{\eta,n}\cdot \OPTdem{H}{1/2}.
+    \leq\gamma_{\rho,\eta}\br{\spr{V_H}}\cdot \OPTdem{H}{\rho}\leq\gamma_{\rho,\eta}\br{n}\cdot \OPTdem{H}{\rho}.
 \end{equation}
-This subroutine may be the one from the previous section or any other algorithm meeting these criteria. We denote it by $\DPartition$, suppressing its parameters $\eta$ and the graph size.
+Denote this subroutine by $\DPartition$, suppressing its parameters $\rho$ and $\eta$.
 
 \begin{theorem}\label{thm:hc-gpd-transfer}
-    Fix $\eta\in(1/2,1)$ and suppose that a subroutine $\DPartition$ is given, where $\gamma(\eta,n)\geq1$. Then there exists a $\frac{2\gamma(\eta,n)}{1-\eta}$-approximation polynomial-time algorithm for \textsc{Hierarchical Clustering with Demands}.
+    Fix constants $0<\rho<\eta<1$ and suppose that a subroutine $\DPartition$ is given, where $\gamma_{\rho,\eta}(n)\geq1$. Then there exists a $\frac{\lceil1/\rho\rceil\cdot\gamma_{\rho,\eta}(n)}{1-\eta}$-approximation polynomial-time algorithm for \textsc{Hierarchical Clustering with Demands}.
 \end{theorem}
 \begin{proof}
-    The following algorithm recursively partitions each non-singleton cluster using the subroutine for \textsc{Graph Partitioning with Demands} and constructs the clustering tree in a top-down manner.
+    The following algorithm recursively partitions each non-singleton cluster using the subroutine for GPD and constructs the clustering tree $\cT$ in a top-down manner.
     
 \medskip
 \input{algorithms/hierarchical_clustering.tex}
@@ -224,41 +220,39 @@ This subroutine may be the one from the previous section or any other algorithm 
             w\br{V_{\operatorname{lca}_{\cT^*}(u,v)}}>q
         \right\}.
     \]
-    By integrating the contribution of every supply edge over the levels below the demand of its least common ancestor, we obtain
-    \begin{equation}\label{eq:hc-level-sum}
+    By summing up the contribution of every supply edge over the levels below the demand of its least common ancestor, we get that $
         c\br{\cT^*}
         =\sum_{q=0}^{W}c\br{E_q^*}.
-    \end{equation}
+    $
 
-    Fix a positive-demand non-singleton cluster $H$ produced by the algorithm, and let $E_H$ be its supply edges. The maximal clusters of $\cT^*$ having demand at most $\fl{r_H/2}$ partition $V$ and by extension $V_H$ into clusters of demand at most $\fl{r_H/2}$.
+    Fix a positive-demand non-singleton cluster $H$ produced by the algorithm, and let $E_H$ be its supply edges.     The maximal clusters of $\cT^*$ having demand at most $\fl{\rho r_H}$ partition $V$ and by extension $V_H$ into clusters of demand at most $\fl{\rho r_H}$.
     We write $r_H=w\br{V_H}$ for the demand of $H$.
-    Every supply edge of $E_H$ joining two distinct parts of this partition has its endpoints in distinct maximal clusters of $\cT^*$, so their least common ancestor in $\cT^*$ has demand greater than $\fl{r_H/2}$. Consequently, the set $E_{\fl{r_H/2}}^*\cap E_H$ is a feasible solution to \textsc{Graph Partitioning with Demands} on the graph $H$ with $\rho=1/2$, and~\eqref{eq:hc-gpd-subroutine} gives $
-        c\br{C_H}\leq \gamma\br{\eta,\spr{V_H}} \cdot \OPT_{1/2}\br{H}
-        \leq \gamma\br{\eta,\spr{V_H}} \cdot c\br{E_{\fl{r_H/2}}^*\cap E_H}.$
-    Let $s_H$ be the largest demand of a non-singleton child of $H$, and set $s_H=0$ if every child is a singleton. Since the subroutine is $\eta$-feasible, $s_H\leq\eta \cdot r_H$.
-    Since $r_H-s_H\geq(1-\eta)r_H$, the previous bound on $c\br{C_H}$ implies the first inequality below. For every integer $t\leq r_H$, $E_{\fl{r_H/2}}^*\subseteq E_{\fl{t/2}}^*$; summing this inclusion over $t=s_H+1,\ldots,r_H$ gives the second inequality.
-    \begin{equation}\label{eq:hc-cluster-charge}
-    \begin{aligned}
+    Every supply edge of $E_H$ joining two distinct parts of this partition has its endpoints in distinct maximal clusters of $\cT^*$, so their least common ancestor in $\cT^*$ has demand greater than $\fl{\rho r_H}$. Consequently, the set $E_{\fl{\rho r_H}}^*\cap E_H$ is a feasible solution to \textsc{Graph Partitioning with Demands} on the graph $H$ with target $\rho$, and~\eqref{eq:hc-gpd-subroutine} gives $
+        c\br{C_H}\leq \gamma_{\rho,\eta}\br{\spr{V_H}} \cdot \OPT_{\rho}\br{H}
+        \leq \gamma_{\rho,\eta}\br{\spr{V_H}} \cdot c\br{E_{\fl{\rho r_H}}^*\cap E_H}.$
+    Let $s_H$ be the largest demand of a non-singleton child of $H$, and set $s_H=0$ if every child is a singleton. Since the subroutine is $\eta$-feasible, $s_H\leq\eta \cdot r_H$. Hence
+    \begin{align*}
         r_H\cdot c\br{C_H}
-        &\leq\frac{\gamma\br{\eta,\spr{V_H}}}{1-\eta}
-            \cdot\br{r_H-s_H}\cdot c\br{E_{\fl{r_H/2}}^*\cap E_H} \\
-        &\leq\frac{\gamma\br{\eta,\spr{V_H}}}{1-\eta}\cdot
-            \sum_{t=s_H+1}^{r_H}c\br{E_{\fl{t/2}}^*\cap E_H}.
-    \end{aligned}
-    \end{equation}
+        \leq\frac{\gamma_{\rho,\eta}\br{\spr{V_H}}}{1-\eta}
+            \cdot\br{r_H-s_H}\cdot c\br{E_{\fl{\rho r_H}}^*\cap E_H} \leq\frac{\gamma_{\rho,\eta}\br{\spr{V_H}}}{1-\eta}\cdot
+            \sum_{t=s_H+1}^{r_H}c\br{E_{\fl{\rho t}}^*\cap E_H}
+    \end{align*}
+    where the first inequality is by $r_H-s_H\geq(1-\eta)r_H$. For every integer $t\leq r_H$, $E_{\fl{\rho r_H}}^*\subseteq E_{\fl{\rho t}}^*$, summing this inclusion over $t=s_H+1,\ldots,r_H$ gives the second inequality.
 
-    For a fixed $t$, the clusters satisfying $s_H<t\leq r_H$ have pairwise disjoint induced edge sets. Indeed, if one such cluster were a descendant of another, it would lie in a non-singleton child of the ancestor and would have demand at most the ancestor's value $s_H<t$, contradicting $t\leq r_H$ for the descendant. Summing over all clusters and using~\eqref{eq:hc-level-sum}, we conclude that, for a tree $\cT$ produced by Algorithm~\ref{algo:hclustering},
+    For a fixed $t$, the clusters satisfying $s_H<t\leq r_H$ have pairwise disjoint induced edge sets. Indeed, if one such cluster were a descendant of another, it would lie in a non-singleton child of the ancestor and would have demand at most the ancestor's value $s_H<t$, contradicting $t\leq r_H$ for the descendant. Summing over all clusters, we conclude that,
     \begin{align*}
         c\br{\cT}
-        \leq\frac{\gamma(\eta,n)}{1-\eta}\cdot
-            \sum_{t=0}^{W}c\br{E_{\fl{t/2}}^*}
-            \leq\frac{2\cdot \gamma(\eta,n)}{1-\eta}\cdot
+        \leq\frac{\gamma_{\rho,\eta}(n)}{1-\eta}\cdot
+            \sum_{t=0}^{W}c\br{E_{\fl{\rho t}}^*}
+            \leq\frac{\lceil1/\rho\rceil\cdot \gamma_{\rho,\eta}(n)}{1-\eta}\cdot
             \sum_{t=0}^{W}c\br{E_{t}^*}
-        \leq\frac{2\cdot\gamma(\eta,n)}{1-\eta}\cdot
+        =\frac{\lceil1/\rho\rceil\cdot\gamma_{\rho,\eta}(n)}{1-\eta}\cdot
             c\br{\cT^*},
     \end{align*}
-    where the first inequality uses~\eqref{eq:hc-cluster-charge} and the disjointness argument, the second inequality is a simple reindexing of the sum, and the third inequality uses~\eqref{eq:hc-level-sum}.
+    where the first inequality uses the disjointness of clusters on each level. For each $q$, at most $\lceil1/\rho\rceil$ integers $t$ satisfy $\fl{\rho t}=q$, so reindexing gives the second inequality.
 \end{proof}
+
+For the HCD approximation bounds below, we apply Theorem~\ref{thm:hc-gpd-transfer} with $\rho=1/2$.
 
 \begin{corollary}\label{cor:hc-general-bounds}
     There is an $\bigo\br{\sqrt{\log n}}$-approximation algorithm for \textsc{Hierarchical Clustering with Demands} on general graphs and an $\bigo\br{1}$-approximation algorithm on trees.

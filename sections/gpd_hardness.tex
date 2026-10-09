@@ -1,6 +1,6 @@
 \section{Hardness Results}\label{sec:gpd-hardness}
 
-In this section we provide approximation-hardness results for \textsc{Generalized Conductance}, \textsc{Graph Partitioning with Demands} and \textsc{Hierarchical Clustering with Demands} based on the Small-Set Expansion Hypothesis. The \emph{Small-Set Expansion Hypothesis} states that, for every constant $\zeta>0$, there is a constant $\delta>0$ for which it is NP-hard, given a regular graph, to distinguish between the existence of a vertex set of normalized size $\delta$ and expansion at most $\zeta$, and the condition that every vertex set of normalized size $\delta$ has expansion at least $1-\zeta$. Both reductions in this section use rational numbers instead of natural ones, however this can be fixed by appropriate scaling.
+In this section we provide several approximation-hardness results for \textsc{Generalized Conductance}, \textsc{Graph Partitioning with Demands} and \textsc{Hierarchical Clustering with Demands} based on the Small-Set Expansion Hypothesis and P$\neq$NP. The \emph{Small-Set Expansion Hypothesis} states that, for every constant $\zeta>0$, there is a constant $\delta>0$ for which it is NP-hard, given a regular graph, to distinguish between the existence of a vertex set of normalized size $\delta$ and expansion at most $\zeta$, and the condition that every vertex set of normalized size $\delta$ has expansion at least $1-\zeta$. Both reductions in this section use rational numbers instead of natural ones, however this can be fixed by appropriate scaling.
 
 For every unweighted undirected graph $G=(V,E)$ used as a source graph below, write
 \[
@@ -21,7 +21,7 @@ where $\deg_G(u)$ is the degree of $u$ in $G$. For the simple random walk on $G$
     =\frac{\deg_G(v)}{M_G}
     =\mu_G(v).
 \]
-Thus $\mu_G(u)$ is the probability that the walk is at $u$ at any given step when it is in stationarity. To avoid overloading notation, we use the subscripts $G$ and write $\mu(u)$ only when the source graph is clear.
+Thus $\mu_G(u)$ is the probability that the walk is at $u$ at any given step when it is in stationarity.
 Now, set
 \[
     p_G(u,v)=\mu_G(u)\cdot P_G(u,v).
@@ -34,7 +34,6 @@ Thus $p_G(u,v)=p_G(v,u)=1/M_G$ on every edge. Then, for any $S\subseteq V$ we ha
     \qquad
     \sum_{uv\in E}p_G(u,v)=\frac12.
 \]
-When the source graph is clear, we write $\mu(u)$ and $\mu(S)$ for $\mu_G(u)$ and $\mu_G(S)$.
 
 We also recall the Gaussian expansion profile used in the source theorem. For $r\in[0,1)$ and $x\in(0,1)$, let
 \[
@@ -51,124 +50,126 @@ Thus $Z$ and $Z'$ are standard Gaussian random variables with correlation $r$. L
     =1-\frac{\Pr[Z\geq t_x,Z'\geq t_x]}{x}.
 \]
 
-For any graph $H=(V_H,E_H)$ with stationary vertex measure $\mu$, write $\mu(u)=\mu(\{u\})$ and define
-\[
-    \alpha=\max_{u\in V_H}\mu(u).
-\]
-We use the standard product-space construction in the source theorem with tensor power $R\geq2$, which gives $\alpha\leq q^{-R}\leq1/4$. This additional atom bound is needed only for the HCD result below, not for the GPD reduction. The explicit parameter choices give a universal constant $K>0$ such that the YES expansion bound $K\varepsilon$ holds uniformly in $q$ for sufficiently small $\varepsilon$.
-
-We use the result of Raghavendra, Steurer, and Tulsiani~\cite{ReductionsBetweenExpansionProblems}.
+For any graph $Y=(V_Y,E_Y)$ define $
+    \alpha_Y=\max_{u\in V_Y}\brc{\mu_Y(u)}.
+$
+%  Note, that this additional bound is needed only for the HCD reduction.
+% The explicit parameter choices give a universal constant $K>0$ such that the YES expansion bound $K\cdot\varepsilon$ holds uniformly in $q$ for sufficiently small $\varepsilon$.
+We use the following result of Raghavendra, Steurer, and Tulsiani~\cite{ReductionsBetweenExpansionProblems}, noting that the standard product-space construction in the source theorem with tensor power $R\geq2$ certifies that $\alpha_Y\leq q^{-R}\leq1/4$.
 
 \begin{theorem}[Raghavendra-Steurer-Tulsiani]\label{thm:rst-global-expansion}
-    For every integer $q\geq2$ and every $\gamma>0$, assuming the Small-Set Expansion Hypothesis, it is hard to distinguish between the following cases for a graph $H=(V_H,E_H)$ with stationary vertex measure $\mu$, for sufficiently small $\varepsilon>0$:
+    For every integer $q\geq2$ and every $\gamma>0$, assuming the Small-Set Expansion Hypothesis, there exists a constant $K>0$ such that for a sufficiently small choice of $\varepsilon>0$ it is hard to distinguish between the following cases for a graph $H=(V_H,E_H)$:
     \begin{description}
         \item[YES:] There is a partition $\cP=\{S_1,\ldots,S_q\}$ of $V_H$ such that, for every $i\in[q]$, 
-            $\mu(S_i)=\frac{1}{q}$ and $\Phi_H(S_i)\leq K\varepsilon$.
+            $\mu_H(S_i)=\frac{1}{q}$ and $\Phi_H(S_i)\leq K\cdot\varepsilon$.
         \item[NO:] Every $S\subseteq V_H$ satisfies $
             \Phi_H(S)
             >
-            \Phi_{\mathcal{G}(1-\varepsilon/2)}(\mu(S))
-            -\frac{\gamma}{\mu(S)}$.
+            \Phi_{\mathcal{G}(1-\varepsilon/2)}(\mu_H(S))
+            -\frac{\gamma}{\mu_H(S)}$.
     \end{description}
-    The output graph can be chosen so that $\alpha\leq q^{-R}\leq1/4$ for its tensor power $R\geq2$.
+    The output graph can be chosen so that $\alpha_H\leq q^{-R}\leq1/4$ for its tensor power $R\geq2$.
 \end{theorem}
 
 We derive from Theorem~\ref{thm:rst-global-expansion} the form of the gap used in our reduction.
 
 \begin{lemma}\label{lem:globalized-long-code-gap}
-    Fix an integer $q\geq2$ and a constant $b\in(0,1/2]$. Assuming the Small-Set Expansion Hypothesis, for sufficiently small $\varepsilon>0$ it is hard to distinguish between the following cases for a graph $X=(U,F)$:
+    Fix an integer $q\geq2$ and a constant $b\in(0,1/2]$. Assuming the Small-Set Expansion Hypothesis, there exist constants $K>0$ and $a_b>0$ such that for a sufficiently small choice of $\varepsilon>0$ it is hard to distinguish between the following cases for a graph $Y=(V_Y,E_Y)$:
     \begin{description}
-        \item[YES:] There is a partition $\cP=\brc{S_1,\ldots,S_q}$ of $U$
+        \item[YES:] There is a partition $\cP=\brc{S_1,\ldots,S_q}$ of $V_Y$
         such that, for every $i\in[q]$, $
-            \mu(S_i)=\frac{1}{q}$ and $
-            \Phi_X(S_i)\leq K\cdot\varepsilon,$
-        where $K>0$ is a universal constant.
-        \item[NO:] For every $S\subseteq U$, where $b\leq\mu(S)\leq\frac{1}{2}$, $\Phi_X(S)\geq a_b\cdot \sqrt{\varepsilon},$
-        where $a_b>0$ depends only on $b$.
+            \mu_Y(S_i)=\frac{1}{q}$ and $
+            \Phi_Y(S_i)\leq K\cdot\varepsilon$.
+        \item[NO:] For every $S\subseteq V_Y$, where $b\leq\mu_Y(S)\leq\frac{1}{2}$, $\Phi_Y(S)\geq a_b\cdot \sqrt{\varepsilon}$.
     \end{description}
-    The output graph also satisfies $\alpha\leq q^{-R}\leq1/4$ for its tensor power $R\geq2$.
+    The output graph also satisfies $\alpha_Y\leq q^{-R}\leq1/4$ for its tensor power $R\geq2$.
 \end{lemma}
 \begin{proof}
-    In the YES case of Theorem~\ref{thm:rst-global-expansion}, the sets $S_1,\ldots,S_q$ have total measure $1$ and therefore form a partition of $U$. The expansion bound is $K\varepsilon$ by the theorem.
+    In the YES case of Theorem~\ref{thm:rst-global-expansion}, the statement stays the same.
 
     Consider now the NO case. If $x\in[b,1/2]$, then $t_x$ ranges over a bounded interval depending only on $b$. The standard estimate for the probability that two highly correlated Gaussian variables lie on opposite sides of such a threshold gives $
         \Phi_{\mathcal{G}(1-\varepsilon/2)}(x)
         \geq a'_b\cdot\sqrt{\varepsilon}$
     for some constant $a'_b>0$ and all sufficiently small $\varepsilon$. Indeed, the standard deviation of $Z'-Z$ is $\sqrt{\varepsilon}$, while the Gaussian density at $t_x$ is bounded above and below by positive constants depending only on $b$. Taking $\gamma\leq b\cdot a'_b\cdot\sqrt{\varepsilon}/2$ yields
     \[
-        \Phi_X(S)\geq\frac{a'_b}{2}\cdot\sqrt{\varepsilon}
+        \Phi_Y(S)\geq a'_b\cdot\sqrt{\varepsilon} - \frac{b\cdot a'_b\cdot\sqrt{\varepsilon}/2}{1}
+        = a'_b\cdot\sqrt{\varepsilon} - \frac{b\cdot a'_b\cdot\sqrt{\varepsilon}}{2}
+        = a'_b\cdot\sqrt{\varepsilon}\left(1 - \frac{b}{2}\right)
+        \geq \frac{a'_b}{2}\cdot\sqrt{\varepsilon}
     \]
-    whenever $b\leq\mu(S)\leq1/2$. The claim follows with $a_b=a'_b/2$.
+    whenever $b\leq\mu_Y(S)\leq1/2$. The claim follows with $a_b=a'_b/2$.
 \end{proof}
 
-\subsection{Hardness of Graph Partitioning with Demands}
+% \subsection{Hardness of Graph Partitioning with Demands}
 
+% Retained for reference; GPD hardness now follows from the HCD reduction below.
+\iffalse
 For simplicity, we carry out the reduction with rational costs and demands. Scaling by a least common denominator does not affect feasibility or any approximation ratio.
 
 A demand graph is \emph{bipartite multiplicative} if its vertex set has a bipartition $L\mathbin{\dot\cup}R$, its demand edges are all pairs with one endpoint in $L$ and the other in $R$, and there is a potential $\pi$ such that $w(uv)=\pi(u)\cdot \pi(v)$ for every demand edge $uv$. Our intention is to show a reduction which establishes the hardness of graph partitioning with bipartite multiplicative demands.
 This class is closed under taking induced subgraphs.
 
 
-    For every $u\in U$, introduce two vertices $u^{\mathrm L}$ and $u^{\mathrm R}$, assign $
-        \pi\br{u^{\mathrm L}}=\pi\br{u^{\mathrm R}}=\mu_X(u),$
+    For every $u\in V_Y$, introduce two vertices $u^{\mathrm L}$ and $u^{\mathrm R}$, assign $
+        \pi\br{u^{\mathrm L}}=\pi\br{u^{\mathrm R}}=\mu_Y(u),$
     and let $
-        \widetilde U
-        =\brc{u^{\mathrm L},u^{\mathrm R}\colon u\in U}.$
-    On $\widetilde U$, define the bipartite multiplicative demand graph to have edge set $
+        \widetilde V_Y
+        =\brc{u^{\mathrm L},u^{\mathrm R}\colon u\in V_Y}.$
+    On $\widetilde V_Y$, define the bipartite multiplicative demand graph to have edge set $
         D_\times
-        =\brc{u^{\mathrm L}v^{\mathrm R}\colon u,v\in U\times U}$ and demands $
+        =\brc{u^{\mathrm L}v^{\mathrm R}\colon u,v\in V_Y}$ and demands $
         w\br{u^{\mathrm L}v^{\mathrm R}}
         =\pi\br{u^{\mathrm L}}\cdot \pi\br{v^{\mathrm R}}.$
-    For $S\subseteq U$, write $
+    For $S\subseteq V_Y$, write $
         \widetilde S=\brc{u^{\mathrm L},u^{\mathrm R}\colon u\in S}.$
 \begin{lemma}\label{lem:multiplicative-demands-encode-measure}
-    For any $S\subseteq U$, we have, $
+    For any $S\subseteq V_Y$, we have, $
         {w\br{\widetilde S}}
-        =\mu(S)^2$. In particular, $w\br{\widetilde U}=1$.
+        =\mu_Y(S)^2$. In particular, $w\br{\widetilde V_Y}=1$.
 \end{lemma}
 \begin{proof}
     Every pair $(u,v)\in S\times S$ indexes the unique demand edge $u^{\mathrm L}v^{\mathrm R}$. Therefore,
     \[
         w\br{\widetilde S}
         =\sum_{(u,v)\in S\times S}\pi\br{u^{\mathrm L}}\cdot \pi\br{v^{\mathrm R}}
-        =\left(\sum_{u\in S}\mu(u)\right)^2
-        =\mu(S)^2.
+        =\left(\sum_{u\in S}\mu_Y(u)\right)^2
+        =\mu_Y(S)^2.
     \]
-    The same calculation for $S=U$ gives $w\br{\widetilde U}=1$.
+    The same calculation for $S=V_Y$ gives $w\br{\widetilde V_Y}=1$.
 \end{proof}
 
-We now turn the source graph $X=(U,F)$ from Lemma~\ref{lem:globalized-long-code-gap} into a supply graph $\widetilde X$ on $\widetilde U$. For every $uv\in F$, add the supply edge $u^{\mathrm L}v^{\mathrm L}$ of cost $c(u^{\mathrm L}v^{\mathrm L})=p_X(u,v)$. For every $u\in U$, also add the \emph{consistency edge} $u^{\mathrm L}u^{\mathrm R}$ of cost $c(u^{\mathrm L}u^{\mathrm R})=1$. Thus, unless a consistency edge is cut, the two copies of every vertex belong to the same component. Together with the previously defined bipartite multiplicative demand graph on $\widetilde U$, this completes the construction of the graph instance $(\widetilde U,\widetilde X,D_\times,c,w)$.
+We now turn the source graph $Y=(V_Y,E_Y)$ from Lemma~\ref{lem:globalized-long-code-gap} into a supply graph $\widetilde Y$ on $\widetilde V_Y$. For every $uv\in E_Y$, add the supply edge $u^{\mathrm L}v^{\mathrm L}$ of cost $c(u^{\mathrm L}v^{\mathrm L})=p_Y(u,v)$. For every $u\in V_Y$, also add the \emph{consistency edge} $u^{\mathrm L}u^{\mathrm R}$ of cost $c(u^{\mathrm L}u^{\mathrm R})=1$. Thus, unless a consistency edge is cut, the two copies of every vertex belong to the same component. Together with the previously defined bipartite multiplicative demand graph on $\widetilde V_Y$, this completes the construction of the graph instance $(\widetilde V_Y,\widetilde Y,D_\times,c,w)$.
 
 \subsubsection{Completenes}
 \begin{lemma}\label{lem:sse-gpd-completeness}
     Fix $\rho\in(0,1)$ and set $
-        q=\max\left\{2,\left\lceil\rho^{-1/2}\right\rceil\right\}. $
+        q=\max\brc{2,\left\lceil\rho^{-1/2}\right\rceil}. $
     In the YES case of Lemma~\ref{lem:globalized-long-code-gap},
     \[
-        \OPTdem{\widetilde X}{\rho}\leq \frac{K}{2}\cdot\varepsilon.
+        \OPTdem{\widetilde Y}{\rho}\leq \frac{K}{2}\cdot\varepsilon.
     \]
 \end{lemma}
 \begin{proof}
     For every $i\in[q]$, define $
         \widetilde S_i
         =\brc{u^{\mathrm L},u^{\mathrm R}\colon u\in S_i}.$
-    Since $S_1,\ldots,S_q$ partition $U$, the sets $\widetilde S_1,\ldots,\widetilde S_q$ partition $\widetilde U$. Let $C_{\mathrm{yes}}$ consist of the supply edges $u^{\mathrm L}v^{\mathrm L}$ for which $uv\in F$ has endpoints in distinct parts of the original partition. Thus all consistency edges $u^{\mathrm L}u^{\mathrm R}$ are retained. Every crossing edge of $X$ is counted twice in the sum of the boundaries, and hence
+    Since $S_1,\ldots,S_q$ partition $V_Y$, the sets $\widetilde S_1,\ldots,\widetilde S_q$ partition $\widetilde V_Y$. Let $C_{\mathrm{yes}}$ consist of the supply edges $u^{\mathrm L}v^{\mathrm L}$ for which $uv\in E_Y$ has endpoints in distinct parts of the original partition. Thus all consistency edges $u^{\mathrm L}u^{\mathrm R}$ are retained. Every crossing edge of $Y$ is counted twice in the sum of the boundaries, and hence
     \[
         c\br{C_{\mathrm{yes}}}
-        =\frac{1}{2}\sum_{i=1}^{q}\mu(S_i)\cdot\Phi_X(S_i).
+        =\frac{1}{2}\sum_{i=1}^{q}\mu_Y(S_i)\cdot\Phi_Y(S_i).
     \]
     By Lemma~\ref{lem:globalized-long-code-gap},
     \[
         c\br{C_{\mathrm{yes}}}
-        \leq\frac{1}{2}\sum_{i=1}^{q}\mu(S_i)\cdot K\cdot\varepsilon
+        \leq\frac{1}{2}\sum_{i=1}^{q}\mu_Y(S_i)\cdot K\cdot\varepsilon
         =\frac{K\cdot\varepsilon}{2}.
     \]
 
-    Every component $\widetilde H$ of $\widetilde X\setminus C_{\mathrm{yes}}$ is a union of left-right pairs corresponding to a set $H\subseteq S_i$ for some $i$. Therefore, by Lemma~\ref{lem:multiplicative-demands-encode-measure},
+    Every component $\widetilde H$ of $\widetilde Y\setminus C_{\mathrm{yes}}$ is a union of left-right pairs corresponding to a set $H\subseteq S_i$ for some $i$. Therefore, by Lemma~\ref{lem:multiplicative-demands-encode-measure},
     \[
-        \frac{w\br{\widetilde H}}{w\br{\widetilde U}}
-        =\mu(H)^2
-        \leq\mu(S_i)^2
+        \frac{w\br{\widetilde H}}{w\br{\widetilde V_Y}}
+        =\mu_Y(H)^2
+        \leq\mu_Y(S_i)^2
         =\frac{1}{q^2}
         \leq\rho.
     \]
@@ -181,7 +182,7 @@ We start by proving a numerical lemma that will be useful in the soundness \DD{c
     Let $p_1,\ldots,p_m\geq0$ satisfy $
         \sum_{i=1}^{m}p_i=1$ and $
         p_i\leq\sqrt{\eta}<1$ for each $i\in[m]$.
-    Define $b_\eta=\min\left\{\frac{1}{4},1-\sqrt{\eta}\right\}$.
+    Define $b_\eta=\min\brc{\frac{1}{4},1-\sqrt{\eta}}$.
     Then, there is a set $I\subseteq[m]$ such that
     \[
         b_\eta\leq\sum_{i\in I}p_i\leq\frac{1}{2}.
@@ -201,20 +202,20 @@ We start by proving a numerical lemma that will be useful in the soundness \DD{c
 \begin{proof}
     Set $\beta_\eta=b_\eta\cdot a_{b_\eta}$. We may assume that $\beta_\eta\cdot\sqrt{\varepsilon}\leq1$. If $C$ contains a consistency edge, then $c\br{C}\geq1\geq\beta_\eta\cdot\sqrt{\varepsilon}$, as required.
 
-    Suppose now that no consistency edge is cut. Let $\widetilde H_1,\ldots,\widetilde H_m$ be the components of $\widetilde X\setminus C$. Every $\widetilde H_i$ is a union of left-right pairs. Let $H_i\subseteq U$ be their projection and put $p_i=\mu(H_i)$. The sets $H_1,\ldots,H_m$ partition $U$. By $\eta$-feasibility and Lemma~\ref{lem:multiplicative-demands-encode-measure},
+    Suppose now that no consistency edge is cut. Let $\widetilde H_1,\ldots,\widetilde H_m$ be the components of $\widetilde Y\setminus C$. Every $\widetilde H_i$ is a union of left-right pairs. Let $H_i\subseteq V_Y$ be their projection and put $p_i=\mu_Y(H_i)$. The sets $H_1,\ldots,H_m$ partition $V_Y$. By $\eta$-feasibility and Lemma~\ref{lem:multiplicative-demands-encode-measure},
     \[
-        p_i^2 = \mu(H_i)^2
-        =\frac{w\br{\widetilde H_i}}{w\br{\widetilde U}}
+        p_i^2 = \mu_Y(H_i)^2
+        =\frac{w\br{\widetilde H_i}}{w\br{\widetilde V_Y}}
         \leq\eta,
     \]
     and hence $p_i\leq\sqrt{\eta}$. Apply Lemma~\ref{lem:group-small-components} and let $
         S=\bigcup_{i\in I}H_i.$
-    Then $b_\eta\leq\mu(S)\leq1/2$. Every original-copy supply edge corresponding to an edge of $X$ crossing $\br{S,U\setminus S}$ joins two distinct components of $\widetilde X\setminus C$ and therefore belongs to $C$. Consequently, $
-        c\br{C}\geq\sum_{(u,v)\in\vec\delta_X(S)}p_X(u,v),
+    Then $b_\eta\leq\mu_Y(S)\leq1/2$. Every original-copy supply edge corresponding to an edge of $Y$ crossing $\br{S,V_Y\setminus S}$ joins two distinct components of $\widetilde Y\setminus C$ and therefore belongs to $C$. Consequently, $
+        c\br{C}\geq\sum_{(u,v)\in\vec\delta_Y(S)}p_Y(u,v),
     $ so by Lemma~\ref{lem:globalized-long-code-gap},
     \[
-        \sum_{(u,v)\in\vec\delta_X(S)}p_X(u,v)
-        =\mu(S)\cdot\Phi_X(S)
+        \sum_{(u,v)\in\vec\delta_Y(S)}p_Y(u,v)
+        =\mu_Y(S)\cdot\Phi_Y(S)
         \geq b_\eta\cdot a_{b_\eta}\sqrt{\varepsilon}
         =\beta_\eta\cdot\sqrt{\varepsilon}.
     \]
@@ -224,14 +225,14 @@ We start by proving a numerical lemma that will be useful in the soundness \DD{c
 \begin{theorem}\label{thm:sse-gpd-bicriteria-hardness}
     Fix constants $0<\rho<\eta<1$. Then, for any sufficiently small $\varepsilon>0$, a universal constant $L$ and a constant $\beta_\eta>0$ dependent only on $\eta$ such that it is SSEH-hard to distinguish between the following two cases:
     \begin{itemize}
-        \item \textbf{YES case:} $\OPTdem{\widetilde X}{\rho}\leq L\cdot\varepsilon$.
+        \item \textbf{YES case:} $\OPTdem{\widetilde Y}{\rho}\leq L\cdot\varepsilon$.
         \item \textbf{NO case:} Every $\eta$-feasible supply-edge set $C$ satisfies $c\br{C}\geq\beta_\eta\cdot\sqrt{\varepsilon}$.
     \end{itemize}
     Consequently, assuming the Small-Set Expansion Hypothesis, for any constant $A>0$ there is no polynomial-time $(A,\eta)$-bicriteria approximation for \textsc{Graph Partitioning with Demands}, even for bipartite multiplicative demands.
 \end{theorem}
 \begin{proof}
     Let $L=\frac{K}{2}$. 
-    In the YES case, Lemma~\ref{lem:sse-gpd-completeness} gives $\OPTdem{\widetilde X}{\rho}\leq L\cdot\varepsilon$. 
+    In the YES case, Lemma~\ref{lem:sse-gpd-completeness} gives $\OPTdem{\widetilde Y}{\rho}\leq L\cdot\varepsilon$.
     In the NO case, Lemma~\ref{lem:sse-gpd-soundness} says that every $\eta$-feasible cut has cost at least $\beta_\eta\cdot\sqrt{\varepsilon}$. 
     Now, suppose that such an algorithm exists. Choose $\varepsilon>0$ sufficiently small that all preceding statements apply and
     \[
@@ -243,65 +244,64 @@ We start by proving a numerical lemma that will be useful in the soundness \DD{c
     \]
     Thus the algorithm distinguishes the YES and NO instances of Lemma~\ref{lem:globalized-long-code-gap}, contradicting the Small-Set Expansion Hypothesis.
 \end{proof}
+\fi
 
-\subsection{Hardness of hierarchical clustering with demands}
+\subsection{Hardness of Hierarchical Clustering with Demands}
 
-The preceding reduction concerns flat partitioning. We now use the same expansion-hardness theorem to obtain a gap for the hierarchical objective.
+% We use the same expansion-hardness theorem to obtain a gap for the hierarchical objective.
 
 \begin{theorem}\label{thm:sse-hcd-hardness}
-    Assuming the Small-Set Expansion Hypothesis, for every constant $A>0$ it is hard to approximate \textsc{Hierarchical Clustering with Demands} within a factor of $A$, even when the demand graph is complete and all supply capacities and demand weights are positive integers.
+    Assuming the Small-Set Expansion Hypothesis, for every constant $A\geq 1$ it is hard to approximate \textsc{Hierarchical Clustering with Demands} within a factor of $A$.
 \end{theorem}
 \begin{proof}
-    Fix $A>0$ and choose $\varepsilon>0$ sufficiently small that all preceding smallness requirements hold and
+    Fix $A\geq 1$ and choose $\varepsilon>0$ sufficiently small that all preceding smallness requirements hold and
     \[
         \varepsilon<\left(\frac{a_{1/4}}{16\cdot A\cdot (K+1)}\right)^2.
     \]
-    Let $q$ be the least power of two satisfying $q^{-2}\leq\varepsilon$. Apply Lemma~\ref{lem:globalized-long-code-gap} with this $q$, $b=1/4$, and $\varepsilon$, and denote its output graph by $H=(V_H,E_H)$ with stationary measure $\mu$.
+    Let $q$ be the least power of two satisfying $q^{-2}\leq\varepsilon$. Apply Lemma~\ref{lem:globalized-long-code-gap} with this $q$, $b=1/4$, and $\varepsilon$, and denote its output graph by $Y=(V_Y,E_Y)$.
 
-    Construct an HCD instance whose supply graph is $H$ with capacity $c(uv)=p_H(u,v)$ on each edge $uv\in E_H$. This is well-defined because $p_H(u,v)=p_H(v,u)$. Let the demand graph be complete on distinct vertex pairs, with $w(uv)=\mu(u)\mu(v)$. By defintion, for every $S\subseteq V_H$,
-    \begin{equation*}
-        c(\delta_H(S))=\mu(S)\cdot \Phi_H(S).
-    \end{equation*}
-    For every cluster $X\subseteq V_H$,
+    Construct an HCD instance whose supply graph is $Y$ with capacity $c(uv)=p_Y(u,v)$ on each edge $uv\in E_Y$. This is well-defined because $p_Y(u,v)=p_Y(v,u)$. Let the demand graph be complete on distinct vertex pairs, with $w(uv)=\mu_Y(u)\cdot \mu_Y(v)$. By defintion, for every $S\subseteq V_Y$, we have $
+        c(\delta_Y(S))=\mu_Y(S)\cdot \Phi_Y(S).$
+    For every cluster $X\subseteq V_Y$,
     \begin{equation}\label{eq:hcd-stationary-demand}
-        w(X)=\sum_{uv\in D[X]}\mu(u)\cdot \mu(v)
-        =\frac12\left(\mu(X)^2-\sum_{u\in X}\mu(u)^2\right).
+        w(X)=\sum_{uv\in D[X]}\mu_Y(u)\cdot \mu_Y(v)
+        =\frac12\left(\mu_Y(X)^2-\sum_{u\in X}\mu_Y(u)^2\right).
     \end{equation}
-    The shared normalization gives total supply capacity $c(E_H)=1/2$, and we know that $\alpha\leq1/4$ by Theorem~\ref{thm:rst-global-expansion}.
+    The shared normalization gives total supply capacity $c(E_Y)=1/2$, and we can assume that $\alpha_Y\leq1/4$ by Theorem~\ref{thm:rst-global-expansion}.
 
-    \emph{YES case.} Make $S_1,\ldots,S_q$ the children of the root of $\cT$, and refine each $S_i$ to singleton leaves. This root may be nonbinary. As noted before, $\cT$ can be made into a binary tree without increasing the cost. The supply edges crossing the root are exactly those between distinct sets, so
+    \emph{YES case.} Make $S_1,\ldots,S_q$ the children of the root of $\cT$, and refine each $S_i$ to singleton leaves. This tree may be nonbinary, however as noted before, $\cT$ can be made into a binary tree without increasing the cost. Summing over the supply edges crossing the root partition we have that
     \[
-        c(C_{\mathrm{root}})=\frac12\sum_{i=1}^q c(\delta_H(S_i))
-        \leq\frac{K\varepsilon}{2}.
+        c(C_{\mathrm{root}})=\frac12\cdot\sum_{i=1}^q c(\delta_Y(S_i))
+        \leq\frac{K\cdot\varepsilon}{2}.
     \]
-    By~\eqref{eq:hcd-stationary-demand}, $w(V_H)\leq1/2$, and hence the root contributes at most $K\varepsilon/4$ to $c\br{\cT}$. Every supply edge internal to an $S_i$ is charged at a cluster $X\subseteq S_i$, for which $w(X)\leq\mu(X)^2/2\leq1/(2q^2)$. Since the total supply capacity is $1/2$, refining the $S_i$'s contributes at most $1/(4q^2)\leq\varepsilon/4$ to $c\br{\cT}$. Therefore,
+    By~\eqref{eq:hcd-stationary-demand}, $w(V_Y)\leq\mu_Y\br{V_Y}^2/2=1/2$, and hence the root partition contributes at most $K\cdot\varepsilon/4$ to $c\br{\cT}$. Every supply edge internal to an $S_i$ is charged at a cluster $X\subseteq S_i$, for which $w(X)\leq\mu_Y(X)^2/2\leq1/(2q^2)$. Since the total supply capacity is $1/2$, refining the $S_i$'s contributes at most $1/(4q^2)\leq\varepsilon/4$ to $c\br{\cT}$. Therefore,
     \[
         \operatorname{OPT}_{\mathrm{YES}}\leq c\br{\cT}
         \leq\frac{K+1}{4}\cdot \varepsilon.
     \]
 
-    \emph{NO case.} Consider any binary clustering tree $\cT$. Starting at its root, follow a larger child of $\cT$ (measured by $\mu(\cdot)$) until first reaching a cluster $S$ with $\mu(S)\leq1/2$. Its parent $P$ has $\mu(P)>1/2$, while the choice of a larger child ensures $1/4<\mu(S)\leq1/2$. The NO case of Lemma~\ref{lem:globalized-long-code-gap}, with $b=1/4$, gives
+    \emph{NO case.} Consider any binary clustering tree $\cT$. Starting at its root, follow a larger child of $\cT$ (measured by $\mu_Y(\cdot)$) until first reaching a cluster $S$ with $\mu_Y(S)\leq1/2$. Its parent $P$ has $\mu_Y(P)>1/2$, while the choice of a larger child ensures $1/4<\mu_Y(S)\leq1/2$. The NO case of Lemma~\ref{lem:globalized-long-code-gap}, with $b=1/4$, gives
     \[
-        c(\delta_H(S))=\mu(S)\cdot \Phi_H(S)
+        c(\delta_Y(S))=\mu_Y(S)\cdot \Phi_Y(S)
         \geq\frac{a_{1/4}}{4}\cdot \sqrt{\varepsilon}.
     \]
-    By~\eqref{eq:hcd-stationary-demand}, $\sum_{u\in P}\mu(u)^2\leq\alpha\cdot \mu(P)$ and $\alpha\leq 1/4$ we get
+    Using~\eqref{eq:hcd-stationary-demand}, $\sum_{u\in P}\mu_Y(u)^2\leq\alpha_Y\cdot \mu_Y(P)$ and $\alpha_Y\leq 1/4$ we get
     \[
-        w(P)\geq\frac{\mu(P)\cdot(\mu(P)-\alpha)}2
+        w(P)\geq\frac{\mu_Y(P)\cdot(\mu_Y(P)-\alpha_Y)}2
         >\frac1{16}.
     \]
     Every supply edge crossing $S$ has its least common ancestor at $P$ or an ancestor of $P$, and is charged at a cluster of demand weight at least $w(P)$. Therefore, for every hierarchy $\mathcal{T}$, the edges crossing $S$ alone contribute
     \[
         c(\mathcal{T})
-        \geq\sum_{uv\in\delta_H(S)}c(uv)\cdot
+        \geq\sum_{uv\in\delta_Y(S)}c(uv)\cdot
           w\br{V_{\operatorname{lca}_{\mathcal{T}}(u,v)}}
-        \geq w(P)\cdot c(\delta_H(S))
+        \geq c(\delta_Y(S))\cdot w(P)
         \geq\frac{1}{16}\cdot\frac{a_{1/4}}{4}\cdot\sqrt{\varepsilon}
         =\frac{a_{1/4}}{64}\cdot\sqrt{\varepsilon}.
     \]
     Taking the minimum over all trees gives $\operatorname{OPT}_{\mathrm{NO}}\geq\frac{a_{1/4}}{64}\cdot\sqrt{\varepsilon}$.
 
-    The choice of $\varepsilon$ gives
+    By our choice of $\varepsilon$, we have
     \[
         A\cdot\frac{K+1}{4}\cdot\varepsilon
         <\frac{a_{1/4}}{64}\cdot\sqrt{\varepsilon},
@@ -309,61 +309,66 @@ The preceding reduction concerns flat partitioning. We now use the same expansio
     so the YES and NO cases are separated by a factor greater than $A$. Therefore, any $A$-approximation algorithm for \textsc{Hierarchical Clustering with Demands} would distinguish the YES and NO cases, which is SSEH-hard.
 \end{proof}
 
-\subsection{Hardness of Generalized Conductance}
+\begin{corollary}\label{cor:sse-gpd-bicriteria-hardness}
+    Assuming the Small-Set Expansion Hypothesis, for every fixed $0<\rho<\eta<1$ and every constant $A\geq 1$, there is no polynomial-time $(A,\eta)$-bicriteria approximation for \textsc{Graph Partitioning with Demands} with target $\rho$, even when the demand graph is complete.
+\end{corollary}
+\begin{proof}
+    Suppose such an algorithm exists. Applying Theorem~\ref{thm:hc-gpd-transfer} with these $\rho$ and $\eta$ would give a polynomial-time
+    $\frac{\lceil1/\rho\rceil A}{1-\eta}$-approximation for \textsc{Hierarchical Clustering with Demands}. This factor is constant for fixed $\rho$, $\eta$, and $A$, contradicting Theorem~\ref{thm:sse-hcd-hardness}.
+\end{proof}
 
+\subsection{Hardness of Generalized Conductance}
+The hardness of generalized conductance essentially follows from the previous hardness results for GPD, however the recent result of OpenAI \cite{OAI:Constant-factor-hardness-of-uniform-sparsest-cut-September-24-2026} gives a constant-factor approximation hardness for uniform-demand \textsc{Sparsest Cut}, which translates to a constant-factor approximation hardness for \textsc{Generalized Conductance} with uniform demands.
 \begin{corollary}\label{cor:generalized-conductance-hardness}
   For every fixed constant $A>1$, it is NP-hard to approximate \textsc{Generalized Conductance} within a factor of $A$, even when $D=\binom{V}{2}$ and $w(e)=1$ for every $e\in D$.
 \end{corollary}
 \begin{proof}
-  Let $G=(V,E,c)$ be a supply graph, let $n=|V|$, and let
+  Let $G=(V,E,c)$ be a supply graph, let $n=|V|$, and recall that the uniform-demand \textsc{Sparsest Cut} objective is
   \[
-\phi_{\mathrm{USC}}\br{S}
+\phi\br{S}
 =\frac{c\br{S,\bar{S}}}{\spr{S}\cdot\spr{\bar{S}}}
   \]
-  be its uniform-demand \textsc{Sparsest Cut} objective. Consider the same supply graph as an instance of \textsc{Generalized Conductance} with $D=\binom{V}{2}$ and $w(e)=1$ for every $e\in D$. For a nontrivial cut $S$, writing $s=\spr{S}$ gives
+  Consider the same supply graph as an instance of \textsc{Generalized Conductance} with $D=\binom{V}{2}$ and $w(e)=1$ for every $e\in D$. For a nontrivial cut $S$, writing $s=\spr{S}$ gives
   \[
 w\br{S,V}=\binom{n}{2}-\binom{n-s}{2}
-  =\frac{s(2n-s-1)}{2}.
+  =\frac{s\cdot(2n-s-1)}{2}.
   \]
   Since $1\leq s\leq n-1$, we have
   \[
-\frac{n\spr{S}}{2}\leq w\br{S,V}\leq n\spr{S},
+\frac{n\cdot \spr{S}}{2}\leq w\br{S,V}\leq n\cdot \spr{S},
   \]
   and the same bounds hold for $\bar{S}$. Therefore,
   \[
-\frac{1}{n^2}\phi_{\mathrm{USC}}\br{S}
+\frac{\phi\br{S}}{n^2}
 \leq \psi_w\br{S}
-\leq \frac{4}{n^2}\phi_{\mathrm{USC}}\br{S}.
+\leq \frac{4\cdot \phi\br{S}}{n^2}.
   \]
-  Thus, a $\gamma$-approximation for \textsc{Generalized Conductance} on these instances gives a $4\gamma$-approximation for uniform-demand \textsc{Sparsest Cut}. The latter is UGC-hard to approximate within any constant factor~\cite{OnTheHardnessOfApproximatingMulticutAndSparsestCut}; the Unique Games Theorem~\cite{OAI:The-Unique-Games-Theorem-September-23-2026} makes this hardness unconditional, proving the corollary.
+  Thus, a $\gamma$-approximation for \textsc{Generalized Conductance} on these instances gives a $4\gamma$-approximation for uniform-demand \textsc{Sparsest Cut}. Since uniform-demand \textsc{Sparsest Cut} is NP-hard to approximate within any constant factor~\cite{OAI:Constant-factor-hardness-of-uniform-sparsest-cut-September-24-2026}, the proof is complete.
 \end{proof}
 
-\subsection{Hardness of Graph Partitioning with Demands on Trees}
+\subsection{Hardness of Graph Partitioning with Demands on Stars}
 
-The following statement gives an approximation-preserving reduction from \textsc{Vertex Cover}.
+The following statement gives an approximation-preserving reduction from \textsc{Vertex Cover} for the case when the supply graph is a star.
 
 \begin{theorem}\label{thm:tree-gpd-vertex-cover-hardness}
-For every fixed rational $\rho\in(0,1)$, \textsc{Graph Partitioning with Demands} is as hard to approximate as \textsc{Vertex Cover}, even when the supply graph is a star.
+For every fixed rational $\rho\in(0,1)$ and $\varepsilon>0$ the \textsc{Graph Partitioning with Demands} is NP-hard to approximate within $2-\varepsilon$ factor, even when the supply graph is a star.
 \end{theorem}
 \begin{proof}
 Let $G=(U,F)$ be a \textsc{Vertex Cover} instance. Let $V=U\cup\{r,d\}$. Construct a supply star $E$ with center $r$, leaves $U$, and one additional leaf $d$. Set $c(rd)=\infty$ and $c(ru)=1$ for every $u\in U$. The edges of the demand graph are $F\cup\{rd\}$ where $w\br{rd}=\frac{\rho \cdot \spr{F}}{1-\rho}$ and, for every $uv\in F$, $w\br{uv}=1$. If necessary, multiply all demand weights by a common denominator to make them integral.
 
 The total demand is $W=w\br{rd}+\spr{F}$, and hence $\rho \cdot W=w\br{rd}$. Any solution of cost at most $\spr{U}$ leaves $rd$ uncut, otherwise its cost becomes $\infty$. For any solution $C$, let $H\in T\setminus C$ be the component containing $r$. If $H$ contained both endpoints of some edge $uv\in F$, its internal demand would exceed $w\br{rd}$. Therefore, the set $C_H=V\setminus V\br{H}$ forms a vertex cover. Moreover, we have that $c\br{C}=\spr{C_H}$ which means that the cost of any solution for the \textsc{Graph Partitioning with Demands} instance equals the size of some vertex cover. Conversely, any cover $C_H\subseteq U$ gives rise to a solution $C$ by cutting all edges incident to $C_H$, which has cost $\spr{C_H}$. Thus the reduction preserves approximation ratios.
+
+Combining this, with the recently proved Unique Games Theorem \cite{OAI:The-Unique-Games-Theorem-September-23-2026} which implies that \textsc{Vertex Cover} is hard to approximate within $2-\varepsilon$ factor yields the proof.
 \end{proof}
 
-Combining Theorem~\ref{thm:tree-gpd-vertex-cover-hardness} with the known hardness of \textsc{Vertex Cover} gives the following consequence.
-\begin{corollary}\label{cor:tree-gpd-hardness}
-For every $\varepsilon>0$, \textsc{Graph Partitioning with Demands} on trees is NP-hard to approximate within $2-\varepsilon$~\cite{VertexCoverMightBeHardToApproximateToWithin2MinusEpsilon,OAI:The-Unique-Games-Theorem-September-23-2026}.
-\end{corollary}
-
-\subsection{Hardness of Hierarchical Clustering with Demands on Trees}
-
+\subsection{Hardness of Hierarchical Clustering with Demands on Stars}
+A similar result as above, however based on the hardness of \textsc{Min-Sum Vertex Cover} gives the following result.
 \begin{theorem}\label{thm:hc-star-hardness}
 \textsc{Hierarchical Clustering with Demands} is NP-hard to approximate within a factor of $1.0748$,
 even when the supply graph is a star and all capacities and demands are uniform.
 \end{theorem}
 \begin{proof}
-We reduce from the NP-hard problem \textsc{Min-Sum Vertex Cover} on general graphs. In this problem we are given an undirected graph $G=(U,F)$ and the goal is to find a permutation $\pi:U\to\{1,\dots,|U|\}$ that minimizes the sum of cover times of the edges $\ct\br{\pi}=\sum_{e\in F}\ct_\pi(e)$, i.e., where the covering time is defined as $\ct_\pi(uv)=\min\{\pi(u),\pi(v)\}$.     Stankovic proves that this problem cannot be approximated within a factor of $1.0748$ assuming the Unique Games Conjecture~\cite{SomeResultsOnApproximabilityOfMinimumSumVertexCover}; the Unique Games Theorem~\cite{OAI:The-Unique-Games-Theorem-September-23-2026} therefore makes this lower bound unconditional. The reduction is very simple. The vertex set is $V=U\cup {r}$, $D=U$ and $E$ is a star with center $r$ and leaves $U$. The capacities and demands are all set to $1$. 
+We reduce from the NP-hard problem \textsc{Min-Sum Vertex Cover} on general graphs. In this problem we are given an undirected graph $G=(U,F)$ and the goal is to find a permutation $\pi:U\to\{1,\dots,|U|\}$ that minimizes the sum of cover times of the edges $\ct\br{\pi}=\sum_{e\in F}\ct_\pi(e)$, i.e., where the covering time is defined as $\ct_\pi(uv)=\min\brc{\pi(u),\pi(v)}$. Stankovic proves that this problem cannot be approximated within a factor of $1.0748$ assuming the Unique Games Conjecture~\cite{SomeResultsOnApproximabilityOfMinimumSumVertexCover}, the Unique Games Theorem~\cite{OAI:The-Unique-Games-Theorem-September-23-2026} therefore makes this lower bound conditional on P versus NP. The reduction is very simple. The vertex set is $V=U\cup {r}$, $D=U$ and $E$ is a star with center $r$ and leaves $U$. The capacities and demands are all set to $1$.
 
 Consider any clustering tree $\cT$. Since any nonbinary tree can be transformed into a binary one without loss of the quality, we assume that $\cT$ is binary. Now, we observe that on stars any binary cut, i.e., cut where both sides of the cut are connected, consists of some leaf $l\in U$ and nothing more. Consequently, any such clustering tree directly corresponds to a sequemce of leaves, in the order they are separated from the root. Conversily, every sequence $\pi:U\to\{1,\dots,|U|\}$ of the leaves corresponds to a unique binary clustering tree. 
 
