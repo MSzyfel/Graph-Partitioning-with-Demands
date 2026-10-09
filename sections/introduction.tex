@@ -26,9 +26,9 @@ To the best of our knowledge, no such results have been obtained in the literatu
 Consider as a toy example a cut where both partitions have internal demand $w\br{S}=w\br{\bar{S}}=w\br{V}/2$ but the demand between them is $w\br{\delta_D\br{S}} = 0$. Then, (by our convention) $\phi_w\br{S}=\infty$, even though the cut is perfectly balanced. This motivates us to focus on a different graph parameter.
 The graph \emph{conductance} is a well-known measure of the balance of a cut, defined as
 \[
-\psi\br{S} = \frac{c\br{\delta_E\br{S}}}{\spr{D\br{S, V}}\cdot \spr{D\br{\bar{S}, V}}}.
+\psi\br{S} = \frac{c\br{\delta_E\br{S}}}{\spr{\delta_D\br{S}}\cdot \spr{\delta_D\br{\bar{S}}}}.
 \]
-where $D\br{S, V}=\brc{e\in D\colon e\cap S\neq \emptyset}$\footnote{Note, that there are several similar definitions of the conductance, however they are all equivalent up to constant factors.}. In fact, for the setup of unit demands, minimizing the conductance is equivalent to the \textsc{Sparsest Cut}, up to a constant factor. However, for the general demands this is not a case, and this will come useful in our applications. The \emph{generalized conductance} of a cut $\br{S,\bar{S}}$ will be defined as
+where $\delta_D[S]=\brc{e\in D\colon e\cap S\neq \emptyset}$\footnote{Note, that there are several similar definitions of the conductance, however they are all equivalent up to constant factors.}. In fact, for the setup of unit demands, minimizing the conductance is equivalent to the \textsc{Sparsest Cut}, up to a constant factor. However, for the general demands this is not a case, and this will come useful in our applications. The \emph{generalized conductance} of a cut $\br{S,\bar{S}}$ will be defined as
 \[
 \psi_w\br{S} = \frac{c\br{\delta_E\br{S}}}{w\br{S, V}\cdot w\br{\bar{S}, V}},
 \]
@@ -52,12 +52,12 @@ For GPD at target $\rho$, a bicriteria $(A,\eta)$-approximation returns a soluti
 \hline
 Problem & Supply graph & Type & Bound & Reference \\
 \hline
-\textsc{GPD} & General & Upper & $O_{\rho,\eta}(\sqrt{\log n})^{*}$ & \hyperref[cor:graph-partitioning-approximation]{Corollary~\ref*{cor:graph-partitioning-approximation}} \\
+\textsc{GPD} & General & Upper & $\bigo_{\rho,\eta}(\sqrt{\log n})^{*}$ & \hyperref[cor:graph-partitioning-approximation]{Corollary~\ref*{cor:graph-partitioning-approximation}} \\
 \textsc{GPD} & Tree & Upper & $\min\brc{\frac{2\eta}{\eta-\rho},\left\lceil\ln\left(\frac{1-\rho}{\eta-\rho}\right)\right\rceil}^{*}$ & \hyperref[cor:tree-general-demand-bicriteria]{Corollary~\ref*{cor:tree-general-demand-bicriteria}} \\
 \textsc{GPD} & Tree & Upper & $4+\varepsilon$ & \hyperref[thm:tree-centroid-full-quota]{Theorem~\ref*{thm:tree-centroid-full-quota}} \\
-\textsc{HCD} & General & Upper & $O(\sqrt{\log n})$ & \hyperref[cor:hc-general-bounds]{Corollary~\ref*{cor:hc-general-bounds}} \\
+\textsc{HCD} & General & Upper & $\bigo(\sqrt{\log n})$ & \hyperref[cor:hc-general-bounds]{Corollary~\ref*{cor:hc-general-bounds}} \\
 \textsc{HCD} & Tree & Upper & $\frac{4e}{e-1}$ & \hyperref[cor:tree-hc-improved]{Corollary~\ref*{cor:tree-hc-improved}} \\
-\textsc{GC} & General & Upper & $O(\sqrt{\log n})$ & \hyperref[thm:generalized-conductance-approx]{Theorem~\ref*{thm:generalized-conductance-approx}} \\
+\textsc{GC} & General & Upper & $\bigo(\sqrt{\log n})$ & \hyperref[thm:generalized-conductance-approx]{Theorem~\ref*{thm:generalized-conductance-approx}} \\
 \textsc{GC} & Tree & Upper & $1$ (exact) & \hyperref[thm:tree-generalized-conductance]{Theorem~\ref*{thm:tree-generalized-conductance}} \\
 \textsc{GPD} & General & Lower & No constant factor$^{*}$ (SSEH) & \hyperref[cor:sse-gpd-bicriteria-hardness]{Corollary~\ref*{cor:sse-gpd-bicriteria-hardness}} \\
 \textsc{GPD} & Tree & Lower & $2-\varepsilon$ & \hyperref[thm:tree-gpd-vertex-cover-hardness]{Theorem~\ref*{thm:tree-gpd-vertex-cover-hardness}} \\

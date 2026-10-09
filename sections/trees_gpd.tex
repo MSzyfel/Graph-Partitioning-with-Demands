@@ -435,7 +435,6 @@ so in particular $w(X)\leq\mu_H(X)$.
         \sum_{i=1}^k\mu_H(A_i)\leq w\br{V_H},
     \]
     since each demand edge contributes at most its weight to this sum.
-    \DD{hmmm, no nie wiem, gdyz jesli na przyklad $k=1$, $A_1=V_H$ to przez to, ze $\mu_H$ ma $+1/2$ w definicji to by sie nie zgadzalo.}
     \DD{BREAK: tutaj na razie przerywam czytanie do konca rozdzialu 5.3.}
     Every peeled subtree has $\mu_H(V_{R_x})>w\br{V_H}/t$, so there are at most $t-1$ of them. By the choice of a deepest such vertex, every child subtree $T'$ of $x$ in $R$ has $\mu_H(V_{T'})\leq w\br{V_H}/t$, and hence $w\br{V_{T'}}\leq w\br{V_H}/t$. Therefore, after removing all separators, every component $K\in H\setminus\mathcal L_H$ is one of these child subtrees at the iteration when its parent separator was selected, or the final remainder $R$. The final remainder satisfies $\mu_H(V_R)\leq w\br{V_H}/t$ by the stopping condition. In either case, $w\br{V_K}\leq w\br{V_H}/t$ as desired.
 \end{proof}
