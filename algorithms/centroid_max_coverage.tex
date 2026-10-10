@@ -1,21 +1,19 @@
-\begin{algorithm}[tbp]
+\begin{algorithm}[H]
     \DontPrintSemicolon
     \caption{Two-separator recursion with core coverage}\label{alg:centroid-max-coverage}
-    \textbf{Input} A tree $T=(V,E,D,c,w)$, fixed rational parameters $0<\rho<\eta<1$\;
+    \textbf{Input} A tree $T=(V,E,D,c,w)$ and $B_\rho\gets\rho W$ and $B_\eta\gets\eta W$\;
     \textbf{Output} An $\eta$-feasible supply-edge set $F\subseteq E$\;
-    Set $B_\rho\gets\rho W$ and $B_\eta\gets\eta W$\;
     \textbf{Procedure} $\textsc{SeparatorMaxCoverage}(H)$\;
     \Indp
         \If{$w\br{V_H}\leq B_\eta$}{
             \textbf{return} $\emptyset$\;
         }
         Run $\textsc{Separator}(H, w, 3)$, obtaining $\mathcal{L}_H$ with $|\mathcal{L}_H|\leq2$\;
-        Let $P_H=H[\mathcal{L}_H]$\;
-        Initialize $\cC_H\gets\emptyset$\;
+        Let $P_H\gets H[\mathcal{L}_H]$ and  $\cC_H\gets\emptyset$\;
         \ForEach{$Q\in\{\emptyset\}\cup\{\{e\}\colon e\in E(P_H)\}$}{
-            Let $\mathcal{K}_Q=\brc{K\text{ component of }H\setminus Q\colon V_K\cap\mathcal{L}_H\neq\emptyset}$ and let $\mathcal{K}_Q^+=\{K\in\mathcal{K}_Q\colon w\br{V_K}>B_\rho\}$\;
+            $\mathcal{K}_Q\gets\brc{K\in H\setminus Q\colon V_K\cap\mathcal{L}_H\neq\emptyset}$, $\mathcal{K}_Q^+\gets\{K\in\mathcal{K}_Q\colon w\br{V_K}>B_\rho\}$\;
             \ForEach{$K\in\mathcal{K}_Q^+$}{
-                Let $\mathcal{L}_K=V_K\cap\mathcal{L}_H$, $S_K=K[\mathcal{L}_K]$, and $q_K\gets w\br{V_K}-B_\rho$\;
+                $\mathcal{L}_K\gets V_K\cap\mathcal{L}_H$, $S_K\gets K[\mathcal{L}_K]$, and $q_K\gets w\br{V_K}-B_\rho$\;
             }
             \If{$\exists K\in\mathcal{K}_Q^+\colon w\br{V_{S_K}}>B_\rho$}{
                 \textbf{continue}\;
@@ -23,15 +21,13 @@
             \ForEach{$K\in\mathcal{K}_Q^+$}{
                 $A_K\gets\textsc{CoreQuotaCover}(f_K,c_K,q_K)$\;
             }
-            Let $C_Q\gets Q\cup\bigcup_{K\in\mathcal{K}_Q^+}C_K(A_K)$ and add $C_Q$ to $\cC_H$\;
+            $C_Q\gets Q\cup\bigcup_{K\in\mathcal{K}_Q^+}C_K(A_K)$ and add $C_Q$ to $\cC_H$\;
         }
-        Let $C_H\in\argmin_{C\in\cC_H}\brc{c(C)}$\;
-        Set $F_H\gets C_H$\;
+        $F_H\gets C_H\gets \argmin_{C\in\cC_H}\brc{c(C)}$\;
         \ForEach{$H'$ of $H\setminus C_H$}{
             $F_H\gets F_H\cup\textsc{SeparatorMaxCoverage}(H')$\;
         }
         \textbf{return} $F_H$\;
     \Indm
-    $F\gets\textsc{SeparatorMaxCoverage}(T)$\;
-    \textbf{return} $F$\;
+    \textbf{return} $F\gets\textsc{SeparatorMaxCoverage}(T)$\;
 \end{algorithm}
