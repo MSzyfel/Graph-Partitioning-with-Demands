@@ -2,18 +2,18 @@
     \DontPrintSemicolon
     \caption{Hybrid LP-separator recursion}\label{alg:hybrid-lp-centroid}
     \textbf{Input} Supply tree $T=(V,E,c)$, demand graph $(V,D,w)$, and fixed rational parameters $0<\rho<\eta<3\rho<1$\;
-    \textbf{Output} An $\eta$-feasible supply-edge set $F\subseteq E$\;
+    \textbf{Output} An $\eta$-feasible supply-edge set $C\subseteq E$\;
     \If{$W=0$}{
-        \textbf{return} $F=\emptyset$\;
+        \textbf{return} $C=\emptyset$\;
     }
     Set $\delta\gets\eta-\rho$, $x\gets\ln(2\rho/\delta)$, and $k\gets\lfloor x\rfloor$\;
     Set $\tau\gets\rho+e^k\delta$\;
     Run the anchored-LP algorithm with feasibility target $\tau$. Let $F_0$ be the returned cut and let $\cH_0$ be the components of $T\setminus F_0$\;
-    Set $\rho\cdot W\gets\rho W$, $\eta\cdot W\gets\eta W$, and $F\gets F_0$\;
-    \ForEach{$H\in\cH_0$ with $w\br{V_H}>\eta\cdot W$}{
-        Set $\rho_H\gets \rho\cdot W/w\br{V_H}$ and $\eta_H\gets \eta\cdot W/w\br{V_H}$\;
+    Set $B_\rho\gets\rho W$, $B_\eta\gets\eta W$, and $C\gets F_0$\;
+    \ForEach{$H\in\cH_0$ with $w\br{V_H}>B_\eta$}{
+        Set $\rho_H\gets B_\rho/w\br{V_H}$ and $\eta_H\gets B_\eta/w\br{V_H}$\;
         Run Algorithm~\ref{alg:centroid-max-coverage} on the instance induced by $V_H$ with parameters $\rho_H,\eta_H$, obtaining a supply-edge set $F_H$\;
-        $F\gets F\cup F_H$\;
+        $C\gets C\cup F_H$\;
     }
-    \textbf{return} $F$\;
+    \textbf{return} $C$\;
 \end{algorithm}

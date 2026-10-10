@@ -1,6 +1,6 @@
 ﻿\section{Warm Up: Generalized Conductance}
 
-We start with relatively simple results regarding \textsc{Generalized Conductance} as a warm-up before tackling other partitioning problems. We begin by proving that in an easier setup, when the supply graph is a tree, an optimal cut is always obtained by removing a single supply edge. This immediately yields an exact polynomial-time algorithm that just checks all supply edges and picks the best cut.
+We start with relatively simple results regarding \textsc{Generalized Conductance}. We begin by proving that in an easier setup, when the supply graph is a tree, an optimal cut is always obtained by removing a single supply edge. This immediately yields an exact polynomial-time algorithm that just checks all supply edges and picks the best cut.
 Secondly, we reduce the general graphs instances to \textsc{Min-Ratio Vertex Cut} problem, which yields a general $\bigo\br{\sqrt{\log n}}$-approximation algorithm using known results.
 
 \subsection{Supply trees}
@@ -30,16 +30,13 @@ Secondly, we reduce the general graphs instances to \textsc{Min-Ratio Vertex Cut
       q_{S^*}(f,g)
         \leq\sum_{e\in E^*}q_{S_e}(f,g).
     \end{equation}
-    Since $q_{S^*}(f,g)\in \brc{0,1,2}$ we distinguish three cases:
+    Since $q_{S^*}(f,g)\in \brc{0,1,2}$ we distinguish two non-trivial cases:
     \begin{enumerate}
-      \item $q_{S^*}(f,g)=0$. Here the claim is immediate.
       \item $q_{S^*}(f,g)=1$. After exchanging $f$ and $g$ if necessary, there is an endpoint $u$ of $f$ in $S^*$ and an endpoint $v$ of $g$ in $\bar{S}^*$. The unique $u$-$v$ path in $T$ contains an edge $e\in E^*$. Removing $e$ places $u$ and $v$ in opposite components. Therefore, either $f\in\delta_D[S_e]$ and $g\in\delta_D[\bar S_e]$, or $g\in\delta_D[S_e]$ and $f\in\delta_D[\bar S_e]$. In either case $q_{S_e}(f,g)\geq 1$.
       \item $q_{S^*}(f,g)=2$. Then each of $f$ and $g$ has one endpoint in $S^*$ and one in $\bar{S}^*$. Let $P_f$ and $P_g$ be the paths in $T$ joining the endpoints of $f$ and $g$, respectively. Choose $e_f\in P_f\cap E^*$ and $e_g\in P_g\cap E^*$.
     If $e_f\neq e_g$, then $f$ is incident to both components of $T\setminus e_f$, so $q_{X_{e_f}}(f,g)\geq1$ regardless of which component contains an endpoint of $g$. The symmetric argument gives $q_{X_{e_g}}(f,g)\geq1$, and consequently $q_{X_{e_f}}(f,g)+q_{X_{e_g}}(f,g)\geq2$. If $e_f=e_g$, both $f$ and $g$ are incident to both components of $T\setminus e_f$, and hence $q_{X_{e_f}}(f,g)=2$.
     \end{enumerate}
-    This proves Equation~\eqref{eq:tree-demand-pair-cover}.
-
-    Applying~\eqref{eq:tree-symmetrized-demand-pairs} first to $S^*$ and then to each $S_e$ combined with~\eqref{eq:tree-demand-pair-cover} gives
+    This proves~\eqref{eq:tree-demand-pair-cover} which combined with applying~\eqref{eq:tree-symmetrized-demand-pairs} first to $S^*$ and then to each $S_e$ gives
     \begin{align*}
       W^* &= \frac{1}{2}\cdot \sum_{f,g\in D}w\br{f}\cdot w\br{g}\cdot q_{S^*}(f,g) \leq
       \frac{1}{2}\cdot \sum_{f,g\in D}w\br{f}\cdot w\br{g}\cdot \sum_{e\in E^*}q_{S_e}(f,g)
@@ -49,16 +46,16 @@ Secondly, we reduce the general graphs instances to \textsc{Min-Ratio Vertex Cut
     as required.
   \end{proof}
 
-  Let $E^*_+=\brc{e\in E^*:W_e>0}$. The above lemma and $W^*>0$ imply that $E^*_+$ is nonempty. Since all capacities are non-negative,
-  \begin{align*}
+  Let $E^*_+=\brc{e\in E^*:W_e>0}$. Lemma~\ref{lemma:tree_edge_weight_sum} and $W^*>0$ imply that $E^*_+\neq\emptyset$. Thus
+  \[
     \psi_{w,T}\br{S^*}
     =\frac{\sum_{e\in E^*}c\br{e}}{W^*}
     \geq\frac{\sum_{e\in E^*}c\br{e}}{\sum_{e\in E^*}W_e}
     \geq\frac{\sum_{e\in E^*_+}c\br{e}}{\sum_{e\in E^*_+}W_e}
     \geq\min_{e\in E^*_+}\brc{\frac{c\br{e}}{W_e}}
-    =\min_{e\in E^*_+}\brc{\psi_{w,T}\br{S_e}}.
-  \end{align*}
-  The first inequality uses Lemma~\ref{lemma:tree_edge_weight_sum}. The second discards the edges with $W_e=0$, while the last inequality is due to averaging.
+    =\min_{e\in E^*_+}\brc{\psi_{w,T}\br{S_e}},
+  \]
+  where the first inequality uses Lemma~\ref{lemma:tree_edge_weight_sum}. The second discards the edges with $W_e=0$, while the last inequality is due to averaging.
 \end{proof}
 
 \subsection{General graphs}
@@ -70,16 +67,16 @@ To tackle general supply graphs, we transform demands into weighted degrees, all
   {\pi_2\br{A\cup Z}\cdot\pi_2\br{B\cup Z}}.
 \]
 
-Now, define the \emph{degree conductance} of a cut $S\subseteq V$ as \DD{sugestia: czy tutaj w mianowniku nie powinien byc "vol" (bo deg(zbior) niezdef.)?}
+Now, define the \emph{degree conductance} of a cut $S\subseteq V$ as
 \[
   \chi_{w}\br{S}
-  =\frac{c\br{S,\bar{S}}}{d_D\br{S}\cdot d_D\br{\bar{S}}}.
+  =\frac{c\br{S,\bar{S}}}{\vol_D\br{S}\cdot \vol_D\br{\bar{S}}}.
 \]
 For every cut of finite value, Equation~\eqref{eq:demand-degree-identity} gives $
-  w\br{S,V}\leq d_D\br{S}\leq 2w\br{S,V}$, so
+  w\br{S,V}\leq \vol_D\br{S}\leq 2w\br{S,V}$, so
 \begin{equation} \label{eq:factor4}
   \frac{\psi_{w}\br{S}}{4}\leq
-  \frac{c\br{S,\bar{S}}}{d_D\br{S}\cdot d_D\br{\bar{S}}}=\chi_{w}\br{S}\leq
+  \frac{c\br{S,\bar{S}}}{\vol_D\br{S}\cdot \vol_D\br{\bar{S}}}=\chi_{w}\br{S}\leq
   \psi_{w}\br{S}.
 \end{equation}
 

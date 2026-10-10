@@ -2,22 +2,22 @@
     \DontPrintSemicolon
     \caption{Full-quota separator partitioning}\label{alg:centroid-full-quota}
     \textbf{Input} Supply tree $T=(V,E,c)$, demand graph $(V,D,w)$, rational $0<\rho<1$, and fixed $\epsilon>0$\;
-    \textbf{Output} A $\rho$-feasible supply-edge set $F\subseteq E$\;
-    Set $t\gets\lceil1/\rho\rceil$\;
+    \textbf{Output} A $\rho$-feasible supply-edge set $C\subseteq E$\;
+    Set $B_\rho\gets\rho W$ and $t\gets\lceil1/\rho\rceil$\;
     Run $\textsc{Separator}(T, w, t)$, obtaining $\mathcal{L}_T$ \;
-    $S_T\gets T[\mathcal{L}_T]$ and $\cC_T\gets\emptyset$\;
+    $S_T\gets T[\mathcal{L}_T]$ and $\cF_T\gets\emptyset$\;
     \ForEach{$Q\subseteq E(S_T)$ with $|Q|\leq|\mathcal{L}_T|-1$}{
-        $\mathcal{K}_Q\gets \brc{K\in T\setminus Q:V_K\cap\mathcal{L}_T\neq\emptyset}$ and $\mathcal{K}_Q^+\gets\{K\in\mathcal{K}_Q:w\br{V_K}>\rho\cdot W\}$\;
+        $\mathcal{K}_Q\gets \brc{K\in T\setminus Q:V_K\cap\mathcal{L}_T\neq\emptyset}$ and $\mathcal{K}_Q^+\gets\{K\in\mathcal{K}_Q:w\br{V_K}>B_\rho\}$\;
         \ForEach{$K\in\mathcal{K}_Q^+$}{
-            $\mathcal{L}_K\gets V_K\cap\mathcal{L}_T$, $S_K\gets K[\mathcal{L}_K]$, and $q_K\gets w\br{V_K}-\rho\cdot W$\;
+            $\mathcal{L}_K\gets V_K\cap\mathcal{L}_T$, $S_K\gets K[\mathcal{L}_K]$ and $q_K\gets w\br{V_K}-B_\rho$\;
         }
-        \If{$\exists K\in\mathcal{K}_Q^+\colon w\br{V_{S_K}}>\rho\cdot W$}{
+        \If{$\exists K\in\mathcal{K}_Q^+\colon w\br{V_{S_K}}>B_\rho$}{
             \textbf{continue}\;
         }
         \ForEach{$K\in\mathcal{K}_Q^+$}{
             $A_K\gets\textsc{CoreFullQuota}(f_K,c_K,q_K)$\;
         }
-        $C_Q\gets Q\cup\bigcup_{K\in\mathcal{K}_Q^+}C_K(A_K)$ and add $C_Q$ to $\cC_T$\;
+        $F_Q\gets Q\cup\bigcup_{K\in\mathcal{K}_Q^+}C_K(A_K)$ and add $F_Q$ to $\cF_T$\;
     }
-    \textbf{return} $F\gets\arg\min_{C\in\cC_T}\brc{c(C)}$\;
+    \textbf{return} $C\gets\arg\min_{F\in\cF_T}\brc{c(F)}$\;
 \end{algorithm}
