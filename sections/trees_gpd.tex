@@ -448,7 +448,7 @@ For each guess $Q$, the algorithm applies this routine to every component $K$ co
 \end{theorem}
 \begin{proof}
     Define the excess of any component $H$ by $\Phi(H)=\max\brc{0,w\br{V_H}-B_\rho}$.
-    Now, consider a recursive call for a subgraph $H$ of $T$, write $w\br{V_H}$ and $q_H=w\br{V_H}-B_\rho>0$. 
+    Consider a recursive call for a subgraph $H$ of $T$, and let $q_H=w\br{V_H}-B_\rho>0$. 
     Let $Q$ be a feasible guess, i.e., for each $K\in\mathcal{K}_Q^+$ there exists some $A\subseteq E_K\setminus E_{S_K}$ with $f_K(A)\geq q_K$. Let $F_H$ be the edges chosen by the algorithm for this guess. Consider each component $H'\in H\setminus F_H$. There are two cases.
     \begin{enumerate}
         \item $V_{S_K}\subseteq V_{H'}$ for some $K\in \mathcal{K}_Q$. Then, $H'=K\setminus U_K(A_K)$. Since $q_K=w\br{V_K}-B_\rho\leq q_H$,
@@ -460,24 +460,24 @@ For each guess $Q$, the algorithm applies this routine to every component $K$ co
     \item $H'$ contains no separator. Then, we have $w\br{V_{H'}}\leq w\br{V_H}/3$ and
     \[
         \Phi(H')=\max\brc{0,w\br{V_{H'}}-B_\rho}
-        \leq\max\brc{0,w\br{V_H}/3-B_\rho}\leq(w\br{V_H}-B_\rho)/3=q_H/3<q_H/e,
+        \leq\max\brc{0,w\br{V_H}/3-B_\rho}\leq(w\br{V_H}-B_\rho)/3=q_H/3<q_H/e.
     \]
     \end{enumerate} 
-    Hence if we consider the recursion tree on top of the components for which the algorithm was called, every child has excess at most $1/e$ times its parent's. Initially $\Phi(T)=W-B_\rho=(1-\rho)\cdot W$, so when the recursion reaches the depth
+    Hence if we consider the recursion tree on top of the components for which the algorithm was called, every child has excess at most $1/e$ times its parent's. Initially $\Phi(T)=W-B_\rho=(1-\rho)\cdot W$. So when the recursion reaches the depth
     $
         L=\left\lceil\ln\left(\frac{1-\rho}{\eta-\rho}\right)\right\rceil,
     $
-    for every leaf component $H$
+    for every leaf component $H$,
     \[
-        \Phi(H)\leq\frac{W-B_\rho}{e^L}\leq\frac{W-B_\rho}{e^{\ln\left(\frac{1-\rho}{\eta-\rho}\right)}}=(\eta-\rho)\cdot W=B_\eta-B_\rho.
+        \Phi(H)\leq\frac{W-B_\rho}{e^L}\leq\frac{W-B_\rho}{e^{\ln\left(\frac{1-\rho}{\eta-\rho}\right)}}=(\eta-\rho)\cdot W=B_\eta-B_\rho,
     \]
-    and is therefore $\eta$-feasible.
+    which makes it $\eta$-feasible.
 
-    It remains to bound the cost. It is relatively straightward to see that the cost of the solution is at most $L\cdot \OPT_{B_\rho}\br{T}$. The full proof is deffered to the Appendix [ref].
-    
+    The bound on the cost follows by a relatively straightforward induction on the recursion depth. The full proof is deffered to the Appendix \DD{[ref]}.
+%
 %     Let $F_H^*$ be an optimal $B_\rho$-feasible cut of $H$. Set $Q^*=F_H^*\cap E_{P_H}$.
 %     \DD{usunalem def $P_H$: bo byla sciezka laczaca wierzcholki w $\mathcal L_H$}
-    It is easy to see that the algorithm considers this guess.
+%    It is easy to see that the algorithm considers this guess.
 %     % Each resulting component containing a separator has all its separators in one component of $H\setminus F_H^*$, so $S_K$ lies in that component. 
 %     The restriction of $F_H^*$ to $K$ therefore satisfies $
 %         \OPT_{B_\rho}\br{K}\leq c(F_H^*\cap E_K).
