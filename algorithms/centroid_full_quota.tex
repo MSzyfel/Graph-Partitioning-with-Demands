@@ -7,11 +7,11 @@
     Run $\textsc{Separator}(T, w, t)$, obtaining $\mathcal{L}_T$ \;
     $S_T\gets T[\mathcal{L}_T]$ and $\cF_T\gets\emptyset$\;
     \ForEach{$Q\subseteq E(S_T)$ with $|Q|\leq|\mathcal{L}_T|-1$}{
-        $\mathcal{K}_Q\gets \brc{K\in T\setminus Q:V_K\cap\mathcal{L}_T\neq\emptyset}$ and $\mathcal{K}_Q^+\gets\{K\in\mathcal{K}_Q:w\br{V_K}>B_\rho\}$\;
+        $\mathcal{K}_Q\gets \brc{K\in T\setminus Q:V_K\cap\mathcal{L}_T\neq\emptyset}$ and $\mathcal{K}_Q^+\gets\{K\in\mathcal{K}_Q:w\br{V_K}>\rho\cdot W\}$\;
         \ForEach{$K\in\mathcal{K}_Q^+$}{
             $\mathcal{L}_K\gets V_K\cap\mathcal{L}_T$, $S_K\gets K[\mathcal{L}_K]$ and $q_K\gets w\br{V_K}-B_\rho$\;
         }
-        \If{$\exists K\in\mathcal{K}_Q^+\colon w\br{V_{S_K}}>B_\rho$}{
+        \If{$\exists K\in\mathcal{K}_Q^+\colon w\br{V_{S_K}}>\rho\cdot W$}{
             \textbf{continue}\;
         }
         \ForEach{$K\in\mathcal{K}_Q^+$}{

@@ -5,17 +5,17 @@
     \textbf{Output} An $\eta$-feasible supply-edge set $C\subseteq E$\;
     \textbf{Procedure} $\textsc{SeparatorMaxCoverage}(H)$\;
     \Indp
-        \If{$w\br{V_H}\leq B_\eta$}{
+        \If{$w\br{V_H}\leq \eta\cdot W$}{
             \textbf{return} $\emptyset$\;
         }
         Run $\textsc{Separator}(H, w, 3)$, obtaining $\mathcal{L}_H$ with $|\mathcal{L}_H|\leq2$\;
         Let $P_H\gets H[\mathcal{L}_H]$ and  $\cF_H\gets\emptyset$\;
         \ForEach{$Q\in\{\emptyset\}\cup\{\{e\}\colon e\in E(P_H)\}$}{
-            $\mathcal{K}_Q\gets\brc{K\in H\setminus Q\colon V_K\cap\mathcal{L}_H\neq\emptyset}$, $\mathcal{K}_Q^+\gets\{K\in\mathcal{K}_Q\colon w\br{V_K}>B_\rho\}$\;
+            $\mathcal{K}_Q\gets\brc{K\in H\setminus Q\colon V_K\cap\mathcal{L}_H\neq\emptyset}$, $\mathcal{K}_Q^+\gets\{K\in\mathcal{K}_Q\colon w\br{V_K}>\rho\cdot W\}$\;
             \ForEach{$K\in\mathcal{K}_Q^+$}{
-                $\mathcal{L}_K\gets V_K\cap\mathcal{L}_H$, $S_K\gets K[\mathcal{L}_K]$, and $q_K\gets w\br{V_K}-B_\rho$\;
+                $\mathcal{L}_K\gets V_K\cap\mathcal{L}_H$, $S_K\gets K[\mathcal{L}_K]$, and $q_K\gets w\br{V_K}-\rho\cdot W$\;
             }
-            \If{$\exists K\in\mathcal{K}_Q^+\colon w\br{V_{S_K}}>B_\rho$}{
+            \If{$\exists K\in\mathcal{K}_Q^+\colon w\br{V_{S_K}}>\rho\cdot W$}{
                 \textbf{continue}\;
             }
             \ForEach{$K\in\mathcal{K}_Q^+$}{

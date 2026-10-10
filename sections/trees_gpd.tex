@@ -6,7 +6,7 @@ We give two polynomial-time bicriteria algorithms for arbitrary demand weights: 
 % The idea behind the algorithm is to find a small-size set of vertices whose removal leads to components with relatively low demand. Then, the new goal of the algorithm becomes to remove a large enough amount of demand from each vertex of the separator. To do this we use a well-known subproblem called \textsc{Maximum Coverage}.
 Taking the best of these guarantees gives approximation ratios depending on $\rho$ and $\eta$ that improve on the constant provided by Theorem~\ref{thm:gpd-extension}.
 As a corollary, we also obtain a polynomial-time $\frac{4e}{e-1}$-approximation for \textsc{Hierarchical Clustering with Demands} on trees. 
-For a tree $T$, let $\OPT_{B_\rho}(T)=\OPTdem{T}{\rho}$ denote the minimum cost of a set of supply edges whose deletion partitions $T$ into components, each with internal demand at most $B_\rho$.
+For a tree $T$, let $\OPT_{\rho\cdot W}(T)=\OPTdem{T}{\rho}$ denote the minimum cost of a set of supply edges whose deletion partitions $T$ into components, each with internal demand at most $\rho\cdot W$.
 
 \subsection{Anchor-LP-based algorithm}
 \label{sec:Anchor-LP-based-algorithm}
@@ -27,7 +27,7 @@ For every vertex $a\in V$, called an \emph{anchor}, and every demand edge $uv\in
     \text{subject to}\quad
         &z^a_{uv}\geq1-\dist_x(a,u)-\dist_x(a,v)
             &&\forall a\in V,\ uv\in D,\\
-        &\sum_{uv\in D}w(u,v)\cdot z^a_{uv}\leq B_\rho
+        &\sum_{uv\in D}w(u,v)\cdot z^a_{uv}\leq \rho\cdot W
             &&\forall a\in V,\\
         &\mathbf{x, z} \in [0,1]^{E \cup (V \times D)}
 \end{aligned}
@@ -35,13 +35,13 @@ For every vertex $a\in V$, called an \emph{anchor}, and every demand edge $uv\in
 % Since $|D|\leq\binom{n}{2}$, the LP has $O(|E|+n|D|)=O(n^3)$ variables and constraints.
 It is easy to see that this is a valid relaxation of the original problem.
 % \begin{lemma}\label{lem:tree-anchored-relaxation}
-%     Every partition with internal demand at most $B_\rho$ in each component induces a feasible solution to~\eqref{lp:tree-anchored} of the same cost. In particular, its optimum $\operatorname{LP}_{B_\rho}(T)$ satisfies
+%     Every partition with internal demand at most $\rho\cdot W$ in each component induces a feasible solution to~\eqref{lp:tree-anchored} of the same cost. In particular, its optimum $\operatorname{LP}_{\rho\cdot W}(T)$ satisfies
 %     \[
-%         \operatorname{LP}_{B_\rho}(T)\leq\OPT_{B_\rho}(T).
+%         \operatorname{LP}_{\rho\cdot W}(T)\leq\OPT_{\rho\cdot W}(T).
 %     \]
 % \end{lemma}
 % \begin{proof}
-%     Let $\cP$ be a partition whose every part has internal demand at most $B_\rho$, and let $F$ be the supply edges whose endpoints lie in distinct parts of $\cP$. Set $x_e=1$ for $e\in F$ and $x_e=0$ otherwise. For every anchor $a\in V$, let $H_a$ be the connected component of $T\setminus F$ containing $a$ and define
+%     Let $\cP$ be a partition whose every part has internal demand at most $\rho\cdot W$, and let $F$ be the supply edges whose endpoints lie in distinct parts of $\cP$. Set $x_e=1$ for $e\in F$ and $x_e=0$ otherwise. For every anchor $a\in V$, let $H_a$ be the connected component of $T\setminus F$ containing $a$ and define
 %     \[
 %         z^a_{uv}=\begin{cases}
 %             1,&u,v\in V_{H_a},\\
@@ -49,11 +49,11 @@ It is easy to see that this is a valid relaxation of the original problem.
 %         \end{cases}
 %         \qquad uv\in D.
 %     \]
-%     If both endpoints of $uv$ belong to $H_a$, then the paths from $a$ to $u$ and $v$ use no edge of $F$, and consequently $\dist_x(a,u)=\dist_x(a,v)=0$. Thus the corresponding connectivity constraint is satisfied with equality. If at least one endpoint lies outside $H_a$, the path from $a$ to that endpoint crosses an edge of $F$, so one of the two path distances is at least $1$. Hence the right-hand side of the connectivity constraint is non-positive and is satisfied by $z^a_{uv}=0$. Since $H_a$ is contained in the part of $\cP$ containing $a$, its internal demand is at most $B_\rho$. Therefore,
+%     If both endpoints of $uv$ belong to $H_a$, then the paths from $a$ to $u$ and $v$ use no edge of $F$, and consequently $\dist_x(a,u)=\dist_x(a,v)=0$. Thus the corresponding connectivity constraint is satisfied with equality. If at least one endpoint lies outside $H_a$, the path from $a$ to that endpoint crosses an edge of $F$, so one of the two path distances is at least $1$. Hence the right-hand side of the connectivity constraint is non-positive and is satisfied by $z^a_{uv}=0$. Since $H_a$ is contained in the part of $\cP$ containing $a$, its internal demand is at most $\rho\cdot W$. Therefore,
 %     \[
-%         \sum_{uv\in D}w(u,v)z^a_{uv}=w\br{V_{H_a}}\leq B_\rho,
+%         \sum_{uv\in D}w(u,v)z^a_{uv}=w\br{V_{H_a}}\leq \rho\cdot W,
 %     \]
-%     so every anchor-demand constraint holds. The LP objective is $\sum_{e\in F}c(e)=c(F)$, proving feasibility at the same cost. Taking an optimal feasible partition gives $\operatorname{LP}_{B_\rho}(T)\leq\OPT_{B_\rho}(T)$.
+%     so every anchor-demand constraint holds. The LP objective is $\sum_{e\in F}c(e)=c(F)$, proving feasibility at the same cost. Taking an optimal feasible partition gives $\operatorname{LP}_{\rho\cdot W}(T)\leq\OPT_{\rho\cdot W}(T)$.
 % \end{proof}
 \begin{theorem}\label{thm:tree-anchored-rounding}
     For every fixed $0<\rho<\eta<1$ and arbitrary pair demands on a supply tree, there is a polynomial-time algorithm that returns an $\eta$-feasible supply-edge set $C\subseteq E$ satisfying $
@@ -62,7 +62,7 @@ It is easy to see that this is a valid relaxation of the original problem.
 \begin{proof}
     Solve the above LP, let $(x,z)$ be an optimal solution and choose $
         R=\frac{\eta-\rho}{2\eta}.$
-    Then $0<R<1/2$, $B_\rho/(1-2R)=B_\eta$, and $1/R=2\eta/(\eta-\rho)$.
+    Then $0<R<1/2$, $\rho\cdot W/(1-2R)=\eta\cdot W$, and $1/R=2\eta/(\eta-\rho)$.
     Root $T$ at an arbitrary vertex $r$ and for each $v\in V$ define $
         \dist(v)=\dist_x(r,v).
     $
@@ -85,7 +85,7 @@ It is easy to see that this is a valid relaxation of the original problem.
     \]
     The anchor-demand constraint and non-negativity of $z$ imply
     \[
-        B_\rho\geq\sum_{uv\in D}w(u,v)\cdot z^a_{uv}
+        \rho\cdot W\geq\sum_{uv\in D}w(u,v)\cdot z^a_{uv}
           \geq\sum_{uv\in D_H}w(u,v)\cdot z^a_{uv}
           \geq(1-2R)\cdot w(V_H).
     \]
@@ -216,7 +216,7 @@ We are now ready to showcase the entire procedure.
     Consequently, the $B$-budget \textsc{Weighted Budget Partitioning} instance with vertex weights $d_D(v)$ has optimum cost at most $\OPTdem{T}{\rho}$, and every feasible partition is $(1+\rho)/2$-feasible for the original demands.
 \end{lemma}
 \begin{proof}
-    If $w\br{S}\leq B_\rho$, the second expression in~\eqref{eq:demand-degree-identity} gives
+    If $w\br{S}\leq \rho\cdot W$, the second expression in~\eqref{eq:demand-degree-identity} gives
     \[
         d_D(S)\leq W+w\br{S}\leq(1+\rho)\cdot W.
     \]
@@ -260,20 +260,20 @@ the dynamic program runs in time polynomial in the input size and in $1/(2\cdot\
 \iffalse
 \subsection{Recursive Weighted Budget Partitioning}
 
-The direct dynamic program handles feasibility thresholds $\eta>(1+\rho)/2$. For smaller thresholds, we apply the same local procedure recursively to components whose demand exceeds $B_\eta$. Each call uses the fixed comparison budget $B_\rho$ and contracts excess demand above it. This construction also underlies the hybrid approach below.
+The direct dynamic program handles feasibility thresholds $\eta>(1+\rho)/2$. For smaller thresholds, we apply the same local procedure recursively to components whose demand exceeds $\eta\cdot W$. Each call uses the fixed comparison budget $\rho\cdot W$ and contracts excess demand above it. This construction also underlies the hybrid approach below.
 
 The recursive weighted-budget algorithm is as follows.
 
 \input{algorithms/weighted_budget_recursive.tex}
 
-The preceding theorem requires $\eta>(1+\rho)/2$. We now use it recursively to reach every target $\eta>\rho$, contracting the excess demand above the fixed global threshold $B_\rho$.
-Fix a rational $\alpha\in(1/2,1)$. Starting with $T$, process every current component $H$ with $w\br{V_H}>B_\eta$. Set
+The preceding theorem requires $\eta>(1+\rho)/2$. We now use it recursively to reach every target $\eta>\rho$, contracting the excess demand above the fixed global threshold $\rho\cdot W$.
+Fix a rational $\alpha\in(1/2,1)$. Starting with $T$, process every current component $H$ with $w\br{V_H}>\eta\cdot W$. Set
 \[
-    \rho_H=\frac{B_\rho}{w\br{V_H}},
+    \rho_H=\frac{\rho\cdot W}{w\br{V_H}},
     \qquad
     \sigma_H=\alpha+(1-\alpha)\rho_H.
 \]
-For each induced instance, write $\OPT_{B_\rho}(H)$ for its minimum cut cost subject to internal demand at most $B_\rho$ in every component. Apply Theorem~\ref{thm:tree-weighted-budget-direct} to the instance induced by $V_H$, using its local weighted demand degrees and parameters $\rho_H$ and $\sigma_H$, and recurse on the resulting components whose internal demand exceeds $B_\eta$.
+For each induced instance, write $\OPT_{\rho\cdot W}(H)$ for its minimum cut cost subject to internal demand at most $\rho\cdot W$ in every component. Apply Theorem~\ref{thm:tree-weighted-budget-direct} to the instance induced by $V_H$, using its local weighted demand degrees and parameters $\rho_H$ and $\sigma_H$, and recurse on the resulting components whose internal demand exceeds $\eta\cdot W$.
 
 \iffalse
 \begin{theorem}\label{thm:tree-weighted-budget-recursive}
@@ -302,9 +302,9 @@ For each induced instance, write $\OPT_{B_\rho}(H)$ for its minimum cut cost sub
     levels suffice. For fixed $\rho$, $\eta$, and $\alpha$, the algorithm runs in polynomial time.
 \end{theorem}
 \begin{proof}
-    For a processed component $H$, we have $w\br{V_H}>B_\eta>B_\rho$, and hence
+    For a processed component $H$, we have $w\br{V_H}>\eta\cdot W>\rho\cdot W$, and hence
     \[
-        0<\rho_H=\frac{B_\rho}{w\br{V_H}}<\frac{B_\rho}{B_\eta}=\frac{\rho}{\eta}<1.
+        0<\rho_H=\frac{\rho\cdot W}{w\br{V_H}}<\frac{\rho\cdot W}{\eta\cdot W}=\frac{\rho}{\eta}<1.
     \]
     The local feasibility parameter is valid because
     \[
@@ -323,11 +323,11 @@ For each induced instance, write $\OPT_{B_\rho}(H)$ for its minimum cut cost sub
     \[
         w\br{V_{H'}}
         \leq\sigma_H w\br{V_H}
-        =\alpha w\br{V_H}+(1-\alpha)B_\rho,
+        =\alpha w\br{V_H}+(1-\alpha)\rho\cdot W,
         \qquad
-        w\br{V_{H'}}-B_\rho\leq\alpha\br{w\br{V_H}-B_\rho}.
+        w\br{V_{H'}}-\rho\cdot W\leq\alpha\br{w\br{V_H}-\rho\cdot W}.
     \]
-    Since $w\br{V_T}=W$, after $j$ levels every surviving component has excess demand at most $\alpha^j(W-B_\rho)$. It is terminal once this excess is at most $B_\eta-B_\rho$. This proves the depth bound~\eqref{eq:tree-recursion-depth}.
+    Since $w\br{V_T}=W$, after $j$ levels every surviving component has excess demand at most $\alpha^j(W-\rho\cdot W)$. It is terminal once this excess is at most $\eta\cdot W-\rho\cdot W$. This proves the depth bound~\eqref{eq:tree-recursion-depth}.
 
     For~\eqref{eq:tree-recursion-best-depth}, put $Q=(1-\rho)/(\eta-\rho)>1$ and $L=\lfloor\log_2 Q\rfloor+1$. Then $Q<2^L$, so $Q^{-1/L}>1/2$. Choose a rational $\alpha$ with $1/2<\alpha<Q^{-1/L}$. Then $\alpha^LQ<1$ and $L$ levels suffice. No smaller integer depth can be certified by a uniform $\alpha>1/2$: if $j<L$, then $Q\geq2^j$ and $\alpha^j>2^{-j}\geq1/Q$.
 
@@ -352,16 +352,16 @@ For each induced instance, write $\OPT_{B_\rho}(H)$ for its minimum cut cost sub
         \leq(d-1)\cdot \sum_{i=1}^{m}\OPT_{B_\rho}(H_i).
     \end{equation}
 
-    To compare the child optima with the parent optimum, let $F_H^*$ be an optimal $B_\rho$-budget partition of $H$. For each $i$, the restriction $F_H^*\cap E_{H_i}$ is feasible for the $B_\rho$-budget problem on $H_i$: every component of $H_i\setminus(F_H^*\cap E_{H_i})$ is contained in a component of $H\setminus F_H^*$ and therefore has internal demand at most $B_\rho$. Hence
+    To compare the child optima with the parent optimum, let $F_H^*$ be an optimal $\rho\cdot W$-budget partition of $H$. For each $i$, the restriction $F_H^*\cap E_{H_i}$ is feasible for the $\rho\cdot W$-budget problem on $H_i$: every component of $H_i\setminus(F_H^*\cap E_{H_i})$ is contained in a component of $H\setminus F_H^*$ and therefore has internal demand at most $\rho\cdot W$. Hence
     \[
-        \OPT_{B_\rho}(H_i)\leq c\br{F_H^*\cap E_{H_i}}.
+        \OPT_{\rho\cdot W}(H_i)\leq c\br{F_H^*\cap E_{H_i}}.
     \]
     The edge sets $E_{H_1},\ldots,E_{H_m}$ are pairwise disjoint, and consequently
     \begin{equation}\label{eq:tree-recursion-child-optima}
-        \sum_{i=1}^{m}\OPT_{B_\rho}(H_i)
+        \sum_{i=1}^{m}\OPT_{\rho\cdot W}(H_i)
         \leq\sum_{i=1}^{m}c\br{F_H^*\cap E_{H_i}}
         \leq c\br{F_H^*}
-        =\OPT_{B_\rho}(H).
+        =\OPT_{\rho\cdot W}(H).
     \end{equation}
     Combining~\eqref{eq:tree-recursion-local-cost}, \eqref{eq:tree-recursion-children-cost}, and~\eqref{eq:tree-recursion-child-optima}, we obtain
     \begin{align*}
@@ -370,7 +370,7 @@ For each induced instance, write $\OPT_{B_\rho}(H)$ for its minimum cut cost sub
         &\leq\OPT_{B_\rho}(H)+(d-1)\sum_{i=1}^{m}\OPT_{B_\rho}(H_i)\\
         &\leq d\cdot\OPT_{B_\rho}(H).
     \end{align*}
-    This completes the induction. For the root component, $d(T)\leq\Gamma_{\mathrm{WB}}^{(\alpha)}(\rho,\eta)$ and $\OPT_{B_\rho}(T)=\OPTdem{T}{\rho}$, which proves the claimed cost bound.
+    This completes the induction. For the root component, $d(T)\leq\Gamma_{\mathrm{WB}}^{(\alpha)}(\rho,\eta)$ and $\OPT_{\rho\cdot W}(T)=\OPTdem{T}{\rho}$, which proves the claimed cost bound.
 
     Since $\sigma_H<1$, every nonterminal call must cut at least one supply edge. The recursion therefore has at most $|E|$ nonterminal calls, and the full algorithm runs in polynomial time for fixed $\rho$, $\eta$, and $\alpha$.
 \end{proof}
@@ -394,6 +394,7 @@ We now show a combinatorial algorithm for \textsc{Graph Partitioning with Demand
 
     % Note, that this lemma will come useful later as well, since after the following procedure we show how to modify it to obtain a true, single-criteria approximation algorithm for \textsc{Graph Partitioning with Demands} on trees.
 
+    \DD{tutaj widze w tym paragrafie chat przywrocil. Ogolenie staralem sie wykasowac jednorazowo uzyte symbole (plus uzyte moze w pseudokodzie), jak $\mathcal K_Q$, $T_e$. Ten fragment traktowalem jako w pelni skonczony, wiec nie wiem czy to jest celowy revert, bo moze byly bledy, czy blad czata (chwile nizej widze "and and" w formule) wiec na razie zostawiam komentarz jako marker aby sie upewnic.}
 In our algorithm we apply Lemma~\ref{lem:tree-separator} with the smallest integer $t\geq e$, which is $t=3$. 
 Thus, $\mathcal L_H$ contains at most two separators, $\spr{\mathcal{L_H}}\leq 2$, and for each $H\setminus\mathcal L_H$, $w(V_H)/3$. Let $P_H$ be the minimal path in $H$ containing the vertices of $\mathcal L_H$. If $|\mathcal L_H|=1$, then $P_H$ is that single vertex. We enumerate $Q=\emptyset$ and $Q=\{e\}$ for each edge $e\in E(P_H)$. Thus at most $1+|E(P_H)|\leq n$ guesses are considered. For a guess $Q$, let $\mathcal K_Q$ be the components of $H\setminus Q$. For a component $K\in\mathcal K_Q$, write $\mathcal L_K=V_K\cap\mathcal L_H$ and let $S_K$ be the minimal subtree of $K$ containing $\mathcal L_K$. Note that $S_K$ is either $P_H$ (when $Q=\emptyset$) or a single vertex of $\mathcal L_K$ (for $\spr{Q}=1$).
 For each edge $e\in E(K)\setminus E(S_K)$, let $T_e$ be the component of $K\setminus\brc{e}$ not containing $S_K$. For $A\subseteq E(K)\setminus E(S_K)$, define
@@ -411,7 +412,7 @@ For each edge $e\in E(K)\setminus E(S_K)$, let $T_e$ be the component of $K\setm
 % is the total demand separated from $S_K$ by cutting the edges in $C_K(A)$.
 Observe, that $f_K$ is a weighted coverage function on the demand pairs. 
 % The idea in our recursion is that the component containing $S_K$ after cutting $C_K(A)$ has demand $w\br{V_K}-f_K(A)$. Moreover, every other component contains no separator, so it is contained in a component of $H\setminus\mathcal L_H$ and has demand at most $w\br{H}/3$. These two facts will allow us to control the demand in all resulting components during the recursion.
-For $w\br{V_K}>B_\rho$, set $q_K=w\br{V_K}-B_\rho$ and define
+For $w\br{V_K}>\rho\cdot W$, set $q_K=w\br{V_K}-\rho\cdot W$ and define
 $
     \OPT_{q_K}\br{K}
     =\min\brc{c_K(A)\colon A\subseteq E_K\setminus E_{S_K},\ f_K(A)\geq q_K}.
@@ -424,7 +425,7 @@ if there exists any $A\subseteq E_K\setminus E_{S_K}$ with $f_K(A)\geq q_K$.  Th
 Indeed, binary-search the budget $b$ on the interval $[0,c_K(E_K)]$ and run the budgeted-coverage approximation at each trial. The successful budget $b$, such that $f_K(A_K)\geq(1-1/e)\cdot q_K$, is no larger than $\OPT_{q_K}\br{K}$.
  Moreover, since we use binary search the required number of trials is $O\br{\log\br{c_K(E_K)}}$, which is polynomial in the input size.
 
-For each guess $Q$, the algorithm applies this routine to every component $K$ containing a separator with $w\br{V_K}>B_\eta$, and chooses the least-cost candidate $Q\cup\bigcup_K B_K(A_K)$. Then, the algorithm recurses on each component. The full procedure is given by Algorithm \ref{alg:centroid-max-coverage}.
+For each guess $Q$, the algorithm applies this routine to every component $K$ containing a separator with $w\br{V_K}>\eta\cdot W$, and chooses the least-cost candidate $Q\cup\bigcup_K B_K(A_K)$. Then, the algorithm recurses on each component. The full procedure is given by Algorithm \ref{alg:centroid-max-coverage}.
 
 \input{algorithms/centroid_max_coverage.tex}
 
@@ -438,16 +439,16 @@ For each guess $Q$, the algorithm applies this routine to every component $K$ co
     Now, consider a recursive call for a subgraph $H$ of $T$, write $w\br{V_H}$ and $q_H=w\br{V_H}-B_\rho>0$. 
     Let $Q$ be a feasible guess, i.e., for each $K\in\mathcal{K}_Q^+$ there exists some $A\subseteq E_K\setminus E_{S_K}$ with $f_K(A)\geq q_K$. Let $F_H$ be the edges chosen by the algorithm for this guess. Consider each component $H'\in H\setminus F_H$. There are two cases.
     \begin{enumerate}
-        \item $V_{S_K}\subseteq V_{H'}$ for some $K\in \mathcal{K}_Q$. Then, $H'=K\setminus U_K(A_K)$. Since $q_K=w\br{V_K}-B_\rho\leq q_H$,
+        \item $V_{S_K}\subseteq V_{H'}$ for some $K\in \mathcal{K}_Q$. Then, $H'=K\setminus U_K(A_K)$. Since $q_K=w\br{V_K}-\rho\cdot W\leq q_H$,
     \[
-        \Phi(H')=\max\brc{0,w\br{V_{H'}}-B_\rho}\leq w\br{V_{K}}-f_K\br{A_K}-B_\rho
+        \Phi(H')=\max\brc{0,w\br{V_{H'}}-\rho\cdot W}\leq w\br{V_{K}}-f_K\br{A_K}-\rho\cdot W
         \leq q_K-(1-1/e)\cdot q_K
         =q_K/e\leq q_H/e.
     \]
     \item $H'$ contains no separator. Then, we have $w\br{V_{H'}}\leq w\br{V_H}/3$ and
     \[
-        \Phi(H')=\max\brc{0,w\br{V_{H'}}-B_\rho}
-        \leq\max\brc{0,w\br{V_H}/3-B_\rho}\leq(w\br{V_H}-B_\rho)/3=q_H/3<q_H/e,
+        \Phi(H')=\max\brc{0,w\br{V_{H'}}-\rho\cdot W}
+        \leq\max\brc{0,w\br{V_H}/3-\rho\cdot W}\leq(w\br{V_H}-\rho\cdot W)/3=q_H/3<q_H/e,
     \]
     \end{enumerate} 
     Hence if we consider the recursion tree on top of the components for which the algorithm was called, every child has excess at most $1/e$ times its parent's. Initially $\Phi(T)=(1-\rho)\cdot W$, so when the recursion reaches the depth 
@@ -456,20 +457,20 @@ For each guess $Q$, the algorithm applies this routine to every component $K$ co
     $
     for every leaf component $H$
     \[
-        \Phi(H)\leq\frac{(1-\rho)\cdot W}{e^L}\leq\frac{(1-\rho)\cdot W}{e^{\ln\left(\frac{1-\rho}{\eta-\rho}\right)}}=(\eta-\rho)\cdot W=B_\eta-B_\rho.
+        \Phi(H)\leq\frac{(1-\rho)\cdot W}{e^L}\leq\frac{(1-\rho)\cdot W}{e^{\ln\left(\frac{1-\rho}{\eta-\rho}\right)}}=(\eta-\rho)\cdot W=\eta\cdot W-\rho\cdot W.
     \]
     and is therefore $\eta$-feasible.
 
-    It remains to bound the cost. It is relatively straightward to see that the cost of the solution is at most $L\cdot \OPT_{B_\rho}\br{T}$. The full proof is deffered to the Appendix [ref]. 
+    It remains to bound the cost. It is relatively straightward to see that the cost of the solution is at most $L\cdot \OPT_{\rho\cdot W}\br{T}$. The full proof is deffered to the Appendix [ref]. 
     
-%     Let $F_H^*$ be an optimal $B_\rho$-feasible cut of $H$. Set $Q^*=F_H^*\cap E_{P_H}$.
+%     Let $F_H^*$ be an optimal $\rho\cdot W$-feasible cut of $H$. Set $Q^*=F_H^*\cap E_{P_H}$.
 %     \DD{usunalem def $P_H$: bo byla sciezka laczaca wierzcholki w $\mathcal L_H$}
     It is easy to see that the algorithm considers this guess.
 %     % Each resulting component containing a separator has all its separators in one component of $H\setminus F_H^*$, so $S_K$ lies in that component. 
 %     The restriction of $F_H^*$ to $K$ therefore satisfies $
-%         \OPT_{B_\rho}\br{K}\leq c(F_H^*\cap E_K).
+%         \OPT_{\rho\cdot W}\br{K}\leq c(F_H^*\cap E_K).
 %     $
-%     Thus, since any $\rho$-feasible edge set of $K$ covers at least $q_K$ demand, we know that $c\br{A_K}\leq \OPT_{q_K}\br{K}\leq \OPT_{B_\rho}\br{K}$. Now observe that by disjointness we get
+%     Thus, since any $\rho$-feasible edge set of $K$ covers at least $q_K$ demand, we know that $c\br{A_K}\leq \OPT_{q_K}\br{K}\leq \OPT_{\rho\cdot W}\br{K}$. Now observe that by disjointness we get
 %     \[
 %     c\br{F_H}=\sum_{K\in \mathcal{K}_{Q^*}} c\br{A_K} + c\br{Q^*} \leq \sum_{K\in \mathcal{K}_{Q^*}} \OPT_{B_\rho}\br{K} + c\br{Q^*} \leq \OPT_{B_\rho}\br{H}.
 %     \]
@@ -500,7 +501,7 @@ For each guess $Q$, the algorithm applies this routine to every component $K$ co
 \subsection{Single criteria approximation via Multicut}
 \label{sec:Single-Criteria-Approximation-via-Multicut}
 
-We now show how to employ a similar separator-based approach to obtain a single-criteria approximation via the Multicut problem. This time, the algorithm is not recursive, and therefore our intention is to pick a separator set large enough so that every connected component has demand at most $B_\rho$. Let $t=\cl{1/\rho}$ be the size of the separator we pick, which is a constant dependent only on $\rho$.
+We now show how to employ a similar separator-based approach to obtain a single-criteria approximation via the Multicut problem. This time, the algorithm is not recursive, and therefore our intention is to pick a separator set large enough so that every connected component has demand at most $\rho\cdot W$. Let $t=\cl{1/\rho}$ be the size of the separator we pick, which is a constant dependent only on $\rho$.
 %  In order for all connected components containing separators to be of appropriate size, we will require that the amount of demand separated from such components is at least $K$. Since we do not want to use an $O\br{\log n}$-approximation algorithm for the $\textsc{Partial Set Cover}$, we will show that we can achieve this goal using the well known \textsc{Partial Multicut} on trees.
 
 The input of the \textsc{Partial Multicut} problem is a graph $G=\br{V, E, D, c, w}$ and an additional value $0\leq q\leq 1$. The goal is to find a subset of edges $C$, minimizing $c\br{C}$, such that the overall demand of edges $uv\in D$, such that $u$ and $v$ belong to different connected components of $G\setminus C$ is at least $q\cdot w\br{V}$. If the supply graph is a tree, Mestre~\cite{DBLP:conf/stacs/Mestre08} gives a $(2+\delta)$-approximation polynomial-time algorithm.

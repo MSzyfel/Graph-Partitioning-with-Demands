@@ -5,7 +5,7 @@
     \If{$w\br{V_H}\leq B_\eta$}{
         \textbf{return} $\emptyset$\;
     }
-    $\eta_0\gets\max\brc{4/5,\,B_\eta/w\br{V_H}}$\;
+    $\eta_0\gets\max\brc{4/5,\,\eta\cdot W/w\br{V_H}}$\;
     Run Algorithm~\ref{algo:partitioning-limited-range} on $H$ with parameter $\eta_0$. Let $C$ be the returned supply-edge set\;
     $C_H\gets C$\;
     \ForEach{connected component $H'$ of $H\setminus C$}{
