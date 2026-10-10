@@ -50,14 +50,14 @@ Secondly, we reduce the general graphs instances to \textsc{Min-Ratio Vertex Cut
   \end{proof}
 
   Let $E^*_+=\brc{e\in E^*:W_e>0}$. The above lemma and $W^*>0$ imply that $E^*_+$ is nonempty. Since all capacities are non-negative,
-  \begin{align*}
+  \[
     \psi_{w,T}\br{S^*}
     =\frac{\sum_{e\in E^*}c\br{e}}{W^*}
     \geq\frac{\sum_{e\in E^*}c\br{e}}{\sum_{e\in E^*}W_e}
     \geq\frac{\sum_{e\in E^*_+}c\br{e}}{\sum_{e\in E^*_+}W_e}
     \geq\min_{e\in E^*_+}\brc{\frac{c\br{e}}{W_e}}
     =\min_{e\in E^*_+}\brc{\psi_{w,T}\br{S_e}}.
-  \end{align*}
+  \]
   The first inequality uses Lemma~\ref{lemma:tree_edge_weight_sum}. The second discards the edges with $W_e=0$, while the last inequality is due to averaging.
 \end{proof}
 
@@ -70,16 +70,16 @@ To tackle general supply graphs, we transform demands into weighted degrees, all
   {\pi_2\br{A\cup Z}\cdot\pi_2\br{B\cup Z}}.
 \]
 
-Now, define the \emph{degree conductance} of a cut $S\subseteq V$ as \DD{sugestia: czy tutaj w mianowniku nie powinien byc "vol" (bo deg(zbior) niezdef.)?}
+Now, define the \emph{degree conductance} of a cut $S\subseteq V$ as
 \[
   \chi_{w}\br{S}
-  =\frac{c\br{S,\bar{S}}}{d_D\br{S}\cdot d_D\br{\bar{S}}}.
+  =\frac{c\br{S,\bar{S}}}{\vol_D\br{S}\cdot \vol_D\br{\bar{S}}}.
 \]
 For every cut of finite value, Equation~\eqref{eq:demand-degree-identity} gives $
-  w\br{S,V}\leq d_D\br{S}\leq 2w\br{S,V}$, so
+  w\br{S,V}\leq \vol_D\br{S}\leq 2w\br{S,V}$, so
 \begin{equation} \label{eq:factor4}
   \frac{\psi_{w}\br{S}}{4}\leq
-  \frac{c\br{S,\bar{S}}}{d_D\br{S}\cdot d_D\br{\bar{S}}}=\chi_{w}\br{S}\leq
+  \frac{c\br{S,\bar{S}}}{\vol_D\br{S}\cdot \vol_D\br{\bar{S}}}=\chi_{w}\br{S}\leq
   \psi_{w}\br{S}.
 \end{equation}
 

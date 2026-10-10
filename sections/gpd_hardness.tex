@@ -2,6 +2,7 @@
 
 In this section we provide several approximation-hardness results for \textsc{Generalized Conductance}, \textsc{Graph Partitioning with Demands} and \textsc{Hierarchical Clustering with Demands} based on the Small-Set Expansion Hypothesis and P$\neq$NP. The \emph{Small-Set Expansion Hypothesis} states that, for every constant $\zeta>0$, there is a constant $\delta>0$ for which it is NP-hard, given a regular graph, to distinguish between the existence of a vertex set of normalized size $\delta$ and expansion at most $\zeta$, and the condition that every vertex set of normalized size $\delta$ has expansion at least $1-\zeta$. Both reductions in this section use rational numbers instead of natural ones, however this can be fixed by appropriate scaling.
 
+\subsection{Hierarchical Clustering with Demands on general graphs}
 For every unweighted undirected graph $G=(V,E)$ used as a source graph below, write
 \[
     \operatorname{vol}_G(S)=\sum_{u\in S}\deg_G(u),
@@ -35,7 +36,7 @@ Thus $p_G(u,v)=p_G(v,u)=1/M_G$ on every edge. Then, for any $S\subseteq V$ we ha
     \sum_{uv\in E}p_G(u,v)=\frac12.
 \]
 
-We also recall the Gaussian expansion profile used in the source theorem. For $r\in[0,1)$ and $x\in(0,1)$, let
+We also recall the Gaussian expansion profile used in the source theorem. For $r\in(-1,1)$ and $x\in(0,1)$, let
 \[
     \begin{pmatrix}Z\\Z'\end{pmatrix}
     \sim\mathcal{N}\left(
@@ -58,9 +59,9 @@ $
 We use the following result of Raghavendra, Steurer, and Tulsiani~\cite{ReductionsBetweenExpansionProblems}, noting that the standard product-space construction in the source theorem with tensor power $R\geq2$ certifies that $\alpha_Y\leq q^{-R}\leq1/4$.
 
 \begin{theorem}[Raghavendra-Steurer-Tulsiani]\label{thm:rst-global-expansion}
-    For every integer $q\geq2$ and every $\gamma>0$, assuming the Small-Set Expansion Hypothesis, there exists a constant $K>0$ such that for a sufficiently small choice of $\varepsilon>0$ it is hard to distinguish between the following cases for a graph $H=(V_H,E_H)$:
+    For every integer $q\geq2$, there are constants $K>0$ and $\varepsilon_0\in(0,1]$ such that for every $\varepsilon\in(0,\varepsilon_0)$ and every $\gamma>0$, assuming the Small-Set Expansion Hypothesis, it is hard to distinguish between the following cases for a graph $H=(V_H,E_H)$:
     \begin{description}
-        \item[YES:] There is a partition $\cP=\{S_1,\ldots,S_q\}$ of $V_H$ such that, for every $i\in[q]$, 
+        \item[YES:] There is a partition $S_1,\ldots,S_q$ of $V_H$ such that, for every $i\in[q]$, 
             $\mu_H(S_i)=\frac{1}{q}$ and $\Phi_H(S_i)\leq K\cdot\varepsilon$.
         \item[NO:] Every $S\subseteq V_H$ satisfies $
             \Phi_H(S)
@@ -76,7 +77,7 @@ We derive from Theorem~\ref{thm:rst-global-expansion} the form of the gap used i
 \begin{lemma}\label{lem:globalized-long-code-gap}
     Fix an integer $q\geq2$ and a constant $b\in(0,1/2]$. Assuming the Small-Set Expansion Hypothesis, there exist constants $K>0$ and $a_b>0$ such that for a sufficiently small choice of $\varepsilon>0$ it is hard to distinguish between the following cases for a graph $Y=(V_Y,E_Y)$:
     \begin{description}
-        \item[YES:] There is a partition $\cP=\brc{S_1,\ldots,S_q}$ of $V_Y$
+        \item[YES:] There is a partition $S_1,\ldots,S_q$ of $V_Y$
         such that, for every $i\in[q]$, $
             \mu_Y(S_i)=\frac{1}{q}$ and $
             \Phi_Y(S_i)\leq K\cdot\varepsilon$.
@@ -87,17 +88,60 @@ We derive from Theorem~\ref{thm:rst-global-expansion} the form of the gap used i
 \begin{proof}
     In the YES case of Theorem~\ref{thm:rst-global-expansion}, the statement stays the same.
 
-    Consider now the NO case. If $x\in[b,1/2]$, then $t_x$ ranges over a bounded interval depending only on $b$. The standard estimate for the probability that two highly correlated Gaussian variables lie on opposite sides of such a threshold gives $
-        \Phi_{\mathcal{G}(1-\varepsilon/2)}(x)
-        \geq a'_b\cdot\sqrt{\varepsilon}$
-    for some constant $a'_b>0$ and all sufficiently small $\varepsilon$. Indeed, the standard deviation of $Z'-Z$ is $\sqrt{\varepsilon}$, while the Gaussian density at $t_x$ is bounded above and below by positive constants depending only on $b$. Taking $\gamma\leq b\cdot a'_b\cdot\sqrt{\varepsilon}/2$ yields
+    Assume the NO case.
+    Write $\varphi$ and $\Phi_{\mathrm N}$ for the standard Gaussian density and CDF, respectively, and let $t_b$ satisfy $\Pr[Z\geq t_b]=b$. For $x\in[b,1/2]$, we have $t_x\in[0,t_b]$. Set $\Delta=Z'-Z$ and $r=1-\varepsilon/2$. Then
     \[
-        \Phi_Y(S)\geq a'_b\cdot\sqrt{\varepsilon} - \frac{b\cdot a'_b\cdot\sqrt{\varepsilon}/2}{1}
-        = a'_b\cdot\sqrt{\varepsilon} - \frac{b\cdot a'_b\cdot\sqrt{\varepsilon}}{2}
-        = a'_b\cdot\sqrt{\varepsilon}\left(1 - \frac{b}{2}\right)
-        \geq \frac{a'_b}{2}\cdot\sqrt{\varepsilon}
+        \operatorname{Var}(\Delta)=2\cdot(1-r)=\varepsilon,
+        \qquad
+        \operatorname{Cov}(Z,\Delta)=r-1=-\frac{\varepsilon}{2}.
     \]
-    whenever $b\leq\mu_Y(S)\leq1/2$. The claim follows with $a_b=a'_b/2$.
+    Since $\Delta$ is a linear combination of $Z$ and $Z'$, the pair $(Z,\Delta)$ is jointly Gaussian. For centered jointly Gaussian variables, the conditional distribution is Gaussian with
+    \[
+        Z\mid\Delta=d\sim\mathcal{N}\left(
+            \frac{\operatorname{Cov}(Z,\Delta)}{\operatorname{Var}(\Delta)}\cdot d,\,
+            1-\frac{\operatorname{Cov}(Z,\Delta)^2}{\operatorname{Var}(\Delta)}
+        \right).
+    \]
+    Taking $d=-u$ gives $Z\mid\Delta=-u\sim\mathcal{N}(u/2,1-\varepsilon/4)$, where the second parameter is the variance. On this event, $Z'=Z-u$, so the crossing event $\{Z\geq t_x,\ Z'<t_x\}$ is exactly $\{t_x\leq Z<t_x+u\}$. Therefore,
+    \[
+        \Phi_{\mathcal{G}(1-\varepsilon/2)}(x)
+        =\frac{1}{x}\cdot\int_0^\infty\frac{\varphi(u/\sqrt{\varepsilon})}{\sqrt{\varepsilon}}\cdot\left[
+            \Phi_{\mathrm N}\left(\frac{t_x+u/2}{\sqrt{1-\varepsilon/4}}\right)
+            -\Phi_{\mathrm N}\left(\frac{t_x-u/2}{\sqrt{1-\varepsilon/4}}\right)
+        \right]\,du.
+    \]
+    Substituting $u=\sqrt{\varepsilon}s$ in this integral gives
+    \[
+        \Phi_{\mathcal{G}(1-\varepsilon/2)}(x)
+        =\frac{1}{x}\cdot\int_0^\infty\varphi(s)\cdot\left[
+            \Phi_{\mathrm N}\left(\frac{t_x+\sqrt{\varepsilon}\cdot s/2}{\sqrt{1-\varepsilon/4}}\right)
+            -\Phi_{\mathrm N}\left(\frac{t_x-\sqrt{\varepsilon}\cdot s/2}{\sqrt{1-\varepsilon/4}}\right)
+        \right]\,ds.
+    \]
+    For each fixed $s$, the bracket divided by $\sqrt{\varepsilon}$ converges, uniformly for $t_x\in[0,t_b]$, to $s\cdot\varphi(t_x)$. Moreover, for $\varepsilon\leq1$ its absolute value is at most $C\cdot\sqrt{\varepsilon}\cdot s$ for an absolute constant $C$, by the boundedness of the Gaussian density and $\sqrt{1-\varepsilon/4}\geq\sqrt{3}/2$. Since $s\cdot\varphi(s)$ is integrable and $\int_0^\infty s\cdot\varphi(s)\,ds=1/\sqrt{2\pi}$, dominated convergence gives the uniform limit
+    \[
+        \lim_{\varepsilon\to0}\sup_{x\in[b,1/2]}
+        \left|
+            \frac{\Phi_{\mathcal{G}(1-\varepsilon/2)}(x)}{\sqrt{\varepsilon}}
+            -\frac{\varphi(t_x)}{x\cdot\sqrt{2\pi}}
+        \right|=0.
+    \]
+    The coefficient is continuous and positive on the compact interval $[b,1/2]$. Define
+    \[
+        c_b=\min_{x\in[b,1/2]}\frac{\varphi(t_x)}{x\cdot\sqrt{2\pi}}.
+    \]
+    Then $c_b>0$, and for all sufficiently small $\varepsilon$,
+    $\Phi_{\mathcal{G}(1-\varepsilon/2)}(x)\geq a'_b\cdot\sqrt{\varepsilon}$ uniformly on this interval, where $a'_b=c_b/2$.
+
+    Invoke Theorem~\ref{thm:rst-global-expansion} with
+    $\gamma=b\cdot a'_b\cdot\sqrt{\varepsilon}/2$. For every $S$ with $x=\mu_Y(S)\in[b,1/2]$, we have $\gamma/x\leq\gamma/b$, so the NO case gives
+    \[
+        \Phi_Y(S)>
+        \Phi_{\mathcal{G}(1-\varepsilon/2)}(x)-\frac{\gamma}{x}
+        \geq a'_b\cdot\sqrt{\varepsilon}-\frac{\gamma}{b}
+        =\frac{a'_b}{2}\cdot\sqrt{\varepsilon}.
+    \]
+    The claim follows with $a_b=a'_b/2$.
 \end{proof}
 
 % \subsection{Hardness of Graph Partitioning with Demands}
@@ -260,7 +304,7 @@ We start by proving a numerical lemma that will be useful in the soundness analy
     \]
     Let $q$ be the least power of two satisfying $q^{-2}\leq\varepsilon$. Apply Lemma~\ref{lem:globalized-long-code-gap} with this $q$, $b=1/4$, and $\varepsilon$, and denote its output graph by $Y=(V_Y,E_Y)$.
 
-    Construct an HCD instance whose supply graph is $Y$ with capacity $c(uv)=p_Y(u,v)$ on each edge $uv\in E_Y$. This is well-defined because $p_Y(u,v)=p_Y(v,u)$. Let the demand graph be complete on distinct vertex pairs, with $w(uv)=\mu_Y(u)\cdot \mu_Y(v)$. By defintion, for every $S\subseteq V_Y$, we have $
+    Construct a HCD instance whose supply graph is $Y$ with capacity $c(uv)=p_Y(u,v)$ on each edge $uv\in E_Y$. This is well-defined because $p_Y(u,v)=p_Y(v,u)$. Let the demand graph be complete on distinct vertex pairs, with $w(uv)=\mu_Y(u)\cdot \mu_Y(v)$. By defintion, for every $S\subseteq V_Y$, we have $
         c(\delta_Y(S))=\mu_Y(S)\cdot \Phi_Y(S).$
     For every cluster $X\subseteq V_Y$,
     \begin{equation}\label{eq:hcd-stationary-demand}

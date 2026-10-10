@@ -60,13 +60,13 @@ The analysis uses a generalization of the standard technique of dealing with \te
             \]
                         and similarly, using $w\br{A,B}=w\br{B,A}$ for disjoint $A$ and $B$, $w\br{B, V}\geq \delta_{\rho}\cdot W$.
             \item Otherwise, $A$ stays unchanged and we set $B=V\setminus A$. We have $w\br{A, V}\geq \delta_{\rho}\cdot W$ by the halting condition of the above greedy rule, and
-              \begin{align*}
+              \[
               w\br{B, V}
               = 
               W-w\br{A}= W-\br{w\br{A'}+w\br{A', V_H}+w\br{V_H}}
               \geq 
                             W-3\delta_{\rho}\cdot W\geq \delta_{\rho}\cdot W,
-            \end{align*}
+              \]
                         where the last inequality follows from $\delta_{\rho}\leq 1/4$, again by $\delta_{\rho}=\min\brc{1/4,1-\rho}$.
         \end{itemize}
     \end{enumerate}
@@ -231,12 +231,12 @@ Denote this subroutine by $\DPartition$, suppressing its parameters $\rho$ and $
         c\br{C_H}\leq \gamma_{\rho,\eta}\br{\spr{V_H}} \cdot \OPT_{\rho}\br{H}
         \leq \gamma_{\rho,\eta}\br{\spr{V_H}} \cdot c\br{E_{\fl{\rho r_H}}^*\cap E_H}.$
     Let $s_H$ be the largest demand of a non-singleton child of $H$, and set $s_H=0$ if every child is a singleton. Since the subroutine is $\eta$-feasible, $s_H\leq\eta \cdot r_H$. Hence
-    \begin{align*}
+    \[
         r_H\cdot c\br{C_H}
         \leq\frac{\gamma_{\rho,\eta}\br{\spr{V_H}}}{1-\eta}
             \cdot\br{r_H-s_H}\cdot c\br{E_{\fl{\rho r_H}}^*\cap E_H} \leq\frac{\gamma_{\rho,\eta}\br{\spr{V_H}}}{1-\eta}\cdot
             \sum_{t=s_H+1}^{r_H}c\br{E_{\fl{\rho t}}^*\cap E_H}
-    \end{align*}
+    \]
     where the first inequality is by $r_H-s_H\geq(1-\eta)r_H$. For every integer $t\leq r_H$, $E_{\fl{\rho r_H}}^*\subseteq E_{\fl{\rho t}}^*$, summing this inclusion over $t=s_H+1,\ldots,r_H$ gives the second inequality.
 
     For a fixed $t$, the clusters satisfying $s_H<t\leq r_H$ have pairwise disjoint induced edge sets. Indeed, if one such cluster were a descendant of another, it would lie in a non-singleton child of the ancestor and would have demand at most the ancestor's value $s_H<t$, contradicting $t\leq r_H$ for the descendant. Summing over all clusters, we conclude that,
