@@ -417,22 +417,23 @@ Observe, that $f_K$ is a weighted coverage function on the demand pairs.
 For $w\br{V_K}>B_\rho$, set $q_K=w\br{V_K}-B_\rho$ and define
 $
     \OPT_{q_K}\br{K}
-    =\min\brc{c_K(A)\colon A\subseteq E(K)\setminus E(S_K),\ f_K(A)\geq q_K}.
+    =\min\brc{c_K(A)\colon A\subseteq E_K\setminus E_{S_K},\ f_K(A)\geq q_K}.
 $
-If this quota is feasible, the $ (1-1/e)$-approximation for \textsc{Budgeted Maximum Coverage}~\cite{KhullerMossNaor1999BudgetedMaximumCoverage} gives a polynomial-time routine $\textsc{CoreQuotaCover}(f_K,c_K,q_K)$ returning $A_K$ such that
+If this quota \DD{ktore to "quota" ($q_K$?) i co znaczy feasible?} is feasible, the $ (1-1/e)$-approximation for \textsc{Budgeted Maximum Coverage}~\cite{KhullerMossNaor1999BudgetedMaximumCoverage} gives a polynomial-time routine $\textsc{CoreQuotaCover}(f_K,c_K,q_K)$ returning $A_K$ such that
 \[
-    f_K(A_K)\geq(1-1/e)\cdot q_K,\quad \text{and}\quad 
+    f_K(A_K)\geq(1-1/e)\cdot q_K,\quad \text{and}\quad \quad\text{and}\quad
     c_K(A_K)\leq\OPT_{q_K}\br{K}.
 \]
-Indeed, binary-search the budget $b$ on the interval $[0,\sum_{e\in E\br{K}}c(e)]$ and run the budgeted-coverage approximation at each trial. The successful budget $b$, such that $f_K(A_K)\geq(1-1/e)\cdot q_K$, is no larger than $\OPT_{q_K}\br{K}$.
- Moreover, since we use binary search the required number of trials is $O\br{\log\br{ \sum_{e\in E\br{K}}c(e)}}$, which is polynomial in the input size.
+Indeed, binary-search the budget $b$ on the interval $[0,c_K(E_K)]$ and run the budgeted-coverage approximation at each trial. The successful budget $b$, such that $f_K(A_K)\geq(1-1/e)\cdot q_K$, is no larger than $\OPT_{q_K}\br{K}$.
+ Moreover, since we use binary search the required number of trials is $O\br{\log\br{c_K(E_K)}}$, which is polynomial in the input size.
 
-For each guess $Q$, the algorithm applies this routine to every component $K$ containing a separator with $w\br{V_K}>B_\eta$, and chooses the least-cost candidate $Q\cup\bigcup_K C_K(A_K)$. Then, the algorithm recurses on each component. The full procedure is given by Algorithm \ref{alg:centroid-max-coverage}.
+For each guess $Q$, the algorithm applies this routine to every component $K$ containing a separator with $w\br{V_K}>B_\eta$, and chooses the least-cost candidate $Q\cup\bigcup_K B_K(A_K)$. Then, the algorithm recurses on each component. The full procedure is given by Algorithm \ref{alg:centroid-max-coverage}.
 
 \input{algorithms/centroid_max_coverage.tex}
 
+\DD{todo: pseudokodu i ostatniego twierdzenia tutaj nie przetworzylem jeszcze (zmeczylo mnie, jakos trudno mi sie przez to przebic, wiec zostawiam na pozniej)}
 \begin{theorem}\label{thm:tree-centroid-max-coverage}
-    Fix rational constants $0<\rho<\eta<1$. For arbitrary integral demand weights on a supply tree, Algorithm~\ref{alg:centroid-max-coverage} runs in polynomial time and returns an $\eta$-feasible supply-edge set $F\subseteq E$ with $
+    Fix rational constants $0<\rho<\eta<1$. For arbitrary integral demands on a supply tree, Algorithm~\ref{alg:centroid-max-coverage} runs in polynomial time and returns an $\eta$-feasible supply-edge set $F\subseteq E$ with $
         c(F)\leq\cl{\ln\br{\frac{1-\rho}{\eta-\rho}}}\cdot\OPTdem{T}{\rho}.$
 \end{theorem}
 \begin{proof}
@@ -464,11 +465,12 @@ For each guess $Q$, the algorithm applies this routine to every component $K$ co
 
     It remains to bound the cost. It is relatively straightward to see that the cost of the solution is at most $L\cdot \OPT_{B_\rho}\br{T}$. The full proof is deffered to the Appendix [ref]. 
     
-%     Let $F_H^*$ be an optimal $B_\rho$-feasible cut of $H$. Set $Q^*=F_H^*\cap E(P_H)$.
-%     It is easy to see that the algorithm considers this guess.
+%     Let $F_H^*$ be an optimal $B_\rho$-feasible cut of $H$. Set $Q^*=F_H^*\cap E_{P_H}$.
+%     \DD{usunalem def $P_H$: bo byla sciezka laczaca wierzcholki w $\mathcal L_H$}
+    It is easy to see that the algorithm considers this guess.
 %     % Each resulting component containing a separator has all its separators in one component of $H\setminus F_H^*$, so $S_K$ lies in that component. 
 %     The restriction of $F_H^*$ to $K$ therefore satisfies $
-%         \OPT_{B_\rho}\br{K}\leq c(F_H^*\cap E(K)).
+%         \OPT_{B_\rho}\br{K}\leq c(F_H^*\cap E_K).
 %     $
 %     Thus, since any $\rho$-feasible edge set of $K$ covers at least $q_K$ demand, we know that $c\br{A_K}\leq \OPT_{q_K}\br{K}\leq \OPT_{B_\rho}\br{K}$. Now observe that by disjointness we get
 %     \[
@@ -506,7 +508,7 @@ We now show how to employ a similar separator-based approach to obtain a single-
 
 The input of the \textsc{Partial Multicut} problem is a graph $G=\br{V, E, D, c, w}$ and an additional value $0\leq q\leq 1$. The goal is to find a subset of edges $C$, minimizing $c\br{C}$, such that the overall demand of edges $uv\in D$, such that $u$ and $v$ belong to different connected components of $G\setminus C$ is at least $q\cdot w\br{V}$. If the supply graph is a tree, Mestre~\cite{DBLP:conf/stacs/Mestre08} gives a $(2+\delta)$-approximation polynomial-time algorithm.
 
-This algorithm is similar to the previous one. We reduce finding a minimum-cost set $A_K\subseteq E(K)\setminus E(S_K)$ with $f_K\br{A_K}\geq q_K$ to \textsc{Partial Multicut} on trees. Recall that $S_K$ is the minimal subtree of $K$ containing the separator vertices $\mathcal L_K$. In the auxiliary instance $T_K$, we forbid cutting the edges of $S_K$ by setting their costs to infinity. Then, for each $K'\in K\setminus V\br{S_K}$, we create a copy of $K'$. We index the two representatives of each vertex $u\in K'$ by $u^{\mathrm L}$ and $u^{\mathrm R}$ (one of them is the original vertex). Now, for each demand pair $uv\in D[K]$ if $\brc{u, v}\cap {S_K}=\emptyset$, we replace this demand edge by a cross-copy demand edge $u^{\mathrm L}v^{\mathrm R}$ with demand $w\br{u^{\mathrm L}v^{\mathrm R}}=w\br{u,v}$.
+This algorithm is similar to the previous one. We reduce finding a minimum-cost set $A_K\subseteq E_K\setminus E_{S_K}$ with $f_K\br{A_K}\geq q_K$ to \textsc{Partial Multicut} on trees. Recall that $S_K$ is the minimal subtree of $K$ containing the separator vertices $\mathcal L_K$. In the auxiliary instance $T_K$, we forbid cutting the edges of $S_K$ by setting their costs to infinity. Then, for each $K'\in K\setminus V\br{S_K}$, we create a copy of $K'$. We index the two representatives of each vertex $u\in K'$ by $u^{\mathrm L}$ and $u^{\mathrm R}$ (one of them is the original vertex). Now, for each demand pair $uv\in D[K]$ if $\brc{u, v}\cap {S_K}=\emptyset$, we replace this demand edge by a cross-copy demand edge $u^{\mathrm L}v^{\mathrm R}$ with demand $w\br{u^{\mathrm L}v^{\mathrm R}}=w\br{u,v}$.
 
 Figure~\ref{fig:full-quota-centroid} illustrates the full-quota routine for $t=4$.
 \input{algorithms/centroid_full_quota.tex}
@@ -521,7 +523,7 @@ Figure~\ref{fig:full-quota-centroid} illustrates the full-quota routine for $t=4
     Let $F^*$ be an optimal $B_\rho$-feasible cut. By Lemma~\ref{lem:tree-separator}, the procedure returns at most $t-1$ separators, and every component of $T\setminus\mathcal L_T$ has demand at most $W/t\leq B_\rho$. By construction, all components $H\in T\setminus F$ have demand bounded by $w\br{V_H}\leq B_\rho$. 
 
     Therefore, we reason about the cost.
-    As in the preceding proof, let $Q^*\subseteq F^*\cap E(S_T)$. Let $K\in \mathcal{K}_{Q^*}$. We firstly want to show, that $c\br{A_K}\leq (4+\epsilon)\OPT_{q_K}\br{K}$. So fix some optimal $A_K^*$ for $\OPT_{q_K}\br{K}$. In order to get a valid multicut for $T_K$, for each edge of $A_K^*$, we include both representative edges in $T_K$, i.e., if $e=uv\in A_K^*$, we include $u^{\mathrm L}v^{\mathrm L}$ and $u^{\mathrm R}v^{\mathrm R}$ in the multicut. Since this doubles the cost of each edge, we have $c\br{A_K}\leq 2\cdot \OPT_{q_K}\br{K}$. Mestre's $(2+\delta)$-approximation then gives $c\br{A_K}\leq (4+\epsilon)\cdot \OPT_{q_K}\br{K}$ for sufficiently small $\delta=\epsilon/2$.
+    As in the preceding proof, let $Q^*\subseteq F^*\cap E_{S_T}$. Let $K\in \mathcal{K}_{Q^*}$. We firstly want to show, that $c\br{A_K}\leq (4+\epsilon)\OPT_{q_K}\br{K}$. So fix some optimal $A_K^*$ for $\OPT_{q_K}\br{K}$. In order to get a valid multicut for $T_K$, for each edge of $A_K^*$, we include both representative edges in $T_K$, i.e., if $e=uv\in A_K^*$, we include $u^{\mathrm L}v^{\mathrm L}$ and $u^{\mathrm R}v^{\mathrm R}$ in the multicut. Since this doubles the cost of each edge, we have $c\br{A_K}\leq 2\cdot \OPT_{q_K}\br{K}$. Mestre's $(2+\delta)$-approximation then gives $c\br{A_K}\leq (4+\epsilon)\cdot \OPT_{q_K}\br{K}$ for sufficiently small $\delta=\epsilon/2$.
 
     Thus, summing the contribution of all edges picked by our algorithm, we ge that
     \[
@@ -529,29 +531,29 @@ Figure~\ref{fig:full-quota-centroid} illustrates the full-quota routine for $t=4
     \]
     as claimed.
 
-    Since the number of sets $Q$ we enumerate is bounded by $\sum_{i=0}^{t-1} \binom{|E(S_T)|}{i}=n^{O(1/\rho)}$, the algorithm runs in polynomial time for any fixed choice of $\rho$.
+    Since the number of sets $Q$ we enumerate is bounded by $\sum_{i=0}^{t-1} \binom{|E_{S_T}|}{i}=n^{O(1/\rho)}$, the algorithm runs in polynomial time for any fixed choice of $\rho$.
 \end{proof}
 
         %\input{sections/tree_hybrid_lp_centroid.tex}
 
-    \subsection{Corollaries}
+    %\subsection{Corollaries}
 
-        We now combine the guarantees of all three of our algorithms.
-        \begin{corollary}\label{cor:tree-best-guarantee}
-        Fix rational constants $0<\rho<\eta<1$ and $\epsilon>0$. On supply trees, there is a polynomial-time algorithm returning an $\eta$-feasible solution of cost at most
-        \[
-        \min\brc{
-            \frac{2\eta}{\eta-\rho},
-            \cl{\ln\br{\frac{1-\rho}{\eta-\rho}}},
-            4+\epsilon
-        }\cdot\OPT_{\rho}(T).
-        \]
-        \end{corollary}
+        %We now combine the guarantees of all three of our algorithms.
+        %\begin{corollary}\label{cor:tree-best-guarantee}
+        %Fix rational constants $0<\rho<\eta<1$ and $\epsilon>0$. On supply trees, there is %a polynomial-time algorithm returning an $\eta$-feasible solution of cost at most
+        %\[
+        %\min\brc{
+        %    \frac{2\eta}{\eta-\rho},
+        %    \cl{\ln\br{\frac{1-\rho}{\eta-\rho}}},
+        %    4+\epsilon
+        %}\cdot\OPT_{\rho}(T).
+        %\]
+        %\end{corollary}
 
         
-        % Figures~\ref{fig:tree-approximation-ratio} and~\ref{fig:tree-approximation-ratio-3d} illustrate the combined tree approximation guarantee for $\epsilon=0.01$ over the relevant ranges of $\rho$ and $\eta$. For almost all choices of parameters, the approximation ratios are relatively close to $1$ and usually below $4$.
-        % \input{figures/tree_approximation_ratio.tex}
-        % \input{figures/tree_approximation_ratio_3d.tex}
+        % %Figures~\ref{fig:tree-approximation-ratio} and~\ref{fig:tree-approximation-ratio-3d} illustrate the combined tree approximation guarantee for $\epsilon=0.01$ over the relevant ranges of $\rho$ and $\eta$. For almost all choices of parameters, the approximation ratios are relatively close to $1$ and usually below $4$.
+        % %\input{figures/tree_approximation_ratio.tex}
+        % %\input{figures/tree_approximation_ratio_3d.tex}
 
         Combining Theorem~\ref{thm:tree-centroid-max-coverage} with Theorem~\ref{thm:hc-gpd-transfer} gives the following corollary.
         \begin{corollary}\label{cor:tree-hc-improved}
