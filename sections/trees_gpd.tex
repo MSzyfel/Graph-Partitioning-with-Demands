@@ -458,7 +458,7 @@ For each guess $Q$, the algorithm applies this routine to every component $K$ co
         \leq\max\brc{0,w\br{V_H}/3-B_\rho}\leq(w\br{V_H}-B_\rho)/3=q_H/3<q_H/e.
     \]
     \end{enumerate} 
-    Hence if we consider the recursion tree on top of the components for which the algorithm was called, every child has excess at most $1/e$ times its parent's. Initially $\Phi(T)=W-B_\rho=(1-\rho)\cdot W$. So when the recursion reaches the depth
+    Hence if we consider the recursion tree on top of the components for which the algorithm was called, every child has excess at most $1/e$ times its parent's. Initially $\Phi(T)=W-B_\rho=(1-\rho)\cdot W$. So when the recursion reaches depth
     $
         L=\left\lceil\ln\left(\frac{1-\rho}{\eta-\rho}\right)\right\rceil,
     $
@@ -472,7 +472,7 @@ For each guess $Q$, the algorithm applies this routine to every component $K$ co
 %
 %     Let $F_H^*$ be an optimal $B_\rho$-feasible cut of $H$. Set $Q^*=F_H^*\cap E_{P_H}$.
 %     \DD{usunalem def $P_H$: bo byla sciezka laczaca wierzcholki w $\mathcal L_H$}
-%    It is easy to see that the algorithm considers this guess.
+%%    It is easy to see that the algorithm considers this guess.
 %     % Each resulting component containing a separator has all its separators in one component of $H\setminus F_H^*$, so $S_K$ lies in that component. 
 %     The restriction of $F_H^*$ to $K$ therefore satisfies $
 %         \OPT_{B_\rho}\br{K}\leq c(F_H^*\cap E_K).
@@ -515,9 +515,9 @@ The input of the \textsc{Partial Multicut} problem is a graph $G=\br{V, E, D, c,
 
 This algorithm is similar to the previous one. We reduce finding a minimum-cost set $A_K\subseteq E_K\setminus E_{S_K}$ with $f_K\br{A_K}\geq q_K$ to \textsc{Partial Multicut} on trees. In the auxiliary instance $T_K$, \DD{czym jest $T_K$?} we forbid cutting the edges of $S_K$ (defined in the previous section) by setting their costs to infinity. Then, for each $K'\in K\setminus V_{S_K}$, we create a copy of $K'$. We index the two representatives of each vertex $u\in V_{K'}$ by $u^{\mathrm L}$ and $u^{\mathrm R}$ (one of them is the original vertex). Now, for each demand pair $uv\in D[K]$ if $\brc{u, v}\cap {S_K}=\emptyset$, we replace this demand edge by a cross-copy demand edge $u^{\mathrm L}v^{\mathrm R}$ with demand $w\br{u^{\mathrm L}v^{\mathrm R}}=w\br{u,v}$.
 
-Figure~\ref{fig:full-quota-centroid} illustrates the full-quota routine for $t=4$.
+% Figure~\ref{fig:full-quota-centroid} illustrates the full-quota routine for $t=4$.
 \input{algorithms/centroid_full_quota.tex}
-\input{figures/three_centroid_coverage.tex}
+%\input{figures/three_centroid_coverage.tex}
 
 \begin{theorem}\label{thm:tree-centroid-full-quota}
     Fix rational $0<\rho<1$ and $\epsilon>0$. For arbitrary integral demand weights on a supply tree, Algorithm~\ref{alg:centroid-full-quota} returns a $\rho$-feasible cut $C$ with $
