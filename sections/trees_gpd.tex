@@ -29,10 +29,7 @@ For every vertex $a\in V$, called an \emph{anchor}, and every demand edge $uv\in
             &&\forall a\in V,\ uv\in D,\\
         &\sum_{uv\in D}w(u,v)\cdot z^a_{uv}\leq B_\rho
             &&\forall a\in V,\\
-        &0\leq x_e\leq1
-            &&\forall e\in E,\\
-        &0\leq z^a_{uv}\leq1
-            &&\forall a\in V,\ uv\in D.
+        &\mathbf{x, z} \in [0,1]^{E \cup (V \times D)}
 \end{aligned}
 \end{equation}
 % Since $|D|\leq\binom{n}{2}$, the LP has $O(|E|+n|D|)=O(n^3)$ variables and constraints.
