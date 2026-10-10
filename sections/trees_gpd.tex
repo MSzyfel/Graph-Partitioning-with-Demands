@@ -428,7 +428,7 @@ Observe, that $f_K$ is a weighted coverage function on the demand pairs.
 For $w\br{V_K}>B_\rho$, set $q_K=w\br{V_K}-B_\rho$ and define
 $
     \OPT_{q_K}\br{K}
-    =\min\brc{c_K(A)\colon A\subseteq E_K\setminus E_{S_K},\ f_K(A)\geq q_K}.
+    =\min\brc{c_K(A)\colon A\subseteq E_K\setminus E_{S_K},\ f_K(A)\geq q_K}
 $
 if there exists any $A\subseteq E_K\setminus E_{S_K}$ with $f_K(A)\geq q_K$.  The $ (1-1/e)$-approximation for \textsc{Budgeted Maximum Coverage}~\cite{KhullerMossNaor1999BudgetedMaximumCoverage} gives a polynomial-time routine $\textsc{CoreQuotaCover}(f_K,c_K,q_K)$ returning $A_K$ such that
 \[
