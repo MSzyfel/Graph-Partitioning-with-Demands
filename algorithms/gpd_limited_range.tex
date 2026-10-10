@@ -1,13 +1,13 @@
 \begin{algorithm}[H]
     \label{algo:partitioning-limited-range}
     \caption{Limited-range bicriteria partitioning}
-    \textbf{Input} Instance $G=(V,E,D,c,w)$, parameters $\rho,\eta$, and a $\gamma$-approximation oracle for \textsc{Generalized Conductance}\;
+    \textbf{Input} Instance $G=(V,E,D,c,w)$, parameters $\rho,\eta$, and a $\gamma\br{n}$-approximation oracle for \textsc{Generalized Conductance}, where $n=|V|$\;
     \textbf{Output} An $\eta$-feasible supply-edge set $C\subseteq E$\;
     $C\gets\emptyset$. $G'\gets (V,E,D,c,w)$\;
     \While{$w_{G'}\br{V_{G'}}>\eta\cdot W$}{
-        Find a cut $(S,\bar{S})$ in $G'$ using the $\gamma$-approximation oracle, with $w_{G'}\br{S}\leq w_{G'}\br{\bar{S}}$\;
+        Find a cut $(S,\bar{S})$ in $G'$ using the $\gamma\br{n}$-approximation for GC, and assume that$w_{G'}\br{S}\leq w_{G'}\br{\bar{S}}$\;
         $C\gets C\cup E_{G'}\br{S,\bar{S}}$\;
-        Remove $S$ from $G'$, restricting its supply and demand edge sets to the remaining vertices\;
+        Remove $S$ from $G'$\;
     }
     \textbf{return} $C$\;
 \end{algorithm}

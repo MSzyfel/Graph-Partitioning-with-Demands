@@ -9,7 +9,7 @@ This section provides our main algorithmic result for GPD and HCD on general gra
 We now apply the approximation algorithm for \textsc{Generalized Conductance} to obtain an approximation algorithm for \textsc{Graph Partitioning with Demands}. In the latter problem, we are given an instance $G=(V,E,D,c,w)$, together with a fixed constant $\rho\in(0,1)$. The goal is to find a subset of supply edges $C\subseteq E$ that minimizes $c\br{C}$ such that for every connected component $H$ of $G\setminus C$, we have $w\br{V_H}\leq \rho\cdot W$.
 Let $\OPTdem{G}{\rho}=c\br{C^*}$, where $C^*\subseteq E$ is an optimal solution.
 Let $\rho<\eta<1$ be a constant. We say that $C\subseteq E$ is $\eta$-feasible if for every connected component $H$ of $G\setminus C$, it holds $w\br{V_H}\leq \eta \cdot W$, instead of $w\br{V_H}\leq \rho \cdot W$.
-We will obtain a bi-criteria approximation algorithm for \textsc{Graph Partitioning with Demands} that returns a subset of edges $C$ such that $c\br{C}=\bigo_{\rho, \eta}\br{\gamma}\cdot \OPTdem{G}{\rho}$ and $C$ is $\eta$-feasible, where $\gamma$ is the approximation ratio for the \textsc{Generalized Conductance}. This is done in two parts. Firstly, we show an algorithm for a limited range of $\eta$ and then extend it to the entirety of $\eta\in(\rho,1)$.
+We will obtain a bi-criteria approximation algorithm for \textsc{Graph Partitioning with Demands} that returns a subset of edges $C$ such that $c\br{C}=\bigo_{\rho, \eta}\br{\gamma\br{n}}\cdot \OPTdem{G}{\rho}$ and $C$ is $\eta$-feasible, where $n=|V|$ and $\gamma\br{n}$ is an upper bound on the approximation ratio of the chosen \textsc{Generalized Conductance} algorithm on instances with at most $n$ vertices. This is done in two parts. Firstly, we show an algorithm for a limited range of $\eta$ and then extend it to the entirety of $\eta\in(\rho,1)$.
 
 \subsubsection{Bi-criteria approximation algorithm for a limited range of $\eta$}
 Let $
@@ -18,11 +18,10 @@ Let $
 The analysis uses a generalization of the standard technique of dealing with \textsc{Balanced Cut}/\textsc{Graph Partitioning} problems using \textsc{Sparsest Cut} \cite{MulticommodityMaxFlowMinCutTheoremsAndTheirUseInDesigningApproximationAlgorithms,ImprovedApproximationAlgorithmsForMinimumWeightVertexSeparators}. However, due to the fact that we need to control both the demand in the components and the demand crossing the cut, a more careful consideration is required. We use a simple algorithm, characterized by the following claim.
 
 \begin{theorem}\label{thm:gpd-bicriteria}
-    For every fixed $\rho\in(0,1)$ and every fixed $\eta\in\br{\max\brc{1/2,1-\delta_{\rho}},1}$, there exists a polynomial-time algorithm that returns an $\eta$-feasible subset of edges $C$ such that
+    For every fixed $\rho\in(0,1)$, let $\delta_{\rho}=\min\brc{1/4,1-\rho}$ and let $\gamma\br{n}$ be the approximation ratio of GC. For every fixed $\eta\in\br{\max\brc{1/2,1-\delta_{\rho}},1}$, there exists a polynomial-time algorithm that returns an $\eta$-feasible subset of edges $C$ such that
     \[
-    c\br{C}=\frac{\gamma}{(\eta+\delta_{\rho}-1)^2}\cdot \OPTdem{G}{\rho}
+    c\br{C}=\frac{\gamma\br{n}}{(\eta+\delta_{\rho}-1)^2}\cdot \OPTdem{G}{\rho}
     \]
-    where $\delta_{\rho}=\min\brc{1/4,1-\rho}$ and $\gamma$ is the approximation ratio for \textsc{Generalized Conductance}.
 \end{theorem}
 \begin{proof}
     The algorithm is as follows:
@@ -78,22 +77,22 @@ The analysis uses a generalization of the standard technique of dealing with \te
         w\br{A\cap V_{G'}, V_{G'}}\geq w\br{A, V}-w\br{V\setminus V_{G'}, V}> \delta_{\rho}\cdot W-\br{1-\eta}\cdot W=\br{\eta+\delta_{\rho}-1}\cdot W.
     \]
         Here the halting condition $w\br{V_{G'}}> \eta \cdot W$ implies $w\br{V\setminus V_{G'}, V}=W-w\br{V_{G'}}<\br{1-\eta}\cdot W$.
-        Symmetrically, for $B$ we get that, $w\br{B\cap V_{G'}, V_{G'}}\geq \br{\eta+\delta_{\rho}-1}\cdot W$. Since $\eta>1-\delta_{\rho}$ by assumption on $\eta$, we have $\eta+\delta_{\rho}-1>0$. Let $\br{S, \bar{S}}$ be the cut returned by the $\gamma$-approximation algorithm for the \textsc{Generalized Conductance} in $G'$ in the considered iteration. Since $\br{A\cap V_{G'}, B\cap V_{G'}}$ is a cut of $G'$, we have
+        Symmetrically, for $B$ we get that, $w\br{B\cap V_{G'}, V_{G'}}\geq \br{\eta+\delta_{\rho}-1}\cdot W$. Since $\eta>1-\delta_{\rho}$ by assumption on $\eta$, we have $\eta+\delta_{\rho}-1>0$. Let $\br{S, \bar{S}}$ be the cut returned by the $\gamma\br{n}$-approximation algorithm for the \textsc{Generalized Conductance} in $G'$ in the considered iteration. Since $\br{A\cap V_{G'}, B\cap V_{G'}}$ is a cut of $G'$, we have
 \begin{align*}
-        \frac{c\br{S, \bar{S}}}{w\br{S, V_{G'}}\cdot w\br{\bar{S}, V_{G'}}}\leq \frac{\gamma \cdot c\br{A, B}}{w\br{A\cap V_{G'}, V_{G'}}\cdot w\br{B\cap V_{G'}, V_{G'}}} 
-        \leq \frac{\gamma\cdot c\br{A, B}}{\br{\eta+\delta_{\rho}-1}^2\cdot W^2}.
+        \frac{c\br{S, \bar{S}}}{w\br{S, V_{G'}}\cdot w\br{\bar{S}, V_{G'}}}\leq \frac{\gamma\br{n} \cdot c\br{A, B}}{w\br{A\cap V_{G'}, V_{G'}}\cdot w\br{B\cap V_{G'}, V_{G'}}}
+        \leq \frac{\gamma\br{n}\cdot c\br{A, B}}{\br{\eta+\delta_{\rho}-1}^2\cdot W^2}.
 \end{align*}
 Now, by rearranging the above inequality we get:
 \begin{align*}
         c\br{S, \bar{S}} \leq 
-     \frac{\gamma\cdot c\br{A, B}}{\br{\eta+\delta_{\rho}-1}^2\cdot W^2}\cdot w\br{S, V_{G'}}\cdot w\br{\bar{S}, V_{G'}} 
-     \leq \frac{\gamma\cdot \OPTdem{G}{\rho}\cdot w\br{S, V_{G'}}}{\br{\eta+\delta_{\rho}-1}^2\cdot W}
+     \frac{\gamma\br{n}\cdot c\br{A, B}}{\br{\eta+\delta_{\rho}-1}^2\cdot W^2}\cdot w\br{S, V_{G'}}\cdot w\br{\bar{S}, V_{G'}}
+     \leq \frac{\gamma\br{n}\cdot \OPTdem{G}{\rho}\cdot w\br{S, V_{G'}}}{\br{\eta+\delta_{\rho}-1}^2\cdot W}
 \end{align*}
 since trivially we have $c\br{A, B}\leq \OPTdem{G}{\rho}$ and $w\br{\bar{S}, V_{G'}}\leq w\br{V_{G'}}\leq W$.
 
 Let $\ell$ be the index of some iteration, let $G_{\ell}'$ be $G'$ at this iteration and let $\br{S_{\ell}, \bar{S_{\ell}}}$ be the cut at this iteration. By summing the above inequality over all iterations we get:
 \begin{align*}
-    c\br{C} &\leq \sum_{\ell} c\br{S_{\ell}, \bar{S_{\ell}}} \leq \frac{\gamma\cdot \OPTdem{G}{\rho}}{\br{\eta+\delta_{\rho}-1}^2\cdot W}\cdot \sum_{\ell} w\br{S_{\ell}, V_{G'_{\ell}}} \leq \frac{\gamma}{\br{\eta+\delta_{\rho}-1}^2}\cdot \OPTdem{G}{\rho}
+    c\br{C} &\leq \sum_{\ell} c\br{S_{\ell}, \bar{S_{\ell}}} \leq \frac{\gamma\br{n}\cdot \OPTdem{G}{\rho}}{\br{\eta+\delta_{\rho}-1}^2\cdot W}\cdot \sum_{\ell} w\br{S_{\ell}, V_{G'_{\ell}}} \leq \frac{\gamma\br{n}}{\br{\eta+\delta_{\rho}-1}^2}\cdot \OPTdem{G}{\rho}
 \end{align*}
 where the last inequality follows since the sets $S_{\ell}$ are disjoint, so $\sum_{\ell} w\br{S_{\ell}, V_{G'_{\ell}}}\leq W$.
 \end{proof}
@@ -111,15 +110,15 @@ As an immediate corollary (by Thoerems~\ref{thm:tree-generalized-conductance} an
 \subsubsection{Extending the range of the parameters}
 Next, we show how to extend the above procedure into a recursive algorithm that works for any choice of $0<\rho < \eta<1$. 
 Since for $\rho\geq 3/4$ the previous procedure works for any $\eta\in(\rho,1)$, we focus on the case $\rho<3/4$. In such case, observe that $\delta_{\rho}=1/4$, and therefore we know, that the previous procedure works for any $\eta\in[3/4,1)$.
-Recall that $B_\rho=\rho\cdot W$ and $B_\eta=\eta\cdot W$, and note that $B_\rho/B_\eta=\rho/\eta$. The next result shows an $\bigo_{\rho,\eta}\br{\gamma}$-approximation for any choice of $0<\rho<\eta<1$. Note that the constants hidden in the $\bigo_{\rho,\eta}\br{\cdot}$ are quite large and we do not attempt to optimize them.
+Recall that $B_\rho=\rho\cdot W$ and $B_\eta=\eta\cdot W$, and note that $B_\rho/B_\eta=\rho/\eta$. The next result shows an $\bigo_{\rho,\eta}\br{\gamma\br{n}}$-approximation for any choice of $0<\rho<\eta<1$. Note that the constants hidden in the $\bigo_{\rho,\eta}\br{\cdot}$ are quite large and we do not attempt to optimize them.
 
 \begin{theorem}\label{thm:gpd-extension}
     Fix $0<\rho<3/4\leq \eta< 1$, and let $
         \kappa\br{\rho,\eta}=\max\brc{400,\ \frac{1}{\br{\br{1-\rho/\eta}\cdot 4/5}^2}}.$
     There exists a polynomial-time algorithm that outputs an $\eta$-feasible subset of edges $C_G$ such that$
-        c\br{C_G}\leq d\cdot \kappa\br{\rho,\eta}\cdot \gamma\cdot \OPTdem{G}{\rho},
+        c\br{C_G}\leq d\cdot \kappa\br{\rho,\eta}\cdot \gamma\br{n}\cdot \OPTdem{G}{\rho},
     $
-    where $d=\cl{\log_{5/4}\br{1/\eta}}$, $C^*$ is an optimal solution and $\gamma$ is the approximation factor of a polynomial-time algorithm for  \textsc{Generalized Conductance}.
+    where $d=\cl{\log_{5/4}\br{1/\eta}}$, $C^*$ is an optimal solution and $\gamma\br{n}$ is the approximation factor of a polynomial-time algorithm for \textsc{Generalized Conductance}.
 \end{theorem}
 \begin{proof}
     For a subgraph $H$ of $G$ with $w\br{V_H}\geq B_\eta$ (recall $B_\eta=\eta\cdot W$), we set $\eta_H=B_\eta/w\br{V_H}$ and $\rho_H=B_\rho/w\br{V_H}$ (recall $B_\rho=\rho\cdot W$). The algorithm uses $\eta_0=\max\brc{4/5,\eta_H}$ and we observe that $\rho_H/\eta_H=B_\rho/B_\eta=\rho/\eta$.
@@ -136,9 +135,9 @@ Because the last partitioning step happens when $\eta_0=\eta_H\geq 4/5$, the rec
 \]
 due to the fact that after reaching $\eta_{H}\geq 4/5$ the algorithm performs one last partitioning step, i.e., the last recursive call. Since $\cl{\log_{5/4}\br{w\br{V_H}/B_\eta}}$ is the number of iterations required to reach $\eta_H\geq 1$, which is one more than we need to reach $\eta_H\geq 4/5$, we get that the above quantity is correct.
 
-Now, we prove by induction on $d\br{H}$ that the recursive algorithm returns a subset of edges of cost at most $d\br{H}\cdot \kappa\br{\rho,\eta}\cdot \gamma\cdot \OPTdem{H}{\rho_H}$.
+Now, we prove by induction on $d\br{H}$ that the recursive algorithm returns a subset of edges of cost at most $d\br{H}\cdot \kappa\br{\rho,\eta}\cdot \gamma\br{n}\cdot \OPTdem{H}{\rho_H}$.
 
-    \emph{Base cases, $d\br{H}=0$ and $d\br{H}=1$.} If $d\br{H}=0$, then $w\br{V_H}\leq B_\eta$, since the algorithm terminates without any partitioning, and the cost is $0$. If $d\br{H}=1$, then $B_\eta/w\br{V_H}\geq 4/5$, so $\eta_0=\eta_H=B_\eta/w\br{V_H}$, and after a single partitioning step for each connected component $H'$ of $H\setminus C$, $w\br{V_{H'}}\leq \eta_0 \cdot w\br{V_H}=B_\eta$. Hence the algorithm terminates at the beginning of the next recursive step. By the explicit bound established in the proof of Theorem~\ref{thm:gpd-bicriteria}, the cost of the solution is bounded by $\frac{\gamma}{\br{\eta_H+\delta_{\rho_H}-1}^2}\cdot \OPTdem{H}{\rho_H}$. We establish the bound $\frac{1}{\br{\eta_H+\delta_{\rho_H}-1}^2}\leq \kappa\br{\rho,\eta}$ in two cases:
+    \emph{Base cases, $d\br{H}=0$ and $d\br{H}=1$.} If $d\br{H}=0$, then $w\br{V_H}\leq B_\eta$, since the algorithm terminates without any partitioning, and the cost is $0$. If $d\br{H}=1$, then $B_\eta/w\br{V_H}\geq 4/5$, so $\eta_0=\eta_H=B_\eta/w\br{V_H}$, and after a single partitioning step for each connected component $H'$ of $H\setminus C$, $w\br{V_{H'}}\leq \eta_0 \cdot w\br{V_H}=B_\eta$. Hence the algorithm terminates at the beginning of the next recursive step. By the explicit bound established in the proof of Theorem~\ref{thm:gpd-bicriteria}, the cost of the solution is bounded by $\frac{\gamma\br{n}}{\br{\eta_H+\delta_{\rho_H}-1}^2}\cdot \OPTdem{H}{\rho_H}$. We establish the bound $\frac{1}{\br{\eta_H+\delta_{\rho_H}-1}^2}\leq \kappa\br{\rho,\eta}$ in two cases:
     \begin{enumerate}
         \item If $\rho_H\leq 3/4$, then $\delta_{\rho_H}=1/4$ and $\eta_H+\delta_{\rho_H}-1\geq 4/5+1/4-1=1/20$, using $\eta_H\geq 4/5$. Hence $\frac{1}{\br{\eta_H+\delta_{\rho_H}-1}^2}\leq 400\leq \kappa\br{\rho,\eta}$.
         \item If $\rho_H> 3/4$, then $\delta_{\rho_H}=1-\rho_H$ and, using $\rho_H=\br{\rho/\eta}\cdot\eta_H$ and $\eta_H\geq 4/5$,
@@ -147,9 +146,9 @@ Now, we prove by induction on $d\br{H}$ that the recursive algorithm returns a s
         \]
         Hence $\frac{1}{\br{\eta_H+\delta_{\rho_H}-1}^2}\leq \frac{1}{\br{\br{1-\rho/\eta}\cdot 4/5}^2}\leq \kappa\br{\rho,\eta}$.
     \end{enumerate}
-    In both cases the cost is at most $\kappa\br{\rho,\eta}\cdot\gamma\cdot \OPTdem{H}{\rho_H}=d\br{H}\cdot \kappa\br{\rho,\eta}\cdot\gamma\cdot\OPTdem{H}{\rho_H}$.
+    In both cases the cost is at most $\kappa\br{\rho,\eta}\cdot\gamma\br{n}\cdot \OPTdem{H}{\rho_H}=d\br{H}\cdot \kappa\br{\rho,\eta}\cdot\gamma\br{n}\cdot\OPTdem{H}{\rho_H}$.
 
-    \emph{Inductive step.} Suppose the claim holds for every graph $H'$ with $d\br{H'}\leq d-1$, and let $H$ satisfy $d\br{H}=d\geq 2$. Then $B_\eta/w\br{V_H}<4/5$, so $\eta_0=4/5$, and for every $H'$ in $H\setminus C$, $w\br{H'}\leq \eta_0\cdot w\br{V_H}=\frac{4}{5}\cdot w\br{V_H}$, thus $d\br{H'}\leq d-1$. By Theorem \ref{thm:gpd-bicriteria}, the current partitioning step has cost at most $\frac{\gamma}{\br{\eta_0+\delta_{\rho_H}-1}^2}\cdot\OPTdem{H}{\rho_H}$, and we again bound $\frac{1}{\br{\eta_0+\delta_{\rho_H}-1}^2}\leq \kappa\br{\rho,\eta}$:
+    \emph{Inductive step.} Suppose the claim holds for every graph $H'$ with $d\br{H'}\leq d-1$, and let $H$ satisfy $d\br{H}=d\geq 2$. Then $B_\eta/w\br{V_H}<4/5$, so $\eta_0=4/5$, and for every $H'$ in $H\setminus C$, $w\br{H'}\leq \eta_0\cdot w\br{V_H}=\frac{4}{5}\cdot w\br{V_H}$, thus $d\br{H'}\leq d-1$. By Theorem \ref{thm:gpd-bicriteria}, the current partitioning step has cost at most $\frac{\gamma\br{n}}{\br{\eta_0+\delta_{\rho_H}-1}^2}\cdot\OPTdem{H}{\rho_H}$, and we again bound $\frac{1}{\br{\eta_0+\delta_{\rho_H}-1}^2}\leq \kappa\br{\rho,\eta}$:
     \begin{enumerate}
         \item If $\rho_H\leq 3/4$, then $\delta_{\rho_H}=1/4$ and $\eta_0+\delta_{\rho_H}-1=4/5+1/4-1=1/20$, so the term is at most $400\leq \kappa\br{\rho,\eta}$.
         \item If $\rho_H> 3/4$, then $\delta_{\rho_H}=1-\rho_H$ and, using $\rho_H=\br{\rho/\eta}\cdot\eta_H<\br{\rho/\eta}\cdot\eta_0$,
@@ -158,13 +157,13 @@ Now, we prove by induction on $d\br{H}$ that the recursive algorithm returns a s
         \]
         so the term is at most $\frac{1}{\br{\br{1-\rho/\eta}\cdot 4/5}^2}\leq \kappa\br{\rho,\eta}$.
     \end{enumerate}
-    Thus the top level contributes at most $\kappa\br{\rho,\eta}\cdot\gamma\cdot\OPTdem{H}{\rho_H}$. By the inductive hypothesis, for each connected component $H'$ of $H\setminus C$, $c\br{C_{H'}}\leq \br{d-1}\cdot \kappa\br{\rho,\eta}\cdot\gamma\cdot\OPTdem{H'}{\rho_{H'}}$. Since the components in $H\setminus C$ are vertex and edge-disjoint and $C^*\cap E_{H'}$ is a valid solution for \textsc{Graph Partitioning with Demands} on $H'$ in $H\setminus C$ with $\rho_{H'}$, we have that $\OPTdem{H'}{\rho_H}\leq c\br{C^*\cap E_{H'}}$. Moreover, by summing up over all $H'$ we get
+    Thus the top level contributes at most $\kappa\br{\rho,\eta}\cdot\gamma\br{n}\cdot\OPTdem{H}{\rho_H}$. By the inductive hypothesis, for each connected component $H'$ of $H\setminus C$, $c\br{C_{H'}}\leq \br{d-1}\cdot \kappa\br{\rho,\eta}\cdot\gamma\br{n}\cdot\OPTdem{H'}{\rho_{H'}}$. Since the components in $H\setminus C$ are vertex and edge-disjoint and $C^*\cap E_{H'}$ is a valid solution for \textsc{Graph Partitioning with Demands} on $H'$ in $H\setminus C$ with $\rho_{H'}$, we have that $\OPTdem{H'}{\rho_H}\leq c\br{C^*\cap E_{H'}}$. Moreover, by summing up over all $H'$ we get
     $\sum_{H'\in H\setminus C}\OPTdem{H'}{\rho_{H'}}\leq \OPTdem{H}{\rho_H}$, and therefore
     \begin{align*}
         c\br{C}&=c\br{C_H}+\sum_{H'\in H\setminus C}c\br{C_{H'}}
-        \\&\leq \kappa\br{\rho,\eta}\cdot\gamma\cdot\OPTdem{H}{\rho_H}+\br{d-1}\cdot\kappa\br{\rho,\eta}\cdot \gamma\sum_{H'\in H\setminus C}\OPTdem{H'}{\rho_{H'}}
+        \\&\leq \kappa\br{\rho,\eta}\cdot\gamma\br{n}\cdot\OPTdem{H}{\rho_H}+\br{d-1}\cdot\kappa\br{\rho,\eta}\cdot \gamma\br{n}\sum_{H'\in H\setminus C}\OPTdem{H'}{\rho_{H'}}
         \\&\leq 
-        d\cdot \kappa\br{\rho,\eta}\cdot\gamma\cdot\OPTdem{H}{\rho_H}.
+        d\cdot \kappa\br{\rho,\eta}\cdot\gamma\br{n}\cdot\OPTdem{H}{\rho_H}.
     \end{align*}
     Therefore, the induction is complete. Applying it to $H=G$, where $\spr{G}=W$ and $B_\eta=\eta\cdot W$, gives $d\br{G}\leq \cl{\log_{5/4}\br{1/\eta}}$, which yields the statement of the theorem.
 \end{proof}

@@ -1,7 +1,7 @@
 \begin{algorithm}[H]
     \caption{Recursive extension to the full parameter range}
     \textbf{Input} A component $H$, global budgets $B_\rho=\rho\cdot W$ and $B_\eta=\eta\cdot W$, and the algorithm from Theorem~\ref{thm:gpd-bicriteria} (Algorithm~\ref{algo:partitioning-limited-range})\;
-    \textbf{Output} A supply-edge set $C_H$ such that the components of $H\setminus C_H$ have demand at most $B_\eta$\;
+    \textbf{Output} An $\eta$-feasible supply-edge set $C_H$\;
     \If{$w\br{V_H}\leq B_\eta$}{
         \textbf{return} $\emptyset$\;
     }
