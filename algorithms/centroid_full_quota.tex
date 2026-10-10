@@ -8,7 +8,7 @@
     Let $S_T=T[\mathcal{L}_T]$\;
     Initialize $\cC_T\gets\emptyset$\;
     \ForEach{$Q\subseteq E(S_T)$ with $|Q|\leq|\mathcal{L}_T|-1$}{
-        Let $\mathcal{K}_Q=\brc{K\text{ component of }T\setminus Q:V_K\cap\mathcal{L}_T\neq\emptyset}$ and $\mathcal{K}_Q^+=\{K\in\mathcal{K}_Q:w\br{V_K}>B_\rho\}$\;
+        Let $\mathcal{K}_Q=\brc{K\in T\setminus Q:V_K\cap\mathcal{L}_T\neq\emptyset}$ and $\mathcal{K}_Q^+=\{K\in\mathcal{K}_Q:w\br{V_K}>B_\rho\}$\;
         \ForEach{$K\in\mathcal{K}_Q^+$}{
             Let $\mathcal{L}_K=V_K\cap\mathcal{L}_T$, $S_K=K[\mathcal{L}_K]$, and $q_K\gets w\br{V_K}-B_\rho$\;
         }
