@@ -396,10 +396,9 @@ We now show a combinatorial algorithm for \textsc{Graph Partitioning with Demand
 
 
 In our algorithm we apply Lemma~\ref{lem:tree-separator} with the smallest integer $t\geq e$, which is $t=3$. 
-Thus, $\mathcal L_H$ contains at most two separators, $\spr{\mathcal{L_H}}\leq 2$,  and every component of $H\setminus\mathcal L_H$ \DDfix{has demand at most $w(V_H)/3$.}.
+Thus, $\mathcal L_H$ contains at most two separators, $\spr{\mathcal{L_H}}\leq 2$, and every component of $H\setminus\mathcal L_H$ has demand at most $w(V_H)/3$.
 Let $P_H$ be the minimal path in $H$ containing the vertices of $\mathcal L_H$. If $|\mathcal L_H|=1$, then $P_H$ is that single vertex. We enumerate $Q=\emptyset$ and $Q=\{e\}$ for each edge $e\in E_{P_H}$. Thus at most $1+|E_{P_H}|\leq n$ guesses are considered. For a guess $Q$, let $\mathcal K_Q$ be the components of $H\setminus Q$.
-If $Q=\emptyset$, then define $S_K$ to be the entire path $P_H$.
-If $Q=\{e\}$ for some edge $e\in E_{P_H}$, then define $S_K$ to be the graph with the single vertex of $\mathcal L_H$ contained in $K$.
+Define $S_K=H[V_{P_H}]$.
 
 %For each edge $e\in E_K\setminus E_{S_K}$, let $T_e$ be the component of $K\setminus\brc{e}$ not containing $S_K$. For $A\subseteq E_K\setminus E_{S_K}$, define
 %\[
@@ -414,14 +413,10 @@ If $Q=\{e\}$ for some edge $e\in E_{P_H}$, then define $S_K$ to be the graph wit
 %     f_K(A)=.
 % \]
 % is the total demand separated from $S_K$ by cutting the edges in $C_K(A)$.
-\DDfix{
-For $A\subseteq E_K\setminus E_{S_K}$, define  $U_K(A)$ to be the set of all vertices $u$ such that the path from $u$ to its closest vertex in $S_K$ contains an edge in $A$.
-Let $B_K(A)\subseteq A$ be the \emph{boundary} of $U_K(A)$, defined as the set of edges with one endpoint in $U_K(A)$. Hence, $B_K(A)$ separates it from $S_K$, and
-\[
-    f_K(A)=w\br{V_K\setminus U_K(A), V_K}.
-\]
-is the total demand separated from $S_K$ by cutting the edges in $B_K(A)$.
-}
+For $A\subseteq E_K\setminus E_{S_K}$, define $U_K(A)$ to be the set of all vertices $u$ such that the path from $u$ to its closest vertex in $S_K$ contains an edge in $A$.
+Let $B_K(A)\subseteq A$ be the \emph{boundary} of $U_K(A)$, defined as the set of edges with one endpoint in $U_K(A)$. Hence, $B_K(A)$ separates $U_K(A)$ from $S_K$. Let $
+            f_K(A)=w\br{V_K\setminus U_K(A), V_K}$
+ be the total demand separated from $S_K$ by cutting the edges in $B_K(A)$.
 
 Observe, that $f_K$ is a weighted coverage function on the demand pairs. 
 % The idea in our recursion is that the component containing $S_K$ after cutting $C_K(A)$ has demand $w\br{V_K}-f_K(A)$. Moreover, every other component contains no separator, so it is contained in a component of $H\setminus\mathcal L_H$ and has demand at most $w\br{H}/3$. These two facts will allow us to control the demand in all resulting components during the recursion.
