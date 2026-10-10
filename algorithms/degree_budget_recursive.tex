@@ -5,14 +5,14 @@
     \If{$W=0$}{
         \textbf{return} $F=\emptyset$\;
     }
-    Set $B_\rho\gets\rho W$, $B_\eta\gets\eta W$, $F\gets\emptyset$, and initialize a queue $\cQ\gets\{T\}$\;
+    Set $\rho\cdot W\gets\rho W$, $\eta\cdot W\gets\eta W$, $F\gets\emptyset$, and initialize a queue $\cQ\gets\{T\}$\;
     \While{$\cQ\neq\emptyset$}{
         Remove a component $H$ from $\cQ$\;
-        \If{$w\br{V_H}>B_\eta$}{
-            Set $\rho_H\gets B_\rho/w\br{V_H}$ and $\sigma_H\gets\alpha+(1-\alpha)\rho_H$\;
+        \If{$w\br{V_H}>\eta\cdot W$}{
+            Set $\rho_H\gets \rho\cdot W/w\br{V_H}$ and $\sigma_H\gets\alpha+(1-\alpha)\rho_H$\;
             Run the direct weighted-budget procedure using the local weighted demand degrees on the instance induced by $V_H$ with parameters $\rho_H,\sigma_H$. Let $C_H$ be its returned cut\;
             $F\gets F\cup C_H$\;
-            \ForEach{component $H'$ of $H\setminus C_H$ with $w\br{V_{H'}}>B_\eta$}{
+            \ForEach{component $H'$ of $H\setminus C_H$ with $w\br{V_{H'}}>\eta\cdot W$}{
                 Add $H'$ to $\cQ$\;
             }
         }

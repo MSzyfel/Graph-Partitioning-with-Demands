@@ -1,11 +1,12 @@
 \begin{algorithm}[H]
     \caption{Recursive extension to the full parameter range}
-    \textbf{Input} A component $H$, global budgets $B_\rho=\rho\cdot W$ and $B_\eta=\eta\cdot W$, and the algorithm from Theorem~\ref{thm:gpd-bicriteria} (Algorithm~\ref{algo:partitioning-limited-range})\;
-    \textbf{Output} A supply-edge set $C_H$ such that the components of $H\setminus C_H$ have demand at most $B_\eta$\;
-    \If{$w\br{V_H}\leq B_\eta$}{
+    \label{alg:recursive-partitioning}
+    \textbf{Input} A component $H$, a constant $\eta$, and the algorithm from Theorem~\ref{thm:gpd-bicriteria}\;
+    \textbf{Output} A $C_H\subseteq E_H$ such that each component of $H\setminus C_H$ has demand at most $\eta\cdot W$\;
+    \If{$w\br{V_H}\leq \eta\cdot W$}{
         \textbf{return} $\emptyset$\;
     }
-    $\eta_0\gets\max\brc{4/5,\,B_\eta/w\br{V_H}}$\;
+    $\eta_0\gets\max\brc{4/5,\,\eta\cdot W/w\br{V_H}}$\;
     Run Algorithm~\ref{algo:partitioning-limited-range} on $H$ with parameter $\eta_0$. Let $C$ be the returned supply-edge set\;
     $C_H\gets C$\;
     \ForEach{connected component $H'$ of $H\setminus C$}{

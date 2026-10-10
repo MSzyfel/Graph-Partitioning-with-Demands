@@ -5,16 +5,16 @@
     \If{$W=0$}{
         \textbf{return} $F=\emptyset$\;
     }
-    Set $B_\rho\gets\rho W$ and $B_\eta\gets\eta W$\;
+    Set $\rho\cdot W\gets\rho W$ and $\eta\cdot W\gets\eta W$\;
     \textbf{Procedure} $\textsc{WeightedBudgetRecursive}(H)$\;
     \Indp
-        \If{$w\br{V_H}\leq B_\eta$}{
+        \If{$w\br{V_H}\leq \eta\cdot W$}{
             \textbf{return} $\emptyset$\;
         }
-        Set $\rho_H\gets B_\rho/w\br{V_H}$ and $\sigma_H\gets\alpha+(1-\alpha)\rho_H$\;
+        Set $\rho_H\gets \rho\cdot W/w\br{V_H}$ and $\sigma_H\gets\alpha+(1-\alpha)\rho_H$\;
         Run the direct weighted-budget procedure using the local weighted demand degrees on the instance induced by $V_H$ with parameters $\rho_H,\sigma_H$. Let $C_H$ be its returned supply-edge set\;
         Set $F_H\gets C_H$\;
-        \ForEach{component $H'$ of $H\setminus C_H$ with $w\br{V_{H'}}>B_\eta$}{
+        \ForEach{component $H'$ of $H\setminus C_H$ with $w\br{V_{H'}}>\eta\cdot W$}{
             $F_H\gets F_H\cup\textsc{WeightedBudgetRecursive}(H')$\;
         }
         \textbf{return} $F_H$\;
