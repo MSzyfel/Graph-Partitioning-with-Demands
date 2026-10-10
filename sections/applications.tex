@@ -148,7 +148,6 @@ Now, we prove by induction on $d\br{H}$ that Algorithm~\ref{alg:recursive-partit
     In both cases the cost is at most $\kappa\br{\rho,\eta}\cdot\gamma\br{n}\cdot \OPTdem{H}{\rho_H}=d\br{H}\cdot \kappa\br{\rho,\eta}\cdot\gamma\br{n}\cdot\OPTdem{H}{\rho_H}$.
 
     \emph{Inductive step.} Suppose the claim holds for every graph $H'$ with $d\br{H'}\leq d-1$, and let $H$ satisfy $d\br{H}=d\geq 2$. Let $C$ be the cut computed when $H$ is the input. It holds $B_\eta/w\br{V_H}<4/5$, so $\eta_0=4/5$, and for every $H'$ in $H\setminus C$, $w\br{H'}\leq \eta_0\cdot w\br{V_H}=\frac{4}{5}\cdot w\br{V_H}$, thus $d\br{H'}\leq d-1$. By Theorem \ref{thm:gpd-bicriteria}, the cost introduced by the current partitioning step is at most $\frac{\gamma\br{n}}{\br{\eta_0+\delta_{\rho_H}-1}^2}\cdot\OPTdem{H}{\rho_H}$, and we again bound $\frac{1}{\br{\eta_0+\delta_{\rho_H}-1}^2}\leq \kappa\br{\rho,\eta}$:
-    \DD{tutaj sie zastanawiam: po co mamy dwa przypadki skoro mozemy z definicji napisac, ze $\frac{1}{\br{\eta_0+\delta_{\rho_H}-1}^2}\leq \kappa\br{\rho,\eta}$ i tym samym mamy oszacowany $C$ niezaleznie od konkretnych stalych wartosci parametrow. A jesli tak, to moze $\kappa$ nie trzeba definiowac jako max tylko jako ten ulamek? (te same dwa podprzypadki by zniknely powyzej takze)}
     \begin{enumerate}
         \item If $\rho_H\leq 3/4$, then $\delta_{\rho_H}=1/4$ and $\eta_0+\delta_{\rho_H}-1=4/5+1/4-1=1/20$, so the term is at most $400\leq \kappa\br{\rho,\eta}$.
         \item If $\rho_H> 3/4$, then $\delta_{\rho_H}=1-\rho_H$ and, using $\rho_H=\br{\rho/\eta}\cdot\eta_H<\br{\rho/\eta}\cdot\eta_0$,
@@ -192,7 +191,8 @@ For $u,v\in V$, let $\operatorname{lca}_{\cT}(u,v)$ denote their lowest common a
     =\sum_{uv\in E}c\br{uv}\cdot
         w\br{V_{\operatorname{lca}_{\cT}(u,v)}}.
 \end{equation}
-We refer to this problem as \textsc{Hierarchical Clustering with Demands}. \DDfix{It generalizes the classical hierarchical clustering problem, also known as decision tree problem, that in turn is a generalization of the classical binary search.} Note, that a non-binary clustering tree can be refined into a binary one without increasing the cost~\cite{ACostFunctionForSimilarityBasedHierarchicalClustering}.
+We refer to this problem as \textsc{Hierarchical Clustering with Demands}. 
+% \DDfix{It generalizes the classical hierarchical clustering problem, also known as decision tree problem, that in turn is a generalization of the classical binary search.} Note, that a non-binary clustering tree can be refined into a binary one without increasing the cost~\cite{ACostFunctionForSimilarityBasedHierarchicalClustering}.
 
 We parameterize our top-down algorithm by constants $0<\rho<\eta<1$. Assume that we have a polynomial-time subroutine for \textsc{Graph Partitioning with Demands} with target $\rho$ that returns an $\eta$-feasible supply-edge set $C_H$ satisfying
 \begin{equation}\label{eq:hc-gpd-subroutine}
