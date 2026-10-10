@@ -419,7 +419,7 @@ $
     \OPT_{q_K}\br{K}
     =\min\brc{c_K(A)\colon A\subseteq E_K\setminus E_{S_K},\ f_K(A)\geq q_K}.
 $
-If this quota \DD{ktore to "quota" ($q_K$?) i co znaczy feasible?} is feasible, the $ (1-1/e)$-approximation for \textsc{Budgeted Maximum Coverage}~\cite{KhullerMossNaor1999BudgetedMaximumCoverage} gives a polynomial-time routine $\textsc{CoreQuotaCover}(f_K,c_K,q_K)$ returning $A_K$ such that
+if there exists any $A\subseteq E_K\setminus E_{S_K}$ with $f_K(A)\geq q_K$.  The $ (1-1/e)$-approximation for \textsc{Budgeted Maximum Coverage}~\cite{KhullerMossNaor1999BudgetedMaximumCoverage} gives a polynomial-time routine $\textsc{CoreQuotaCover}(f_K,c_K,q_K)$ returning $A_K$ such that
 \[
     f_K(A_K)\geq(1-1/e)\cdot q_K,\quad \text{and}\quad \quad\text{and}\quad
     c_K(A_K)\leq\OPT_{q_K}\br{K}.
@@ -439,7 +439,7 @@ For each guess $Q$, the algorithm applies this routine to every component $K$ co
 \begin{proof}
     Define the excess of any component $H$ by $\Phi(H)=\max\brc{0,w\br{V_H}-B_\rho}$.
     Now, consider a recursive call for a subgraph $H$ of $T$, write $w\br{V_H}$ and $q_H=w\br{V_H}-B_\rho>0$. 
-    Let $Q$ be a feasible guess, i.e., the quota problem is feasible. Let $C_H$ be the edges chosen by the algorithm for this guess. Consider each component $H'\in H\setminus C_H$. There are two cases.
+    Let $Q$ be a feasible guess, i.e., for each $K\in\mathcal{K}_Q^+$ there exists some $A\subseteq E_K\setminus E_{S_K}$ with $f_K(A)\geq q_K$. Let $C_H$ be the edges chosen by the algorithm for this guess. Consider each component $H'\in H\setminus C_H$. There are two cases.
     \begin{enumerate}
         \item $V_{S_K}\subseteq V_{H'}$ for some $K\in \mathcal{K}_Q$. Then, $H'=K\setminus U_K(A_K)$. Since $q_K=w\br{V_K}-B_\rho\leq q_H$,
     \[
