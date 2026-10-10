@@ -564,16 +564,16 @@ removing the smaller side of the returned cut until all components $H$ are of si
 
 \smallskip
 \thmterm{Corollary}{
-  A bicriteria $O(\log n)$-approx. algorithm exists: it
+  A bi-criteria $O(\log n)$-approx. algorithm exists: it
   achieves cost $O(\log n)\cdot c(C^*)$ while guaranteeing
-  $w(H)\le \tfrac{4}{5}w(V)$ for every resulting component $H$. A bicriteria $O\br{1}$-approx.  exists for trees.
+  $w(H)\le \tfrac{4}{5}w(V)$ for every resulting component $H$. A bi-criteria $O\br{1}$-approx. exists for trees.
 }
 
 \bigskip
 \textbf{2.\ Hierarchical Clustering with Demands.}\\
 Find a binary clustering tree $T$ on $V$ minimising
 \[
-  \sum_{u\in V(T)} w(S_u)\cdot c\bigl(S_u,V\setminus S_u\bigr).
+  \sum_{u\in V_T} w(S_u)\cdot c\bigl(S_u,V\setminus S_u\bigr).
 \]
 Algorithm: recursively apply graph partitioning with demands,
 building $T$ top-down until all clusters become singletons.

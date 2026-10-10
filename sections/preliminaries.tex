@@ -3,7 +3,7 @@
 Most instances of the problems considered in this work consist of a graph $G=\br{V,E,D,c,w}$, where $V$ is the vertex set, $E$ is the set of \emph{supply edges}, $D$ is the set of \emph{demand edges}, $c\colon E \to \mathbb{N}$ is the \emph{capacity} function which encodes the cost of cutting a supply edge, and $w\colon D\to \mathbb{N}$ is the \emph{demand} function which assigns a non-negative weight to each demand edge.
 For adjacent vertices $u,v\in V$, whenever not explicitly stated, we denote by $uv$ the supply edge between $u$ and $v$.
 For any $C\subseteq E$, $G\setminus C$ is the graph obtained by removing the edges in $C$ from $G$, and with a slight abuse of notation,  the set of connected components obtained by removing the edges in $C$ from $G$.
-We write $\br{V_H,E_H,D_H,c_H,w_H}$ to point out that given parameters represent a particular graph or subgraph $H$, different than $G$.
+We write $\br{V_H,E_H,D_H,c_H,w_H}$ to point out that given parameters represent a particular graph or subgraph $H$ different than $G$.
 For $U\subseteq V$, the induced subgraph $G[U]$ has the vertex set $U$, the supply-edge set $E[U]=\brc{uv\in E:u,v\in U}$, the demand-edge set $D[U]=\brc{uv\in D:u,v\in U}$, and the restrictions of $c$ and $w$ to these sets.
 
 Fix an edge set $X\subseteq\binom{V}{2}$ (usually either $X=E$ or $X=D$).
@@ -25,7 +25,7 @@ For $A\subseteq V$ and a set of edges $X$, let $\delta_X[A]=\brc{uv\in X:\brc{u,
 For parameters $\rho,\eta\in(0,1)$, write $B_\rho=\rho W$ and $B_\eta=\eta W$ for the corresponding demand budgets.
 For a subset $C\subseteq X$, $f\br{C}=\sum_{e\in C}f\br{e}$ (recall that if $X=D$, then $f=w$ and if $X=E$, then $f=c$).
 For a subset $S\subseteq V$, we denote by $\bar{S}$ the complement of $S$ in $V$, i.~e. $\bar{S}=V\setminus S$.
-A \emph{cut} is any subset $S\subseteq V$, such that $S\neq \emptyset$, $S\neq V$ and we denote it either by just $S$ or we write $\br{S, \bar{S}}$ to explicitly indicate its two sides.
+A \emph{cut} is any subset $S\subseteq V$ such that $S\neq \emptyset$, $S\neq V$ and we denote it either by just $S$ or we write $\br{S, \bar{S}}$ to explicitly indicate its two sides.
 
 Whenever an objective function is given as a ratio and its denominator equals $0$, we set the value of this objective to $\infty$.
 

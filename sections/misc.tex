@@ -53,10 +53,10 @@ For every connected $S\subseteq V$, we can now rewrite
     =\sum_{v\in S}\beta_v+c\br{E_S}.
 \end{equation}
 
-Root $T$ arbitrarily. For a vertex $v$, let $T_v$ be its descendant subtree, and let $P_v(\ell)$ be the maximum value of the right-hand side of~\eqref{eq:tree-pricing-profit} over connected sets $S\subseteq V(T_v)$ containing $v$ and satisfying $\sum_{u\in S}\widehat d(u)=\ell$. An impossible state has value $-\infty$.
+Root $T$ arbitrarily. For a vertex $v$, let $T_v$ be its descendant subtree, and let $P_v(\ell)$ be the maximum value of the right-hand side of~\eqref{eq:tree-pricing-profit} over connected sets $S\subseteq V_{T_v}$ containing $v$ and satisfying $\sum_{u\in S}\widehat d(u)=\ell$. An impossible state has value $-\infty$.
 
 If the children of $v$ are $u_1,\ldots,u_k$, denote by
-$P_v^{(j)}(\ell)$ the maximum value of the right-hand side of~\eqref{eq:tree-pricing-profit} over connected sets $S\subseteq V(T_v)$ containing $v$ and the first $j$ children and satisfying $\sum_{u\in S}\widehat d(u)=\ell$.
+$P_v^{(j)}(\ell)$ the maximum value of the right-hand side of~\eqref{eq:tree-pricing-profit} over connected sets $S\subseteq V_{T_v}$ containing $v$ and the first $j$ children and satisfying $\sum_{u\in S}\widehat d(u)=\ell$.
 Initialize
 \[
     P_v^{(0)}(\ell)
