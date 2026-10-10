@@ -5,10 +5,10 @@
     \If{$W=0$}{
         \textbf{return} $C=\emptyset$\;
     }
-    Set $\rho\cdot W\gets\rho W$ and $\eta\cdot W\gets\eta W$\;
+    Set $B_\rho\gets\rho W$ and $B_\eta\gets\eta W$\;
     \textbf{Procedure} $\textsc{WeightedBudgetRecursive}(H)$\;
     \Indp
-        \If{$w\br{V_H}\leq \eta\cdot W$}{
+        \If{$w\br{V_H}\leq B_\eta$}{
             \textbf{return} $\emptyset$\;
         }
         Set $\rho_H\gets B_\rho/w\br{V_H}$ and $\sigma_H\gets\alpha+(1-\alpha)\rho_H$\;

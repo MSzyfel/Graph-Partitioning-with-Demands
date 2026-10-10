@@ -3,15 +3,15 @@
     \caption{Full-quota separator partitioning}\label{alg:centroid-full-quota}
     \textbf{Input} Supply tree $T=(V,E,c)$, demand graph $(V,D,w)$, rational $0<\rho<1$, and fixed $\epsilon>0$\;
     \textbf{Output} A $\rho$-feasible supply-edge set $C\subseteq E$\;
-    Set $t\gets\lceil1/\rho\rceil$\;
+    Set $B_\rho\gets\rho W$ and $t\gets\lceil1/\rho\rceil$\;
     Run $\textsc{Separator}(T, w, t)$, obtaining $\mathcal{L}_T$ \;
     $S_T\gets T[\mathcal{L}_T]$ and $\cF_T\gets\emptyset$\;
     \ForEach{$Q\subseteq E(S_T)$ with $|Q|\leq|\mathcal{L}_T|-1$}{
-        $\mathcal{K}_Q\gets \brc{K\in T\setminus Q:V_K\cap\mathcal{L}_T\neq\emptyset}$ and $\mathcal{K}_Q^+\gets\{K\in\mathcal{K}_Q:w\br{V_K}>\rho\cdot W\}$\;
+        $\mathcal{K}_Q\gets \brc{K\in T\setminus Q:V_K\cap\mathcal{L}_T\neq\emptyset}$ and $\mathcal{K}_Q^+\gets\{K\in\mathcal{K}_Q:w\br{V_K}>B_\rho\}$\;
         \ForEach{$K\in\mathcal{K}_Q^+$}{
             $\mathcal{L}_K\gets V_K\cap\mathcal{L}_T$, $S_K\gets K[\mathcal{L}_K]$ and $q_K\gets w\br{V_K}-B_\rho$\;
         }
-        \If{$\exists K\in\mathcal{K}_Q^+\colon w\br{V_{S_K}}>\rho\cdot W$}{
+        \If{$\exists K\in\mathcal{K}_Q^+\colon w\br{V_{S_K}}>B_\rho$}{
             \textbf{continue}\;
         }
         \ForEach{$K\in\mathcal{K}_Q^+$}{
