@@ -1,9 +1,9 @@
 \begin{algorithm}[tbp]
     \caption{Recursive weighted-budget partitioning}
     \textbf{Input} Supply tree $T=(V,E,c)$, demand graph $(V,D,w)$, and rational parameters $0<\rho<\eta<1$ and $\alpha\in(1/2,1)$\;
-    \textbf{Output} An $\eta$-feasible supply-edge set $F\subseteq E$\;
+    \textbf{Output} An $\eta$-feasible supply-edge set $C\subseteq E$\;
     \If{$W=0$}{
-        \textbf{return} $F=\emptyset$\;
+        \textbf{return} $C=\emptyset$\;
     }
     Set $B_\rho\gets\rho W$ and $B_\eta\gets\eta W$\;
     \textbf{Procedure} $\textsc{WeightedBudgetRecursive}(H)$\;
@@ -12,13 +12,13 @@
             \textbf{return} $\emptyset$\;
         }
         Set $\rho_H\gets B_\rho/w\br{V_H}$ and $\sigma_H\gets\alpha+(1-\alpha)\rho_H$\;
-        Run the direct weighted-budget procedure using the local weighted demand degrees on the instance induced by $V_H$ with parameters $\rho_H,\sigma_H$. Let $C_H$ be its returned supply-edge set\;
-        Set $F_H\gets C_H$\;
-        \ForEach{component $H'$ of $H\setminus C_H$ with $w\br{V_{H'}}>B_\eta$}{
-            $F_H\gets F_H\cup\textsc{WeightedBudgetRecursive}(H')$\;
+        Run the direct weighted-budget procedure using the local weighted demand degrees on the instance induced by $V_H$ with parameters $\rho_H,\sigma_H$. Let $F_H$ be its returned supply-edge set\;
+        Set $C_H\gets F_H$\;
+        \ForEach{component $H'$ of $H\setminus F_H$ with $w\br{V_{H'}}>B_\eta$}{
+            $C_H\gets C_H\cup\textsc{WeightedBudgetRecursive}(H')$\;
         }
-        \textbf{return} $F_H$\;
+        \textbf{return} $C_H$\;
     \Indm
-    $F\gets\textsc{WeightedBudgetRecursive}(T)$\;
-    \textbf{return} $F$\;
+    $C\gets\textsc{WeightedBudgetRecursive}(T)$\;
+    \textbf{return} $C$\;
 \end{algorithm}

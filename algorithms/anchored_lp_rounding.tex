@@ -1,9 +1,9 @@
 \begin{algorithm}[tbp]
     \caption{Anchored-LP rounding on a supply tree}
     \textbf{Input} A tree $T=(V,E,D,c,w)$, and parameters $0<\rho<\eta<1$\;
-    \textbf{Output} An $\eta$-feasible supply-edge set $F\subseteq E$\;
+    \textbf{Output} An $\eta$-feasible supply-edge set $C\subseteq E$\;
     \If{$W=0$}{
-        \textbf{return} $F=\emptyset$\;
+        \textbf{return} $C=\emptyset$\;
     }
     Set $B_\rho\gets\rho W$ and solve the anchored LP~\eqref{lp:tree-anchored}. Let $(x,z)$ be an optimal rational solution\;
     Set $R\gets(\eta-\rho)/(2\eta)$ and root $T$ at an arbitrary vertex $r$\;
@@ -13,5 +13,5 @@
         Form $F_\theta\gets\left\{pv\in E:\dist(p)<\theta+kR\leq \dist(v)\text{ for some }k\in\mathbb{Z},\ p\text{ is the parent of }v\right\}$\;
     }
     Choose $\theta^*\in\arg\min_{\theta}\brc{c(F_\theta)}$\;
-    \textbf{return} $F_{\theta^*}$\;
+    \textbf{return} $C\gets F_{\theta^*}$\;
 \end{algorithm}

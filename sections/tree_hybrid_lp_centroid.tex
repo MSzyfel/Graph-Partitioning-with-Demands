@@ -26,12 +26,12 @@ For each $H\in\cH_0$ with $w\br{V_H}>B_\eta$, run Algorithm~\ref{alg:centroid-ma
     \qquad
     \eta_H=\frac{B_\eta}{w\br{V_H}}.
 \]
-These parameters make the algorithm's local budgets equal to $B_\rho$ and $B_\eta$, respectively. Let $F_H$ be its returned supply-edge set, and set $F=F_0\cup\bigcup_{H\in\cH_0}F_H$.
+These parameters make the algorithm's local budgets equal to $B_\rho$ and $B_\eta$, respectively. Let $F_H$ be its returned supply-edge set, and set $C=F_0\cup\bigcup_{H\in\cH_0}F_H$.
 
 \begin{theorem}\label{thm:tree-hybrid-recursion}
-    Fix rational parameters $0<\rho<\eta<3\rho<1$. For integral demand weights on a supply tree, the hybrid algorithm returns an $\eta$-feasible supply-edge set $F$ satisfying
+    Fix rational parameters $0<\rho<\eta<3\rho<1$. For integral demand weights on a supply tree, the hybrid algorithm returns an $\eta$-feasible supply-edge set $C$ satisfying
     \[
-        c\br{F}\leq\Gamma_{\mathrm{H}}(\rho,\eta)\cdot\OPTdem{T}{\rho},
+        c\br{C}\leq\Gamma_{\mathrm{H}}(\rho,\eta)\cdot\OPTdem{T}{\rho},
     \]
     where
     \begin{equation}\label{eq:tree-hybrid-ratio}
@@ -47,7 +47,7 @@ These parameters make the algorithm's local budgets equal to $B_\rho$ and $B_\et
 
     Combining this with~\eqref{eq:tree-hybrid-normalization-cost} gives
     \[
-        c\br{F}\leq
+        c\br{C}\leq
         \left(k+2+\frac{2\rho}{e^k\delta}\right)\OPT_{B_\rho}(T).
     \]
     Since $x=k+s$ and $e^k\delta=2\rho/e^s$, the coefficient is

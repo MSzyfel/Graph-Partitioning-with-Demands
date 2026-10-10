@@ -49,12 +49,12 @@ Table~\ref{tab:main-results} summarizes our upper and lower approximation bounds
 \small
 \setlength{\tabcolsep}{2pt}
 \renewcommand{\arraystretch}{1.08}
-\begin{tabular}{p{0.11\linewidth}p{0.12\linewidth}p{0.09\linewidth}p{0.44\linewidth}p{0.16\linewidth}}
+\begin{tabular}{p{0.10\linewidth}p{0.16\linewidth}p{0.08\linewidth}p{0.40\linewidth}p{0.20\linewidth}}
 \hline
 Problem & Supply graph & Type & Bound & Reference \\
 \hline
 \textsc{GPD} & General & Upper & $\bigo_{\rho,\eta}(\sqrt{\log n})^{*}$ & \hyperref[cor:graph-partitioning-approximation]{Corollary~\ref*{cor:graph-partitioning-approximation}} \\
-\textsc{GPD} & Tree & Upper & $\min\brc{\frac{2\eta}{\eta-\rho},\left\lceil\ln\left(\frac{1-\rho}{\eta-\rho}\right)\right\rceil}^{*}$ & \hyperref[cor:tree-best-guarantee]{Corollary~\ref*{cor:tree-best-guarantee}} \\
+\textsc{GPD} & Tree & Upper & $\min\brc{\frac{2\eta}{\eta-\rho},\left\lceil\ln\left(\frac{1-\rho}{\eta-\rho}\right)\right\rceil}^{*}$ & \hyperref[thm:tree-anchored-rounding]{Theorems~\ref*{thm:tree-anchored-rounding}}, \hyperref[thm:tree-centroid-max-coverage]{\ref*{thm:tree-centroid-max-coverage}} \\
 \textsc{GPD} & Tree & Upper & $4+\varepsilon$ & \hyperref[thm:tree-centroid-full-quota]{Theorem~\ref*{thm:tree-centroid-full-quota}} \\
 \textsc{HCD} & General & Upper & $\bigo(\sqrt{\log n})$ & \hyperref[cor:hc-general-bounds]{Corollary~\ref*{cor:hc-general-bounds}} \\
 \textsc{HCD} & Tree & Upper & $\frac{4e}{e-1}$ & \hyperref[cor:tree-hc-improved]{Corollary~\ref*{cor:tree-hc-improved}} \\

@@ -56,8 +56,8 @@ It is easy to see that this is a valid relaxation of the original problem.
 %     so every anchor-demand constraint holds. The LP objective is $\sum_{e\in F}c(e)=c(F)$, proving feasibility at the same cost. Taking an optimal feasible partition gives $\operatorname{LP}_{B_\rho}(T)\leq\OPT_{B_\rho}(T)$.
 % \end{proof}
 \begin{theorem}\label{thm:tree-anchored-rounding}
-    For every fixed $0<\rho<\eta<1$ and arbitrary pair demands on a supply tree, there is a polynomial-time algorithm that returns an $\eta$-feasible supply-edge set $F\subseteq E$ satisfying $
-        c(F)\leq\frac{2\eta}{\eta-\rho}\cdot \OPTdem{T}{\rho}.$
+    For every fixed $0<\rho<\eta<1$ and arbitrary pair demands on a supply tree, there is a polynomial-time algorithm that returns an $\eta$-feasible supply-edge set $C\subseteq E$ satisfying $
+        c(C)\leq\frac{2\eta}{\eta-\rho}\cdot \OPTdem{T}{\rho}.$
 \end{theorem}
 \begin{proof}
     Solve the above LP, let $(x,z)$ be an optimal solution and choose $
@@ -68,15 +68,15 @@ It is easy to see that this is a valid relaxation of the original problem.
     $
     The values $\dist(v)$ embed the tree vertices into the non-negative real line. 
     % Figure~\ref{fig:anchored-lp-threshold-line} illustrates these coordinates and the shifted thresholds. 
-    We now wish to choose thresholds along this line to determine which edges to cut. Let $C=\emptyset$.
-    Choose a \emph{phase} $\theta$ uniformly at random from $[0,R)$. Include a parent-child edge $e=pv$ in $C$ whenever $\dist(p)<\theta+k\cdot R\leq \dist(v)$
-    for some integer $k$. If $x_e<R$, the set of phases $\theta\in[0,R)$ that place a threshold in $(\dist(p),\dist(v)]$ has measure $x_e$, so $e$ is included in $C$ with probability $x_e/R$. If $x_e\geq R$, every phase places at least one threshold in this interval and the inclusion probability is $1$. Thus in all cases $
-        \Pr[e\in C]=\min\brc{1,\frac{x_e}{R}}\leq\frac{x_e}{R},$
+    We now wish to choose thresholds along this line to determine which edges to cut. Let $F=\emptyset$.
+    Choose a \emph{phase} $\theta$ uniformly at random from $[0,R)$. Include a parent-child edge $e=pv$ in $F$ whenever $\dist(p)<\theta+k\cdot R\leq \dist(v)$
+    for some integer $k$. If $x_e<R$, the set of phases $\theta\in[0,R)$ that place a threshold in $(\dist(p),\dist(v)]$ has measure $x_e$, so $e$ is included in $F$ with probability $x_e/R$. If $x_e\geq R$, every phase places at least one threshold in this interval and the inclusion probability is $1$. Thus in all cases $
+        \Pr[e\in F]=\min\brc{1,\frac{x_e}{R}}\leq\frac{x_e}{R},$
     and therefore $
-        \mathbb{E}[c(C)]\leq\frac{1}{R}\cdot \sum_{e\in E}c(e)\cdot x_e.
+        \mathbb{E}[c(F)]\leq\frac{1}{R}\cdot \sum_{e\in E}c(e)\cdot x_e.
     $
 
-    Now fix a component $H$ of $T\setminus C$, and let $a$ be its vertex closest to the root. For every $v\in V_H$, the path from $a$ to $v$ lies entirely in $H$. No threshold of the form $\theta+kR$ can lie in $(\dist(a),\dist(v)]$, since such a threshold would cause an edge of that path to be deleted. The thresholds are spaced exactly $R$ apart, so $
+    Now fix a component $H$ of $T\setminus F$, and let $a$ be its vertex closest to the root. For every $v\in V_H$, the path from $a$ to $v$ lies entirely in $H$. No threshold of the form $\theta+kR$ can lie in $(\dist(a),\dist(v)]$, since such a threshold would cause an edge of that path to be deleted. The thresholds are spaced exactly $R$ apart, so $
         \dist_x(a,v)=\dist(v)-\dist(a)<R.
     $
     For each demand edge $uv\in D_H$, the LP connectivity constraint for anchor $a$ gives
@@ -91,12 +91,12 @@ It is easy to see that this is a valid relaxation of the original problem.
     \]
     Rearranging gives the desired bound on $w(V_H)$.
 
-    It remains to derandomize the procedure. Since $C$ changes only when $\theta$ crosses one of the at most $|V|$ residues $\dist(v)\bmod R$, check one value per each interval between residues and pick the candidate $F$ with minimum cost. By the properties of the expected value 
+    It remains to derandomize the procedure. Since $F$ changes only when $\theta$ crosses one of the at most $|V|$ residues $\dist(v)\bmod R$, check one value per each interval between residues and pick the candidate $C$ with minimum cost. By the properties of the expected value
     \[
-        c(F)\leq \mathbb{E}[c(C)]\leq \frac{1}{R}\cdot \sum_{e\in E}c(e)\cdot x_e
+        c(C)\leq \mathbb{E}[c(F)]\leq \frac{1}{R}\cdot \sum_{e\in E}c(e)\cdot x_e
         \leq\frac{2\eta}{\eta-\rho}\cdot \OPTdem{T}{\rho}.
     \]
-    and every component $H$ of $T\setminus F$ has $w(V_H)\leq B_\rho/(1-2R)=B_\eta$.
+    and every component $H$ of $T\setminus C$ has $w(V_H)\leq B_\rho/(1-2R)=B_\eta$.
 \end{proof}
 
 % \input{algorithms/anchored_lp_rounding.tex}
@@ -166,7 +166,7 @@ and define the family of rounded-feasible connected sets
 
 The minimum-cost partition into sets from $\widehat\cC$ is computed by the following dynamic program.
 \begin{theorem}\label{thm:weighted-budget-dp}
-    Let $T$ be a tree with vertex weights $q(v)$ for each vertex $v$ and let $L$ be the maximum weight of a component in $\widehat\cC$. Then there exists an algorithm which computes a minimum-cost edge set $F\subseteq E$ such that every component of $T\setminus F$ belongs to $\widehat\cC$, in $O(nL^2)$ time.
+    Let $T$ be a tree with vertex weights $q(v)$ for each vertex $v$ and let $L$ be the maximum weight of a component in $\widehat\cC$. Then there exists an algorithm which computes a minimum-cost edge set $C\subseteq E$ such that every component of $T\setminus C$ belongs to $\widehat\cC$, in $O(nL^2)$ time.
 \end{theorem}
 \begin{proof}
 \input{algorithms/weighted_budget_dp.tex}
@@ -200,27 +200,27 @@ We are now ready to showcase the entire procedure.
 \begin{theorem}\label{thm:tree-weighted-budget-direct}
     Let $0<\rho<1$ and $\eta>(1+\rho)/2$ be rational. For arbitrary demand-edge weights on a supply tree, there is an algorithm, polynomial in the input size and in $
         \frac{1}{2\cdot\eta-1-\rho}$,
-    that returns an $\eta$-feasible solution $F$ with
+    that returns an $\eta$-feasible solution $C$ with
     \[
-        c\br{F}\leq\OPTdem{T}{\rho}.
+        c\br{C}\leq\OPTdem{T}{\rho}.
     \]
 \end{theorem}
 \begin{proof}
     We begin with the following lemma.
 \begin{lemma}\label{lem:weighted-budget-demand-degree}
-    Let $C=(1+\rho)\cdot W$ and $\Delta\geq 0$. Then
+    Let $B=(1+\rho)\cdot W$ and $\Delta\geq 0$. Then
     \begin{enumerate}
-        \item every set $S$ with $w\br{S}\leq B_\rho$ satisfies $d_D(S)\leq C$.
-        \item every set $S$ with $w(S)\leq C+\Delta$ satisfies $w\br{S}\leq\frac{\br{1+\rho}\cdot W+\Delta}{2}$.
+        \item every set $S$ with $w\br{S}\leq B_\rho$ satisfies $d_D(S)\leq B$.
+        \item every set $S$ with $w(S)\leq B+\Delta$ satisfies $w\br{S}\leq\frac{\br{1+\rho}\cdot W+\Delta}{2}$.
     \end{enumerate}
-    Consequently, the $C$-budget \textsc{Weighted Budget Partitioning} instance with vertex weights $d_D(v)$ has optimum cost at most $\OPTdem{T}{\rho}$, and every feasible partition is $(1+\rho)/2$-feasible for the original demands.
+    Consequently, the $B$-budget \textsc{Weighted Budget Partitioning} instance with vertex weights $d_D(v)$ has optimum cost at most $\OPTdem{T}{\rho}$, and every feasible partition is $(1+\rho)/2$-feasible for the original demands.
 \end{lemma}
 \begin{proof}
     If $w\br{S}\leq B_\rho$, the second expression in~\eqref{eq:demand-degree-identity} gives
     \[
         d_D(S)\leq W+w\br{S}\leq(1+\rho)\cdot W.
     \]
-    Conversely, for each set $S$ with $d_D(S)\leq C+\Delta$, the first expression in~\eqref{eq:demand-degree-identity} gives $2w\br{S}\leq d_D(S)\leq C+\Delta=(1+\rho)\cdot W+\Delta$, and hence $w\br{S}\leq\frac{\br{1+\rho}\cdot W+\Delta}{2}$ as promised.
+    Conversely, for each set $S$ with $d_D(S)\leq B+\Delta$, the first expression in~\eqref{eq:demand-degree-identity} gives $2w\br{S}\leq d_D(S)\leq B+\Delta=(1+\rho)\cdot W+\Delta$, and hence $w\br{S}\leq\frac{\br{1+\rho}\cdot W+\Delta}{2}$ as promised.
 \end{proof}
 
 Fix
@@ -229,21 +229,21 @@ Fix
     \qquad
     \eta>\frac{1+\rho}{2},
     \qquad
-    C=(1+\rho)\cdot W,
+    B=(1+\rho)\cdot W,
     \qquad
     \Delta=(2\cdot\eta-1-\rho)\cdot W,
     \qquad
     K=\frac{\Delta}{n}.
 \]
-We have that for each vertex $q\br{v}\leq W \leq C$ as required in our problem.
+We have that for each vertex $q\br{v}\leq W \leq B$ as required in our problem.
 The rounded weights and budget are
 \begin{equation}\label{eq:rounded-weight-definition}
     \widehat q(v)=\left\lfloor\frac{d_D(v)}{K}\right\rfloor,
     \qquad
-    L=\left\lfloor\frac{C}{K}\right\rfloor.
+    L=\left\lfloor\frac{B}{K}\right\rfloor.
 \end{equation}
 And therefore using Lemma~\ref{lem:weighted-budget-rounding}, we also have $\widehat q(v)\leq L$ for all $v\in V$.
-Combining with Lemma~\ref{lem:weighted-budget-rounding} and~\ref{lem:weighted-budget-demand-degree} with Theorem~\ref{thm:weighted-budget-dp}, we obtain a dynamic program that finds an optimal partition $F$ with respect to the rounded weights. Therefore, we get that $c\br{F}\leq\OPTdem{T}{\rho}$ and for each part $H\in T\setminus F$
+Combining with Lemma~\ref{lem:weighted-budget-rounding} and~\ref{lem:weighted-budget-demand-degree} with Theorem~\ref{thm:weighted-budget-dp}, we obtain a dynamic program that finds an optimal partition $C$ with respect to the rounded weights. Therefore, we get that $c\br{C}\leq\OPTdem{T}{\rho}$ and for each part $H\in T\setminus C$
 \[
     w\br{V_H}\leq\frac{(1+\rho)\cdot W+\Delta}{2}= \eta\cdot W.
 \]
@@ -277,9 +277,9 @@ For each induced instance, write $\OPT_{B_\rho}(H)$ for its minimum cut cost sub
 
 \iffalse
 \begin{theorem}\label{thm:tree-weighted-budget-recursive}
-    For every fixed rational $0<\rho<\eta<1$ and rational $\alpha\in(1/2,1)$, the recursive algorithm returns an $\eta$-feasible solution $F$ satisfying
+    For every fixed rational $0<\rho<\eta<1$ and rational $\alpha\in(1/2,1)$, the recursive algorithm returns an $\eta$-feasible solution $C$ satisfying
     \[
-        c\br{F}\leq\Gamma_{\mathrm{WB}}^{(\alpha)}(\rho,\eta)\cdot\OPTdem{T}{\rho},
+        c\br{C}\leq\Gamma_{\mathrm{WB}}^{(\alpha)}(\rho,\eta)\cdot\OPTdem{T}{\rho},
     \]
     where
     \begin{equation}\label{eq:tree-recursion-depth}
@@ -331,24 +331,24 @@ For each induced instance, write $\OPT_{B_\rho}(H)$ for its minimum cut cost sub
 
     For~\eqref{eq:tree-recursion-best-depth}, put $Q=(1-\rho)/(\eta-\rho)>1$ and $L=\lfloor\log_2 Q\rfloor+1$. Then $Q<2^L$, so $Q^{-1/L}>1/2$. Choose a rational $\alpha$ with $1/2<\alpha<Q^{-1/L}$. Then $\alpha^LQ<1$ and $L$ levels suffice. No smaller integer depth can be certified by a uniform $\alpha>1/2$: if $j<L$, then $Q\geq2^j$ and $\alpha^j>2^{-j}\geq1/Q$.
 
-    It remains to bound the total cost accumulated over the recursion tree. For every component $H$, let $F_H$ be all edges selected by the recursive procedure in the subtree rooted at $H$, including the edges selected while processing $H$. Let $d(H)$ be the maximum number of nonterminal calls on a path in this recursion subtree. Thus $d(H)=0$ if $H$ is terminal, and otherwise
+    It remains to bound the total cost accumulated over the recursion tree. For every component $H$, let $C_H$ be all edges selected by the recursive procedure in the subtree rooted at $H$, including the edges selected while processing $H$. Let $d(H)$ be the maximum number of nonterminal calls on a path in this recursion subtree. Thus $d(H)=0$ if $H$ is terminal, and otherwise
     \[
         d(H)=1+\max_i\brc{d(H_i)},
     \]
     where $H_1,\ldots,H_m$ are the components produced by the call on $H$. We prove by induction on $d(H)$ that
     \begin{equation}\label{eq:tree-recursion-inductive-cost}
-        c\br{F_H}\leq d(H)\cdot\OPT_{B_\rho}(H).
+        c\br{C_H}\leq d(H)\cdot\OPT_{B_\rho}(H).
     \end{equation}
 
-    If $d(H)=0$, then $w\br{V_H}\leq B_\eta$, the procedure selects no edge in $H$, and hence $c\br{F_H}=0$. This proves the base case.
+    If $d(H)=0$, then $w\br{V_H}\leq B_\eta$, the procedure selects no edge in $H$, and hence $c\br{C_H}=0$. This proves the base case.
 
-    Now let $d(H)=d\geq1$ and assume the claim for all recursion subtrees of depth at most $d-1$. Let $C_H$ be the edges returned by Theorem~\ref{thm:tree-weighted-budget-direct} when processing $H$, and let $H_1,\ldots,H_m$ be the resulting components. Since the theorem is applied to the induced instance with comparison budget $B_\rho=\rho_H w\br{V_H}$, it gives
+    Now let $d(H)=d\geq1$ and assume the claim for all recursion subtrees of depth at most $d-1$. Let $F_H$ be the edges returned by Theorem~\ref{thm:tree-weighted-budget-direct} when processing $H$, and let $H_1,\ldots,H_m$ be the resulting components. Since the theorem is applied to the induced instance with comparison budget $B_\rho=\rho_H w\br{V_H}$, it gives
     \begin{equation}\label{eq:tree-recursion-local-cost}
-        c\br{C_H}\leq\OPT_{B_\rho}(H).
+        c\br{F_H}\leq\OPT_{B_\rho}(H).
     \end{equation}
-    Every child satisfies $d(H_i)\leq d-1$. For terminal children, put $F_{H_i}=\emptyset$, so the inductive bound also holds for them. Therefore,
+    Every child satisfies $d(H_i)\leq d-1$.     For terminal children, put $C_{H_i}=\emptyset$, so the inductive bound also holds for them. Therefore,
     \begin{equation}\label{eq:tree-recursion-children-cost}
-        \sum_{i=1}^{m}c\br{F_{H_i}}
+        \sum_{i=1}^{m}c\br{C_{H_i}}
         \leq(d-1)\cdot \sum_{i=1}^{m}\OPT_{B_\rho}(H_i).
     \end{equation}
 
@@ -365,8 +365,8 @@ For each induced instance, write $\OPT_{B_\rho}(H)$ for its minimum cut cost sub
     \end{equation}
     Combining~\eqref{eq:tree-recursion-local-cost}, \eqref{eq:tree-recursion-children-cost}, and~\eqref{eq:tree-recursion-child-optima}, we obtain
     \begin{align*}
-        c\br{F_H}
-        &=c\br{C_H}+\sum_{i=1}^{m}c\br{F_{H_i}}\\
+        c\br{C_H}
+        &=c\br{F_H}+\sum_{i=1}^{m}c\br{C_{H_i}}\\
         &\leq\OPT_{B_\rho}(H)+(d-1)\sum_{i=1}^{m}\OPT_{B_\rho}(H_i)\\
         &\leq d\cdot\OPT_{B_\rho}(H).
     \end{align*}
@@ -430,13 +430,13 @@ For each guess $Q$, the algorithm applies this routine to every component $K$ co
 
 \DD{todo: pseudokodu i ostatniego twierdzenia tutaj nie przetworzylem jeszcze (zmeczylo mnie, jakos trudno mi sie przez to przebic, wiec zostawiam na pozniej)}
 \begin{theorem}\label{thm:tree-centroid-max-coverage}
-    Fix rational constants $0<\rho<\eta<1$. For arbitrary integral demands on a supply tree, Algorithm~\ref{alg:centroid-max-coverage} runs in polynomial time and returns an $\eta$-feasible supply-edge set $F\subseteq E$ with $
-        c(F)\leq\cl{\ln\br{\frac{1-\rho}{\eta-\rho}}}\cdot\OPTdem{T}{\rho}.$
+    Fix rational constants $0<\rho<\eta<1$. For arbitrary integral demands on a supply tree, Algorithm~\ref{alg:centroid-max-coverage} runs in polynomial time and returns an $\eta$-feasible supply-edge set $C\subseteq E$ with $
+        c(C)\leq\cl{\ln\br{\frac{1-\rho}{\eta-\rho}}}\cdot\OPTdem{T}{\rho}.$
 \end{theorem}
 \begin{proof}
     Define the excess of any component $H$ by $\Phi(H)=\max\brc{0,w\br{V_H}-B_\rho}$.
     Now, consider a recursive call for a subgraph $H$ of $T$, write $w\br{V_H}$ and $q_H=w\br{V_H}-B_\rho>0$. 
-    Let $Q$ be a feasible guess, i.e., for each $K\in\mathcal{K}_Q^+$ there exists some $A\subseteq E_K\setminus E_{S_K}$ with $f_K(A)\geq q_K$. Let $C_H$ be the edges chosen by the algorithm for this guess. Consider each component $H'\in H\setminus C_H$. There are two cases.
+    Let $Q$ be a feasible guess, i.e., for each $K\in\mathcal{K}_Q^+$ there exists some $A\subseteq E_K\setminus E_{S_K}$ with $f_K(A)\geq q_K$. Let $F_H$ be the edges chosen by the algorithm for this guess. Consider each component $H'\in H\setminus F_H$. There are two cases.
     \begin{enumerate}
         \item $V_{S_K}\subseteq V_{H'}$ for some $K\in \mathcal{K}_Q$. Then, $H'=K\setminus U_K(A_K)$. Since $q_K=w\br{V_K}-B_\rho\leq q_H$,
     \[
@@ -471,29 +471,29 @@ For each guess $Q$, the algorithm applies this routine to every component $K$ co
 %     $
 %     Thus, since any $\rho$-feasible edge set of $K$ covers at least $q_K$ demand, we know that $c\br{A_K}\leq \OPT_{q_K}\br{K}\leq \OPT_{B_\rho}\br{K}$. Now observe that by disjointness we get
 %     \[
-%         c\br{C_H}=\sum_{K\in \mathcal{K}_{Q^*}} c\br{A_K} + c\br{Q^*} \leq \sum_{K\in \mathcal{K}_{Q^*}} \OPT_{B_\rho}\br{K} + c\br{Q^*} \leq \OPT_{B_\rho}\br{H}.
+%     c\br{F_H}=\sum_{K\in \mathcal{K}_{Q^*}} c\br{A_K} + c\br{Q^*} \leq \sum_{K\in \mathcal{K}_{Q^*}} \OPT_{B_\rho}\br{K} + c\br{Q^*} \leq \OPT_{B_\rho}\br{H}.
 %     \]
-%     which is the contribution of $C_H$ to the cost of $F_H$
+%     which is the contribution of $F_H$ to the cost of $C_H$
 
 %     Again, by disjointness, we have that
 %     \[
-%     \sum_{H'\in H\setminus C_H} \OPT_{B_\rho}\br{H'} \leq \OPT_{B_\rho}\br{H}.
+%     \sum_{H'\in H\setminus F_H} \OPT_{B_\rho}\br{H'} \leq \OPT_{B_\rho}\br{H}.
 %     \]
 
-%     Let $F_H$ denote all cuts produced in the recursion below $H$, and let $d(H)$ be the maximum remaining depth of recursive calls for $H$. We show by induction that $
-%         c(F_H)\leq \br{d(H)+1}\cdot \OPT_{B_\rho}(H).$
-%     For the base case, when $d\br{H}=0$, we have $c(F_H)=c\br{C_H}\leq \OPT_{B_\rho}(H)$, which satisfies the induction hypothesis. Now, assume that the claim holds for all $H$ such that $d\br{H}\leq d$ for some $d\geq 0$, and consider $H$ with $d\br{H}=d+1$. By the induction hypothesis applied to the subcomponents $H'\in H\setminus C_H$, we have
+%     Let $C_H$ denote all cuts produced in the recursion below $H$, and let $d(H)$ be the maximum remaining depth of recursive calls for $H$. We show by induction that $
+%         c(C_H)\leq \br{d(H)+1}\cdot \OPT_{B_\rho}(H).$
+%     For the base case, when $d\br{H}=0$, we have $c(C_H)=c\br{F_H}\leq \OPT_{B_\rho}(H)$, which satisfies the induction hypothesis. Now, assume that the claim holds for all $H$ such that $d\br{H}\leq d$ for some $d\geq 0$, and consider $H$ with $d\br{H}=d+1$. By the induction hypothesis applied to the subcomponents $H'\in H\setminus F_H$, we have
 % \[
-%     c(F_{H'})\leq \br{d(H')+1}\cdot \OPT_{B_\rho}(H')\leq d\cdot \OPT_{B_\rho}(H'),
+%     c(C_{H'})\leq \br{d(H')+1}\cdot \OPT_{B_\rho}(H')\leq d\cdot \OPT_{B_\rho}(H'),
 % \]
-% Summing over all such $H'$ and adding the cost of $C_H$, we get
+% Summing over all such $H'$ and adding the cost of $F_H$, we get
 % \[
-%     c(F_H) = c(C_H) + \sum_{H'\in H\setminus C_H} c(F_{H'}) \leq \OPT_{B_\rho}(H) + d\cdot \sum_{H'\in H\setminus C_H} \OPT_{B_\rho}(H') \leq (d+1)\cdot \OPT_{B_\rho}(H),
+%     c(C_H) = c(F_H) + \sum_{H'\in H\setminus F_H} c(C_{H'}) \leq \OPT_{B_\rho}(H) + d\cdot \sum_{H'\in H\setminus F_H} \OPT_{B_\rho}(H') \leq (d+1)\cdot \OPT_{B_\rho}(H),
 % \]
 % which completes the induction step.
 
 % Now, observe that $d\br{T}\leq L-1$, which implies that $
-%     c(F_T)\leq L\cdot \OPT_{B_\rho}(T),$
+%     c(C_T)\leq L\cdot \OPT_{B_\rho}(T),$
 % as desired.
 \end{proof}
 
@@ -512,19 +512,19 @@ Figure~\ref{fig:full-quota-centroid} illustrates the full-quota routine for $t=4
 \input{figures/three_centroid_coverage.tex}
 
 \begin{theorem}\label{thm:tree-centroid-full-quota}
-    Fix rational $0<\rho<1$ and $\epsilon>0$. For arbitrary integral demand weights on a supply tree, Algorithm~\ref{alg:centroid-full-quota} returns a $\rho$-feasible cut $F$ with $
-        c(F)\leq(4+\epsilon)\cdot \OPTdem{T}{\rho}.$
+    Fix rational $0<\rho<1$ and $\epsilon>0$. For arbitrary integral demand weights on a supply tree, Algorithm~\ref{alg:centroid-full-quota} returns a $\rho$-feasible cut $C$ with $
+        c(C)\leq(4+\epsilon)\cdot \OPTdem{T}{\rho}.$
     For fixed $\rho$ and $\epsilon$, its running time is $n^{O(1/\rho)}$.
 \end{theorem}
 \begin{proof}
-    Let $F^*$ be an optimal $B_\rho$-feasible cut. By Lemma~\ref{lem:tree-separator}, the procedure returns at most $t-1$ separators, and every component of $T\setminus\mathcal L_T$ has demand at most $W/t\leq B_\rho$. By construction, all components $H\in T\setminus F$ have demand bounded by $w\br{V_H}\leq B_\rho$. 
+    Let $F^*$ be an optimal $B_\rho$-feasible cut. By Lemma~\ref{lem:tree-separator}, the procedure returns at most $t-1$ separators, and every component of $T\setminus\mathcal L_T$ has demand at most $W/t\leq B_\rho$. By construction, all components $H\in T\setminus C$ have demand bounded by $w\br{V_H}\leq B_\rho$.
 
     Therefore, we reason about the cost.
     As in the preceding proof, let $Q^*\subseteq F^*\cap E_{S_T}$. Let $K\in \mathcal{K}_{Q^*}$. We firstly want to show, that $c\br{A_K}\leq (4+\epsilon)\OPT_{q_K}\br{K}$. So fix some optimal $A_K^*$ for $\OPT_{q_K}\br{K}$. In order to get a valid multicut for $T_K$, for each edge of $A_K^*$, we include both representative edges in $T_K$, i.e., if $e=uv\in A_K^*$, we include $u^{\mathrm L}v^{\mathrm L}$ and $u^{\mathrm R}v^{\mathrm R}$ in the multicut. Since this doubles the cost of each edge, we have $c\br{A_K}\leq 2\cdot \OPT_{q_K}\br{K}$. Mestre's $(2+\delta)$-approximation then gives $c\br{A_K}\leq (4+\epsilon)\cdot \OPT_{q_K}\br{K}$ for sufficiently small $\delta=\epsilon/2$.
 
     Thus, summing the contribution of all edges picked by our algorithm, we ge that
     \[
-    c\br{F}\leq \sum_{K\in \mathcal{K}_{Q^*}} c\br{A_K}+c(Q^*)\leq \sum_{K\in \mathcal{K}_{Q^*}} (4+\epsilon)\cdot\OPT_{q_K}\br{K}+c(Q^*)\leq (4+\epsilon)\cdot \OPTdem{T}{\rho}
+    c\br{C}\leq \sum_{K\in \mathcal{K}_{Q^*}} c\br{A_K}+c(Q^*)\leq \sum_{K\in \mathcal{K}_{Q^*}} (4+\epsilon)\cdot\OPT_{q_K}\br{K}+c(Q^*)\leq (4+\epsilon)\cdot \OPTdem{T}{\rho}
     \]
     as claimed.
 

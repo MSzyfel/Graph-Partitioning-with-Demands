@@ -1,7 +1,7 @@
 \begin{algorithm}[tbp]
     \caption{Weighted-budget dynamic program on a tree}
     \textbf{Input} Supply tree $T=(V,E,c)$, non-negative integer vertex weights $a(v)\leq L$, and integer budget $L$\;
-    \textbf{Output} A minimum-cost edge set $F\subseteq E$ such that every component $H$ satisfies $\sum_{v\in V_H}a(v)\leq L$\;
+    \textbf{Output} A minimum-cost edge set $C\subseteq E$ such that every component $H$ satisfies $\sum_{v\in V_H}a(v)\leq L$\;
     Root $T$ at an arbitrary vertex $r$\;
     \ForEach{vertex $v$ in a bottom-up traversal of $T$}{
         Let $u_1,\ldots,u_k$ be the children of $v$\;
@@ -14,6 +14,6 @@
         }
         Set $F_v(\ell)\gets F_v^{(k)}(\ell)$ for all $0\leq\ell\leq L$ and $F_v\gets\min_{0\leq b\leq L}\brc{F_v(b)}$\;
     }
-    Choose $\ell^*\in\arg\min_{0\leq\ell\leq L}\brc{F_r(\ell)}$ and backtrack from $(r,\ell^*)$ through the stored choices to recover the set of edges to remove\;
-    \textbf{return} the recovered edge set $F$\;
+    Choose $\ell^*\in\arg\min_{0\leq\ell\leq L}\brc{F_r(\ell)}$ and backtrack from $(r,\ell^*)$ through the stored choices to recover the edge set $C$\;
+    \textbf{return} $C$\;
 \end{algorithm}
