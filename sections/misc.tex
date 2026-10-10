@@ -50,7 +50,7 @@ For each vertex, let $d_c(v)=\sum_{e\ni v}c_e$ and $\beta_v=\alpha_v-\frac{1}{2}
 For every connected $S\subseteq V$, we can now rewrite
 \begin{equation}\label{eq:tree-pricing-profit}
     \alpha(S)-q_S
-    =\sum_{v\in S}\beta_v+c\br{E(S)}.
+    =\sum_{v\in S}\beta_v+c\br{E_S}.
 \end{equation}
 
 Root $T$ arbitrarily. For a vertex $v$, let $T_v$ be its descendant subtree, and let $P_v(\ell)$ be the maximum value of the right-hand side of~\eqref{eq:tree-pricing-profit} over connected sets $S\subseteq V(T_v)$ containing $v$ and satisfying $\sum_{u\in S}\widehat d(u)=\ell$. An impossible state has value $-\infty$.

@@ -394,22 +394,35 @@ We now show a combinatorial algorithm for \textsc{Graph Partitioning with Demand
 
     % Note, that this lemma will come useful later as well, since after the following procedure we show how to modify it to obtain a true, single-criteria approximation algorithm for \textsc{Graph Partitioning with Demands} on trees.
 
-    \DD{tutaj widze w tym paragrafie chat przywrocil. Ogolenie staralem sie wykasowac jednorazowo uzyte symbole (plus uzyte moze w pseudokodzie), jak $\mathcal K_Q$, $T_e$. Ten fragment traktowalem jako w pelni skonczony, wiec nie wiem czy to jest celowy revert, bo moze byly bledy, czy blad czata (chwile nizej widze "and and" w formule) wiec na razie zostawiam komentarz jako marker aby sie upewnic.}
+
 In our algorithm we apply Lemma~\ref{lem:tree-separator} with the smallest integer $t\geq e$, which is $t=3$. 
-Thus, $\mathcal L_H$ contains at most two separators, $\spr{\mathcal{L_H}}\leq 2$, and for each $H\setminus\mathcal L_H$, $w(V_H)/3$. Let $P_H$ be the minimal path in $H$ containing the vertices of $\mathcal L_H$. If $|\mathcal L_H|=1$, then $P_H$ is that single vertex. We enumerate $Q=\emptyset$ and $Q=\{e\}$ for each edge $e\in E(P_H)$. Thus at most $1+|E(P_H)|\leq n$ guesses are considered. For a guess $Q$, let $\mathcal K_Q$ be the components of $H\setminus Q$. For a component $K\in\mathcal K_Q$, write $\mathcal L_K=V_K\cap\mathcal L_H$ and let $S_K$ be the minimal subtree of $K$ containing $\mathcal L_K$. Note that $S_K$ is either $P_H$ (when $Q=\emptyset$) or a single vertex of $\mathcal L_K$ (for $\spr{Q}=1$).
-For each edge $e\in E(K)\setminus E(S_K)$, let $T_e$ be the component of $K\setminus\brc{e}$ not containing $S_K$. For $A\subseteq E(K)\setminus E(S_K)$, define
-\[
-    \begin{aligned}
-        U_K(A)&=\bigcup_{e\in A}V_{T_e},\quad C_K(A)=\left\{xy\in E(K)\colon \left|\{x,y\}\cap U_K(A)\right|=1\right\},\\
-        f_K(A)&=\sum_{uv\in D_K}w(u,v)\cdot 
-            \mathbf 1\!\left[\{u,v\}\cap U_K(A)\neq\emptyset\right]=w\br{V_K\setminus U_K(A), V_K}.
-    \end{aligned}
-\]
+Thus, $\mathcal L_H$ contains at most two separators, $\spr{\mathcal{L_H}}\leq 2$,  and every component of $H\setminus\mathcal L_H$ \DDfix{has demand at most $w(V_H)/3$.}.
+Let $P_H$ be the minimal path in $H$ containing the vertices of $\mathcal L_H$. If $|\mathcal L_H|=1$, then $P_H$ is that single vertex. We enumerate $Q=\emptyset$ and $Q=\{e\}$ for each edge $e\in E_{P_H}$. Thus at most $1+|E_{P_H}|\leq n$ guesses are considered. For a guess $Q$, let $\mathcal K_Q$ be the components of $H\setminus Q$.
+If $Q=\emptyset$, then define $S_K$ to be the entire path $P_H$.
+If $Q=\{e\}$ for some edge $e\in E_{P_H}$, then define $S_K$ to be the graph with the single vertex of $\mathcal L_H$ contained in $K$.
+
+%For each edge $e\in E_K\setminus E_{S_K}$, let $T_e$ be the component of $K\setminus\brc{e}$ not containing $S_K$. For $A\subseteq E_K\setminus E_{S_K}$, define
+%\[
+%    \begin{aligned}
+%        U_K(A)&=\bigcup_{e\in A}V_{T_e},\quad C_K(A)=\left\{xy\in E_K\colon \left|\{x,y\}\cap U_K(A)\right|=1\right\},\\
+%        f_K(A)&=\sum_{uv\in D_K}w(u,v)\cdot 
+%            \mathbf 1\!\left[\{u,v\}\cap U_K(A)\neq\emptyset\right]=w\br{V_K\setminus U_K(A), V_K}.
+%    \end{aligned}
+%\]
 % Here $C_K(A)\subseteq A$ is the boundary of $U_K(A)$ separating it from $S_K$, and
 % \[
 %     f_K(A)=.
 % \]
 % is the total demand separated from $S_K$ by cutting the edges in $C_K(A)$.
+\DDfix{
+For $A\subseteq E_K\setminus E_{S_K}$, define  $U_K(A)$ to be the set of all vertices $u$ such that the path from $u$ to its closest vertex in $S_K$ contains an edge in $A$.
+Let $B_K(A)\subseteq A$ be the \emph{boundary} of $U_K(A)$, defined as the set of edges with one endpoint in $U_K(A)$. Hence, $B_K(A)$ separates it from $S_K$, and
+\[
+    f_K(A)=w\br{V_K\setminus U_K(A), V_K}.
+\]
+is the total demand separated from $S_K$ by cutting the edges in $B_K(A)$.
+}
+
 Observe, that $f_K$ is a weighted coverage function on the demand pairs. 
 % The idea in our recursion is that the component containing $S_K$ after cutting $C_K(A)$ has demand $w\br{V_K}-f_K(A)$. Moreover, every other component contains no separator, so it is contained in a component of $H\setminus\mathcal L_H$ and has demand at most $w\br{H}/3$. These two facts will allow us to control the demand in all resulting components during the recursion.
 For $w\br{V_K}>B_\rho$, set $q_K=w\br{V_K}-B_\rho$ and define
@@ -419,7 +432,7 @@ $
 $
 if there exists any $A\subseteq E_K\setminus E_{S_K}$ with $f_K(A)\geq q_K$.  The $ (1-1/e)$-approximation for \textsc{Budgeted Maximum Coverage}~\cite{KhullerMossNaor1999BudgetedMaximumCoverage} gives a polynomial-time routine $\textsc{CoreQuotaCover}(f_K,c_K,q_K)$ returning $A_K$ such that
 \[
-    f_K(A_K)\geq(1-1/e)\cdot q_K,\quad \text{and}\quad \quad\text{and}\quad
+    f_K(A_K)\geq(1-1/e)\cdot q_K,\quad \quad\text{and}\quad
     c_K(A_K)\leq\OPT_{q_K}\br{K}.
 \]
 Indeed, binary-search the budget $b$ on the interval $[0,c_K(E_K)]$ and run the budgeted-coverage approximation at each trial. The successful budget $b$, such that $f_K(A_K)\geq(1-1/e)\cdot q_K$, is no larger than $\OPT_{q_K}\br{K}$.
@@ -429,7 +442,6 @@ For each guess $Q$, the algorithm applies this routine to every component $K$ co
 
 \input{algorithms/centroid_max_coverage.tex}
 
-\DD{todo: pseudokodu i ostatniego twierdzenia tutaj nie przetworzylem jeszcze (zmeczylo mnie, jakos trudno mi sie przez to przebic, wiec zostawiam na pozniej)}
 \begin{theorem}\label{thm:tree-centroid-max-coverage}
     Fix rational constants $0<\rho<\eta<1$. For arbitrary integral demands on a supply tree, Algorithm~\ref{alg:centroid-max-coverage} runs in polynomial time and returns an $\eta$-feasible supply-edge set $C\subseteq E$ with $
         c(C)\leq\cl{\ln\br{\frac{1-\rho}{\eta-\rho}}}\cdot\OPTdem{T}{\rho}.$
@@ -506,7 +518,7 @@ We now show how to employ a similar separator-based approach to obtain a single-
 
 The input of the \textsc{Partial Multicut} problem is a graph $G=\br{V, E, D, c, w}$ and an additional value $0\leq q\leq 1$. The goal is to find a subset of edges $C$, minimizing $c\br{C}$, such that the overall demand of edges $uv\in D$, such that $u$ and $v$ belong to different connected components of $G\setminus C$ is at least $q\cdot w\br{V}$. If the supply graph is a tree, Mestre~\cite{DBLP:conf/stacs/Mestre08} gives a $(2+\delta)$-approximation polynomial-time algorithm.
 
-This algorithm is similar to the previous one. We reduce finding a minimum-cost set $A_K\subseteq E_K\setminus E_{S_K}$ with $f_K\br{A_K}\geq q_K$ to \textsc{Partial Multicut} on trees. Recall that $S_K$ is the minimal subtree of $K$ containing the separator vertices $\mathcal L_K$. In the auxiliary instance $T_K$, we forbid cutting the edges of $S_K$ by setting their costs to infinity. Then, for each $K'\in K\setminus V\br{S_K}$, we create a copy of $K'$. We index the two representatives of each vertex $u\in K'$ by $u^{\mathrm L}$ and $u^{\mathrm R}$ (one of them is the original vertex). Now, for each demand pair $uv\in D[K]$ if $\brc{u, v}\cap {S_K}=\emptyset$, we replace this demand edge by a cross-copy demand edge $u^{\mathrm L}v^{\mathrm R}$ with demand $w\br{u^{\mathrm L}v^{\mathrm R}}=w\br{u,v}$.
+This algorithm is similar to the previous one. We reduce finding a minimum-cost set $A_K\subseteq E_K\setminus E_{S_K}$ with $f_K\br{A_K}\geq q_K$ to \textsc{Partial Multicut} on trees. In the auxiliary instance $T_K$, we forbid cutting the edges of $S_K$ by setting their costs to infinity. Then, for each $K'\in K\setminus V\br{S_K}$, we create a copy of $K'$. We index the two representatives of each vertex $u\in K'$ by $u^{\mathrm L}$ and $u^{\mathrm R}$ (one of them is the original vertex). Now, for each demand pair $uv\in D[K]$ if $\brc{u, v}\cap {S_K}=\emptyset$, we replace this demand edge by a cross-copy demand edge $u^{\mathrm L}v^{\mathrm R}$ with demand $w\br{u^{\mathrm L}v^{\mathrm R}}=w\br{u,v}$.
 
 Figure~\ref{fig:full-quota-centroid} illustrates the full-quota routine for $t=4$.
 \input{algorithms/centroid_full_quota.tex}
