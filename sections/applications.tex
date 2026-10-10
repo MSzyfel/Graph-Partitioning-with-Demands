@@ -194,7 +194,12 @@ For $u,v\in V$, let $\operatorname{lca}_{\cT}(u,v)$ denote their lowest common a
 \end{equation}
 We refer to this problem as \textsc{Hierarchical Clustering with Demands}. \DDfix{It generalizes the classical hierarchical clustering problem, also known as decision tree problem, that in turn is a generalization of the classical binary search.} Note, that a non-binary clustering tree can be refined into a binary one without increasing the cost~\cite{ACostFunctionForSimilarityBasedHierarchicalClustering}.
 
-We parameterize our top-down algorithm by constants $0<\rho<\eta<1$. Assume that we have a polynomial-time bi-criteria $\gamma_{\rho,\eta}\br{n}$-approximate subroutine for \textsc{Graph Partitioning with Demands} denoted by $\DPartition$, suppressing its parameters $\rho$ and $\eta$.
+We parameterize our top-down algorithm by constants $0<\rho<\eta<1$. Assume that we have a polynomial-time subroutine for \textsc{Graph Partitioning with Demands} with target $\rho$ that returns an $\eta$-feasible supply-edge set $C_H$ satisfying
+\begin{equation}\label{eq:hc-gpd-subroutine}
+    c\br{C_H}
+    \leq\gamma_{\rho,\eta}\br{\spr{V_H}}\cdot \OPTdem{H}{\rho}\leq\gamma_{\rho,\eta}\br{n}\cdot \OPTdem{H}{\rho}.
+\end{equation}
+Denote this subroutine by $\DPartition$, suppressing its parameters $\rho$ and $\eta$.
 
 \begin{theorem}\label{thm:hc-gpd-transfer}
     Fix constants $0<\rho<\eta<1$ and suppose that a subroutine $\DPartition$ is given, where $\gamma_{\rho,\eta}(n)\geq1$. Then there exists a $\frac{\lceil1/\rho\rceil\cdot\gamma_{\rho,\eta}(n)}{1-\eta}$-approximation polynomial-time algorithm for \textsc{Hierarchical Clustering with Demands}.
@@ -214,13 +219,13 @@ We parameterize our top-down algorithm by constants $0<\rho<\eta<1$. Assume that
             w\br{V_{\operatorname{lca}_{\cT^*}(u,v)}}>q
         \right\}.
     \]
-    By summing up the contribution of every supply edge over the levels below the demand of its least common ancestor, we get that $
+    By summing up the contribution of every supply-edge over the levels below the demand of its least common ancestor, we get that $
         c\br{\cT^*}
         =\sum_{q=0}^{W}c\br{E_q^*}.
     $
 
     Fix a non-singleton cluster $H$ produced by the algorithm and 
-    write $r_H=w\br{V_H}$. The maximal clusters of $\cT^*$ having demand at most $\fl{\rho r_H}$ partition $V$ and by extension $V_H$ into clusters of demand at most $\fl{\rho r_H}$.
+    write $r_H=w\br{V_H}$. The maximal clusters of $\cT^*$ having demand at most $\fl{\rho r_H}$ partition $V$, and by extension $V_H$, into clusters of demand at most $\fl{\rho r_H}$.
     Every supply edge of $E_H$ joining two distinct parts of this partition has its endpoints in distinct maximal clusters of $\cT^*$, so their least common ancestor in $\cT^*$ has demand greater than $\fl{\rho r_H}$. Consequently, the set $E_{\fl{\rho r_H}}^*\cap E_H$ is a feasible solution to \textsc{Graph Partitioning with Demands} on the graph $H$ with target $\rho$, and~\eqref{eq:hc-gpd-subroutine} gives $
         c\br{C_H}\leq \gamma_{\rho,\eta}\br{\spr{V_H}} \cdot \OPT_{\rho}\br{H}
         \leq \gamma_{\rho,\eta}\br{\spr{V_H}} \cdot c\br{E_{\fl{\rho r_H}}^*\cap E_H}.$
@@ -246,7 +251,7 @@ We parameterize our top-down algorithm by constants $0<\rho<\eta<1$. Assume that
     where the first inequality uses the disjointness of clusters on each level. For each $q$, at most $\lceil1/\rho\rceil$ integers $t$ satisfy $\fl{\rho t}=q$, so reindexing gives the second inequality.
 \end{proof}
 
-For the HCD approximation bounds below, we apply Theorem~\ref{thm:hc-gpd-transfer} with $\rho=1/2$.
+For the approximation bounds below, we apply Theorem~\ref{thm:hc-gpd-transfer} with $\rho=1/2$.
 
 \begin{corollary}\label{cor:hc-general-bounds}
     There is an $\bigo\br{\sqrt{\log n}}$-approximation algorithm for \textsc{Hierarchical Clustering with Demands} on general graphs and an $\bigo\br{1}$-approximation algorithm on trees.
