@@ -1,6 +1,6 @@
 \section{Hardness Results}\label{sec:gpd-hardness}
 
-In this section we provide several approximation-hardness results for \textsc{Generalized Conductance}, \textsc{Graph Partitioning with Demands} and \textsc{Hierarchical Clustering with Demands} based on the Small-Set Expansion Hypothesis and P$\neq$NP. The \emph{Small-Set Expansion Hypothesis} states that, for every constant $\zeta>0$, there is a constant $\delta>0$ for which it is NP-hard, given a regular graph, to distinguish between the existence of a vertex set of normalized size $\delta$ and expansion at most $\zeta$, and the condition that every vertex set of normalized size $\delta$ has expansion at least $1-\zeta$. Both reductions in this section use rational numbers instead of natural ones, however this can be fixed by appropriate scaling.
+In this section we provide several approximation-hardness results for \textsc{Generalized Conductance}, \textsc{Graph Partitioning with Demands} and \textsc{Hierarchical Clustering with Demands} based on the Small-Set Expansion Hypothesis and P$\neq$NP. The \emph{Small-Set Expansion Hypothesis} states that, for every constant $\zeta>0$, there is a constant $\delta>0$ for which it is NP-hard, given a regular graph, to distinguish between the existence of a vertex set of normalized size $\delta$ and expansion at most $\zeta$, and the condition that every vertex set of normalized size $\delta$ has expansion at least $1-\zeta$. Some reductions in this section use rational numbers instead of natural ones, however this can be fixed by an appropriate scaling.
 
 \subsection{Hierarchical Clustering with Demands on general graphs}
 For every unweighted undirected graph $G=(V,E)$ used as a source graph below, write
@@ -17,12 +17,11 @@ For every unweighted undirected graph $G=(V,E)$ used as a source graph below, wr
 \]
 where $\deg_G(u)$ is the degree of $u$ in $G$. For the simple random walk on $G$, let $P_G(u,v)=1/\deg_G(u)$ if $uv\in E$ and $P_G(u,v)=0$ otherwise. Its stationary distribution is $\mu_G(u)=\deg_G(u)/M_G$: for every $v\in V$,
 \[
-    \sum_{u\in V}\mu_G(u)P_G(u,v)
+    \sum_{u\in V}\mu_G(u)\cdot P_G(u,v)
     =\sum_{u:uv\in E}\frac{1}{M_G}
     =\frac{\deg_G(v)}{M_G}
     =\mu_G(v).
 \]
-Thus $\mu_G(u)$ is the probability that the walk is at $u$ at any given step when it is in stationarity.
 Now, set
 \[
     p_G(u,v)=\mu_G(u)\cdot P_G(u,v).
@@ -72,7 +71,7 @@ We use the following result of Raghavendra, Steurer, and Tulsiani~\cite{Reductio
     The output graph can be chosen so that $\alpha_H\leq q^{-R}\leq1/4$ for its tensor power $R\geq2$.
 \end{theorem}
 
-We derive from Theorem~\ref{thm:rst-global-expansion} the form of the gap used in our reduction.
+We derive from Theorem~\ref{thm:rst-global-expansion} the form of the gap used in our reduction. This step is relatively standard, however we include it for completeness.
 
 \begin{lemma}\label{lem:globalized-long-code-gap}
     Fix an integer $q\geq2$ and a constant $b\in(0,1/2]$. Assuming the Small-Set Expansion Hypothesis, there exist constants $K>0$ and $a_b>0$ such that for a sufficiently small choice of $\varepsilon>0$ it is hard to distinguish between the following cases for a graph $Y=(V_Y,E_Y)$:
@@ -102,7 +101,7 @@ We derive from Theorem~\ref{thm:rst-global-expansion} the form of the gap used i
             1-\frac{\operatorname{Cov}(Z,\Delta)^2}{\operatorname{Var}(\Delta)}
         \right).
     \]
-    Taking $d=-u$ gives $Z\mid\Delta=-u\sim\mathcal{N}(u/2,1-\varepsilon/4)$, where the second parameter is the variance. On this event, $Z'=Z-u$, so the crossing event $\{Z\geq t_x,\ Z'<t_x\}$ is exactly $\{t_x\leq Z<t_x+u\}$. Therefore,
+    Taking $d=-u$ gives $Z\mid\Delta=-u\sim\mathcal{N}(u/2,1-\varepsilon/4)$, where the second parameter is the variance. On this event, $Z'=Z-u$, so the crossing event $\{Z\geq t_x,\ Z'<t_x\}$ is $\{t_x\leq Z<t_x+u\}$. Therefore,
     \[
         \Phi_{\mathcal{G}(1-\varepsilon/2)}(x)
         =\frac{1}{x}\cdot\int_0^\infty\frac{\varphi(u/\sqrt{\varepsilon})}{\sqrt{\varepsilon}}\cdot\left[
@@ -302,23 +301,23 @@ We start by proving a numerical lemma that will be useful in the soundness analy
     \[
         \varepsilon<\left(\frac{a_{1/4}}{16\cdot A\cdot (K+1)}\right)^2.
     \]
-    Let $q$ be the least power of two satisfying $q^{-2}\leq\varepsilon$. Apply Lemma~\ref{lem:globalized-long-code-gap} with this $q$, $b=1/4$, and $\varepsilon$, and denote its output graph by $Y=(V_Y,E_Y)$.
+    Let $q$ be the least integer satisfying $q^{-2}\leq\varepsilon$. Apply Lemma~\ref{lem:globalized-long-code-gap} with this $q$, $b=1/4$, and $\varepsilon$, and denote its output graph by $Y=(V_Y,E_Y)$.
 
-    Construct a HCD instance whose supply graph is $Y$ with capacity $c(uv)=p_Y(u,v)$ on each edge $uv\in E_Y$. This is well-defined because $p_Y(u,v)=p_Y(v,u)$. Let the demand graph be complete on distinct vertex pairs, with $w(uv)=\mu_Y(u)\cdot \mu_Y(v)$. By defintion, for every $S\subseteq V_Y$, we have $
+    Construct an HCD instance whose supply graph is $Y$ with capacity $c(uv)=p_Y(u,v)$ on each edge $uv\in E_Y$. This is well-defined because $p_Y(u,v)=p_Y(v,u)$. Let the demand graph be complete on distinct vertex pairs, with $w(uv)=\mu_Y(u)\cdot \mu_Y(v)$. By defintion, for every $S\subseteq V_Y$, we have $
         c(\delta_Y(S))=\mu_Y(S)\cdot \Phi_Y(S).$
     For every cluster $X\subseteq V_Y$,
     \begin{equation}\label{eq:hcd-stationary-demand}
         w(X)=\sum_{uv\in D[X]}\mu_Y(u)\cdot \mu_Y(v)
-        =\frac12\left(\mu_Y(X)^2-\sum_{u\in X}\mu_Y(u)^2\right).
+        =\frac12\cdot \left(\mu_Y(X)^2-\sum_{u\in X}\mu_Y(u)^2\right).
     \end{equation}
     The shared normalization gives total supply capacity $c(E_Y)=1/2$, and we can assume that $\alpha_Y\leq1/4$ by Theorem~\ref{thm:rst-global-expansion}.
 
-    \emph{YES case.} Make $S_1,\ldots,S_q$ the children of the root of $\cT$, and refine each $S_i$ to singleton leaves. This tree may be nonbinary, however as noted before, $\cT$ can be made into a binary tree without increasing the cost. Summing over the supply edges crossing the root partition we have that
+    \emph{YES case.} Make $S_1,\ldots,S_q$ the children of the root of $\cT$, and refine each $S_i$ to singleton leaves. This tree may not be binary, however as noted before, $\cT$ this can be fixed without increasing the cost. Summing over the supply edges crossing the root partition we have that
     \[
         c(C_{\mathrm{root}})=\frac12\cdot\sum_{i=1}^q c(\delta_Y(S_i))
         \leq\frac{K\cdot\varepsilon}{2}.
     \]
-    By~\eqref{eq:hcd-stationary-demand}, $w(V_Y)\leq\mu_Y\br{V_Y}^2/2=1/2$, and hence the root partition contributes at most $K\cdot\varepsilon/4$ to $c\br{\cT}$. Every supply edge internal to an $S_i$ is charged at a cluster $X\subseteq S_i$, for which $w(X)\leq\mu_Y(X)^2/2\leq1/(2q^2)$. Since the total supply capacity is $1/2$, refining the $S_i$'s contributes at most $1/(4q^2)\leq\varepsilon/4$ to $c\br{\cT}$. Therefore,
+    By~\eqref{eq:hcd-stationary-demand}, $w(V_Y)\leq\mu_Y\br{V_Y}^2/2=1/2$, and hence the root partition contributes at most $K\cdot\varepsilon/4$ to $c\br{\cT}$. Now, observe that every supply edge internal to some $S_i$ is charged at a cluster of demand at most $w(S_i)\leq\mu_Y(S_i)^2/2\leq1/(2q^2)$. Since the total supply capacity is $1/2$, refining the $S_i$'s contributes at most $1/(4q^2)\leq\varepsilon/4$ to $c\br{\cT}$. Therefore,
     \[
         \operatorname{OPT}_{\mathrm{YES}}\leq c\br{\cT}
         \leq\frac{K+1}{4}\cdot \varepsilon.
@@ -334,7 +333,7 @@ We start by proving a numerical lemma that will be useful in the soundness analy
         w(P)\geq\frac{\mu_Y(P)\cdot(\mu_Y(P)-\alpha_Y)}2
         >\frac1{16}.
     \]
-    Every supply edge crossing $S$ has its least common ancestor at $P$ or an ancestor of $P$, and is charged at a cluster of demand weight at least $w(P)$. Therefore, for every hierarchy $\mathcal{T}$, the edges crossing $S$ alone contribute
+    Every supply edge crossing $S$ has its least common ancestor at $P$ or an ancestor of $P$, and thus is charged at a cluster of demand at least $w(P)$. Therefore, for every tree $\mathcal{T}$, the edges crossing $S$ alone contribute
     \[
         c(\mathcal{T})
         \geq\sum_{uv\in\delta_Y(S)}c(uv)\cdot
@@ -358,16 +357,16 @@ We start by proving a numerical lemma that will be useful in the soundness analy
 \end{corollary}
 \begin{proof}
     Suppose such an algorithm exists. Applying Theorem~\ref{thm:hc-gpd-transfer} with these $\rho$ and $\eta$ would give a polynomial-time
-    $\frac{\lceil1/\rho\rceil A}{1-\eta}$-approximation for \textsc{Hierarchical Clustering with Demands}. This factor is constant for fixed $\rho$, $\eta$, and $A$, contradicting Theorem~\ref{thm:sse-hcd-hardness}.
+    $\frac{\lceil1/\rho\rceil \cdot A}{1-\eta}$-approximation for \textsc{Hierarchical Clustering with Demands}. This factor is constant for fixed $\rho$, $\eta$, and $A$, contradicting Theorem~\ref{thm:sse-hcd-hardness}.
 \end{proof}
 
 \subsection{Hardness of Generalized Conductance}
-The hardness of generalized conductance essentially follows from the previous hardness results for GPD, however the recent result of OpenAI \cite{OAI:Constant-factor-hardness-of-uniform-sparsest-cut-September-24-2026} gives a constant-factor approximation hardness for uniform-demand \textsc{Sparsest Cut}, which translates to a constant-factor approximation hardness for \textsc{Generalized Conductance} with uniform demands.
+The hardness of \textsc{Generalized Conductance} essentially follows from the previous hardness results for GPD, however the recent result of OpenAI \cite{OAI:Constant-factor-hardness-of-uniform-sparsest-cut-September-24-2026} gives a constant-factor inapproximability for uniform-demand \textsc{Sparsest Cut}, which translates to the same result for \textsc{Generalized Conductance} with uniform demands.
 \begin{corollary}\label{cor:generalized-conductance-hardness}
   For every fixed constant $A>1$, it is NP-hard to approximate \textsc{Generalized Conductance} within a factor of $A$, even when $D=\binom{V}{2}$ and $w(e)=1$ for every $e\in D$.
 \end{corollary}
 \begin{proof}
-  Let $G=(V,E,c)$ be a supply graph, let $n=|V|$, and recall that the uniform-demand \textsc{Sparsest Cut} objective is
+  Let $G=(V,E,c)$ be a supply graph, and recall that the uniform-demand \textsc{Sparsest Cut} objective is
   \[
 \phi\br{S}
 =\frac{c\br{S,\bar{S}}}{\spr{S}\cdot\spr{\bar{S}}}
@@ -398,7 +397,7 @@ The following statement gives an approximation-preserving reduction from \textsc
 For every fixed rational $\rho\in(0,1)$ and $\varepsilon>0$ the \textsc{Graph Partitioning with Demands} is NP-hard to approximate within $2-\varepsilon$ factor, even when the supply graph is a star.
 \end{theorem}
 \begin{proof}
-Let $G=(U,F)$ be a \textsc{Vertex Cover} instance. Let $V=U\cup\{r,d\}$. Construct a supply star $E$ with center $r$, leaves $U$, and one additional leaf $d$. Set $c(rd)=\infty$ and $c(ru)=1$ for every $u\in U$. The edges of the demand graph are $F\cup\{rd\}$ where $w\br{rd}=\frac{\rho \cdot \spr{F}}{1-\rho}$ and, for every $uv\in F$, $w\br{uv}=1$. If necessary, multiply all demand weights by a common denominator to make them integral.
+Let $G=(U,F)$ be a \textsc{Vertex Cover} instance. Let $V=U\cup\{r,d\}$. Construct a supply star $E$ with center $r$, leaves $U$, and one additional leaf $d$. Set $c(rd)=\infty$ and $c(ru)=1$ for every $u\in U$. The edges of the demand graph are $F\cup\{rd\}$ where $w\br{rd}=\frac{\rho \cdot \spr{F}}{1-\rho}$ and, for every $uv\in F$, $w\br{uv}=1$.
 
 The total demand is $W=w\br{rd}+\spr{F}$, and hence $\rho \cdot W=w\br{rd}$. Any solution of cost at most $\spr{U}$ leaves $rd$ uncut, otherwise its cost becomes $\infty$. For any solution $C$, let $H\in T\setminus C$ be the component containing $r$. If $H$ contained both endpoints of some edge $uv\in F$, its internal demand would exceed $w\br{rd}$. Therefore, the set $C_H=V\setminus V\br{H}$ forms a vertex cover. Moreover, we have that $c\br{C}=\spr{C_H}$ which means that the cost of any solution for the \textsc{Graph Partitioning with Demands} instance equals the size of some vertex cover. Conversely, any cover $C_H\subseteq U$ gives rise to a solution $C$ by cutting all edges incident to $C_H$, which has cost $\spr{C_H}$. Thus the reduction preserves approximation ratios.
 
