@@ -186,8 +186,8 @@ As an immediate corollary we get:
 \subsection{Hierarchical clustering with demands}
 % \newcommand{\Dasgupta}{\tilde{c}}
 
-In this problem one is given a graph $G=(V,E,D,c,w)$ with a supply-cost function $c\colon E\to\mathbb{N}$ and a demand function $w\colon D\to\mathbb{N}$. A \emph{clustering tree} $\cT$ is a rooted tree whose vertices are subgraphs of $G$ called \emph{clusters}, representing a laminar family of subgraphs of $G$, i.e., for any two clusters $H$ and $H'$, either $V_H\subseteq V_{H'}$, $V_{H'}\subseteq V_H$, or $V_H\cap V_{H'}=\emptyset$. We require the clustering tree to have the entire graph $G$ as its root cluster and each leaf to be a singleton, i.e., a cluster with a single vertex of $G$. Therefore, there is a one-to-one correspondence between the leaves of $\cT$ and the vertices of $G$.
-For $u,v\in V$, let $\operatorname{lca}_{\cT}(u,v)$ denote their lowest common ancestor in $\cT$, that is, the cluster that is farthest from the root and contains both $u$ and $v$. For an internal node $H$, let $C_H$ be the supply edges whose endpoints lie in distinct child clusters of $H$. The objective is to minimize the total cost of separating the vertices according to the demand function, which is captured by the following function:
+In this problem one is given a graph $G=(V,E,D,c,w)$ with a supply-cost function $c\colon E\to\mathbb{N}$ and a demand function $w\colon D\to\mathbb{N}$. A \emph{clustering tree} $\cT$ is a rooted tree whose vertices are subgraphs of $G$ called \emph{clusters}, representing a laminar family of subgraphs of $G$, i.e., for any two clusters $H$ and $H'$, either $V_H\subseteq V_{H'}$, $V_{H'}\subseteq V_H$, or $V_H\cap V_{H'}=\emptyset$. We require the clustering tree to have the entire graph $G$ as its root cluster, \DDfix{any non-leaf cluster to have at least two child clusters whose vertex sets form a partition of the vertex set of the parent cluster,} and each leaf to be a singleton, i.e., a cluster with a single vertex of $G$. Therefore, there is a one-to-one correspondence between the leaves of $\cT$ and the vertices of $G$.
+For $u,v\in V$, let $\operatorname{lca}_{\cT}(u,v)$ denote their lowest common ancestor in $\cT$, that is, the cluster that is farthest from the root and contains both $u$ and $v$. For a non-leaf node with cluster $H$, let $C_H$ be the supply edges whose endpoints lie in distinct child clusters of $H$. \DDfix{(For simplicity we equate the nodes with the clusters).} The objective is to minimize the total cost of separating the vertices according to the demand function, which is captured by the following function:
 \begin{equation}\label{eq:Dasgupta}
     c\br{\cT}
     =\sum_{H\in\cT}
@@ -195,7 +195,7 @@ For $u,v\in V$, let $\operatorname{lca}_{\cT}(u,v)$ denote their lowest common a
     =\sum_{uv\in E}c\br{uv}\cdot
         w\br{V_{\operatorname{lca}_{\cT}(u,v)}}.
 \end{equation}
-We refer to this problem as \textsc{Hierarchical Clustering with Demands}. Note, that a non-binary clustering tree can be refined into a binary one without increasing the cost~\cite{ACostFunctionForSimilarityBasedHierarchicalClustering}.
+We refer to this problem as \textsc{Hierarchical Clustering with Demands}. \DDfix{It generalizes the classical hierarchical clustering problem, also known as decision tree problem, that in turn is a generalization of the classical binary search.} Note, that a non-binary clustering tree can be refined into a binary one without increasing the cost~\cite{ACostFunctionForSimilarityBasedHierarchicalClustering}.
 
 We parameterize our top-down algorithm by constants $0<\rho<\eta<1$. Assume that we have a polynomial-time subroutine for \textsc{Graph Partitioning with Demands} with target $\rho$ that returns an $\eta$-feasible supply-edge set $C_H$ satisfying
 \begin{equation}\label{eq:hc-gpd-subroutine}
