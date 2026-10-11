@@ -7,16 +7,16 @@
     \textbf{Procedure} $\textsc{BuildHierarchy}(H)$\;
     \Indp
             \If{$w\br{V_H}=0$}{
-                Make the vertices of $H$ singleton children and exit\;
+                Make the vertices of $H$ singleton children\;
             }
             \Else{
                 Compute $C_H$ by applying $\DPartition$  on $H$\;
 
                 Make the components of $H\setminus C_H$ the children of $H$\;
-            }
+
             \ForEach{child $K$ of $H$}{
                 $\textsc{BuildHierarchy}(K)$\;
-            }
+            }                }
     \Indm
     $\textsc{BuildHierarchy}(G)$\;
     \textbf{return} $\cT$\;
