@@ -89,7 +89,7 @@ It is easy to see that this is a valid relaxation of the original problem.
           \geq\sum_{uv\in D_H}w(u,v)\cdot z^a_{uv}
           \geq(1-2R)\cdot w(V_H).
     \]
-    Rearranging gives the desired bound on $w(V_H)$.
+    % Rearranging gives the desired bound on $w(V_H)$.
 
     It remains to derandomize the procedure. Since $F$ changes only when $\theta$ crosses one of the at most $|V|$ residues $\dist(v)\bmod R$, check one value per each interval between residues and pick the candidate $C$ with minimum cost. By the properties of the expected value
     \[
@@ -413,13 +413,13 @@ $
     \OPT_{q_K}\br{K}
     =\min\brc{c_K(A)\colon A\subseteq E_K\setminus E_{S_K},f_K(A)\geq q_K}
 $
-if there exists any $A\subseteq E_K\setminus E_{S_K}$ with $f_K(A)\geq q_K$.  No we claim that the $ (1-1/e)$-approximation for \textsc{Budgeted Coverage} of~\cite{KhullerMossNaor1999BudgetedMaximumCoverage} provides us with a polynomial-time subroutine $\textsc{CoreQuotaCover}(K,S_K,f_K,c_K,q_K)$ returning $A_K$ such that
+if there exists any $A\subseteq E_K\setminus E_{S_K}$ with $f_K(A)\geq q_K$.  Now we claim that the $ (1-1/e)$-approximation for \textsc{Maximum Coverage} of~\cite{KhullerMossNaor1999BudgetedMaximumCoverage} provides us with a polynomial-time subroutine $\textsc{CoreQuotaCover}(K,S_K,f_K,c_K,q_K)$ returning $A_K$ such that
 \[
     f_K(A_K)\geq(1-1/e)\cdot q_K,\quad \quad\text{and}\quad
     c_K(A_K)\leq\OPT_{q_K}\br{K}.
 \]
-Indeed, binary-search the budget $b$ on the interval $[0,c_K(E_K)]$ and run the budgeted-coverage approximation at each trial. The successful budget $b$, such that $f_K(A_K)\geq(1-1/e)\cdot q_K$, is no larger than $\OPT_{q_K}\br{K}$.
- Moreover, since we use binary search the required number of trials is $O\br{\log\br{c_K(E_K)}}$, which is polynomial in the input size.
+Indeed, binary-search the budget $b\in \brc{0,\dots, c_K(E_K)}$ and run the algorithm for \textsc{Maximum Coverage} at each trial. The lowest budget $b$, such that $f_K(A_K)\geq(1-1/e)\cdot q_K$, we get $b\leq \OPT_{q_K}\br{K}$.
+ Since we use binary search the required number of trials is $O\br{\log\br{c_K(E_K)}}$, which is polynomial in the input size.
 
 For each guess $Q$, the algorithm applies this routine to every component $K$ containing a separator with $w\br{V_K}>B_\rho$, and chooses the least-cost candidate $Q\cup\bigcup_K A_K$. Then, the algorithm recurses on each component. The full procedure is given by Algorithm \ref{alg:centroid-max-coverage}.
 
@@ -430,9 +430,9 @@ For each guess $Q$, the algorithm applies this routine to every component $K$ co
         c(C)\leq\cl{\ln\br{\frac{1-\rho}{\eta-\rho}}}\cdot\OPTdem{T}{\rho}.$
 \end{theorem}
 \begin{proof}
-    Define the excess of any component $H$ by $\Phi(H)=\max\brc{0,w\br{V_H}-B_\rho}$.
     Consider a recursive call for a subgraph $H$ of $T$, and let $q_H=w\br{V_H}-B_\rho>0$. 
-    Let $Q$ be a feasible guess, i.e., for each $K\in\mathcal{K}_Q^+$ there exists some $A\subseteq E_K\setminus E_{S_K}$ with $f_K(A)\geq q_K$. Let $F_H$ be the edges chosen by the algorithm for this guess. Consider each component $H'\in H\setminus F_H$. There are two cases.
+    Define the \emph{excess} of $H$ by $\Phi(H)=\max\brc{0,w\br{V_H}-B_\rho}$.
+    Let $Q$ be a feasible guess, i.e., for each $K\in\mathcal{K}_Q^+$ there exists $A\subseteq E_K\setminus E_{S_K}$ with $f_K(A)\geq q_K$. Let $F_H$ be the edges chosen by the algorithm for this guess. Consider a component $H'\in H\setminus F_H$. There are two cases.
     \begin{enumerate}
         \item $V_{S_K}\subseteq V_{H'}$ for some $K\in \mathcal{K}_Q$. Then, $H'=K\setminus U_K(A_K)$. Since $q_K=w\br{V_K}-B_\rho\leq q_H$,
     \[

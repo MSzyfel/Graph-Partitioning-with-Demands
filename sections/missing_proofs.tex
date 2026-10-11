@@ -4,9 +4,6 @@
 \begin{proof}[Proof of Theorem~\ref{thm:gpd-extension}]
     For a subgraph $H$ of $G$ with $w\br{V_H}\geq B_\eta$, we set $\eta_H=B_\eta/w\br{V_H}$ and $\rho_H=B_\rho/w\br{V_H}$. The algorithm uses $\eta_0=\max\brc{4/5,\eta_H}$ and we observe that $\rho_H/\eta_H=\rho/\eta$.
     Recall that $\OPTdem{H}{\rho_H}$ is the cost of the optimal \textsc{Graph Partitioning with Demands} solution on $H$ with threshold $\rho_H$.
-    The recursive procedure for a component $H$ is as follows.
-
-\input{algorithms/gpd_recursive_extension.tex}
     It is easy to see that the algorithm runs in polynomial time and the returned solution is $\eta$-feasible. Hence, we focus on the approximation ratio.
 
 For a subgraph $H$ of $G$ for which the procedure has been called, let $d\br{H}$ denote the number of recursion levels the algorithm performs on $H$. Every recursive call takes $\eta_0\geq 4/5$ and, by Theorem~\ref{thm:gpd-bicriteria}, produces connected components of demand at most $\eta_0 \cdot w\br{V_H}\leq \frac{4}{5} w\br{V_H}$ each.

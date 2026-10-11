@@ -118,7 +118,12 @@ The next result shows an $\bigo_{\rho,\eta}\br{\gamma\br{n}}$-approximation for 
     $
     where $d=\cl{\log_{5/4}\br{1/\eta}}$ and $\gamma\br{n}$ is the approximation factor of a polynomial-time algorithm for \textsc{Generalized Conductance}.
 \end{theorem}
-The proof is deferred to Appendix~\ref{app:gpd-extension}.
+\begin{proof}
+The recursive procedure for a component $H$ is as follows.
+
+\input{algorithms/gpd_recursive_extension.tex}
+The proof of correctness is deferred to Appendix~\ref{app:gpd-extension}.
+\end{proof}
 
 As an immediate corollary we get:
 \begin{corollary}\label{cor:graph-partitioning-approximation}
