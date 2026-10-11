@@ -3,14 +3,14 @@
 \subsection{Proof of Theorem~\ref{thm:gpd-extension}}\label{app:gpd-extension}
 \begin{proof}[Proof of Theorem~\ref{thm:gpd-extension}]
     For a subgraph $H$ of $G$ with $w\br{V_H}\geq B_\eta$, we set $\eta_H=B_\eta/w\br{V_H}$ and $\rho_H=B_\rho/w\br{V_H}$. The algorithm uses $\eta_0=\max\brc{4/5,\eta_H}$ and we observe that $\rho_H/\eta_H=\rho/\eta$.
-    Recall that $\OPTdem{H}{\rho_H}$ is the cost of the optimal \textsc{Graph Partitioning with Demands} solution on $H$ with threshold $\rho_H$.
-    It is easy to see that the algorithm runs in polynomial time and the returned solution is $\eta$-feasible. Hence, we focus on the approximation ratio.
+    Recall that $\OPTdem{H}{\rho_H}$ is the cost of an optimal solution to \textsc{Graph Partitioning with Demands} on $H$ with threshold $\rho_H$.
+    It is easy to see that Algorithm~\ref{alg:recursive-partitioning} runs in polynomial time and the returned solution is $\eta$-feasible. Hence, we focus on the approximation ratio.
 
 For a subgraph $H$ of $G$ for which the procedure has been called, let $d\br{H}$ denote the number of recursion levels the algorithm performs on $H$. Every recursive call takes $\eta_0\geq 4/5$ and, by Theorem~\ref{thm:gpd-bicriteria}, produces connected components of demand at most $\eta_0 \cdot w\br{V_H}\leq \frac{4}{5} w\br{V_H}$ each.
 Hence, for every `child component' $H'$ of $H\setminus C$ in the recursion tree, we get $\eta_{H'}\geq 5/4\cdot \eta_H$.
 Because the last partitioning step happens when $\eta_0=\eta_H\geq 4/5$, the recursion depth is bounded by
 \[
-    d\br{H}\leq \cl{\log_{5/4}\br{w\br{V_H}/B_\eta}}.
+    d\br{H}\leq \cl{\log_{5/4}\br{w\br{V_H}/B_\eta}}
 \]
 due to the fact that after reaching $\eta_{H}\geq 4/5$ the algorithm performs one last partitioning step, i.e., the last recursive call. Since $\cl{\log_{5/4}\br{w\br{V_H}/B_\eta}}$ is the number of iterations required to reach $\eta_H\geq 1$, which is one more than we need to reach $\eta_H\geq 4/5$, we get that the above quantity is correct.
 
@@ -27,7 +27,7 @@ Now, we prove by induction on $d\br{H}$ that Algorithm~\ref{alg:recursive-partit
     \end{enumerate}
     In both cases the cost is at most $\kappa\br{\rho,\eta}\cdot\gamma\br{n}\cdot \OPTdem{H}{\rho_H}=d\br{H}\cdot \kappa\br{\rho,\eta}\cdot\gamma\br{n}\cdot\OPTdem{H}{\rho_H}$.
 
-    \emph{Inductive step.} Suppose the claim holds for every graph $H'$ with $d\br{H'}\leq d-1$, and let $H$ satisfy $d\br{H}=d\geq 2$. Let $C$ be the cut computed when $H$ is the input. It holds $B_\eta/w\br{V_H}<4/5$, so $\eta_0=4/5$, and for every $H'$ in $H\setminus C$, $w\br{H'}\leq \eta_0\cdot w\br{V_H}=\frac{4}{5}\cdot w\br{V_H}$, thus $d\br{H'}\leq d-1$. By Theorem \ref{thm:gpd-bicriteria}, the cost introduced by the current partitioning step is at most $\frac{\gamma\br{n}}{\br{\eta_0+\delta_{\rho_H}-1}^2}\cdot\OPTdem{H}{\rho_H}$, and we again bound $\frac{1}{\br{\eta_0+\delta_{\rho_H}-1}^2}\leq \kappa\br{\rho,\eta}$:
+    \emph{Inductive step.} Suppose the claim holds for every graph $H'$ with $d\br{H'}\leq d-1$, and let $H$ satisfy $d\br{H}=d\geq 2$. Let $C$ be the cut computed when $H$ is the input. It holds $B_\eta/w\br{V_H}<4/5$, so $\eta_0=4/5$, and for every $H'$ in $H\setminus C$, $w\br{H'}\leq \eta_0\cdot w\br{V_H}=\frac{4}{5}\cdot w\br{V_H}$, thus $d\br{H'}\leq d-1$. By Theorem \ref{thm:gpd-bicriteria}, the cost introduced by the current partitioning step is at most $\frac{\gamma\br{n}}{\br{\eta_0+\delta_{\rho_H}-1}^2}\cdot\OPTdem{H}{\rho_H}$, and we bound $\frac{1}{\br{\eta_0+\delta_{\rho_H}-1}^2}\leq \kappa\br{\rho,\eta}$ similarly as before:
     \begin{enumerate}
         \item If $\rho_H\leq 3/4$, then $\delta_{\rho_H}=1/4$ and $\eta_0+\delta_{\rho_H}-1=4/5+1/4-1=1/20$, so the term is at most $400\leq \kappa\br{\rho,\eta}$.
         \item If $\rho_H> 3/4$, then $\delta_{\rho_H}=1-\rho_H$ and, using $\rho_H=\br{\rho/\eta}\cdot\eta_H<\br{\rho/\eta}\cdot\eta_0$,
@@ -55,38 +55,38 @@ Now, we prove by induction on $d\br{H}$ that Algorithm~\ref{alg:recursive-partit
 
 \subsection{Cost bound in Theorem~\ref{thm:tree-centroid-max-coverage}}\label{app:tree-centroid-max-coverage-cost}
 \begin{proof}[Proof of the cost bound in Theorem~\ref{thm:tree-centroid-max-coverage}]
-Let $\OPT_{B_\rho}(H)$ denote the minimum cost of a cut that leaves every component of $H$ with internal demand at most $B_\rho$. We prove by induction on the maximum number $d(H)$ of nonterminal recursive calls on a path starting at $H$ that the total cost $C_H$ returned below $H$ satisfies
+Recall that $\OPT_{\rho}(H)$ denotes the minimum cost of a cut that leaves every component of $H$ with internal demand at most $B_\rho$. We prove by induction on the maximum number $d(H)$ of non-terminal recursive calls on a path starting at $H$ that the total cost $C_H$ returned below $H$ satisfies
 \[
-    c(C_H)\leq d(H)\cdot\OPT_{B_\rho}(H).
+    c(C_H)\leq d(H)\cdot\OPT_{\rho}(H).
 \]
 For a terminal component, $d(H)=0$ and $C_H=\emptyset$, so the claim holds. Otherwise, let $F_H$ be the cut selected at $H$, and let $H_1,\ldots,H_m$ be the components of $H\setminus F_H$. Then
 \[
     d(H)=1+\max_{1\leq i\leq m}d(H_i).
 \]
 
-Let $F_H^*$ be an optimal $B_\rho$-feasible cut of $H$, and set $Q^*=F_H^*\cap E_{S_H}$. The algorithm considers this guess. For each $K\in\mathcal K_{Q^*}^+$, the component of $K\setminus F_H^*$ containing $S_K$ has internal demand at most $B_\rho$. Hence the restriction of $F_H^*$ to $K$ separates at least $q_K=w(V_K)-B_\rho$ demand from $S_K$. It follows that
+Let $F_H^*$ be an optimal $\rho$-feasible cut of $H$, and set $Q^*=F_H^*\cap E_{S_H}$. The algorithm considers this guess. For each $K\in\mathcal K_{Q^*}^+$, the component of $K\setminus F_H^*$ containing $S_K$ has internal demand at most $B_\rho$. Hence the restriction of $F_H^*$ to $K$ separates at least $q_K=w(V_K)-B_\rho$ demand from $S_K$. It follows that
 \[
     \OPT_{q_K}(K)\leq c(F_H^*\cap E_K).
 \]
 Since $\textsc{CoreQuotaCover}$ returns a set $A_K$ with $f_K(A_K)\geq(1-1/e)q_K$ and $c_K(A_K)\leq\OPT_{q_K}(K)$, the candidate for $Q^*$ has cost at most
 \[
     c(Q^*)+\sum_{K\in\mathcal K_{Q^*}^+}\OPT_{q_K}(K)
-    \leq c(F_H^*)=\OPT_{B_\rho}(H).
+    \leq c(F_H^*)=\OPT_{\rho}(H).
 \]
-Since the algorithm chooses the least-cost candidate, $c(F_H)\leq\OPT_{B_\rho}(H)$.
+Since the algorithm chooses the least-cost candidate, $c(F_H)\leq\OPT_{\rho}(H)$.
 
-For each child $H_i$, restricting $F_H^*$ to $E_{H_i}$ is feasible for $\OPT_{B_\rho}(H_i)$. The child edge sets are pairwise disjoint, so
+For each child $H_i$, restricting $F_H^*$ to $E_{H_i}$ is feasible for $\OPT_{\rho}(H_i)$. The child edge sets are pairwise disjoint, so
 \[
-    \sum_{i=1}^m\OPT_{B_\rho}(H_i)
+    \sum_{i=1}^m\OPT_{\rho}(H_i)
     \leq\sum_{i=1}^m c(F_H^*\cap E_{H_i})
-    \leq\OPT_{B_\rho}(H).
+    \leq\OPT_{\rho}(H).
 \]
 Assuming the induction claim for each child, we obtain
 \begin{align*}
     c(C_H)
     &=c(F_H)+\sum_{i=1}^m c(C_{H_i})\\
-    &\leq\OPT_{B_\rho}(H)+(d(H)-1)\cdot \sum_{i=1}^m\OPT_{B_\rho}(H_i)\\
-    &\leq d(H)\cdot\OPT_{B_\rho}(H).
+    &\leq\OPT_{\rho}(H)+(d(H)-1)\cdot \sum_{i=1}^m\OPT_{\rho}(H_i)\\
+    &\leq d(H)\cdot\OPT_{\rho}(H).
 \end{align*}
 By the excess-demand bound in the proof of Theorem~\ref{thm:tree-centroid-max-coverage}, all recursive calls terminate by depth
 \[
@@ -97,13 +97,13 @@ Thus $d(T)\leq L$, and the claimed cost bound follows.
 
 \subsection{Proof of Theorem~\ref{thm:tree-centroid-full-quota}}\label{app:tree-centroid-full-quota}
 \begin{proof}[Proof of Theorem~\ref{thm:tree-centroid-full-quota}]
-    By Lemma~\ref{lem:tree-separator}, $\spr{\mathcal{L}_T}\leq t-1$, and for every $H\in T\setminus\mathcal L_T$, $w\br{H}\leq W/t\leq B_\rho$. By construction, all components $H\in T\setminus C$ have demand bounded by $w\br{V_H}\leq B_\rho$.
+    By Lemma~\ref{lem:tree-separator}, $\spr{\mathcal{L}_T}\leq t-1$, and for every $H\in T\setminus\mathcal L_T$, $w\br{H}\leq W/t\leq B_\rho$. By construction, all components $H\in T\setminus C$ have total demand bounded by $w\br{V_H}\leq B_\rho$.
 
-    Let $F^*$ be an optimal $B_\rho$-feasible cut and set $Q^*=F^*\cap E_{S_T}$. For each $K\in\mathcal K_{Q^*}^+$, fix an optimal $A_K^*$ for $\OPT_{q_K}(K)$. To obtain a valid multicut $M$ for $T_K$, for each edge $e=uv\in A_K^*$ include both representative edges $u^{\mathrm L}v^{\mathrm L}$ and $u^{\mathrm R}v^{\mathrm R}$ in $M$. This doubles the cost of each edge, so $c(M)\leq2\OPT_{q_K}(K)$. Mestre's $(2+\delta)$-approximation returns a multicut $\widehat A_K$ with
+    Let $F^*$ be an optimal $\rho$-feasible cut and set $Q^*=F^*\cap E_{S_T}$. For each $K\in\mathcal K_{Q^*}^+$, fix an optimal $A_K^*$ for $\OPT_{q_K}(K)$. To obtain a valid multicut $M$ for $T_K$, for each edge $e=uv\in A_K^*$ include both representative edges $u^{\mathrm L}v^{\mathrm L}$ and $u^{\mathrm R}v^{\mathrm R}$ in $M$. This doubles the cost of each edge, so $c(M)\leq2\OPT_{q_K}(K)$. Mestre's $(2+\delta)$-approximation returns a multicut $\widehat A_K$ with
     \[
         c(\widehat A_K)\leq(2+\delta)\cdot c(M)\leq(4+\epsilon)\cdot\OPT_{q_K}(K),
     \]
-    where $\delta=\epsilon/2$. The routine returns $A_K$ by replacing every selected copied edge in $\widehat A_K$ by its corresponding original supply edge and merging duplicates. This preserves the separated demand and cannot increase cost, so $c(A_K)\leq c(\widehat A_K)\leq(4+\epsilon)\cdot\OPT_{q_K}(K)$.
+    where $\delta=\epsilon/2$. The routine returns $A_K$ by replacing each selected copy of an edge in $\widehat A_K$ by its corresponding original supply edge and merging duplicates. This preserves the separated demand and cannot increase the cost, so $c(A_K)\leq c(\widehat A_K)\leq(4+\epsilon)\cdot\OPT_{q_K}(K)$.
 
     The restrictions of $F^*$ to the disjoint components in $\mathcal K_{Q^*}^+$ are feasible for their quota problems, and their edges together with $Q^*$ are a subset of $F^*$. Therefore,
     \[
