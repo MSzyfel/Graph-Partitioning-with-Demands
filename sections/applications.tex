@@ -20,7 +20,7 @@ The analysis uses a generalization of the standard technique of dealing with \te
 \begin{theorem}\label{thm:gpd-bicriteria}
     For every fixed $\rho\in(0,1)$, let $\delta_{\rho}=\min\brc{1/4,1-\rho}$ and let $\gamma\br{n}$ be the approximation ratio of GC. For every fixed $\eta\in\br{\max\brc{1/2,1-\delta_{\rho}},1}$, there exists a polynomial-time algorithm that returns an $\eta$-feasible subset of edges $C$ such that
     \[
-    c\br{C}=\frac{\gamma\br{n}}{(\eta+\delta_{\rho}-1)^2}\cdot \OPTdem{G}{\rho}
+    c\br{C}=\frac{\gamma\br{n}}{(\eta+\delta_{\rho}-1)^2}\cdot \OPTdem{G}{\rho}.
     \]
 \end{theorem}
 \begin{proof}
@@ -194,12 +194,7 @@ For $u,v\in V$, let $\operatorname{lca}_{\cT}(u,v)$ denote their lowest common a
 We refer to this problem as \textsc{Hierarchical Clustering with Demands}. 
 % \DDfix{It generalizes the classical hierarchical clustering problem, also known as decision tree problem, that in turn is a generalization of the classical binary search.} Note, that a non-binary clustering tree can be refined into a binary one without increasing the cost~\cite{ACostFunctionForSimilarityBasedHierarchicalClustering}.
 
-We parameterize our top-down algorithm by constants $0<\rho<\eta<1$. Assume that we have a polynomial-time subroutine for \textsc{Graph Partitioning with Demands} with target $\rho$ that returns an $\eta$-feasible supply-edge set $C_H$ satisfying
-\begin{equation}\label{eq:hc-gpd-subroutine}
-    c\br{C_H}
-    \leq\gamma_{\rho,\eta}\br{\spr{V_H}}\cdot \OPTdem{H}{\rho}\leq\gamma_{\rho,\eta}\br{n}\cdot \OPTdem{H}{\rho}.
-\end{equation}
-Denote this subroutine by $\DPartition$, suppressing its parameters $\rho$ and $\eta$.
+We parameterize our top-down algorithm by constants $0<\rho<\eta<1$. Assume that we have a polynomial-time $\gamma_{\rho,\eta}\br{n}$-approximate subroutine for \textsc{Graph Partitioning with Demands}, denoted by $\DPartition$, suppressing its parameters $\rho$ and $\eta$.
 
 \begin{theorem}\label{thm:hc-gpd-transfer}
     Fix constants $0<\rho<\eta<1$ and suppose that a subroutine $\DPartition$ is given, where $\gamma_{\rho,\eta}(n)\geq1$. Then there exists a $\frac{\lceil1/\rho\rceil\cdot\gamma_{\rho,\eta}(n)}{1-\eta}$-approximation polynomial-time algorithm for \textsc{Hierarchical Clustering with Demands}.
@@ -226,10 +221,9 @@ Denote this subroutine by $\DPartition$, suppressing its parameters $\rho$ and $
 
     Fix a non-singleton cluster $H$ produced by the algorithm and 
     write $r_H=w\br{V_H}$. The maximal clusters of $\cT^*$ having demand at most $\fl{\rho r_H}$ partition $V$, and by extension $V_H$, into clusters of demand at most $\fl{\rho r_H}$.
-    Every supply edge of $E_H$ joining two distinct parts of this partition has its endpoints in distinct maximal clusters of $\cT^*$, so their least common ancestor in $\cT^*$ has demand greater than $\fl{\rho r_H}$. Consequently, the set $E_{\fl{\rho r_H}}^*\cap E_H$ is a feasible solution to \textsc{Graph Partitioning with Demands} on the graph $H$ with target $\rho$, and~\eqref{eq:hc-gpd-subroutine} gives $
-        c\br{C_H}\leq \gamma_{\rho,\eta}\br{\spr{V_H}} \cdot \OPT_{\rho}\br{H}
-        \leq \gamma_{\rho,\eta}\br{\spr{V_H}} \cdot c\br{E_{\fl{\rho r_H}}^*\cap E_H}.$
-    Let $s_H$ be the largest demand of a non-singleton child of $H$, and set $s_H=0$ if every child is a singleton. Since the subroutine returns an $\eta$-feasible solution, $s_H\leq\eta \cdot r_H$. Hence
+    Every supply edge of $E_H$ joining two distinct parts of this partition has its endpoints in distinct maximal clusters of $\cT^*$, so their least common ancestor in $\cT^*$ has demand greater than $\fl{\rho r_H}$. Consequently, the set $E_{\fl{\rho r_H}}^*\cap E_H$ is a feasible solution to \textsc{Graph Partitioning with Demands} on the graph $H$ with target $\rho$, so $
+        c\br{C_H}\leq \gamma_{\rho,\eta}\br{\spr{V_H}} \cdot c\br{E_{\fl{\rho r_H}}^*\cap E_H}.$
+    Let $s_H$ be the largest demand among the children of $H$. Since the subroutine returns an $\eta$-feasible solution, $s_H\leq\eta \cdot r_H$. Hence
     \[
         r_H\cdot c\br{C_H}
         \leq\frac{\gamma_{\rho,\eta}\br{\spr{V_H}}}{1-\eta}

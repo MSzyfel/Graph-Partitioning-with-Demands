@@ -33,8 +33,8 @@ Secondly, for general graphs we use a reduction to \textsc{Min-Ratio Vertex Cut}
     Since $q_{S^*}(f,g)\in \brc{0,1,2}$ we distinguish two non-trivial cases:
     \begin{enumerate}
       \item $q_{S^*}(f,g)=1$. After exchanging $f$ and $g$ if necessary, there is an endpoint $u$ of $f$ in $S^*$ and an endpoint $v$ of $g$ in $\bar{S}^*$. The unique $u$-$v$ path in $T$ contains an edge $e\in E^*$. Removing $e$ places $u$ and $v$ in opposite components. Therefore, either $f\in\delta_D[S_e]$ and $g\in\delta_D[\bar S_e]$, or $g\in\delta_D[S_e]$ and $f\in\delta_D[\bar S_e]$. In either case $q_{S_e}(f,g)\geq 1$.
-      \item $q_{S^*}(f,g)=2$. Then each of $f$ and $g$ has one endpoint in $S^*$ and one in $\bar{S}^*$. Let $P_f$ and $P_g$ be the paths in $T$ joining the endpoints of $f$ and $g$, respectively. Choose $e_f\in P_f\cap E^*$ and $e_g\in P_g\cap E^*$.
-    If $e_f\neq e_g$, then $f$ is incident to both components of $T\setminus e_f$, so $q_{X_{e_f}}(f,g)\geq1$ regardless of which component contains an endpoint of $g$. The symmetric argument gives $q_{X_{e_g}}(f,g)\geq1$, and consequently $q_{X_{e_f}}(f,g)+q_{X_{e_g}}(f,g)\geq2$. If $e_f=e_g$, both $f$ and $g$ are incident to both components of $T\setminus e_f$, and hence $q_{X_{e_f}}(f,g)=2$.
+      \item $q_{S^*}(f,g)=2$. Then each of $f$ and $g$ has one endpoint in $S^*$ and one in $\bar{S}^*$. Let $P_f$ and $P_g$ be the paths in $T$ joining the endpoints of $f$ and $g$, respectively. Choose $f'\in P_f\cap E^*$ and $g'\in P_g\cap E^*$.
+    If $f'\neq g'$, then $f$ is incident to both components of $T\setminus f'$, so $q_{X_{f'}}(f,g)\geq1$ regardless of which component contains an endpoint of $g$. The symmetric argument gives $q_{X_{g'}}(f,g)\geq1$, and consequently $q_{X_{f'}}(f,g)+q_{X_{g'}}(f,g)\geq2$. If $f'=g'$, both $f$ and $g$ are incident to both components of $T\setminus f'$, and hence $q_{X_{f'}}(f,g)=2$.
     \end{enumerate}
     This proves~\eqref{eq:tree-demand-pair-cover} which combined with applying~\eqref{eq:tree-symmetrized-demand-pairs} first to $S^*$ and then to each $S_e$ gives
     \begin{align*}

@@ -1,7 +1,7 @@
 \begin{algorithm}[h]
     \DontPrintSemicolon
     \caption{Two-separator recursion with core coverage}\label{alg:centroid-max-coverage}
-    \textbf{Input} A tree $T=(V,E,D,c,w)$ and $B_\rho\gets\rho W$ and $B_\eta\gets\eta W$\;
+    \textbf{Input} A tree $T=(V,E,D,c,w)$ and $B_\rho=\rho W$ and $B_\eta=\eta W$\;
     \textbf{Output} An $\eta$-feasible supply-edge set $C\subseteq E$\;
     \textbf{Procedure} $\textsc{SeparatorMaxCoverage}(H)$\;
     \Indp
@@ -9,17 +9,17 @@
             \textbf{return} $\emptyset$\;
         }
         Run $\textsc{Separator}(H, w, 3)$, obtaining $\mathcal{L}_H$ with $|\mathcal{L}_H|\leq2$\;
-        Let $P_H\gets H[\mathcal{L}_H]$ and  $\cF_H\gets\emptyset$\;
-        \ForEach{$Q\in\{\emptyset\}\cup\{\{e\}\colon e\in E_{P_H}\}$}{
+        Let $S_H\gets H[\mathcal{L}_H]$ and  $\cF_H\gets\emptyset$\;
+        \ForEach{$Q\in\{\emptyset\}\cup\{\{e\}\colon e\in E_{S_H}\}$}{
             $\mathcal{K}_Q\gets\brc{K\in H\setminus Q\colon V_K\cap\mathcal{L}_H\neq\emptyset}$, $\mathcal{K}_Q^+\gets\{K\in\mathcal{K}_Q\colon w\br{V_K}>B_\rho\}$\;
             \ForEach{$K\in\mathcal{K}_Q^+$}{
-                $\mathcal{L}_K\gets V_K\cap\mathcal{L}_H$, $S_K\gets K[\mathcal{L}_K]$, and $q_K\gets w\br{V_K}-B_\rho$\;
+                $S_K\gets K[S_H]$ and $q_K\gets w\br{V_K}-B_\rho$\;
             }
             \If{$\exists K\in\mathcal{K}_Q^+\colon w\br{V_{S_K}}>B_\rho$}{
                 \textbf{continue}\;
             }
             \ForEach{$K\in\mathcal{K}_Q^+$}{
-                $A_K\gets\textsc{CoreQuotaCover}(f_K,c_K,q_K)$\;
+                $A_K\gets\textsc{CoreQuotaCover}(K,S_K,f_K,c_K,q_K)$\;
             }
             $F_Q\gets Q\cup\bigcup_{K\in\mathcal{K}_Q^+}B_K(A_K)$ and add $F_Q$ to $\cF_H$\;
         }
