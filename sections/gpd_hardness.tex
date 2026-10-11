@@ -313,7 +313,7 @@ We start by proving a numerical lemma that will be useful in the soundness analy
     \end{equation}
     The shared normalization gives total supply capacity $c(E_Y)=1/2$, and we can assume that $\alpha_Y\leq1/4$ by Theorem~\ref{thm:rst-global-expansion}.
 
-    \emph{YES case.} Make $S_1,\ldots,S_q$ the children of the root of $\cT$, and refine each $S_i$ to singleton leaves. This tree may not be binary, however as noted before, $\cT$ this can be fixed without increasing the cost.
+    \emph{YES case.} Make $S_1,\ldots,S_q$ the children of the root of $\cT$, and refine each $S_i$ to singleton leaves. This tree may not be binary, however as noted before, it can be converted to a binary tree without increasing the cost.
     Summing over the supply edges crossing the cut corresponding to the root partition, we have that
     \[
         c(C_{\mathrm{root}})=\frac12\cdot\sum_{i=1}^q c(\delta_Y(S_i))
@@ -399,11 +399,11 @@ Let $G=(U,F)$ be a \textsc{Vertex Cover} instance. Let $V=U\cup\{r,d\}$. Constru
 
 The total demand is $W=w\br{rd}+\spr{F}$, and hence $B_\rho=\rho\cdot W=w\br{rd}$. Any solution of cost at most $\spr{U}$ leaves $rd$ uncut, otherwise its cost becomes $\infty$. For any solution $C$, let $H\in T\setminus C$ be the component containing $r$. If $H$ contained both endpoints of some edge $uv\in F$, its internal demand would exceed $w\br{rd}$. Therefore, the set $C_H=V\setminus V_H$ forms a vertex cover. Moreover, we have that $c\br{C}=\spr{C_H}$ which means that the cost of any solution for the \textsc{Graph Partitioning with Demands} instance equals the size of some vertex cover. Conversely, any cover $C_H\subseteq U$ gives rise to a solution $C$ by cutting all edges incident to $C_H$, which has cost $\spr{C_H}$. Thus the reduction preserves approximation ratios.
 
-Combining this, with the recently proved Unique Games Theorem \cite{OAI:The-Unique-Games-Theorem-September-23-2026} which implies that \textsc{Vertex Cover} is hard to approximate within $2-\varepsilon$ factor yields the proof.
+Combining this with the recently proved Unique Games Theorem \cite{OAI:The-Unique-Games-Theorem-September-23-2026} which implies that \textsc{Vertex Cover} is hard to approximate within a factor of $2-\varepsilon$ yields the proof.
 \end{proof}
 
 \subsection{Hardness of Hierarchical Clustering with Demands on Stars}
-A similar result as above, however based on the hardness of \textsc{Min-Sum Vertex Cover} gives the following.
+A similar result follows from the hardness of \textsc{Min-Sum Vertex Cover} and gives the following.
 \begin{theorem}\label{thm:hc-star-hardness}
 \textsc{Hierarchical Clustering with Demands} is NP-hard to approximate within a factor of $1.0748$,
 even when the supply graph is a star and all capacities and demands are uniform.
