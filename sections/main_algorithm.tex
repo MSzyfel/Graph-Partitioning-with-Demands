@@ -1,7 +1,7 @@
 ﻿\section{Warm Up: Generalized Conductance}
 
 We start with relatively simple results regarding \textsc{Generalized Conductance}. We begin by proving that in an easier setup, when the supply graph is a tree, an optimal cut is always obtained by removing a single supply edge. This immediately yields an exact polynomial-time algorithm that just checks all supply edges and picks the best cut.
-Secondly, we reduce the general graphs instances to \textsc{Min-Ratio Vertex Cut} problem, which yields a general $\bigo\br{\sqrt{\log n}}$-approximation algorithm using known results.
+Secondly, for general graphs we use a reduction to \textsc{Min-Ratio Vertex Cut} problem, which yields a general $\bigo\br{\sqrt{\log n}}$-approximation algorithm using known results.
 
 \subsection{Supply trees}
 
@@ -12,7 +12,7 @@ Secondly, we reduce the general graphs instances to \textsc{Min-Ratio Vertex Cut
   If every cut has infinite value, the claim follows immediately. Otherwise, let $\br{S^*,\bar{S}^*}$ be an optimal cut and for brevity denote $
     W^*=w\br{S^*,V}\cdot w\br{\bar{S}^*,V}$ and $ E^*=\delta_E\br{S^*}.$
   For every $e\in E^*$, let $S_e$ and $\bar{S}_e$ be the vertex sets of the two components of $T\setminus e$, and denote $
-    W_e=w\br{S_e,V}\cdot w\br{\bar{S}_e,V}$. We want to show that the there exists an edge $e\in E^*$ with $\psi_{w}\br{S_e}\leq \psi_{w}\br{S^*}$.
+    W_e=w\br{S_e,V}\cdot w\br{\bar{S}_e,V}$. We want to show that there exists an edge $e\in E^*$ with $\psi_{w}\br{S_e}\leq \psi_{w}\br{S^*}$.
     To this end we employ the following lemma.
   \begin{lemma}\label{lemma:tree_edge_weight_sum}
     It holds $\sum_{e\in E^*}W_e\geq W^*$.

@@ -2,7 +2,7 @@
 
 We now focus on the case where the supply graph is a tree.
 Since Section~\ref{sec:gpd-hardness} provides evidence of that the problem cannot be approximated efficiently even on supply stars, we focus on improving the approximation guarantee given by Theorem \ref{thm:gpd-extension}, since the constant provided by that theorem is relatively large.
-We give two polynomial-time bicriteria algorithms for arbitrary demand weights: anchored-LP rounding (cf. Section~\ref{sec:Anchor-LP-based-algorithm}) and separator recursion based on submodular maximum coverage (cf. Section~\ref{sec:Separator-Recursion-via-Maximum-Coverage}). We also give a single-criteria separator algorithm whose polynomial degree depends on $1/\rho$ (cf. Section~\ref{sec:Single-Criteria-Approximation-via-Multicut}).
+We give two polynomial-time bi-criteria algorithms for arbitrary demand weights: anchored-LP rounding (cf. Section~\ref{sec:Anchor-LP-based-algorithm}) and separator recursion based on submodular maximum coverage (cf. Section~\ref{sec:Separator-Recursion-via-Maximum-Coverage}). We also give a single-criteria separator algorithm whose polynomial degree depends on $1/\rho$ (cf. Section~\ref{sec:Single-Criteria-Approximation-via-Multicut}).
 % The idea behind the algorithm is to find a small-size set of vertices whose removal leads to components with relatively low demand. Then, the new goal of the algorithm becomes to remove a large enough amount of demand from each vertex of the separator. To do this we use a well-known subproblem called \textsc{Maximum Coverage}.
 Taking the best of these guarantees gives approximation ratios depending on $\rho$ and $\eta$ that improve on the constant provided by Theorem~\ref{thm:gpd-extension}.
 As a corollary, we also obtain a polynomial-time $\frac{4e}{e-1}$-approximation for \textsc{Hierarchical Clustering with Demands} on trees. 
@@ -403,23 +403,23 @@ Define $S_K=H[V_{P_H}]$.
 %For each edge $e\in E_K\setminus E_{S_K}$, let $T_e$ be the component of $K\setminus\brc{e}$ not containing $S_K$. For $A\subseteq E_K\setminus E_{S_K}$, define
 %\[
 %    \begin{aligned}
-%        U_K(A)&=\bigcup_{e\in A}V_{T_e},\quad C_K(A)=\left\{xy\in E_K\colon \left|\{x,y\}\cap U_K(A)\right|=1\right\},\\
+%        U_K(A)&=\bigcup_{e\in A}V_{T_e},\quad B_K(A)=\left\{xy\in E_K\colon \left|\{x,y\}\cap U_K(A)\right|=1\right\},\\
 %        f_K(A)&=\sum_{uv\in D_K}w(u,v)\cdot 
 %            \mathbf 1\!\left[\{u,v\}\cap U_K(A)\neq\emptyset\right]=w\br{V_K\setminus U_K(A), V_K}.
 %    \end{aligned}
 %\]
-% Here $C_K(A)\subseteq A$ is the boundary of $U_K(A)$ separating it from $S_K$, and
+% Here $B_K(A)\subseteq A$ is the boundary of $U_K(A)$ separating it from $S_K$, and
 % \[
 %     f_K(A)=.
 % \]
-% is the total demand separated from $S_K$ by cutting the edges in $C_K(A)$.
+% is the total demand separated from $S_K$ by cutting the edges in $B_K(A)$.
 For $A\subseteq E_K\setminus E_{S_K}$, define $U_K(A)$ to be the set of all vertices $u$ such that the path from $u$ to its closest vertex in $S_K$ contains an edge in $A$.
 Let $B_K(A)\subseteq A$ be the \emph{boundary} of $U_K(A)$, defined as the set of edges with one endpoint in $U_K(A)$. Hence, $B_K(A)$ separates $U_K(A)$ from $S_K$. Let $
             f_K(A)=w\br{V_K\setminus U_K(A), V_K}$
  be the total demand separated from $S_K$ by cutting the edges in $B_K(A)$.
 
-Observe, that $f_K$ is a weighted coverage function on the demand pairs. 
-% The idea in our recursion is that the component containing $S_K$ after cutting $C_K(A)$ has demand $w\br{V_K}-f_K(A)$. Moreover, every other component contains no separator, so it is contained in a component of $H\setminus\mathcal L_H$ and has demand at most $w\br{H}/3$. These two facts will allow us to control the demand in all resulting components during the recursion.
+Observe that $f_K$ is a weighted coverage function on the demand pairs. 
+% The idea in our recursion is that the component containing $S_K$ after cutting $B_K(A)$ has demand $w\br{V_K}-f_K(A)$. Moreover, every other component contains no separator, so it is contained in a component of $H\setminus\mathcal L_H$ and has demand at most $w\br{H}/3$. These two facts will allow us to control the demand in all resulting components during the recursion.
 For $w\br{V_K}>B_\rho$, set $q_K=w\br{V_K}-B_\rho$ and define
 $
     \OPT_{q_K}\br{K}
@@ -433,7 +433,7 @@ if there exists any $A\subseteq E_K\setminus E_{S_K}$ with $f_K(A)\geq q_K$.  Th
 Indeed, binary-search the budget $b$ on the interval $[0,c_K(E_K)]$ and run the budgeted-coverage approximation at each trial. The successful budget $b$, such that $f_K(A_K)\geq(1-1/e)\cdot q_K$, is no larger than $\OPT_{q_K}\br{K}$.
  Moreover, since we use binary search the required number of trials is $O\br{\log\br{c_K(E_K)}}$, which is polynomial in the input size.
 
-For each guess $Q$, the algorithm applies this routine to every component $K$ containing a separator with $w\br{V_K}>B_\eta$, and chooses the least-cost candidate $Q\cup\bigcup_K B_K(A_K)$. Then, the algorithm recurses on each component. The full procedure is given by Algorithm \ref{alg:centroid-max-coverage}.
+For each guess $Q$, the algorithm applies this routine to every component $K$ containing a separator with $w\br{V_K}>B_\eta$, \DD{czy tutaj na pewno $\eta$ a nie $\rho$?} and chooses the least-cost candidate $Q\cup\bigcup_K B_K(A_K)$. Then, the algorithm recurses on each component. The full procedure is given by Algorithm \ref{alg:centroid-max-coverage}.
 
 \input{algorithms/centroid_max_coverage.tex}
 
@@ -513,7 +513,7 @@ We now show how to employ a similar separator-based approach to obtain a single-
 
 The input of the \textsc{Partial Multicut} problem is a graph $G=\br{V, E, D, c, w}$ and an additional value $0\leq q\leq 1$. The goal is to find a subset of edges $C$, minimizing $c\br{C}$, such that the overall demand of edges $uv\in D$, such that $u$ and $v$ belong to different connected components of $G\setminus C$ is at least $q\cdot w\br{V}$. If the supply graph is a tree, Mestre~\cite{DBLP:conf/stacs/Mestre08} gives a $(2+\delta)$-approximation polynomial-time algorithm.
 
-This algorithm is similar to the previous one. We reduce finding a minimum-cost set $A_K\subseteq E_K\setminus E_{S_K}$ with $f_K\br{A_K}\geq q_K$ to \textsc{Partial Multicut} on trees. In the auxiliary instance $T_K$, we forbid cutting the edges of $S_K$ by setting their costs to infinity. Then, for each $K'\in K\setminus V\br{S_K}$, we create a copy of $K'$. We index the two representatives of each vertex $u\in K'$ by $u^{\mathrm L}$ and $u^{\mathrm R}$ (one of them is the original vertex). Now, for each demand pair $uv\in D[K]$ if $\brc{u, v}\cap {S_K}=\emptyset$, we replace this demand edge by a cross-copy demand edge $u^{\mathrm L}v^{\mathrm R}$ with demand $w\br{u^{\mathrm L}v^{\mathrm R}}=w\br{u,v}$.
+This algorithm is similar to the previous one. We reduce finding a minimum-cost set $A_K\subseteq E_K\setminus E_{S_K}$ with $f_K\br{A_K}\geq q_K$ to \textsc{Partial Multicut} on trees. In the auxiliary instance $T_K$, \DD{czym jest $T_K$?} we forbid cutting the edges of $S_K$ (defined in the previous section) by setting their costs to infinity. Then, for each $K'\in K\setminus V_{S_K}$, we create a copy of $K'$. We index the two representatives of each vertex $u\in V_{K'}$ by $u^{\mathrm L}$ and $u^{\mathrm R}$ (one of them is the original vertex). Now, for each demand pair $uv\in D[K]$ if $\brc{u, v}\cap {S_K}=\emptyset$, we replace this demand edge by a cross-copy demand edge $u^{\mathrm L}v^{\mathrm R}$ with demand $w\br{u^{\mathrm L}v^{\mathrm R}}=w\br{u,v}$.
 
 % Figure~\ref{fig:full-quota-centroid} illustrates the full-quota routine for $t=4$.
 \input{algorithms/centroid_full_quota.tex}
@@ -528,9 +528,9 @@ This algorithm is similar to the previous one. We reduce finding a minimum-cost 
     Let $F^*$ be an optimal $B_\rho$-feasible cut. By Lemma~\ref{lem:tree-separator}, the procedure returns at most $t-1$ separators, and every component of $T\setminus\mathcal L_T$ has demand at most $W/t\leq B_\rho$. By construction, all components $H\in T\setminus C$ have demand bounded by $w\br{V_H}\leq B_\rho$.
 
     Therefore, we reason about the cost.
-    As in the preceding proof, let $Q^*\subseteq F^*\cap E_{S_T}$. Let $K\in \mathcal{K}_{Q^*}$. We firstly want to show, that $c\br{A_K}\leq (4+\epsilon)\OPT_{q_K}\br{K}$. So fix some optimal $A_K^*$ for $\OPT_{q_K}\br{K}$. In order to get a valid multicut for $T_K$, for each edge of $A_K^*$, we include both representative edges in $T_K$, i.e., if $e=uv\in A_K^*$, we include $u^{\mathrm L}v^{\mathrm L}$ and $u^{\mathrm R}v^{\mathrm R}$ in the multicut. Since this doubles the cost of each edge, we have $c\br{A_K}\leq 2\cdot \OPT_{q_K}\br{K}$. Mestre's $(2+\delta)$-approximation then gives $c\br{A_K}\leq (4+\epsilon)\cdot \OPT_{q_K}\br{K}$ for sufficiently small $\delta=\epsilon/2$.
+    As in the preceding proof, let $Q^*\subseteq F^*\cap E_{S_T}$. Let $K\in \mathcal{K}_{Q^*}$. We firstly want to show that $c\br{A_K}\leq (4+\epsilon)\OPT_{q_K}\br{K}$. So fix some optimal $A_K^*$ for $\OPT_{q_K}\br{K}$. In order to get a valid multicut for $T_K$, for each edge of $A_K^*$, we include both representative edges in $T_K$, i.e., if $e=uv\in A_K^*$, we include $u^{\mathrm L}v^{\mathrm L}$ and $u^{\mathrm R}v^{\mathrm R}$ in the multicut. Since this doubles the cost of each edge, we have $c\br{A_K}\leq 2\cdot \OPT_{q_K}\br{K}$. Mestre's $(2+\delta)$-approximation then gives $c\br{A_K}\leq (4+\epsilon)\cdot \OPT_{q_K}\br{K}$ for sufficiently small $\delta=\epsilon/2$.
 
-    Thus, summing the contribution of all edges picked by our algorithm, we ge that
+    Thus, summing the contribution of all edges picked by our algorithm, we get that
     \[
     c\br{C}\leq \sum_{K\in \mathcal{K}_{Q^*}} c\br{A_K}+c(Q^*)\leq \sum_{K\in \mathcal{K}_{Q^*}} (4+\epsilon)\cdot\OPT_{q_K}\br{K}+c(Q^*)\leq (4+\epsilon)\cdot \OPTdem{T}{\rho}
     \]

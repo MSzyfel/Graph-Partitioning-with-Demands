@@ -21,7 +21,7 @@
             \ForEach{$K\in\mathcal{K}_Q^+$}{
                 $A_K\gets\textsc{CoreQuotaCover}(f_K,c_K,q_K)$\;
             }
-            $F_Q\gets Q\cup\bigcup_{K\in\mathcal{K}_Q^+}C_K(A_K)$ and add $F_Q$ to $\cF_H$\;
+            $F_Q\gets Q\cup\bigcup_{K\in\mathcal{K}_Q^+}B_K(A_K)$ and add $F_Q$ to $\cF_H$\;
         }
         $F_H\gets \argmin_{F\in\cF_H}\brc{c(F)}$ and $C_H\gets F_H$\;
         \ForEach{$H'$ of $H\setminus F_H$}{
