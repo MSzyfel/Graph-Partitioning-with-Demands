@@ -76,7 +76,7 @@ The analysis uses a generalization of the standard technique of dealing with \te
         w\br{A\cap V_{G'}, V_{G'}}\geq w\br{A, V}-w\br{V\setminus V_{G'}, V}> \delta_{\rho}\cdot W-\br{W-B_\eta}=\br{\eta+\delta_{\rho}-1}\cdot W.
     \]
         Here the halting condition $w\br{V_{G'}}> B_\eta$ implies $w\br{V\setminus V_{G'}, V}=W-w\br{V_{G'}}<W-B_\eta$.
-        Symmetrically, for $B$ we get that, $w\br{B\cap V_{G'}, V_{G'}}\geq \br{\eta+\delta_{\rho}-1}\cdot W$. Since $\eta>1-\delta_{\rho}$ by assumption on $\eta$, we have $\eta+\delta_{\rho}-1>0$. Let $\br{S, \bar{S}}$ be the cut returned by the $\gamma\br{n}$-approximation algorithm for the \textsc{Generalized Conductance} in $G'$ in the considered iteration. Since $\br{A\cap V_{G'}, B\cap V_{G'}}$ is a cut of $G'$, we have
+        Symmetrically, for $B$ we get that $w\br{B\cap V_{G'}, V_{G'}}\geq \br{\eta+\delta_{\rho}-1}\cdot W$. Since $\eta>1-\delta_{\rho}$ by assumption on $\eta$, we have $\eta+\delta_{\rho}-1>0$. Let $\br{S, \bar{S}}$ be the cut returned by the $\gamma\br{n}$-approximation algorithm for the \textsc{Generalized Conductance} in $G'$ in the considered iteration. Since $\br{A\cap V_{G'}, B\cap V_{G'}}$ is a cut of $G'$, we have
 \begin{align*}
         \frac{c\br{S, \bar{S}}}{w\br{S, V_{G'}}\cdot w\br{\bar{S}, V_{G'}}}\leq \frac{\gamma\br{n} \cdot c\br{A, B}}{w\br{A\cap V_{G'}, V_{G'}}\cdot w\br{B\cap V_{G'}, V_{G'}}}
         \leq \frac{\gamma\br{n}\cdot c\br{A, B}}{\br{\eta+\delta_{\rho}-1}^2\cdot W^2}.
@@ -96,7 +96,7 @@ Let $\ell$ be the index of some iteration, let $G_{\ell}'$ be $G'$ at this itera
 where the last inequality follows since the sets $S_{\ell}$ are disjoint, so $\sum_{\ell} w\br{S_{\ell}, V_{G'_{\ell}}}\leq W$.
 \end{proof}
 
-As an immediate corollary (by Thoerems~\ref{thm:tree-generalized-conductance} and~\ref{thm:generalized-conductance-approx}) we get:
+As an immediate corollary (by Theorems~\ref{thm:tree-generalized-conductance} and~\ref{thm:generalized-conductance-approx}) we get:
 \begin{corollary}
     For fixed $\rho\in(0,1)$ and $\eta\in\br{\max\brc{1/2,1-\delta_{\rho}},1}$ (where $\delta_{\rho}=\min\brc{1/4,1-\rho}$), there is a pseudo-approximation algorithm for \textsc{Graph Partitioning with Demands} which returns an $\eta$-feasible cut $C$ with the following approximation ratios:
     \[
@@ -108,7 +108,7 @@ As an immediate corollary (by Thoerems~\ref{thm:tree-generalized-conductance} an
 
 \subsubsection{Extending the range of the parameters}
 Next, we show how to extend the above procedure into a recursive algorithm that works for any choice of $0<\rho < \eta<1$. 
-Since for $\rho\geq 3/4$ the previous procedure works for any $\eta\in(\rho,1)$, we focus on the case $\rho<3/4$. Then observe that $\delta_{\rho}=1/4$, and therefore we know, that the previous procedure works for any $\eta\in[3/4,1)$.
+Since for $\rho\geq 3/4$ the previous procedure works for any $\eta\in(\rho,1)$, we focus on the case $\rho<3/4$. Then observe that $\delta_{\rho}=1/4$, and therefore we know that the previous procedure works for any $\eta\in[3/4,1)$.
 The next result shows an $\bigo_{\rho,\eta}\br{\gamma\br{n}}$-approximation for any choice of $0<\rho<\eta<1$. Note that the constants hidden in the $\bigo_{\rho,\eta}\br{\cdot}$ are quite large and we do not attempt to optimize them.
 
 \begin{theorem}\label{thm:gpd-extension}

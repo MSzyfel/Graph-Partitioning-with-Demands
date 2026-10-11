@@ -1,7 +1,7 @@
 \section{Graph Partitioning with Demands on Trees}\label{sec:tree-configuration-lp}
 
 We now focus on the case where the supply graph is a tree.
-Since Section~\ref{sec:gpd-hardness} provides evidence of that the problem cannot be approximated efficiently even on supply stars, we focus on improving the approximation guarantee given by Theorem \ref{thm:gpd-extension}, since the constant provided by that theorem is relatively large.
+Since Section~\ref{sec:gpd-hardness} provides evidence that the problem cannot be approximated efficiently even on supply stars, we focus on improving the approximation guarantee given by Theorem \ref{thm:gpd-extension}, since the constant provided by that theorem is relatively large.
 We give two polynomial-time bi-criteria algorithms for arbitrary demand weights: anchored-LP rounding (cf. Section~\ref{sec:Anchor-LP-based-algorithm}) and separator recursion based on submodular maximum coverage (cf. Section~\ref{sec:Separator-Recursion-via-Maximum-Coverage}). We also give a single-criteria separator algorithm whose polynomial degree depends on $1/\rho$ (cf. Section~\ref{sec:Single-Criteria-Approximation-via-Multicut}).
 % The idea behind the algorithm is to find a small-size set of vertices whose removal leads to components with relatively low demand. Then, the new goal of the algorithm becomes to remove a large enough amount of demand from each vertex of the separator. To do this we use a well-known subproblem called \textsc{Maximum Coverage}.
 Taking the best of these guarantees gives approximation ratios depending on $\rho$ and $\eta$ that improve on the constant provided by Theorem~\ref{thm:gpd-extension}.
@@ -191,7 +191,7 @@ After processing the first $j-1$ children, merge the table of $u_j$ using
         \brc{F_v^{(j-1)}(\ell_1)+F_{u_j}(\ell_2)}
     }.
 \end{align*}
-The first term corresponds to choosing $vu_j$ to be cut. This means, that the component $H_v$ containing $v$ does not include $u_j$ or its descendants. Thus, the cost of the subproblem rooted at $u_j$ can be chosen to be $F_{u_j}$. The second term corresponds to keeping $vu_j$. For this case we consider all possible splits of weight $\ell_1$ and $\ell_2$ such that $\ell_1+\ell_2=\ell$, where $\ell_1$ is the weight of the component containing $v$ before merging and $\ell_2$ is the weight of the component containing $u_j$. Thus every feasible partition of $T_v$ is considered, and after all children are processed $F_r$ is the minimum cost among partitions into sets from $\widehat\cC$. Solving the recurrence for each merge takes $O\br{L}$ time and since for each vertex $v$, there are $O\br{L}$ subproblems indexed by $\ell$, the running time is $O\br{nL^2}$. Simple bookkeeping allows storing the actual partition achieving the minimum cost.
+The first term corresponds to choosing $vu_j$ to be cut. This means that the component $H_v$ containing $v$ does not include $u_j$ or its descendants. Thus, the cost of the subproblem rooted at $u_j$ can be chosen to be $F_{u_j}$. The second term corresponds to keeping $vu_j$. For this case we consider all possible splits of weight $\ell_1$ and $\ell_2$ such that $\ell_1+\ell_2=\ell$, where $\ell_1$ is the weight of the component containing $v$ before merging and $\ell_2$ is the weight of the component containing $u_j$. Thus every feasible partition of $T_v$ is considered, and after all children are processed $F_r$ is the minimum cost among partitions into sets from $\widehat\cC$. Solving the recurrence for each merge takes $O\br{L}$ time and since for each vertex $v$, there are $O\br{L}$ subproblems indexed by $\ell$, the running time is $O\br{nL^2}$. Simple bookkeeping allows storing the actual partition achieving the minimum cost.
 \end{proof}
 \subsubsection{Applying the method to demand degrees}
 
@@ -242,8 +242,8 @@ The rounded weights and budget are
     \qquad
     L=\left\lfloor\frac{B}{K}\right\rfloor.
 \end{equation}
-And therefore using Lemma~\ref{lem:weighted-budget-rounding}, we also have $\widehat q(v)\leq L$ for all $v\in V$.
-Combining with Lemma~\ref{lem:weighted-budget-rounding} and~\ref{lem:weighted-budget-demand-degree} with Theorem~\ref{thm:weighted-budget-dp}, we obtain a dynamic program that finds an optimal partition $C$ with respect to the rounded weights. Therefore, we get that $c\br{C}\leq\OPTdem{T}{\rho}$ and for each part $H\in T\setminus C$
+Therefore, by Lemma~\ref{lem:weighted-budget-rounding}, we also have $\widehat q(v)\leq L$ for all $v\in V$.
+Combining Lemmas~\ref{lem:weighted-budget-rounding} and~\ref{lem:weighted-budget-demand-degree} with Theorem~\ref{thm:weighted-budget-dp}, we obtain a dynamic program that finds an optimal partition $C$ with respect to the rounded weights. Therefore, we get that $c\br{C}\leq\OPTdem{T}{\rho}$ and for each part $H\in T\setminus C$
 \[
     w\br{V_H}\leq\frac{(1+\rho)\cdot W+\Delta}{2}=B_\eta.
 \]
@@ -381,7 +381,7 @@ For each induced instance, write $\OPT_{B_\rho}(H)$ for its minimum cut cost sub
 \subsection{Separator Recursion via Maximum Coverage}
 \label{sec:Separator-Recursion-via-Maximum-Coverage}
 
-We now show a combinatorial algorithm for \textsc{Graph Partitioning with Demands} on trees. The idea is to find a small-size set of vertices whose removal leads to components with sufficiently low demand. Then, the new goal of the algorithm becomes to remove a large enough amount of demand from each vertex of the separator. To this end, we employ a well-known subproblem called \textsc{Maximum Coverage}.  We start with the following lemma
+We now show a combinatorial algorithm for \textsc{Graph Partitioning with Demands} on trees. The idea is to find a small set of vertices whose removal leads to components with sufficiently low demand. Then, the new goal of the algorithm becomes to remove a large enough amount of demand from each vertex of the separator. To this end, we employ a well-known subproblem called \textsc{Maximum Coverage}.  We start with the following lemma
 
 \begin{lemma}\label{lem:tree-separator}
     Fix an integer $t\geq2$ and take any subtree $H$. There is a polynomial-time procedure $\textsc{Separator}(H, w, t)$ that returns a vertex separator $\mathcal L_H\subseteq V_H$ with $|\mathcal L_H|\leq t-1$ such that every component $J$ of $H\setminus\mathcal L_H$ satisfies $
@@ -418,7 +418,8 @@ if there exists any $A\subseteq E_K\setminus E_{S_K}$ with $f_K(A)\geq q_K$.  No
     f_K(A_K)\geq(1-1/e)\cdot q_K,\quad \quad\text{and}\quad
     c_K(A_K)\leq\OPT_{q_K}\br{K}.
 \]
-Indeed, binary-search the budget $b\in \brc{0,\dots, c_K(E_K)}$ and run the algorithm for \textsc{Maximum Coverage} at each trial. The lowest budget $b$, such that $f_K(A_K)\geq(1-1/e)\cdot q_K$, we get $b\leq \OPT_{q_K}\br{K}$.
+Indeed, binary-search the budget $b\in \brc{0,\dots, c_K(E_K)}$ and run the algorithm for \textsc{Maximum Coverage} at each trial.
+Let $b$ be the lowest budget such that $f_K(A_K)\geq(1-1/e)\cdot q_K$, we get $b\leq \OPT_{q_K}\br{K}$.
  Since we use binary search the required number of trials is $O\br{\log\br{c_K(E_K)}}$, which is polynomial in the input size.
 
 For each guess $Q$, the algorithm applies this routine to every component $K$ containing a separator with $w\br{V_K}>B_\rho$, and chooses the least-cost candidate $Q\cup\bigcup_K A_K$. Then, the algorithm recurses on each component. The full procedure is given by Algorithm \ref{alg:centroid-max-coverage}.
@@ -506,11 +507,11 @@ Combining Theorem~\ref{thm:tree-centroid-max-coverage} with Theorem~\ref{thm:hc-
         \frac{2}{1-\eta}=\frac{4e}{e-1}.$
 \end{proof}
 
-\subsection{Single criterion approximation via Multicut}
+\subsection{Single-criterion approximation via Multicut}
 \label{sec:Single-Criteria-Approximation-via-Multicut}
 
-We now show how to employ a similar approach to obtain a single-criteria approximation for GPD on trees via the \textsc{Partial Multicut} problem. 
-Here, input is a graph $G=\br{V, E, D, c, w}$ and an additional value $0\leq q\leq 1$. The goal is to find a subset of edges $C$, minimizing $c\br{C}$, such that the overall demand of edges $uv\in D$, such that $u$ and $v$ belong to different connected components of $G\setminus C$ is at least $q\cdot w\br{V}$. For supply trees, Mestre~\cite{DBLP:conf/stacs/Mestre08} gives a $(2+\delta)$-approximation in polynomial-time. 
+We now show how to employ a similar approach to obtain a single-criteria approximation for \textsc{Graph Partitioning with Demands} on trees via the \textsc{Partial Multicut} problem. 
+In the latter problem, the input is a graph $G=\br{V, E, D, c, w}$ and an additional value $0\leq q\leq 1$. The goal is to find a subset of edges $C$, minimizing $c\br{C}$, such that the overall demand of edges $uv\in D$ having endpoints $u$ and $v$ in different connected components of $G\setminus C$ is at least $q\cdot w\br{V}$. For supply trees, Mestre~\cite{DBLP:conf/stacs/Mestre08} gives a $(2+\delta)$-approximation in polynomial-time. 
 
 This time our algorithm is not recursive, and we pick a separator set large enough so that every connected component has demand at most $B_\rho$. Let $t=\cl{1/\rho}$ be this size.
 %  In order for all connected components containing separators to be of appropriate size, we will require that the amount of demand separated from such components is at least $K$. Since we do not want to use an $O\br{\log n}$-approximation algorithm for the $\textsc{Partial Set Cover}$, we will show that we can achieve this goal using the well known \textsc{Partial Multicut} on trees.
