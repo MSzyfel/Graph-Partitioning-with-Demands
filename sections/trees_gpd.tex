@@ -11,7 +11,7 @@ For a tree $T$, let $\OPT_{B_\rho}(T)=\OPTdem{T}{\rho}$ denote the minimum cost 
 \subsection{Anchor-LP-based algorithm}
 \label{sec:Anchor-LP-based-algorithm}
 
-Our first algorithm is based on an anchored linear programming relaxation. For each vertex $a\in V$, which we call an \emph{anchor}, we need a constraint upper bounding the internal demand of the component containing $a$. For this reason our LP consists of two kinds of variables, the $x_e$ variables, corresponding to the edges that are cut and the $z^a_{uv}$ variables, denoting whether a given demand edge is internal to the component contaning $a$.
+Our first algorithm is based on an anchored linear programming relaxation. For each vertex $a\in V$, which we call an \emph{anchor}, we need a constraint upper bounding the internal demand of the component containing $a$. For this reason our LP consists of two kinds of variables, the $x_e$ variables, corresponding to the edges that are cut and the $z^a_{uv}$ variables, denoting whether a given demand edge is internal to the component containing $a$.
 After solving the anchored LP, let $x$ be its optimal edge-length vector. We pick an arbitrary global root $r\in V$ and calculate $\dist(u)=\dist_x(r,u)$ for every vertex $u\in V$. This projects the vertices of the tree onto the real line with $r$ at the origin and $u$ at $\dist_x(r,u)$. Then, we choose an appropriate value of $R$ and subdivide the line into intervals of length $R$, and cut every edge that crosses an interval boundary. To make this approach work, we draw a random phase $\theta\in[0,R)$ and shift all intervals by $\theta$, which gives a solution with low expected cost. 
 % Figure~\ref{fig:anchored-lp-threshold-line} illustrates the embedding and threshold locations.
 
@@ -506,7 +506,7 @@ Combining Theorem~\ref{thm:tree-centroid-max-coverage} with Theorem~\ref{thm:hc-
         \frac{2}{1-\eta}=\frac{4e}{e-1}.$
 \end{proof}
 
-\subsection{Single criteria approximation via Multicut}
+\subsection{Single criterion approximation via Multicut}
 \label{sec:Single-Criteria-Approximation-via-Multicut}
 
 We now show how to employ a similar approach to obtain a single-criteria approximation for GPD on trees via the \textsc{Partial Multicut} problem. 

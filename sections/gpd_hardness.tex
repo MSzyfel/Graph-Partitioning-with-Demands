@@ -304,7 +304,7 @@ We start by proving a numerical lemma that will be useful in the soundness analy
     \]
     Let $q$ be the least integer satisfying $q^{-2}\leq\varepsilon$. Apply Lemma~\ref{lem:globalized-long-code-gap} with this $q$, $b=1/4$, and $\varepsilon$, and denote its output graph by $Y=(V_Y,E_Y)$.
 
-    Construct an HCD instance whose supply graph is $Y$ with capacity $c(uv)=p_Y(u,v)$ on each edge $uv\in E_Y$. This is well-defined because $p_Y(u,v)=p_Y(v,u)$. Let the demand graph be complete on distinct vertex pairs, with $w(uv)=\mu_Y(u)\cdot \mu_Y(v)$. By defintion, for every $S\subseteq V_Y$, we have $
+    Construct an HCD instance whose supply graph is $Y$ with capacity $c(uv)=p_Y(u,v)$ on each edge $uv\in E_Y$. This is well-defined because $p_Y(u,v)=p_Y(v,u)$. Let the demand graph be complete on distinct vertex pairs, with $w(uv)=\mu_Y(u)\cdot \mu_Y(v)$. By definition, for every $S\subseteq V_Y$, we have $
         c(\delta_Y(S))=\mu_Y(S)\cdot \Phi_Y(S).$
     For every cluster $X\subseteq V_Y$,
     \begin{equation}\label{eq:hcd-stationary-demand}
@@ -411,7 +411,7 @@ even when the supply graph is a star and all capacities and demands are uniform.
 \begin{proof}
 The reduction is from \textsc{Min-Sum Vertex Cover} on general graphs. In this problem we are given an undirected graph $G=(U,F)$ and the goal is to find a permutation $\pi:U\to\{1,\dots,|U|\}$ that minimizes the sum of cover times of the edges $\ct\br{\pi}=\sum_{e\in F}\ct_\pi(e)$, i.e., where the \emph{cover time} of an edge is defined as $\ct_\pi(uv)=\min\brc{\pi(u),\pi(v)}$. Stankovic proves that this problem cannot be approximated within a factor of $1.0748$ assuming UGC~\cite{SomeResultsOnApproximabilityOfMinimumSumVertexCover}. The reduction is very simple. The vertex set is $V=U\cup {r}$, $D=F$ and $E$ is a star with center $r$ and leaves $U$. The capacities and demands are all set to $1$.
 
-Consider any clustering tree $\cT$. As discussed before, we can assume without loss of generality that $\cT$ is binary. Now, we observe that on stars any binary cut, i.e., cut where both sides of the cut are connected, consists of some leaf $l\in U$ and nothing more. Consequently, any such clustering tree directly corresponds to a sequemce of leaves, in the order they are separated from the center (i.e., according to their distances from the root in $\cT$). Conversily, every sequence $\pi:U\to\{1,\dots,|U|\}$ of the leaves corresponds to a unique binary clustering tree. 
+Consider any clustering tree $\cT$. As discussed before, we can assume without loss of generality that $\cT$ is binary. Now, we observe that on stars any binary cut, i.e., cut where both sides of the cut are connected, consists of some leaf $l\in U$ and nothing more. Consequently, any such clustering tree directly corresponds to a sequence of leaves, in the order they are separated from the center (i.e., according to their distances from the root in $\cT$). Conversely, every sequence $\pi:U\to\{1,\dots,|U|\}$ of the leaves corresponds to a unique binary clustering tree. 
 
 Now, for any sequence $\pi:U\to\{1,\dots,|U|\}$ and a vertex $u\in U$, let
 \[
