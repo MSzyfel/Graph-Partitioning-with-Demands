@@ -470,12 +470,12 @@ For each guess $Q$, the algorithm applies this routine to every component $K$ co
 %     c\br{F_H}=\sum_{K\in \mathcal{K}_{Q^*}} c\br{A_K} + c\br{Q^*} \leq \sum_{K\in \mathcal{K}_{Q^*}} \OPT_{B_\rho}\br{K} + c\br{Q^*} \leq \OPT_{B_\rho}\br{H}.
 %     \]
 %     which is the contribution of $F_H$ to the cost of $C_H$
-
+%
 %     Again, by disjointness, we have that
 %     \[
 %     \sum_{H'\in H\setminus F_H} \OPT_{B_\rho}\br{H'} \leq \OPT_{B_\rho}\br{H}.
 %     \]
-
+%
 %     Let $C_H$ denote all cuts produced in the recursion below $H$, and let $d(H)$ be the maximum remaining depth of recursive calls for $H$. We show by induction that $
 %         c(C_H)\leq \br{d(H)+1}\cdot \OPT_{B_\rho}(H).$
 %     For the base case, when $d\br{H}=0$, we have $c(C_H)=c\br{F_H}\leq \OPT_{B_\rho}(H)$, which satisfies the induction hypothesis. Now, assume that the claim holds for all $H$ such that $d\br{H}\leq d$ for some $d\geq 0$, and consider $H$ with $d\br{H}=d+1$. By the induction hypothesis applied to the subcomponents $H'\in H\setminus F_H$, we have
@@ -487,7 +487,7 @@ For each guess $Q$, the algorithm applies this routine to every component $K$ co
 %     c(C_H) = c(F_H) + \sum_{H'\in H\setminus F_H} c(C_{H'}) \leq \OPT_{B_\rho}(H) + d\cdot \sum_{H'\in H\setminus F_H} \OPT_{B_\rho}(H') \leq (d+1)\cdot \OPT_{B_\rho}(H),
 % \]
 % which completes the induction step.
-
+%
 % Now, observe that $d\br{T}\leq L-1$, which implies that $
 %     c(C_T)\leq L\cdot \OPT_{B_\rho}(T),$
 % as desired.
