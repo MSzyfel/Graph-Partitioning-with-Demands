@@ -16,7 +16,7 @@
         \ForEach{$K\in\mathcal{K}_Q^+$}{
             $A_K\gets\textsc{CoreFullQuota}(K,S_K,f_K,c_K,q_K)$\;
         }
-        $F_Q\gets Q\cup\bigcup_{K\in\mathcal{K}_Q^+}C_K(A_K)$ and add $F_Q$ to $\cF_T$\;
+        $F_Q\gets Q\cup\bigcup_{K\in\mathcal{K}_Q^+}A_K$ and add $F_Q$ to $\cF_T$\;
     }
     \textbf{return} $C\gets\arg\min_{F\in\cF_T}\brc{c(F)}$\;
 \end{algorithm}

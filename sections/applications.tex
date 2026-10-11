@@ -118,54 +118,7 @@ The next result shows an $\bigo_{\rho,\eta}\br{\gamma\br{n}}$-approximation for 
     $
     where $d=\cl{\log_{5/4}\br{1/\eta}}$ and $\gamma\br{n}$ is the approximation factor of a polynomial-time algorithm for \textsc{Generalized Conductance}.
 \end{theorem}
-\begin{proof}
-    For a subgraph $H$ of $G$ with $w\br{V_H}\geq B_\eta$, we set $\eta_H=B_\eta/w\br{V_H}$ and $\rho_H=B_\rho/w\br{V_H}$. The algorithm uses $\eta_0=\max\brc{4/5,\eta_H}$ and we observe that $\rho_H/\eta_H=\rho/\eta$.
-    Recall that $\OPTdem{H}{\rho_H}$ is the cost of the optimal \textsc{Graph Partitioning with Demands} solution on $H$ with threshold $\rho_H$.
-    The recursive procedure for a component $H$ is as follows.
-
-\input{algorithms/gpd_recursive_extension.tex}
-    It is easy to see that the algorithm runs in polynomial time and the returned solution is $\eta$-feasible. Hence, we focus on the approximation ratio.
-
-For a subgraph $H$ of $G$ for which the procedure has been called, let $d\br{H}$ denote the number of recursion levels the algorithm performs on $H$. Every recursive call takes $\eta_0\geq 4/5$ and, by Theorem~\ref{thm:gpd-bicriteria}, produces connected components of demand at most $\eta_0 \cdot w\br{V_H}\leq \frac{4}{5} w\br{V_H}$ each.
-Hence, this means that for every `child component' $H'$ of $H\setminus C$ in the recursion tree, we get $\eta_{H'}\geq 5/4\cdot \eta_H$.
-Because the last partitioning step happens when $\eta_0=\eta_H\geq 4/5$, the recursion depth is bounded by
-\[
-    d\br{H}\leq \cl{\log_{5/4}\br{w\br{V_H}/B_\eta}}.
-\]
-due to the fact that after reaching $\eta_{H}\geq 4/5$ the algorithm performs one last partitioning step, i.e., the last recursive call. Since $\cl{\log_{5/4}\br{w\br{V_H}/B_\eta}}$ is the number of iterations required to reach $\eta_H\geq 1$, which is one more than we need to reach $\eta_H\geq 4/5$, we get that the above quantity is correct.
-
-Now, we prove by induction on $d\br{H}$ that Algorithm~\ref{alg:recursive-partitioning} returns a subset of edges of cost at most $d\br{H}\cdot \kappa\br{\rho,\eta}\cdot \gamma\br{n}\cdot \OPTdem{H}{\rho_H}$.
-
-    \emph{Base cases, $d\br{H}=0$ and $d\br{H}=1$.} If $d\br{H}=0$, then the cost is $0$ since the algorithm terminates without any partitioning. If $d\br{H}=1$, then $B_\eta/w\br{V_H}\geq 4/5$, so $\eta_0=\eta_H=B_\eta/w\br{V_H}$, and after a single partitioning step for each connected component $H'$ of $H\setminus C$, $w\br{V_{H'}}\leq \eta_0 \cdot w\br{V_H}=B_\eta$. Hence the algorithm terminates at the beginning of the next recursive step without adding any supply edges to the cut. By the explicit bound established in the proof of Theorem~\ref{thm:gpd-bicriteria}, the cost of the solution is bounded by $\frac{\gamma\br{n}}{\br{\eta_H+\delta_{\rho_H}-1}^2}\cdot \OPTdem{H}{\rho_H}$. We establish the bound $\frac{1}{\br{\eta_H+\delta_{\rho_H}-1}^2}\leq \kappa\br{\rho,\eta}$ in two cases:
-    \begin{enumerate}
-        \item If $\rho_H\leq 3/4$, then $\delta_{\rho_H}=1/4$ and $\eta_H+\delta_{\rho_H}-1\geq 4/5+1/4-1=1/20$, using $\eta_H\geq 4/5$. Hence $\frac{1}{\br{\eta_H+\delta_{\rho_H}-1}^2}\leq 400\leq \kappa\br{\rho,\eta}$.
-        \item If $\rho_H> 3/4$, then $\delta_{\rho_H}=1-\rho_H$ and, using $\rho_H=\br{\rho/\eta}\cdot\eta_H$ and $\eta_H\geq 4/5$,
-        \[
-            \eta_H+\delta_{\rho_H}-1=\eta_H-\rho_H=\br{1-\rho/\eta}\cdot\eta_H\geq \br{1-\rho/\eta}\cdot\frac{4}{5}.
-        \]
-        Hence $\frac{1}{\br{\eta_H+\delta_{\rho_H}-1}^2}\leq \frac{1}{\br{\br{1-\rho/\eta}\cdot 4/5}^2}\leq \kappa\br{\rho,\eta}$.
-    \end{enumerate}
-    In both cases the cost is at most $\kappa\br{\rho,\eta}\cdot\gamma\br{n}\cdot \OPTdem{H}{\rho_H}=d\br{H}\cdot \kappa\br{\rho,\eta}\cdot\gamma\br{n}\cdot\OPTdem{H}{\rho_H}$.
-
-    \emph{Inductive step.} Suppose the claim holds for every graph $H'$ with $d\br{H'}\leq d-1$, and let $H$ satisfy $d\br{H}=d\geq 2$. Let $C$ be the cut computed when $H$ is the input. It holds $B_\eta/w\br{V_H}<4/5$, so $\eta_0=4/5$, and for every $H'$ in $H\setminus C$, $w\br{H'}\leq \eta_0\cdot w\br{V_H}=\frac{4}{5}\cdot w\br{V_H}$, thus $d\br{H'}\leq d-1$. By Theorem \ref{thm:gpd-bicriteria}, the cost introduced by the current partitioning step is at most $\frac{\gamma\br{n}}{\br{\eta_0+\delta_{\rho_H}-1}^2}\cdot\OPTdem{H}{\rho_H}$, and we again bound $\frac{1}{\br{\eta_0+\delta_{\rho_H}-1}^2}\leq \kappa\br{\rho,\eta}$:
-    \begin{enumerate}
-        \item If $\rho_H\leq 3/4$, then $\delta_{\rho_H}=1/4$ and $\eta_0+\delta_{\rho_H}-1=4/5+1/4-1=1/20$, so the term is at most $400\leq \kappa\br{\rho,\eta}$.
-        \item If $\rho_H> 3/4$, then $\delta_{\rho_H}=1-\rho_H$ and, using $\rho_H=\br{\rho/\eta}\cdot\eta_H<\br{\rho/\eta}\cdot\eta_0$,
-        \[
-            \eta_0+\delta_{\rho_H}-1=\eta_0-\rho_H> \eta_0-\br{\rho/\eta}\cdot\eta_0=\br{1-\rho/\eta}\cdot\frac{4}{5},
-        \]
-        so the term is at most $\frac{1}{\br{\br{1-\rho/\eta}\cdot 4/5}^2}\leq \kappa\br{\rho,\eta}$.
-    \end{enumerate}
-    Thus the top level contributes at most $\kappa\br{\rho,\eta}\cdot\gamma\br{n}\cdot\OPTdem{H}{\rho_H}$. By the inductive hypothesis, for each connected component $H'$ of $H\setminus C$, $c\br{C_{H'}}\leq \br{d-1}\cdot \kappa\br{\rho,\eta}\cdot\gamma\br{n}\cdot\OPTdem{H'}{\rho_{H'}}$. Since the components in $H\setminus C$ are vertex and edge-disjoint and the $C^*\cap E_{H'}$ is a valid solution for \textsc{Graph Partitioning with Demands} on $H'$ in $H\setminus C$ with $\rho_{H'}$, we have that $\OPTdem{H'}{\rho_{H'}}\leq c\br{C^*\cap E_{H'}}$. Moreover, by summing up over all $H'$ we get
-    $\sum_{H'\in H\setminus C}\OPTdem{H'}{\rho_{H'}}\leq \OPTdem{H}{\rho_H}$, and therefore
-    \begin{align*}
-        c\br{C}&=c\br{C_H}+\sum_{H'\in H\setminus C}c\br{C_{H'}}
-        \\&\leq \kappa\br{\rho,\eta}\cdot\gamma\br{n}\cdot\OPTdem{H}{\rho_H}+\br{d-1}\cdot\kappa\br{\rho,\eta}\cdot \gamma\br{n}\sum_{H'\in H\setminus C}\OPTdem{H'}{\rho_{H'}}
-        \\&\leq 
-        d\cdot \kappa\br{\rho,\eta}\cdot\gamma\br{n}\cdot\OPTdem{H}{\rho_H}.
-    \end{align*}
-    Therefore, the induction is complete. Applying it to $H=G$ yields the statement of the theorem.
-\end{proof}
+The proof is deferred to Appendix~\ref{app:gpd-extension}.
 
 As an immediate corollary we get:
 \begin{corollary}\label{cor:graph-partitioning-approximation}
