@@ -13,7 +13,7 @@ Our main topic of interest is whether one could establish similar relationships 
 % These demands are a more general measure of size of the components.
 Our question then naturally extends to asking which particular generalization of the \textsc{Sparsest Cut} would be appropriate for such needs.
 
-In order to answer these questions we firstly which property of the \textsc{Sparsest Cut} allows approximating other balanced partitioning tasks in the first place.
+In order to answer these questions we firstly examine which property of \textsc{Sparsest Cut} allows approximating other balanced partitioning tasks in the first place.
 This usefulness of \textsc{Sparsest Cut} can be attributed to the following observation, implicitly exploited by many algorithms \cite{MulticommodityMaxFlowMinCutTheoremsAndTheirUseInDesigningApproximationAlgorithms,AnOlogkApproximateMinCutMaxFlowTheoremAndApproximationAlgorithm,ACostFunctionForSimilarityBasedHierarchicalClustering,ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics,HierarchicalClusteringObjectiveFunctionsAndAlgorithms,ImprovedApproximationAlgorithmsForMinimumWeightVertexSeparators}.
 The quantity $\spr{S}\cdot \spr{\bar{S}}$ can be interpreted in two separate ways. First, imagine $D=\binom{V}{2}$ to be a set of demand edges where each edge has a unit demand. Then, $\spr{S}\cdot \spr{\bar{S}}$ is the total demand crossing the cut. This interpretation is useful for the sake of developing approximation algorithms for the \textsc{Sparsest Cut} itself, since a weak duality between \textsc{Sparsest Cut} and multicommodity flow type problems has been established \cite{AnOlogkApproximateMinCutMaxFlowTheoremAndApproximationAlgorithm,MulticommodityMaxFlowMinCutTheoremsAndTheirUseInDesigningApproximationAlgorithms}. Secondly, $\spr{S}\cdot \spr{\bar{S}}$ can be observed to be large when both partitions are of roughly equal size. This is useful when developing algorithms for other graph problems \cite{ExpanderFlowsGeometricEmbeddingsAndGraphPartitioning,ImprovedApproximationAlgorithmsForMinimumWeightVertexSeparators,MulticommodityMaxFlowMinCutTheoremsAndTheirUseInDesigningApproximationAlgorithms}, since the product in the denominator becomes a measure of the balance of the cut.
 
@@ -33,7 +33,7 @@ where $\delta_D[S]=\brc{e\in D\colon e\cap S\neq \emptyset}$\footnote{Note, that
 \psi_w\br{S} = \frac{c\br{\delta_E\br{S}}}{w\br{S, V}\cdot w\br{\bar{S}, V}},
 \]
 where $w\br{S,V}=w\br{S}+w\br{\delta_D\br{S}}$.
-We call the problem of minimizing $\psi_w$ \textsc{Generalized Conductance} (GC). The goal of this work is to examine whether this new notion can be used leveraged to approximate other graph partitioning tasks with general demands.
+We call the problem of minimizing $\psi_w$ \textsc{Generalized Conductance} (GC). The goal of this work is to examine whether this new notion can be leveraged to approximate other graph partitioning tasks with general demands.
 
 We now define also the problems we are interested in more formally.
 For $U\subseteq V$, let $w(U)$ denote the total weight of demand pairs with both endpoints in $U$, and set $W=w(V)$. In \textsc{Graph Partitioning with Demands} (GPD), given a target $\rho\in(0,1)$, the goal is to delete a minimum-cost set of supply edges so that every resulting component $H=(V_H,E_H)$ satisfies $w(V_H)\leq\rho W$. In \textsc{Hierarchical Clustering with Demands} (HCD), the goal is to find a rooted tree $\mathcal T$ with leaves $V$ minimizing $c\br{\cT}=\sum_{uv\in E} c(uv)\cdot w\br{V_{\lca_{\mathcal T}(u,v)}}$.
