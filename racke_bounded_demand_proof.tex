@@ -28,7 +28,7 @@ via Räcke's cut-sparsifier decomposition}
 Let $G=(V,E,D,c,w)$ be an undirected supply graph where $c\colon E\to\mathbb{R}_{>0}$
 are edge capacities, $D\subseteq V\times V$ is a symmetric set of demand edges, and $w\colon D\to\mathbb{R}_{\ge 0}$ assigns their demand weights. Write
 \[
-  \pi(u) \;=\; \sum_{uv\in D} w(u,v)
+  \pi(u) \;=\; \sum_{uv\in D} w(uv)
 \]
 for the total demand incident to $u$ and $W_{\mathrm{tot}}=\sum_{u\in V}\pi(u)$.
 For a nonempty proper subset $S\subsetneq V$ define
@@ -133,7 +133,7 @@ $T=(V_T,E_T)$ whose leaves are in bijection with $V'$, together with:
 For a tree edge $e_t=(u_t,v_t)$, let $V_{u_t},V_{v_t}$ be the leaf partition
 induced by deleting $e_t$. Its capacity is
 \[
-  c_T(e_t):=\sum_{\substack{u\in V_{u_t}\\ v\in V_{v_t}}} c(u,v).
+  c_T(e_t):=\sum_{\substack{u\in V_{u_t}\\ v\in V_{v_t}}} c(uv).
 \]
 
 \subsection{Exact Räcke statements used below}

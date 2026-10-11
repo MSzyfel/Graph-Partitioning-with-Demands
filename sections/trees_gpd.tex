@@ -86,7 +86,7 @@ It is easy to see that this is a valid relaxation of the original problem.
     The anchor-demand constraint and non-negativity of $z$ imply
     \[
         B_\rho\geq\sum_{uv\in D}w(u,v)\cdot z^a_{uv}
-          \geq\sum_{uv\in D_H}w(u,v)\cdot z^a_{uv}
+          \geq\sum_{uv\in D_H}w(uv)\cdot z^a_{uv}
           \geq(1-2R)\cdot w(V_H).
     \]
     % Rearranging gives the desired bound on $w(V_H)$.
@@ -514,7 +514,7 @@ Here, input is a graph $G=\br{V, E, D, c, w}$ and an additional value $0\leq q\l
 
 This time our algorithm is not recursive, and we pick a separator set large enough so that every connected component has demand at most $B_\rho$. Let $t=\cl{1/\rho}$ be this size.
 %  In order for all connected components containing separators to be of appropriate size, we will require that the amount of demand separated from such components is at least $K$. Since we do not want to use an $O\br{\log n}$-approximation algorithm for the $\textsc{Partial Set Cover}$, we will show that we can achieve this goal using the well known \textsc{Partial Multicut} on trees.
-We give a procedure $\textsc{CoreFullQuota}(K,S_K,f_K,c_K,q_K)$ that uses \textsc{Partial Multicut} on trees to find a quota-covering cut in an auxiliary tree $T_K$, and returns the corresponding set $A_K$ of original supply edges. We create this instance as follows: we forbid cutting the edges of $S_K$ (defined in the previous section) by setting their costs to $\infty$. Then, for each $K'\in K\setminus V_{S_K}$, we create a copy of $K'$. We index the two representatives of each vertex $u\in V_{K'}$ by $u^{\mathrm L}$ and $u^{\mathrm R}$ (one of them is the original vertex). Now, for each $uv\in D[K]$ if $\brc{u, v}\cap {S_K}=\emptyset$, we replace this demand edge by a cross-copy demand edge $u^{\mathrm L}v^{\mathrm R}$ with demand $w\br{u^{\mathrm L}v^{\mathrm R}}=w\br{u,v}$. Other demands stay unchanged. The output consists of the original supply edges corresponding to the selected edges in $T_K$, with duplicates merged.
+We give a procedure $\textsc{CoreFullQuota}(K,S_K,f_K,c_K,q_K)$ that uses \textsc{Partial Multicut} on trees to find a quota-covering cut in an auxiliary tree $T_K$, and returns the corresponding set $A_K$ of original supply edges. We create this instance as follows: we forbid cutting the edges of $S_K$ (defined in the previous section) by setting their costs to $\infty$. Then, for each $K'\in K\setminus V_{S_K}$, we create a copy of $K'$. We index the two representatives of each vertex $u\in V_{K'}$ by $u^{\mathrm L}$ and $u^{\mathrm R}$ (one of them is the original vertex). Now, for each $uv\in D[K]$ if $\brc{u, v}\cap {S_K}=\emptyset$, we replace this demand edge by a cross-copy demand edge $u^{\mathrm L}v^{\mathrm R}$ with demand $w\br{u^{\mathrm L}v^{\mathrm R}}=w\br{uv}$. Other demands stay unchanged. The output consists of the original supply edges corresponding to the selected edges in $T_K$, with duplicates merged.
 
 % Figure~\ref{fig:full-quota-centroid} illustrates the full-quota routine for $t=4$.
 \input{algorithms/centroid_full_quota.tex}

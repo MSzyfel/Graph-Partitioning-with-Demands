@@ -16,7 +16,7 @@
 
 Let $G=(V,E,D,c,w)$ be an instance, where $c\colon E\to\mathbb{R}_{\ge 0}$ is the edge-capacity function, $D\subseteq V\times V$ is a symmetric demand-edge set, and $w\colon D\to\mathbb{R}_{\ge 0}$ is its demand function. Define
 \[
-\pi(u)=\sum_{uv\in D} w\br{u,v}
+\pi(u)=\sum_{uv\in D} w\br{uv}
 \qquad\text{for every }u\in V.
 \]
 The objective is
@@ -46,7 +46,7 @@ Consider the standard metric relaxation for the augmented sparsest cut instance.
 \]
 The relaxation objective is
 \[
-\lambda^* = \sum_{uv\in E} c\br{u,v}\,d\br{u,v}.
+\lambda^* = \sum_{uv\in E} c\br{u,v}\,d\br{uv}.
 \]
 For an integral cut $X\subseteq V^+$, the associated cut metric is feasible, and the relaxation value is at most the sparsity of the cut. Hence the relaxation is valid.
 
