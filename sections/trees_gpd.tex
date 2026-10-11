@@ -457,40 +457,6 @@ For each guess $Q$, the algorithm applies this routine to every component $K$ co
     which makes it $\eta$-feasible.
 
     The cost bound is proved in Appendix~\ref{app:tree-centroid-max-coverage-cost}.
-%
-%     Let $F_H^*$ be an optimal $\rho$-feasible cut of $H$. Set $Q^*=F_H^*\cap E_{S_H}$.
-%     \DD{usunalem def $S_H$: bo byla sciezka laczaca wierzcholki w $\mathcal L_H$}
-%%    It is easy to see that the algorithm considers this guess.
-%     % Each resulting component containing a separator has all its separators in one component of $H\setminus F_H^*$, so $S_K$ lies in that component. 
-%     The restriction of $F_H^*$ to $K$ therefore satisfies $
-%         \OPT_{\rho}\br{K}\leq c(F_H^*\cap E_K).
-%     $
-%     Thus, since any $\rho$-feasible edge set of $K$ covers at least $q_K$ demand, we know that $c\br{A_K}\leq \OPT_{q_K}\br{K}\leq \OPT_{\rho}\br{K}$. Now observe that by disjointness we get
-%     \[
-%     c\br{F_H}=\sum_{K\in \mathcal{K}_{Q^*}} c\br{A_K} + c\br{Q^*} \leq \sum_{K\in \mathcal{K}_{Q^*}} \OPT_{\rho}\br{K} + c\br{Q^*} \leq \OPT_{\rho}\br{H}.
-%     \]
-%     which is the contribution of $F_H$ to the cost of $C_H$
-%
-%     Again, by disjointness, we have that
-%     \[
-%     \sum_{H'\in H\setminus F_H} \OPT_{\rho}\br{H'} \leq \OPT_{\rho}\br{H}.
-%     \]
-%
-%     Let $C_H$ denote all cuts produced in the recursion below $H$, and let $d(H)$ be the maximum remaining depth of recursive calls for $H$. We show by induction that $
-%         c(C_H)\leq \br{d(H)+1}\cdot \OPT_{\rho}(H).$
-%     For the base case, when $d\br{H}=0$, we have $c(C_H)=c\br{F_H}\leq \OPT_{\rho}(H)$, which satisfies the induction hypothesis. Now, assume that the claim holds for all $H$ such that $d\br{H}\leq d$ for some $d\geq 0$, and consider $H$ with $d\br{H}=d+1$. By the induction hypothesis applied to the subcomponents $H'\in H\setminus F_H$, we have
-% \[
-%     c(C_{H'})\leq \br{d(H')+1}\cdot \OPT_{\rho}(H')\leq d\cdot \OPT_{\rho}(H'),
-% \]
-% Summing over all such $H'$ and adding the cost of $F_H$, we get
-% \[
-%     c(C_H) = c(F_H) + \sum_{H'\in H\setminus F_H} c(C_{H'}) \leq \OPT_{\rho}(H) + d\cdot \sum_{H'\in H\setminus F_H} \OPT_{\rho}(H') \leq (d+1)\cdot \OPT_{\rho}(H),
-% \]
-% which completes the induction step.
-%
-% Now, observe that $d\br{T}\leq L-1$, which implies that $
-%     c(C_T)\leq L\cdot \OPT_{\rho}(T),$
-% as desired.
 \end{proof}
 
 Combining Theorem~\ref{thm:tree-centroid-max-coverage} with Theorem~\ref{thm:hc-gpd-transfer} gives the following corollary.
