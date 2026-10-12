@@ -6,7 +6,7 @@ This section provides our main algorithmic result for GPD and HCD on general gra
 
 \subsection{Graph Partitioning with Demands}
 
-We now apply the approximation algorithm for GC to obtain an approximation algorithm for \textsc{Graph Partitioning with Demands} (GPD). In this problem, we are given an instance $G=(V,E,D,c,w)$, together with a fixed constant $\rho\in(0,1)$. The goal is to find a subset of supply edges $C\subseteq E$ that minimizes $c\br{C}$ such that for every connected component $H$ of $G\setminus C$, we have $w\br{V_H}\leq B_\rho$.
+We apply the approximation algorithm for GC to obtain an approximation algorithm for \textsc{Graph Partitioning with Demands} (GPD). In the latter problem, we are given an instance $G=(V,E,D,c,w)$, together with a fixed constant $\rho\in(0,1)$. The goal is to find a subset of supply edges $C\subseteq E$ that minimizes $c\br{C}$ such that for every connected component $H$ of $G\setminus C$, we have $w\br{V_H}\leq B_\rho$.
 Let $\OPTdem{G}{\rho}=c\br{C^*}$, where $C^*\subseteq E$ is an optimal solution.
 Let $\rho<\eta<1$ be a constant. We say that $C\subseteq E$ is $\eta$-feasible if for every connected component $H$ of $G\setminus C$, it holds $w\br{V_H}\leq B_\eta$, instead of $w\br{V_H}\leq B_\rho$.
 We will obtain a bi-criteria approximation algorithm for GPD that returns an $\eta$-feasible subset of edges $C$ such that $c\br{C}=\bigo_{\rho, \eta}\br{\gamma\br{n}}\cdot \OPTdem{G}{\rho}$, where $n=|V|$ and $\gamma\br{n}$ is an upper bound on the approximation ratio of the chosen \textsc{Generalized Conductance} algorithm on instances with at most $n$ vertices. This is done in two parts. Firstly, we show an algorithm for a limited range of $\eta$ and then extend it to the entirety of $\eta\in(\rho,1)$.
@@ -98,7 +98,7 @@ where the last inequality follows since the sets $S_{\ell}$ are disjoint, so $\s
 
 As an immediate corollary (by Theorems~\ref{thm:tree-generalized-conductance} and~\ref{thm:generalized-conductance-approx}) we get:
 \begin{corollary}
-    For fixed $\rho\in(0,1)$ and $\eta\in\br{\max\brc{1/2,1-\delta_{\rho}},1}$ (where $\delta_{\rho}=\min\brc{1/4,1-\rho}$), there is a pseudo-approximation algorithm for \textsc{Graph Partitioning with Demands} which returns an $\eta$-feasible cut $C$ with the following approximation ratios:
+    For fixed $\rho\in(0,1)$ and $\eta\in\br{\max\brc{1/2,1-\delta_{\rho}},1}$ (where $\delta_{\rho}=\min\brc{1/4,1-\rho}$), there is a bi-criteria approximation algorithm for \textsc{Graph Partitioning with Demands} which returns an $\eta$-feasible cut $C$ with the following approximation ratios:
     \[
     \bigo\br{\frac{\sqrt{\log n}}{\br{\eta+\delta_{\rho}-1}^2}}\cdot \OPTdem{G}{\rho}
     \quad\text{on general graphs,}\quad \frac{1}{\br{\eta+\delta_{\rho}-1}^2}\cdot \OPTdem{G}{\rho}
@@ -140,7 +140,7 @@ As an immediate corollary we get:
 \subsection{Hierarchical clustering with demands}
 % \newcommand{\Dasgupta}{\tilde{c}}
 
-In this problem one is given a graph $G=(V,E,D,c,w)$ with a supply-cost function $c\colon E\to\mathbb{N}$ and a demand function $w\colon D\to\mathbb{N}$. A \emph{clustering tree} $\cT$ is a rooted tree whose vertices are subgraphs of $G$ called \emph{clusters}, representing a laminar family of subgraphs of $G$, i.e., for any two clusters $H$ and $H'$, either $V_H\subseteq V_{H'}$, $V_{H'}\subseteq V_H$, or $V_H\cap V_{H'}=\emptyset$. We require the clustering tree to have the entire graph $G$ as its root cluster, any non-leaf cluster to have at least two child clusters whose vertex sets form a partition of the vertex set of the parent cluster, and each leaf to be a singleton, i.e., a cluster with a single vertex of $G$. Therefore, there is a one-to-one correspondence between the leaves of $\cT$ and the vertices of $G$.
+We now concern ourselves with \textsc{Hierarchical Clustering with Demands} (HCD) problem. The input is a graph $G=(V,E,D,c,w)$. A \emph{clustering tree} $\cT$ is a rooted tree whose vertices are subgraphs of $G$ called \emph{clusters}, representing a laminar family of subgraphs of $G$, i.e., for any two clusters $H$ and $H'$, either $V_H\subseteq V_{H'}$, $V_{H'}\subseteq V_H$, or $V_H\cap V_{H'}=\emptyset$. We require the clustering tree to have the entire graph $G$ as its root cluster, any non-leaf cluster to have at least two child clusters whose vertex sets form a partition of the vertex set of the parent cluster, and each leaf to be a singleton, i.e., a cluster with a single vertex of $G$. Therefore, there is a one-to-one correspondence between the leaves of $\cT$ and the vertices of $G$.
 For $u,v\in V$, let $\operatorname{lca}_{\cT}(u,v)$ denote their lowest common ancestor in $\cT$, that is, the cluster that is farthest from the root and contains both $u$ and $v$. For a non-leaf node with cluster $H$, let $C_H$ be the supply edges whose endpoints lie in distinct child clusters of $H$ (for simplicity we equate the nodes with the clusters). The objective is to minimize the total cost of separating the vertices according to the demand function, which is captured by the following function:
 \begin{equation}\label{eq:Dasgupta}
     c\br{\cT}
@@ -149,13 +149,12 @@ For $u,v\in V$, let $\operatorname{lca}_{\cT}(u,v)$ denote their lowest common a
     =\sum_{uv\in E}c\br{uv}\cdot
         w\br{V_{\operatorname{lca}_{\cT}(u,v)}}.
 \end{equation}
-We refer to this problem as \textsc{Hierarchical Clustering with Demands}. 
 % It generalizes the classical hierarchical clustering problem, also known as decision tree problem, that in turn is a generalization of the classical binary search. Note, that a non-binary clustering tree can be refined into a binary one without increasing the cost~\cite{ACostFunctionForSimilarityBasedHierarchicalClustering}.
 
 We parameterize our top-down algorithm by constants $0<\rho<\eta<1$. Assume that we have a polynomial-time $\gamma_{\rho,\eta}\br{n}$-approximate subroutine for \textsc{Graph Partitioning with Demands}, denoted by $\DPartition$, suppressing its parameters $\rho$ and $\eta$.
 
 \begin{theorem}\label{thm:hc-gpd-transfer}
-    Fix constants $0<\rho<\eta<1$ and suppose that a subroutine $\DPartition$ is given, where $\gamma_{\rho,\eta}(n)\geq1$. Then there exists a $\frac{\lceil1/\rho\rceil\cdot\gamma_{\rho,\eta}(n)}{1-\eta}$-approximation polynomial-time algorithm for \textsc{Hierarchical Clustering with Demands}.
+    Fix constants $0<\rho<\eta<1$ and suppose that an $\gamma_{\rho,\eta}(n)$-approximate subroutine for GPD, called $\DPartition$ is given. Then, there exists a $\frac{\lceil1/\rho\rceil\cdot\gamma_{\rho,\eta}(n)}{1-\eta}$-approximation polynomial-time algorithm for \textsc{Hierarchical Clustering with Demands}.
 \end{theorem}
 \begin{proof}
     The following algorithm recursively partitions each non-singleton cluster using the subroutine for GPD and constructs the clustering tree $\cT$ in a top-down manner.
@@ -179,7 +178,8 @@ We parameterize our top-down algorithm by constants $0<\rho<\eta<1$. Assume that
 
     Fix a non-singleton cluster $H$ produced by the algorithm and 
     write $r_H=w\br{V_H}$. The maximal clusters of $\cT^*$ having demand at most $\fl{\rho r_H}$ partition $V$, and by extension $V_H$, into clusters of demand at most $\fl{\rho r_H}$.
-    Every supply edge of $E_H$ joining two distinct parts of this partition has its endpoints in distinct maximal clusters of $\cT^*$, so their least common ancestor in $\cT^*$ has demand greater than $\fl{\rho r_H}$. Consequently, the set $E_{\fl{\rho r_H}}^*\cap E_H$ is a feasible solution to \textsc{Graph Partitioning with Demands} on the graph $H$ with target $\rho$, so $
+    % Every supply edge of $E_H$ joining two distinct parts of this partition has its endpoints in distinct maximal clusters of $\cT^*$, so their least common ancestor in $\cT^*$ has demand greater than $\fl{\rho r_H}$. 
+    Consequently, the set $E_{\fl{\rho r_H}}^*\cap E_H$ is a feasible solution to \textsc{Graph Partitioning with Demands} on the graph $H$ with target $\rho$, so $
         c\br{C_H}\leq \gamma_{\rho,\eta}\br{\spr{V_H}} \cdot c\br{E_{\fl{\rho r_H}}^*\cap E_H}.$
     Let $s_H$ be the largest demand among the children of $H$. Since the subroutine returns an $\eta$-feasible solution, $s_H\leq\eta \cdot r_H$. Hence
     \[

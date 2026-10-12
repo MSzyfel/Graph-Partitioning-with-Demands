@@ -9,7 +9,7 @@ Secondly, for general graphs we use a reduction to the \textsc{Min-Ratio Vertex 
   If the supply graph $T$ is a tree, an optimal \textsc{Generalized Conductance} cut is obtained by removing one supply edge. Consequently, the problem admits an exact polynomial-time algorithm on supply trees.
 \end{theorem}
 \begin{proof}
-  If every cut has infinite value, the claim follows immediately. Otherwise, let $\br{S^*,\bar{S}^*}$ be an optimal cut and for brevity denote $
+  If every cut has infinite value or $w\br{V}=0$, the claim follows immediately. Otherwise, let $\br{S^*,\bar{S}^*}$ be an optimal cut and for brevity denote $
     W^*=w\br{S^*,V}\cdot w\br{\bar{S}^*,V}$ and $ E^*=\delta_E\br{S^*}.$
   For every $e\in E^*$, let $S_e$ and $\bar{S}_e$ be the vertex sets of the two components of $T\setminus e$, and denote $
     W_e=w\br{S_e,V}\cdot w\br{\bar{S}_e,V}$. We want to show that there exists an edge $e\in E^*$ with $\psi_{w}\br{S_e}\leq \psi_{w}\br{S^*}$.
@@ -37,7 +37,7 @@ Secondly, for general graphs we use a reduction to the \textsc{Min-Ratio Vertex 
     If $f'\neq g'$, then $f$ is incident to both components of $T\setminus f'$, so $q_{X_{f'}}(f,g)\geq1$ regardless of which component contains an endpoint of $g$. The symmetric argument gives $q_{X_{g'}}(f,g)\geq1$, and consequently $q_{X_{f'}}(f,g)+q_{X_{g'}}(f,g)\geq2$. If $f'=g'$, both $f$ and $g$ are incident to both components of $T\setminus f'$, and hence $q_{X_{f'}}(f,g)=2$.
     \end{enumerate}
     This proves~\eqref{eq:tree-demand-pair-cover}.
-    Combining this with with \eqref{eq:tree-symmetrized-demand-pairs} first to $S^*$ and then to each $S_e$ gives
+    Combining this with \eqref{eq:tree-symmetrized-demand-pairs} applied first to $S^*$ and then to each $S_e$ gives
     \begin{align*}
       W^* &= \frac{1}{2}\cdot \sum_{f,g\in D}w\br{f}\cdot w\br{g}\cdot q_{S^*}(f,g) \leq
       \frac{1}{2}\cdot \sum_{f,g\in D}w\br{f}\cdot w\br{g}\cdot \sum_{e\in E^*}q_{S_e}(f,g)
@@ -97,5 +97,5 @@ For every cut of finite value, Equation~\eqref{eq:demand-degree-identity} gives 
   \]
 
   It is easy to see that this construction encodes degree conductance exactly: every cut $S\subsetneq V$ in $G$ corresponds to a vertex cut of value $\chi_{w}\br{S}$ in $H$, and every finite-value vertex cut $(A,B,Z)$ projects to $S=A\cap V$ with $\chi_{w}\br{S}\leq\alpha_{\pi_1,\pi_2}\br{A,B,Z}$.
-  The $\bigo\br{\sqrt{\log |V_H|}}$-approximation algorithm for \textsc{Min-Ratio Vertex Cut} of \cite{ImprovedApproximationAlgorithmsForMinimumWeightVertexSeparators} (with projected output to a cut $S$ of $G$), Equation~\eqref{eq:factor4}, and observation that $|V_H|=n+|E|=\bigo\br{n^2}$ give an $\bigo\br{\sqrt{\log n}}$-approximation algorithm for \textsc{Generalized Conductance}.
+  The $\bigo\br{\sqrt{\log |V_H|}}$-approximation algorithm for \textsc{Min-Ratio Vertex Cut} of \cite{ImprovedApproximationAlgorithmsForMinimumWeightVertexSeparators} (with projected output to a cut $S$ of $G$), Equation~\eqref{eq:factor4}, and observing that $|V_H|=n+|E|=\bigo\br{n^2}$ imply an $\bigo\br{\sqrt{\log n}}$-approximation algorithm for \textsc{Generalized Conductance}.
 \end{proof}

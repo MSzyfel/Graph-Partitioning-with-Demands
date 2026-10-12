@@ -1,7 +1,7 @@
 \section{Preliminaries}
 
 Most instances of the problems considered in this work consist of a graph $G=\br{V,E,D,c,w}$, where $V$ is the vertex set, $E$ is the set of \emph{supply edges}, $D$ is the set of \emph{demand edges}, $c\colon E \to \mathbb{N}$ is the \emph{capacity} function which encodes the cost of cutting a supply edge, and $w\colon D\to \mathbb{N}$ is the \emph{demand} function which assigns a non-negative weight to each demand edge.
-For adjacent vertices $u,v\in V$, whenever not explicitly stated, we denote by $uv$ the supply edge between $u$ and $v$.
+For vertices $u,v\in V$ sharing an edge in $E$, whenever not explicitly stated, we denote by $uv$ the supply edge between $u$ and $v$.
 For any $C\subseteq E$, $G\setminus C$ is the graph obtained by removing the edges in $C$ from $G$, and with a slight abuse of notation, we also treat it as the set of connected components obtained by removing the edges in $C$ from $G$.
 We write $\br{V_H,E_H,D_H,c_H,w_H}$ to point out that given parameters represent a particular graph or subgraph $H$ different than $G$.
 For $U\subseteq V$, the induced subgraph $G[U]$ has the vertex set $U$, the supply-edge set $E[U]=\brc{uv\in E:u,v\in U}$, the demand-edge set $D[U]=\brc{uv\in D:u,v\in U}$, and the restrictions of $c$ and $w$ to these sets.
@@ -20,7 +20,6 @@ We have
 	\vol_X(S)
 	=2f\br{S}+f\br{S,V\setminus S}.
 \end{equation}
-For a partition $\cP$ of $V$, let $\delta_{X}(\cP)=\brc{uv\in X\colon u\text{ and }v\text{ belong to distinct parts of }\cP}$.
 For $A\subseteq V$ and a set of edges $X$, let $\delta_X[A]=\brc{uv\in X:\brc{u,v}\cap A\neq\emptyset}=X[A]\cup\delta_X(A)$ denote the edges of $X$ incident to $A$.
 For parameters $\rho,\eta\in(0,1)$, write $B_\rho=\rho W$ and $B_\eta=\eta W$ for the corresponding demand budgets.
 For a subset $C\subseteq X$, $f\br{C}=\sum_{e\in C}f\br{e}$ (recall that if $X=D$, then $f=w$ and if $X=E$, then $f=c$).

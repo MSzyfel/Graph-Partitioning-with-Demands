@@ -2,10 +2,10 @@
 
 We now focus on the case where the supply graph is a tree.
 Since Section~\ref{sec:gpd-hardness} provides evidence that the problem cannot be approximated efficiently even on supply stars, we focus on improving the approximation guarantee given by Theorem \ref{thm:gpd-extension}, since the constant provided by that theorem is relatively large.
-We give two polynomial-time bi-criteria algorithms for arbitrary demand weights: anchored-LP rounding (cf. Section~\ref{sec:Anchor-LP-based-algorithm}) and separator recursion based on submodular maximum coverage (cf. Section~\ref{sec:Separator-Recursion-via-Maximum-Coverage}). We also give a single-criteria separator algorithm whose polynomial degree depends on $1/\rho$ (cf. Section~\ref{sec:Single-Criteria-Approximation-via-Multicut}).
+We give two polynomial-time bi-criteria algorithms: anchored-LP rounding (cf. Section~\ref{sec:Anchor-LP-based-algorithm}) and separator recursion based on the \textsc{Maximum Coverage} problem (cf. Section~\ref{sec:Separator-Recursion-via-Maximum-Coverage}). We also give a single-criteria separator algorithm based on \textsc{Partial Multicut} with $n^{O\br{1/\rho}}$ runtime (cf. Section~\ref{sec:Single-Criteria-Approximation-via-Multicut}).
 % The idea behind the algorithm is to find a small-size set of vertices whose removal leads to components with relatively low demand. Then, the new goal of the algorithm becomes to remove a large enough amount of demand from each vertex of the separator. To do this we use a well-known subproblem called \textsc{Maximum Coverage}.
 Taking the best of these guarantees gives approximation ratios depending on $\rho$ and $\eta$ that improve on the constant provided by Theorem~\ref{thm:gpd-extension}.
-As a corollary, we also obtain a polynomial-time $\frac{4e}{e-1}$-approximation for \textsc{Hierarchical Clustering with Demands} on trees. 
+As a corollary, we also obtain a polynomial-time $\frac{4e}{e-1}$-approximation for \textsc{Hierarchical Clustering with Demands} on supply trees. 
 
 \subsection{Anchor-LP-based algorithm}
 \label{sec:Anchor-LP-based-algorithm}
@@ -18,7 +18,7 @@ After solving the anchored LP, let $x$ be its optimal edge-length vector. We pic
 
 For $a,u\in V$, let $P_T(a,u)$ be the unique path from $a$ to $u$ in the input tree $T=(V,E,D,c,w)$. Introduce variables $x_e\in[0,1]$ for each edge $e\in E$ and define $
     \dist_x(a,u)=\sum_{e\in P_T(a,u)}x_e.$
-For every vertex $a\in V$, called an \emph{anchor}, and every demand edge $uv\in D$, introduce a variable $z^a_{uv}\in[0,1]$. The anchored relaxation is
+For every vertex $a\in V$, called an \emph{anchor}, and every demand edge $uv\in D$, introduce a variable $z^a_{uv}\in[0,1]$. The \emph{anchored relaxation} of GPD is
 \begin{equation}\label{lp:tree-anchored}
 \begin{aligned}
     \min\quad
@@ -28,7 +28,7 @@ For every vertex $a\in V$, called an \emph{anchor}, and every demand edge $uv\in
             &&\forall a\in V,\ uv\in D,\\
         &\sum_{uv\in D}w(u,v)\cdot z^a_{uv}\leq B_\rho
             &&\forall a\in V,\\
-        &\mathbf{x, z} \in [0,1]^{E \cup (V \times D)}
+        &x, z \in [0,1]^{E \cup (V \times D)}
 \end{aligned}
 \end{equation}
 % Since $|D|\leq\binom{n}{2}$, the LP has $O(|E|+n|D|)=O(n^3)$ variables and constraints.
@@ -75,7 +75,7 @@ It is easy to see that this is a valid relaxation of the original problem.
         \mathbb{E}[c(F)]\leq\frac{1}{R}\cdot \sum_{e\in E}c(e)\cdot x_e.
     $
 
-    Now fix a component $H$ of $T\setminus F$, and let $a$ be its vertex closest to the root. For every $v\in V_H$, the path from $a$ to $v$ lies entirely in $H$. No threshold of the form $\theta+kR$ can lie in $(\dist(a),\dist(v)]$, since such a threshold would cause an edge of that path to be deleted. The thresholds are spaced exactly $R$ apart, so $
+    Now fix a component $H$ of $T\setminus F$, and let $a$ be its vertex closest to the root. For every $v\in V_H$, the path from $a$ to $v$ lies entirely in $H$. No threshold of the form $\theta+kR$ can lie in $(\dist(a),\dist(v)]$, since such a threshold would cause an edge of that path to be deleted. The thresholds are spaced $R$ apart, so $
         \dist_x(a,v)=\dist(v)-\dist(a)<R.
     $
     For each demand edge $uv\in D_H$, the LP connectivity constraint for anchor $a$ gives
@@ -95,7 +95,7 @@ It is easy to see that this is a valid relaxation of the original problem.
         c(C)\leq \mathbb{E}[c(F)]\leq \frac{1}{R}\cdot \sum_{e\in E}c(e)\cdot x_e
         \leq\frac{2\eta}{\eta-\rho}\cdot \OPTdem{T}{\rho}.
     \]
-    and every component $H$ of $T\setminus C$ has $w(V_H)\leq B_\rho/(1-2R)=B_\eta$.
+    and every component $H$ of $T\setminus C$ satisfies $w(V_H)\leq B_\rho/(1-2R)=B_\eta$.
 \end{proof}
 
 % \input{algorithms/anchored_lp_rounding.tex}
@@ -395,7 +395,7 @@ The proof is relatively easy and is deferred to Appendix~\ref{app:tree-separator
 
 In our algorithm we apply Lemma~\ref{lem:tree-separator} with the smallest integer $t\geq e$, which is $t=3$. 
 Thus, $\mathcal L_H$ contains at most two separators, $\spr{\mathcal{L_H}}\leq 2$, and every component of $H\setminus\mathcal L_H$ has demand at most $w(V_H)/3$.
-Let $S_H=H[\mathcal L_H]$, note that (here $S_H$ is either a vertex or a path). 
+Let $S_H=H[\mathcal L_H]$, (note that here $S_H$ is either a vertex or a path). 
 % If $|\mathcal L_H|=1$, then $S_H$ is that single vertex. 
 We enumerate $Q=\emptyset$ and $Q=\{e\}$ for each edge $e\in E_{S_H}$. Thus at most $1+|E_{S_H}|\leq n$ guesses are considered. For a guess $Q$, let $\mathcal K_Q$ be the components of $H\setminus Q$.
 Define $S_K=K[V_{S_H}]$.
@@ -418,7 +418,7 @@ if there exists any $A\subseteq E_K\setminus E_{S_K}$ with $f_K(A)\geq q_K$.  No
     c_K(A_K)\leq\OPT_{q_K}\br{K}.
 \]
 Indeed, binary-search the budget $b\in \brc{0,\dots, c_K(E_K)}$ and run the algorithm for \textsc{Maximum Coverage} at each trial.
-Let $b$ be the lowest budget such that $f_K(A_K)\geq(1-1/e)\cdot q_K$, we get $b\leq \OPT_{q_K}\br{K}$.
+Let $b$ be the lowest budget such that $f_K(A_K)\geq(1-1/e)\cdot q_K$, so that we get $b\leq \OPT_{q_K}\br{K}$.
  Since we use binary search the required number of trials is $O\br{\log\br{c_K(E_K)}}$, which is polynomial in the input size.
 
 For each guess $Q$, the algorithm applies this routine to every component $K$ containing a separator with $w\br{V_K}>B_\rho$, and chooses the least-cost candidate $Q\cup\bigcup_K A_K$. Then, the algorithm recurses on each component. The full procedure is given by Algorithm \ref{alg:centroid-max-coverage}.
@@ -426,7 +426,7 @@ For each guess $Q$, the algorithm applies this routine to every component $K$ co
 \input{algorithms/centroid_max_coverage.tex}
 
 \begin{theorem}\label{thm:tree-centroid-max-coverage}
-    Fix rational constants $0<\rho<\eta<1$. For arbitrary integral demands on a supply tree, Algorithm~\ref{alg:centroid-max-coverage} runs in polynomial time and returns an $\eta$-feasible supply-edge set $C\subseteq E$ with $
+    Fix rational constants $0<\rho<\eta<1$. The Algorithm~\ref{alg:centroid-max-coverage} runs in polynomial time and returns an $\eta$-feasible supply-edge set $C\subseteq E$ with $
         c(C)\leq\cl{\ln\br{\frac{1-\rho}{\eta-\rho}}}\cdot\OPTdem{T}{\rho}.$
 \end{theorem}
 \begin{proof}
@@ -487,7 +487,7 @@ We give a procedure $\textsc{CoreFullQuota}(K,S_K,f_K,c_K,q_K)$ that uses \texts
 %\input{figures/three_centroid_coverage.tex}
 
 \begin{theorem}\label{thm:tree-centroid-full-quota}
-    Fix rational $0<\rho<1$ and $\epsilon>0$. For arbitrary integral demand weights on a supply tree, Algorithm~\ref{alg:centroid-full-quota} returns a $\rho$-feasible cut $C$ with $
+    Fix rational $0<\rho<1$ and $\epsilon>0$. The Algorithm~\ref{alg:centroid-full-quota} returns a $\rho$-feasible cut $C$ with $
         c(C)\leq(4+\epsilon)\cdot \OPTdem{T}{\rho}.$
     For fixed $\rho$ and $\epsilon$, its running time is $n^{O(1/\rho)}$.
 \end{theorem}
