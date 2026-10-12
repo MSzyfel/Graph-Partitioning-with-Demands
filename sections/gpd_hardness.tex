@@ -19,7 +19,7 @@ where $\deg_G(u)$ is the degree of $u$ in $G$.
 The transition probabilities in a random walk on $G$ are given by $P_G(u,v)=1/\deg_G(u)$ if $uv\in E$ and $P_G(u,v)=0$ otherwise. Its stationary distribution is $\mu_G(u)=\deg_G(u)/M_G$: for every $v\in V$,
 \[
     \sum_{u\in V}\mu_G(u)\cdot P_G(u,v)
-    =\sum_{u:uv\in E}\frac{1}{M_G}
+    =\sum_{u\colon uv\in E}\frac{1}{M_G}
     =\frac{\deg_G(v)}{M_G}
     =\mu_G(v).
 \]
@@ -403,17 +403,17 @@ Khot and Regev show that, assuming UGC, \textsc{Vertex Cover} is hard to approxi
 \end{proof}
 
 \subsection{Hardness of Hierarchical Clustering with Demands on Stars}
-A similar result follows from the hardness of \textsc{Min-Sum Vertex Cover} and gives the following.
+A similar result for GPD follows from the hardness of \textsc{Min-Sum Vertex Cover} and gives the following.
 \begin{theorem}\label{thm:hc-star-hardness}
 Assuming UGC, \textsc{Hierarchical Clustering with Demands} is hard to approximate within a factor of $1.0748$,
 even when the supply graph is a star and all capacities and demands are uniform.
 \end{theorem}
 \begin{proof}
-The reduction is from \textsc{Min-Sum Vertex Cover} on general graphs. In this problem we are given an undirected graph $G=(U,F)$ and the goal is to find a permutation $\pi:U\to\{1,\dots,|U|\}$ that minimizes the sum of cover times of the edges $\ct\br{\pi}=\sum_{e\in F}\ct_\pi(e)$, i.e., where the \emph{cover time} of an edge is defined as $\ct_\pi(uv)=\min\brc{\pi(u),\pi(v)}$. Stankovic proves that this problem cannot be approximated within a factor of $1.0748$ assuming UGC~\cite{SomeResultsOnApproximabilityOfMinimumSumVertexCover}. The reduction is very simple. The vertex set is $V=U\cup {r}$, $D=F$ and $E$ is a star with center $r$ and leaves $U$. The capacities and demands are all set to $1$.
+The reduction is from \textsc{Min-Sum Vertex Cover} on general graphs. In this problem we are given an undirected graph $G=(U,F)$ and the goal is to find a permutation $\pi\colon U\to\{1,\dots,|U|\}$ that minimizes the sum of cover times of the edges $\ct\br{\pi}=\sum_{e\in F}\ct_\pi(e)$, i.e., where the \emph{cover time} of an edge is defined as $\ct_\pi(uv)=\min\brc{\pi(u),\pi(v)}$. Stankovic proves that this problem cannot be approximated within a factor of $1.0748$ assuming UGC~\cite{SomeResultsOnApproximabilityOfMinimumSumVertexCover}. The reduction is very simple. The vertex set is $V=U\cup \brc{r}$, $D=F$ and $E$ is a star with center $r$ and leaves $U$. The capacities and demands are all set to $1$.
 
-Consider any clustering tree $\cT$. As discussed before, we can assume without loss of generality that $\cT$ is binary. Now, we observe that on stars any binary cut, i.e., cut where both sides of the cut are connected, consists of some leaf $l\in U$ and nothing more. Consequently, any such clustering tree directly corresponds to a sequence of leaves, in the order they are separated from the center (i.e., according to their distances from the root in $\cT$). Conversely, every sequence $\pi:U\to\{1,\dots,|U|\}$ of the leaves corresponds to a unique binary clustering tree. 
+Consider any clustering tree $\cT$. As discussed before, we can assume without loss of generality that $\cT$ is binary. Now, we observe that on stars any \emph{binary cut}, by which we mean a cut where both sides of the cut are connected, consists of some leaf $l\in U$ and nothing more. Consequently, any such clustering tree directly corresponds to a sequence of leaves, in the order they are separated from the center (i.e., according to their distances from the root in $\cT$). Conversely, every sequence $\pi\colon U\to\{1,\dots,|U|\}$ of the leaves corresponds to a unique binary clustering tree. 
 
-Now, for any sequence $\pi:U\to\{1,\dots,|U|\}$ and a vertex $u\in U$, let
+Now, for any sequence $\pi\colon U\to\{1,\dots,|U|\}$ and a vertex $u\in U$, let
 \[
 E_\pi(u)=\{vw\in F\colon \pi(u)\leq \min\brc{\pi(v), \pi(w)}\}
 \]
@@ -426,7 +426,7 @@ c\br{\cT}=
 \sum_{u\in U}\spr{E_\pi(u)} =
 \ct\br{\pi},
 \]
-where the third equality is due to the fact that for any vertex $u\in U$, the set $E_\pi(u)$ consists of all edges whose both endpoints appear no sooner than $\pi\br{u}$ in the sequence $\pi$, which are all of the demand edges still present in the cluster containing $u$, before cutting $u$ from the root. The fourth equality follows from basic rewriting of $\ct\br{\pi}$, since each $u\in U$ contributes one unit per each edge which was not covered by the first $\pi(u)-1$ vertices in the sequence.
+where the third equality is due to the fact that for any vertex $u\in U$, the set $E_\pi(u)$ consists of all edges whose both endpoints appear no sooner than $\pi\br{u}$ in the sequence $\pi$, which are all of the demand edges still present in the cluster containing $u$, before cutting $u$ from the root. The fourth equality follows from basic rewriting of $\ct\br{\pi}$, since each $u\in U$ contributes one unit of cost per each edge which was not covered by the first $\pi(u)-1$ vertices in the sequence.
 
 Therefore, the costs of corresponding solutions coincide, and the inapproximability of \textsc{Min-Sum Vertex Cover} transfers to \textsc{Hierarchical Clustering with Demands} on supply stars.
 \end{proof}
